@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     eia_api_key: str | None = None
     youtube_api_key: str | None = None
 
+    research_mode: bool = True
+    allow_buy_signals: bool = False
+    allow_order_execution: bool = False
+
     min_score_buy: float = 0.72
     min_confidence_buy: float = 0.65
     min_reward_risk: float = 1.8

@@ -24,7 +24,14 @@ class B3ScreenerJsonBridge:
         records = payload.get("records", payload if isinstance(payload, list) else [])
         if not isinstance(records, list):
             raise ValueError("invalid B3 screener export: expected records[]")
-        return [self._parse(record, payload) for record in records]
+        
+        valid_assets: list[AssetSnapshot] = []
+        for record in records:
+            try:
+                valid_assets.append(self._parse(record, payload))
+            except ValueError:
+                continue
+        return valid_assets
 
     def _parse(self, record: dict[str, Any], envelope: dict[str, Any]) -> AssetSnapshot:
         ticker = str(record.get("ticker") or record.get("symbol") or "").upper().strip()

@@ -53,6 +53,12 @@ def discover_reuse(
         console.print(f"Manifest written to {output}")
 
 
+@app.command("ingest-b3")
+def ingest_b3() -> None:
+    from scripts.ingest_b3 import run_ingest_b3
+    run_ingest_b3()
+
+
 @app.command("demo")
 def demo() -> None:
     settings = Settings()
