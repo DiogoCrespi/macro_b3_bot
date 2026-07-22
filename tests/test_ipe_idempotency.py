@@ -23,6 +23,24 @@ class TestIpeIdempotency(unittest.TestCase):
     def tearDown(self):
         self.temp_dir.cleanup()
 
+    def test_build_document_id_deterministic(self):
+        from macro_b3_bot.adapters.cvm.ipe_index_client import build_document_id
+        from datetime import datetime, timezone
+
+        dt = datetime(2026, 5, 10, 12, 0, 0, tzinfo=timezone.utc)
+        id1 = build_document_id("004170", "PROT123", dt, "Fato Relevante", "TIPO1", 1)
+        id2 = build_document_id("004170", "PROT123", dt, "Fato Relevante", "TIPO1", 1)
+        self.assertEqual(id1, id2)
+
+    def test_build_document_id_different_protocol_or_version(self):
+        from macro_b3_bot.adapters.cvm.ipe_index_client import build_document_id
+        from datetime import datetime, timezone
+
+        dt = datetime(2026, 5, 10, 12, 0, 0, tzinfo=timezone.utc)
+        id1 = build_document_id("004170", "PROT123", dt, "Fato Relevante", "TIPO1", 1)
+        id2 = build_document_id("004170", "PROT123", dt, "Fato Relevante", "TIPO1", 2)
+        self.assertNotEqual(id1, id2)
+
     def test_duplicate_ipe_document_rejected(self):
         store = DatabaseStore(self.db_path)
         doc = IpeDocumentIndex(

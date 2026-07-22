@@ -11,8 +11,8 @@ from macro_b3_bot.infrastructure.store import DatabaseStore
 
 class IpePrioritizer:
     """
-    Priorizador determinístico de documentos IPE da CVM (sem uso de LLM).
-    Pontua a fila de processamento entre 0.0 e 1.0 com base em categoria, recência, vínculo com ticker e termos materiais.
+    Priorizador determinístico com decomposição auditável dos 5 fatores de prioridade:
+    priority_score = 0.30 * category_score + 0.25 * recency_score + 0.20 * ticker_mapping_score + 0.15 * liquidity_score + 0.10 * material_terms_score
     """
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -32,7 +32,6 @@ class IpePrioritizer:
         store = DatabaseStore(self.db_path)
         conn = store.connection
 
-        # Carrega índice IPE e mapa de tickers
         docs = conn.execute("""
             SELECT i.document_id, i.cvm_code, i.category, i.subject, i.delivery_date, m.ticker
             FROM ipe_document_index i
@@ -46,31 +45,31 @@ class IpePrioritizer:
         for doc in docs:
             doc_id, cvm_code, category, subject, deliv_dt, ticker = doc
 
-            # 1. Peso Categoria (30%)
-            cat_weight = self.category_weights.get(category, 0.30)
+            # 1. Categoria (30%)
+            cat_score = float(self.category_weights.get(category, 0.15))
 
             # 2. Recência (25%)
             if deliv_dt.tzinfo is None:
                 deliv_dt = deliv_dt.replace(tzinfo=timezone.utc)
             days_old = (now - deliv_dt).total_seconds() / 86400.0
-            recency_score = max(0.0, 1.0 - (days_old / 365.0))
+            rec_score = float(max(0.0, min(1.0, 1.0 - (days_old / 365.0))))
 
-            # 3. Vínculo Ticker B3 (20%)
+            # 3. Mapeamento Ticker B3 (20%)
             ticker_score = 1.0 if ticker else 0.0
 
-            # 4. Liquidez do Ativo (15%) - Padrão 0.5 se mapeado
-            liquidity_score = 0.8 if ticker else 0.1
+            # 4. Liquidez do Ativo (15%)
+            liq_score = 0.8 if ticker else 0.1
 
             # 5. Termos materiais (10%)
             subj_lower = (subject or "").lower()
-            material_score = 1.0 if any(term in subj_lower for term in self.material_terms) else 0.0
+            mat_score = 1.0 if any(term in subj_lower for term in self.material_terms) else 0.0
 
             priority_score = round(
-                (0.30 * cat_weight) +
-                (0.25 * recency_score) +
+                (0.30 * cat_score) +
+                (0.25 * rec_score) +
                 (0.20 * ticker_score) +
-                (0.15 * liquidity_score) +
-                (0.10 * material_score),
+                (0.15 * liq_score) +
+                (0.10 * mat_score),
                 4
             )
 
@@ -80,6 +79,11 @@ class IpePrioritizer:
                 document_id=doc_id,
                 status=status,
                 priority_score=priority_score,
+                category_score=cat_score,
+                recency_score=rec_score,
+                ticker_mapping_score=ticker_score,
+                liquidity_score=liq_score,
+                material_terms_score=mat_score,
                 attempts=0,
                 updated_at=now
             )

@@ -23,8 +23,13 @@ class IpeDocumentIndex(BaseModel):
 
 class IpeProcessingState(BaseModel):
     document_id: str
-    status: str = Field(pattern="^(DISCOVERED|QUEUED|DOWNLOADED|PARSED|REJECTED|FAILED)$")
+    status: str = Field(pattern="^(DISCOVERED|QUEUED|DOWNLOADED|PARSED|EXTRACTED|DEDUPLICATED|EVIDENCE_BUILT|REJECTED|FAILED)$")
     priority_score: float = Field(ge=0.0, le=1.0)
+    category_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    recency_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    ticker_mapping_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    liquidity_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    material_terms_score: float = Field(default=0.0, ge=0.0, le=1.0)
     materiality_score: float | None = None
     attempts: int = 0
     last_error: str | None = None

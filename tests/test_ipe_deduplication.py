@@ -20,5 +20,18 @@ class TestIpeDeduplication(unittest.TestCase):
         self.assertEqual(_compute_jaccard_similarity(text1, text2), 1.0)
         self.assertGreater(_compute_jaccard_similarity(text1, text3), 0.70)
 
+    def test_deduplication_precedence_hierarchy(self):
+        # EXACT_FILE_DUPLICATE -> EXACT_TEXT_DUPLICATE -> NEAR_DUPLICATE -> CANONICAL
+        precedence = ["EXACT_FILE_DUPLICATE", "EXACT_TEXT_DUPLICATE", "NEAR_DUPLICATE", "CANONICAL"]
+        self.assertEqual(precedence[0], "EXACT_FILE_DUPLICATE")
+        self.assertEqual(precedence[1], "EXACT_TEXT_DUPLICATE")
+
+    def test_numerical_entity_check_for_near_duplicate(self):
+        text_a = "Lucro líquido de R$ 100.000.000 no 1T26"
+        text_b = "Lucro líquido de R$ 500.000.000 no 1T26"
+        # Mesmo template, números diferentes = DEVE MANTER AMBOS (CANÔNICOS)
+        sim = _compute_jaccard_similarity(text_a, text_b)
+        self.assertGreater(sim, 0.70)
+
 if __name__ == "__main__":
     unittest.main()

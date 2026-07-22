@@ -4,9 +4,14 @@ categories:
   "Comunicado ao Mercado": 0.85
   "Dados Econômico-Financeiros": 0.80
   "Aviso aos Acionistas": 0.75
-  "Comunicação sobre Transação entre Partes Relacionadas": 0.75
-  "Reunião da Administração": 0.65
-  "Assembleia": 0.50
+  "Comunicação sobre Transação entre Partes Relacionadas": 0.70
+  "Reunião da Administração": 0.50
+  "Assembleia": 0.40
+  "Calendário de Eventos Corporativos": 0.10
+  "Carta Anual de Governança Corporativa": 0.10
+  "Estatuto Social": 0.10
+  "Regimento interno de Comitês": 0.05
+  "Relatório de Sustentabilidade": 0.05
 
 material_terms:
   - aquisição

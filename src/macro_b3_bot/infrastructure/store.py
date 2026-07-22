@@ -212,6 +212,11 @@ class DatabaseStore:
                 document_id VARCHAR PRIMARY KEY,
                 status VARCHAR NOT NULL,
                 priority_score DOUBLE NOT NULL,
+                category_score DOUBLE DEFAULT 0.0,
+                recency_score DOUBLE DEFAULT 0.0,
+                ticker_mapping_score DOUBLE DEFAULT 0.0,
+                liquidity_score DOUBLE DEFAULT 0.0,
+                material_terms_score DOUBLE DEFAULT 0.0,
                 materiality_score DOUBLE,
                 attempts INTEGER NOT NULL DEFAULT 0,
                 last_error VARCHAR,
@@ -219,6 +224,11 @@ class DatabaseStore:
                 updated_at TIMESTAMP NOT NULL
             );
         """)
+        for col in ["category_score", "recency_score", "ticker_mapping_score", "liquidity_score", "material_terms_score"]:
+            try:
+                self.connection.execute(f"ALTER TABLE ipe_processing_queue ADD COLUMN {col} DOUBLE DEFAULT 0.0;")
+            except Exception:
+                pass
         # IPE Document Versions
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS ipe_document_versions (
@@ -290,6 +300,26 @@ class DatabaseStore:
                     canonical_document_id,
                     duplicate_document_id
                 )
+            );
+        """)
+        # Event Candidates (Sprint 2C-C)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS event_candidates (
+                event_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                event_type VARCHAR NOT NULL,
+                title VARCHAR NOT NULL,
+                effective_date DATE,
+                claim_ids VARCHAR NOT NULL,
+                evidence_count INTEGER NOT NULL,
+                novelty_score DOUBLE NOT NULL,
+                materiality_score DOUBLE NOT NULL,
+                persistence_score DOUBLE NOT NULL,
+                quantitative_impact VARCHAR,
+                invalidators VARCHAR,
+                status VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL
             );
         """)
         # Evidence Claims
@@ -567,14 +597,18 @@ class DatabaseStore:
         self.connection.execute(
             """
             INSERT OR REPLACE INTO ipe_processing_queue (
-                document_id, status, priority_score, materiality_score,
-                attempts, last_error, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                document_id, status, priority_score, category_score, recency_score,
+                ticker_mapping_score, liquidity_score, material_terms_score,
+                materiality_score, attempts, last_error, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 state["document_id"], state["status"], state["priority_score"],
-                state.get("materiality_score"), state.get("attempts", 0),
-                state.get("last_error"), datetime.now(timezone.utc), datetime.now(timezone.utc)
+                state.get("category_score", 0.0), state.get("recency_score", 0.0),
+                state.get("ticker_mapping_score", 0.0), state.get("liquidity_score", 0.0),
+                state.get("material_terms_score", 0.0), state.get("materiality_score"),
+                state.get("attempts", 0), state.get("last_error"),
+                datetime.now(timezone.utc), datetime.now(timezone.utc)
             ]
         )
 
@@ -686,8 +720,30 @@ class DatabaseStore:
         res = self.connection.execute("SELECT COUNT(*) FROM extracted_documents").fetchone()
         return res[0] if res else 0
 
-    def count_evidence_claims(self) -> int:
-        res = self.connection.execute("SELECT COUNT(*) FROM evidence_claims").fetchone()
+    def save_event_candidate(self, candidate: dict) -> None:
+        import json
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO event_candidates (
+                event_id, ticker, cvm_code, event_type, title, effective_date,
+                claim_ids, evidence_count, novelty_score, materiality_score,
+                persistence_score, quantitative_impact, invalidators, status, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                candidate["event_id"], candidate["ticker"], candidate["cvm_code"],
+                candidate["event_type"], candidate["title"], candidate.get("effective_date"),
+                json.dumps(candidate.get("claim_ids", [])), candidate.get("evidence_count", 1),
+                candidate["novelty_score"], candidate["materiality_score"],
+                candidate.get("persistence_score", 0.8),
+                json.dumps(candidate.get("quantitative_impact", {})),
+                json.dumps(candidate.get("invalidators", [])),
+                candidate["status"], datetime.now(timezone.utc)
+            ]
+        )
+
+    def count_event_candidates(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM event_candidates").fetchone()
         return res[0] if res else 0
 
     def close(self) -> None:
