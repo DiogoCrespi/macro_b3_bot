@@ -1,0 +1,225 @@
+# Global Macro Series Configuration — Sprint 4A
+# =============================================
+# All series ingested by the macro engine.
+# Fields:
+#   source        : FRED | EIA | NOAA | BCB_SGS | BCB_FOCUS
+#   series_code   : source-native identifier
+#   indicator     : human-readable label
+#   geography     : list of affected regions
+#   frequency     : DAILY | WEEKLY | MONTHLY | QUARTERLY
+#   unit          : unit of measurement
+#   event_family  : which MacroEventType this can trigger
+#   lookback_days : history window for z-score / surprise calculation
+
+series:
+
+  # ── Brazil (BCB) ──────────────────────────────────────────────────────────
+  - source: BCB_SGS
+    series_code: "11"
+    indicator: "Selic Taxa Overnight"
+    geography: [BR]
+    frequency: DAILY
+    unit: "% a.a."
+    event_family: MONETARY_POLICY_SURPRISE
+    lookback_days: 730
+
+  - source: BCB_SGS
+    series_code: "1"
+    indicator: "USD/BRL Spot"
+    geography: [BR]
+    frequency: DAILY
+    unit: "BRL/USD"
+    event_family: USD_REGIME_SHIFT
+    lookback_days: 730
+
+  - source: BCB_SGS
+    series_code: "24364"
+    indicator: "IBC-Br (Atividade Econômica)"
+    geography: [BR]
+    frequency: MONTHLY
+    unit: "INDEX"
+    event_family: GROWTH_SURPRISE
+    lookback_days: 1825
+
+  - source: BCB_FOCUS
+    series_code: "IPCA"
+    indicator: "Focus IPCA (Expectativa Mediana 12m)"
+    geography: [BR]
+    frequency: WEEKLY
+    unit: "%"
+    event_family: INFLATION_SURPRISE
+    lookback_days: 1095
+
+  - source: BCB_FOCUS
+    series_code: "Selic"
+    indicator: "Focus Selic (Expectativa Mediana Fim de Ano)"
+    geography: [BR]
+    frequency: WEEKLY
+    unit: "% a.a."
+    event_family: MONETARY_POLICY_SURPRISE
+    lookback_days: 1095
+
+  - source: BCB_FOCUS
+    series_code: "Cambio"
+    indicator: "Focus Câmbio (Expectativa Mediana Fim de Ano)"
+    geography: [BR]
+    frequency: WEEKLY
+    unit: "BRL/USD"
+    event_family: USD_REGIME_SHIFT
+    lookback_days: 1095
+
+  - source: BCB_FOCUS
+    series_code: "PIB Total"
+    indicator: "Focus PIB (Expectativa Mediana Ano Corrente)"
+    geography: [BR]
+    frequency: WEEKLY
+    unit: "% a.a."
+    event_family: GROWTH_SURPRISE
+    lookback_days: 1095
+
+  # ── United States (FRED) ───────────────────────────────────────────────────
+  - source: FRED
+    series_code: "DFF"
+    indicator: "Fed Funds Effective Rate"
+    geography: [US]
+    frequency: DAILY
+    unit: "%"
+    event_family: MONETARY_POLICY_SURPRISE
+    lookback_days: 730
+
+  - source: FRED
+    series_code: "DGS2"
+    indicator: "US Treasury 2Y Yield"
+    geography: [US]
+    frequency: DAILY
+    unit: "%"
+    event_family: YIELD_CURVE_REGIME_SHIFT
+    lookback_days: 730
+
+  - source: FRED
+    series_code: "DGS10"
+    indicator: "US Treasury 10Y Yield"
+    geography: [US]
+    frequency: DAILY
+    unit: "%"
+    event_family: YIELD_CURVE_REGIME_SHIFT
+    lookback_days: 730
+
+  - source: FRED
+    series_code: "T10Y2Y"
+    indicator: "10Y-2Y Treasury Spread"
+    geography: [US]
+    frequency: DAILY
+    unit: "%"
+    event_family: YIELD_CURVE_REGIME_SHIFT
+    lookback_days: 730
+
+  - source: FRED
+    series_code: "DTWEXBGS"
+    indicator: "USD Broad Index (DXY Proxy)"
+    geography: [US, GLOBAL]
+    frequency: DAILY
+    unit: "INDEX"
+    event_family: USD_REGIME_SHIFT
+    lookback_days: 730
+
+  - source: FRED
+    series_code: "CPIAUCSL"
+    indicator: "US CPI All Items (SA)"
+    geography: [US]
+    frequency: MONTHLY
+    unit: "INDEX"
+    event_family: INFLATION_SURPRISE
+    lookback_days: 1825
+
+  - source: FRED
+    series_code: "INDPRO"
+    indicator: "US Industrial Production Index"
+    geography: [US]
+    frequency: MONTHLY
+    unit: "INDEX"
+    event_family: GROWTH_SURPRISE
+    lookback_days: 1825
+
+  - source: FRED
+    series_code: "UNRATE"
+    indicator: "US Unemployment Rate"
+    geography: [US]
+    frequency: MONTHLY
+    unit: "%"
+    event_family: GROWTH_SURPRISE
+    lookback_days: 1825
+
+  # ── Energy (EIA) ─────────────────────────────────────────────────────────
+  - source: EIA
+    series_code: "PET.RWTC.D"
+    indicator: "WTI Crude Oil Price"
+    geography: [US, GLOBAL]
+    frequency: DAILY
+    unit: "USD/BBL"
+    event_family: OIL_PRICE_SHOCK
+    lookback_days: 730
+
+  - source: EIA
+    series_code: "PET.RBRTE.D"
+    indicator: "Brent Crude Oil Price"
+    geography: [GLOBAL]
+    frequency: DAILY
+    unit: "USD/BBL"
+    event_family: OIL_PRICE_SHOCK
+    lookback_days: 730
+
+  - source: EIA
+    series_code: "PET.WCRSTUS1.W"
+    indicator: "US Crude Oil Stocks (Weekly)"
+    geography: [US]
+    frequency: WEEKLY
+    unit: "MBBL"
+    event_family: OIL_INVENTORY_SHOCK
+    lookback_days: 1095
+
+  - source: EIA
+    series_code: "PET.WCRFPUS2.W"
+    indicator: "US Crude Oil Production (Weekly)"
+    geography: [US]
+    frequency: WEEKLY
+    unit: "MBBL/D"
+    event_family: ENERGY_SUPPLY_SHOCK
+    lookback_days: 1095
+
+  - source: EIA
+    series_code: "PET.WPULEUS2.W"
+    indicator: "US Refinery Utilization Rate"
+    geography: [US]
+    frequency: WEEKLY
+    unit: "%"
+    event_family: ENERGY_SUPPLY_SHOCK
+    lookback_days: 1095
+
+  - source: EIA
+    series_code: "PET.WGTSTUS1.W"
+    indicator: "US Gasoline Stocks (Weekly)"
+    geography: [US]
+    frequency: WEEKLY
+    unit: "MBBL"
+    event_family: OIL_INVENTORY_SHOCK
+    lookback_days: 1095
+
+  # ── Climate / ENSO (NOAA) ────────────────────────────────────────────────
+  - source: NOAA
+    series_code: "NINO34"
+    indicator: "Niño 3.4 Sea Surface Temperature Anomaly"
+    geography: [GLOBAL]
+    frequency: MONTHLY
+    unit: "°C"
+    event_family: ENSO_PHASE_CHANGE
+    lookback_days: 3650
+
+  - source: NOAA
+    series_code: "ONI"
+    indicator: "Oceanic Niño Index (3-month running mean)"
+    geography: [GLOBAL]
+    frequency: MONTHLY
+    unit: "°C"
+    event_family: ENSO_PHASE_CHANGE
+    lookback_days: 3650

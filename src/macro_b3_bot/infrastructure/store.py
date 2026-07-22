@@ -440,6 +440,114 @@ class DatabaseStore:
             except Exception:
                 pass
 
+        # ── Sprint 4A: Global Macro Engine ────────────────────────────────────
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS macro_releases (
+                release_id VARCHAR PRIMARY KEY,
+                source VARCHAR NOT NULL,
+                series_code VARCHAR NOT NULL,
+                indicator VARCHAR NOT NULL,
+                geography VARCHAR NOT NULL,          -- JSON array
+                frequency VARCHAR NOT NULL,
+                unit VARCHAR NOT NULL,
+
+                reference_date DATE NOT NULL,
+                published_at TIMESTAMP NOT NULL,
+                available_at TIMESTAMP NOT NULL,
+
+                actual_value DECIMAL(28, 10) NOT NULL,
+                previous_value DECIMAL(28, 10),
+                revised_previous_value DECIMAL(28, 10),
+                consensus_value DECIMAL(28, 10),
+
+                raw_checksum VARCHAR NOT NULL,
+                record_checksum VARCHAR NOT NULL,
+                ingestion_run_id VARCHAR NOT NULL,
+
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS macro_data_vintages (
+                vintage_id VARCHAR PRIMARY KEY,
+                series_code VARCHAR NOT NULL,
+                source VARCHAR NOT NULL,
+                reference_date DATE NOT NULL,
+                vintage_date DATE NOT NULL,
+                value DECIMAL(28, 10) NOT NULL,
+                is_latest BOOLEAN NOT NULL DEFAULT FALSE,
+                ingestion_run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS macro_event_candidates (
+                event_id VARCHAR PRIMARY KEY,
+                event_type VARCHAR NOT NULL,
+                indicator VARCHAR NOT NULL,
+                geography VARCHAR NOT NULL,           -- JSON array
+                affected_variables VARCHAR NOT NULL,  -- JSON array
+
+                reference_date DATE NOT NULL,
+                detected_at TIMESTAMP NOT NULL,
+                horizon_months INTEGER NOT NULL,
+
+                actual_value DECIMAL(28, 10),
+                expected_value DECIMAL(28, 10),
+                surprise_value DECIMAL(28, 10),
+
+                surprise_score DOUBLE NOT NULL,
+                novelty_score DOUBLE NOT NULL,
+                persistence_score DOUBLE NOT NULL,
+                regime_shift_score DOUBLE NOT NULL,
+                data_quality_score DOUBLE NOT NULL,
+
+                direction VARCHAR NOT NULL,
+                current_regime VARCHAR NOT NULL,
+
+                evidence_ids VARCHAR NOT NULL,        -- JSON array of release_ids
+                status VARCHAR NOT NULL DEFAULT 'PENDING',
+
+                score_breakdown VARCHAR,              -- JSON dict
+
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS macro_event_evidence_links (
+                event_id VARCHAR NOT NULL,
+                release_id VARCHAR NOT NULL,
+                link_type VARCHAR NOT NULL DEFAULT 'PRIMARY',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (event_id, release_id)
+            );
+        """)
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS macro_regime_snapshots (
+                snapshot_id VARCHAR PRIMARY KEY,
+                snapshot_date DATE NOT NULL,
+                captured_at TIMESTAMP NOT NULL,
+
+                growth_direction VARCHAR NOT NULL,
+                inflation_direction VARCHAR NOT NULL,
+                liquidity_stance VARCHAR NOT NULL,
+                oil_regime VARCHAR NOT NULL,
+                enso_phase VARCHAR NOT NULL,
+
+                regime_label VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+
+                evidence_release_ids VARCHAR NOT NULL,  -- JSON array
+                ingestion_run_id VARCHAR NOT NULL,
+
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
         self.connection.execute("""
@@ -491,6 +599,184 @@ class DatabaseStore:
             ]
         )
         return True
+
+    # ── Sprint 4A: Global Macro Release persistence ──────────────────────────
+
+    def save_macro_release(self, rel: dict) -> bool:
+        """
+        Idempotent upsert of a MacroRelease.
+        Uses record_checksum for deduplication (same series/date/value = same record).
+        Returns True if a new record was inserted, False if it already existed.
+        """
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM macro_releases WHERE record_checksum = ?",
+            [rel["record_checksum"]]
+        ).fetchone()[0]
+
+        if existing > 0:
+            return False
+
+        geography = json.dumps(rel.get("geography", []))
+        self.connection.execute(
+            """
+            INSERT INTO macro_releases (
+                release_id, source, series_code, indicator, geography, frequency, unit,
+                reference_date, published_at, available_at,
+                actual_value, previous_value, revised_previous_value, consensus_value,
+                raw_checksum, record_checksum, ingestion_run_id, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                rel["release_id"], rel["source"], rel["series_code"], rel["indicator"],
+                geography, rel["frequency"], rel["unit"],
+                rel["reference_date"], rel["published_at"], rel["available_at"],
+                rel["actual_value"], rel.get("previous_value"), rel.get("revised_previous_value"),
+                rel.get("consensus_value"),
+                rel["raw_checksum"], rel["record_checksum"], rel["ingestion_run_id"],
+                datetime.now(timezone.utc),
+            ]
+        )
+        return True
+
+    def save_macro_vintage(self, vint: dict) -> bool:
+        """Idempotent upsert of a MacroDataVintage."""
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM macro_data_vintages WHERE vintage_id = ?",
+            [vint["vintage_id"]]
+        ).fetchone()[0]
+        if existing > 0:
+            return False
+
+        self.connection.execute(
+            """
+            INSERT INTO macro_data_vintages (
+                vintage_id, series_code, source, reference_date, vintage_date,
+                value, is_latest, ingestion_run_id, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                vint["vintage_id"], vint["series_code"], vint["source"],
+                vint["reference_date"], vint["vintage_date"],
+                vint["value"], vint.get("is_latest", False),
+                vint["ingestion_run_id"], datetime.now(timezone.utc),
+            ]
+        )
+        return True
+
+    def save_macro_event_candidate(self, evt: dict) -> bool:
+        """Idempotent upsert of a MacroEventCandidate."""
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM macro_event_candidates WHERE event_id = ?",
+            [evt["event_id"]]
+        ).fetchone()[0]
+        if existing > 0:
+            return False
+
+        import json as _json
+        geography = _json.dumps(evt.get("geography", []))
+        affected_variables = _json.dumps(evt.get("affected_variables", []))
+        evidence_ids = _json.dumps(evt.get("evidence_ids", []))
+        score_breakdown = _json.dumps(evt.get("score_breakdown", {}))
+
+        self.connection.execute(
+            """
+            INSERT INTO macro_event_candidates (
+                event_id, event_type, indicator, geography, affected_variables,
+                reference_date, detected_at, horizon_months,
+                actual_value, expected_value, surprise_value,
+                surprise_score, novelty_score, persistence_score, regime_shift_score, data_quality_score,
+                direction, current_regime, evidence_ids, status, score_breakdown, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                evt["event_id"], evt["event_type"], evt["indicator"], geography, affected_variables,
+                evt["reference_date"], evt["detected_at"], evt["horizon_months"],
+                evt.get("actual_value"), evt.get("expected_value"), evt.get("surprise_value"),
+                evt["surprise_score"], evt["novelty_score"], evt["persistence_score"],
+                evt["regime_shift_score"], evt["data_quality_score"],
+                evt["direction"], evt["current_regime"], evidence_ids,
+                evt.get("status", "PENDING"), score_breakdown, datetime.now(timezone.utc),
+            ]
+        )
+        # Link evidence
+        for rid in evt.get("evidence_ids", []):
+            try:
+                self.connection.execute(
+                    "INSERT INTO macro_event_evidence_links (event_id, release_id) VALUES (?, ?)",
+                    [evt["event_id"], rid]
+                )
+            except Exception:
+                pass
+        return True
+
+    def update_macro_event_status(self, event_id: str, status: str) -> None:
+        self.connection.execute(
+            "UPDATE macro_event_candidates SET status = ? WHERE event_id = ?",
+            [status, event_id]
+        )
+
+    def save_macro_regime_snapshot(self, snap: dict) -> bool:
+        """Idempotent upsert of a MacroRegimeSnapshot."""
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM macro_regime_snapshots WHERE snapshot_id = ?",
+            [snap["snapshot_id"]]
+        ).fetchone()[0]
+        if existing > 0:
+            return False
+
+        import json as _json
+        evidence_release_ids = _json.dumps(snap.get("evidence_release_ids", []))
+
+        self.connection.execute(
+            """
+            INSERT INTO macro_regime_snapshots (
+                snapshot_id, snapshot_date, captured_at,
+                growth_direction, inflation_direction, liquidity_stance, oil_regime, enso_phase,
+                regime_label, confidence, evidence_release_ids, ingestion_run_id, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                snap["snapshot_id"], snap["snapshot_date"], snap["captured_at"],
+                snap["growth_direction"], snap["inflation_direction"],
+                snap["liquidity_stance"], snap["oil_regime"], snap["enso_phase"],
+                snap["regime_label"], snap["confidence"],
+                evidence_release_ids, snap["ingestion_run_id"], datetime.now(timezone.utc),
+            ]
+        )
+        return True
+
+    def get_macro_releases_for_series(
+        self, source: str, series_code: str, limit: int = 500
+    ) -> list[dict]:
+        """Return recent releases ordered by reference_date DESC."""
+        rows = self.connection.execute(
+            """
+            SELECT release_id, reference_date, published_at, available_at,
+                   actual_value, previous_value, consensus_value
+            FROM macro_releases
+            WHERE source = ? AND series_code = ?
+            ORDER BY reference_date DESC
+            LIMIT ?
+            """,
+            [source, series_code, limit]
+        ).fetchall()
+        cols = ["release_id", "reference_date", "published_at", "available_at",
+                "actual_value", "previous_value", "consensus_value"]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_macro_event_candidates(self, status: Optional[str] = None) -> list[dict]:
+        """Return macro event candidates, optionally filtered by status."""
+        if status:
+            rows = self.connection.execute(
+                "SELECT * FROM macro_event_candidates WHERE status = ? ORDER BY detected_at DESC",
+                [status]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                "SELECT * FROM macro_event_candidates ORDER BY detected_at DESC"
+            ).fetchall()
+        cols = [d[0] for d in self.connection.description]
+        return [dict(zip(cols, r)) for r in rows]
 
     def save_market_expectation(self, exp: dict) -> bool:
         existing = self.connection.execute(

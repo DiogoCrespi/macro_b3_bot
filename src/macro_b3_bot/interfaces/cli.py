@@ -282,22 +282,149 @@ def run_event_study(
     from macro_b3_bot.application.recalibrate_scores import ScoreRecalibrator
     from macro_b3_bot.application.audit_event_reactions import EventReactionsAuditor
     settings = Settings()
-    
+
     boot = SignificanceBootstrapper(settings, iterations=bootstrap_iterations, seed=seed)
     res_boot = boot.run_bootstrap()
     console.print("  Bootstrap:", res_boot)
-    
+
     recal = ScoreRecalibrator(settings)
     res_recal = recal.run_recalibration()
     console.print("  Recalibração:", res_recal)
-    
+
     console.print("\n[bold]Passo 5/5: Exportando Auditorias em CSV...[/bold]")
     auditor = EventReactionsAuditor(settings)
     res_audit = auditor.run_export()
     console.print("  Audit Export:", res_audit)
-    
+
     console.print("\n[bold green]✓ Pipeline do Sprint 3B executado com sucesso![/bold green]")
     validate_sprint3b()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sprint 4A — Global Macro Engine commands
+# ─────────────────────────────────────────────────────────────────────────────
+
+@app.command("ingest-global-macro")
+def ingest_global_macro(
+    sources: str = typer.Option("fred,eia,noaa", "--sources", help="Comma-separated sources: fred,eia,noaa,bcb"),
+    incremental: bool = typer.Option(True, "--incremental/--full", help="Incremental (since last stored) vs full history"),
+) -> None:
+    """Ingest macro series from FRED, EIA, and NOAA into the DuckDB store."""
+    from macro_b3_bot.application.ingest_global_macro import GlobalMacroIngester
+    settings = Settings()
+    sources_list = [s.strip() for s in sources.split(",")]
+    console.print(f"\n[bold]Ingestão de Macro Global — fontes: {sources_list}[/bold]")
+    ingester = GlobalMacroIngester(settings, incremental=incremental)
+    result = ingester.run(sources=sources_list)
+    ingester.close()
+
+    table = Table(title="Macro Ingestion Result")
+    table.add_column("Metric")
+    table.add_column("Value")
+    for k, v in result.items():
+        table.add_row(str(k), str(v))
+    console.print(table)
+
+    if result.get("failed_series"):
+        console.print(f"[yellow]⚠ Failed series: {result['failed_series']}[/yellow]")
+    else:
+        console.print("[bold green]✓ Ingestion completed successfully[/bold green]")
+
+
+@app.command("detect-macro-events")
+def detect_macro_events(
+    since: str = typer.Option(None, "--since", help="Start date YYYY-MM-DD (default: 90 days ago)"),
+) -> None:
+    """Detect macro surprises and generate MacroEventCandidates from stored releases."""
+    from datetime import date, timedelta
+    from macro_b3_bot.application.build_macro_events import MacroEventBuilder
+    from macro_b3_bot.application.detect_regime_changes import RegimeDetector
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+    import uuid
+
+    settings = Settings()
+    db_path = settings.data_dir / "audit.duckdb"
+    store = DatabaseStore(db_path)
+    run_id = str(uuid.uuid4())
+
+    since_date = date.fromisoformat(since) if since else (date.today() - timedelta(days=90))
+
+    console.print(f"\n[bold]Detectando eventos macro desde {since_date}...[/bold]")
+
+    # Step 1: Regime snapshot
+    detector = RegimeDetector(store, run_id)
+    snap = detector.detect_and_snapshot()
+    console.print(f"  Regime atual: [cyan]{snap['regime_label']}[/cyan] (confiança={snap['confidence']:.2f})")
+
+    # Step 2: Build event candidates
+    builder = MacroEventBuilder(store, run_id)
+    result = builder.process_since(since_date)
+    store.close()
+
+    table = Table(title="Macro Event Detection")
+    table.add_column("Metric")
+    table.add_column("Count")
+    for k, v in result.items():
+        table.add_row(str(k), str(v))
+    console.print(table)
+
+
+@app.command("audit-macro-events")
+def audit_macro_events() -> None:
+    """Print a summary of all MacroEventCandidates in the store."""
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    db_path = settings.data_dir / "audit.duckdb"
+    store = DatabaseStore(db_path)
+
+    rows = store.connection.execute(
+        """
+        SELECT event_type, indicator, reference_date, direction, status,
+               round(surprise_score, 3), round(novelty_score, 3),
+               round(regime_shift_score, 3), round(data_quality_score, 3)
+        FROM macro_event_candidates
+        ORDER BY detected_at DESC
+        """
+    ).fetchall()
+    store.close()
+
+    table = Table(title=f"MacroEventCandidates ({len(rows)} total)")
+    for col in ["EventType", "Indicator", "RefDate", "Direction", "Status",
+                "Surprise", "Novelty", "RegimeShift", "DataQuality"]:
+        table.add_column(col)
+    for r in rows:
+        table.add_row(*[str(x) for x in r])
+    console.print(table)
+
+    # Breakdown by status
+    approved = sum(1 for r in rows if r[4] == "MACRO_EVENT_APPROVED")
+    watch = sum(1 for r in rows if r[4] == "MACRO_EVENT_WATCH")
+    rejected = sum(1 for r in rows if r[4] == "MACRO_EVENT_REJECTED")
+    console.print(f"\nApproved={approved} | Watch={watch} | Rejected={rejected}")
+    console.print("[bold]BUY habilitado: NÃO[/bold]")
+
+
+@app.command("run-macro-engine")
+def run_macro_engine(
+    sources: str = typer.Option("fred,eia,noaa", "--sources"),
+    incremental: bool = typer.Option(True, "--incremental/--full"),
+    since: str = typer.Option(None, "--since"),
+) -> None:
+    """Run the full Sprint 4A Macro Event Engine pipeline end-to-end."""
+    console.print("\n[bold cyan]=== SPRINT 4A: MACRO EVENT ENGINE ===[/bold cyan]\n")
+
+    console.print("[bold]Passo 1/3: Ingestão de Dados Macro Globais...[/bold]")
+    ingest_global_macro(sources=sources, incremental=incremental)
+
+    console.print("\n[bold]Passo 2/3: Detecção de Regime e Eventos Macro...[/bold]")
+    detect_macro_events(since=since)
+
+    console.print("\n[bold]Passo 3/3: Auditoria...[/bold]")
+    audit_macro_events()
+
+    console.print("\n[bold green]✓ Macro Engine executado com sucesso![/bold green]")
+    console.print("[bold red]BUY: DESABILITADO | ORDENS: DESABILITADAS[/bold red]")
 
 
 if __name__ == "__main__":

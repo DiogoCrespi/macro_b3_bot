@@ -1,0 +1,98 @@
+# Macro Event Detection Rules — Sprint 4A
+# =========================================
+# Thresholds for computing scores and classifying macro events.
+# All values are dimensionless unless noted.
+
+gate:
+  # MacroEventGate thresholds
+  min_surprise_score: 0.60         # OR regime_shift_score must pass
+  min_regime_shift_score: 0.65
+  min_novelty_score: 0.50          # AND condition
+  min_data_quality_score: 0.80     # AND condition
+
+  # Outputs
+  approved_label: "MACRO_EVENT_APPROVED"
+  watch_label: "MACRO_EVENT_WATCH"
+  rejected_label: "MACRO_EVENT_REJECTED"
+
+  # An event scores WATCH if it passes novelty+quality but misses surprise/regime
+  watch_min_surprise_score: 0.40
+
+surprise:
+  # z-score thresholds mapped to [0, 1] score
+  # score = min(1.0, abs(z) / z_max)
+  z_score_cap: 4.0                 # |z| >= 4 → score = 1.0
+  min_periods: 12                  # minimum observations for z-score calculation
+
+  # Weights for consensus vs historical deviation
+  weight_consensus_based: 0.70     # when consensus is available
+  weight_history_based: 0.30       # fallback without consensus
+
+novelty:
+  # Weighted components
+  w_time_since_last_event: 0.40
+  w_magnitude_percentile: 0.30
+  w_combination_rarity: 0.20
+  w_absence_of_recent: 0.10
+
+  # Decay: events < 30 days ago reduce novelty
+  recency_days_full_decay: 30
+
+persistence:
+  # Weighted components
+  w_historical_duration: 0.40
+  w_consecutive_confirmations: 0.30
+  w_underlying_trend: 0.20
+  w_revision_stability: 0.10
+
+  # Historical duration by event_family (months)
+  typical_durations:
+    MONETARY_POLICY_SURPRISE: 6
+    INFLATION_SURPRISE: 4
+    GROWTH_SURPRISE: 3
+    YIELD_CURVE_REGIME_SHIFT: 12
+    USD_REGIME_SHIFT: 6
+    OIL_PRICE_SHOCK: 2
+    OIL_INVENTORY_SHOCK: 1
+    ENERGY_SUPPLY_SHOCK: 3
+    ENSO_PHASE_CHANGE: 9
+    ENSO_INTENSIFICATION: 6
+    BRAZIL_EXPECTATION_REPRICING: 3
+
+regime:
+  # Regime detection windows (months of data)
+  growth_window_months: 3
+  inflation_window_months: 3
+  oil_window_months: 1
+  enso_window_months: 3
+
+  # Change thresholds for declaring regime shift
+  growth_shift_z: 1.5
+  inflation_shift_z: 1.5
+  oil_shift_pct: 0.15              # 15% move in oil price
+  enso_shift_oni: 0.5              # 0.5°C change in ONI
+
+  # ENSO classification
+  enso_el_nino_threshold: 0.5      # ONI >= +0.5 for 5 consecutive months
+  enso_la_nina_threshold: -0.5     # ONI <= -0.5 for 5 consecutive months
+
+data_quality:
+  # Penalties applied to data_quality_score
+  penalty_no_vintage: 0.10         # source doesn't provide revisions
+  penalty_no_consensus: 0.05       # no market consensus available
+  penalty_low_frequency: 0.05      # QUARTERLY series penalised vs DAILY
+  penalty_missing_previous: 0.10   # previous_value unavailable
+
+horizons:
+  # Expected market-impact horizon by event_family (months)
+  MONETARY_POLICY_SURPRISE: 6
+  INFLATION_SURPRISE: 3
+  GROWTH_SURPRISE: 3
+  YIELD_CURVE_REGIME_SHIFT: 12
+  USD_REGIME_SHIFT: 6
+  OIL_PRICE_SHOCK: 1
+  OIL_INVENTORY_SHOCK: 1
+  ENERGY_SUPPLY_SHOCK: 3
+  ENSO_PHASE_CHANGE: 12
+  ENSO_INTENSIFICATION: 6
+  BRAZIL_EXPECTATION_REPRICING: 3
