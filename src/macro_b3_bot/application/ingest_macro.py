@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 import yaml
+from dataclasses import dataclass
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from typing import Dict, Any, List
@@ -11,9 +12,17 @@ from macro_b3_bot.adapters.bcb.sgs_client import BcbSgsClient
 from macro_b3_bot.adapters.bcb.expectations_client import BcbExpectationsClient
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
+@dataclass
+class IngestionResult:
+    received: int = 0
+    inserted: int = 0
+    duplicated: int = 0
+    revised: int = 0
+    rejected: int = 0
+
 class MacroIngestionPipeline:
     """
-    Orquestrador de ingestão de dados macroeconômicos do BCB (SGS e Focus).
+    Orquestrador de ingestão de dados macroeconômicos do BCB (SGS e Focus) com rastreio estrito de duplicidade.
     """
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -37,9 +46,7 @@ class MacroIngestionPipeline:
             cfg = yaml.safe_load(f)
 
         series_list = cfg.get("series", [])
-        total_received = 0
-        total_valid = 0
-        total_rejected = 0
+        result = IngestionResult()
 
         for s in series_list:
             code = s["code"]
@@ -57,23 +64,28 @@ class MacroIngestionPipeline:
                     end_date=end_date,
                     ingestion_run_id=run_id
                 )
-                total_received += len(obs_list)
+                result.received += len(obs_list)
                 for obs in obs_list:
-                    store.save_macro_observation(obs.model_dump(mode="json"))
-                    total_valid += 1
+                    was_inserted = store.save_macro_observation(obs.model_dump(mode="json"))
+                    if was_inserted:
+                        result.inserted += 1
+                    else:
+                        result.duplicated += 1
             except Exception as e:
-                total_rejected += 1
+                result.rejected += 1
+                print(f"    ❌ [ERROR SGS {code}]: {e}")
 
-        store.finish_ingestion_run(run_id, "SUCCESS", total_received, total_valid, total_rejected)
+        store.finish_ingestion_run(run_id, "SUCCESS", result.received, result.inserted, result.rejected)
         store.close()
 
         return {
             "run_id": run_id,
             "status": "SUCCESS",
             "series_count": len(series_list),
-            "received": total_received,
-            "valid": total_valid,
-            "rejected": total_rejected
+            "received": result.received,
+            "inserted": result.inserted,
+            "duplicated": result.duplicated,
+            "rejected": result.rejected
         }
 
     async def ingest_bcb_focus(self, since: date) -> Dict[str, Any]:
@@ -82,9 +94,7 @@ class MacroIngestionPipeline:
         store.start_ingestion_run(run_id, "BCB_FOCUS")
 
         indicators = ["IPCA", "Selic", "Câmbio", "PIB Total"]
-        total_received = 0
-        total_valid = 0
-        total_rejected = 0
+        result = IngestionResult()
 
         for ind in indicators:
             try:
@@ -93,21 +103,26 @@ class MacroIngestionPipeline:
                     since=since,
                     ingestion_run_id=run_id
                 )
-                total_received += len(exp_list)
+                result.received += len(exp_list)
                 for exp in exp_list:
-                    store.save_market_expectation(exp.model_dump(mode="json"))
-                    total_valid += 1
+                    was_inserted = store.save_market_expectation(exp.model_dump(mode="json"))
+                    if was_inserted:
+                        result.inserted += 1
+                    else:
+                        result.duplicated += 1
             except Exception as e:
-                total_rejected += 1
+                result.rejected += 1
+                print(f"    ❌ [ERROR FOCUS {ind}]: {e}")
 
-        store.finish_ingestion_run(run_id, "SUCCESS", total_received, total_valid, total_rejected)
+        store.finish_ingestion_run(run_id, "SUCCESS", result.received, result.inserted, result.rejected)
         store.close()
 
         return {
             "run_id": run_id,
             "status": "SUCCESS",
             "indicators_count": len(indicators),
-            "received": total_received,
-            "valid": total_valid,
-            "rejected": total_rejected
+            "received": result.received,
+            "inserted": result.inserted,
+            "duplicated": result.duplicated,
+            "rejected": result.rejected
         }

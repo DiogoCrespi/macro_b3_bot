@@ -1,0 +1,33 @@
+registry:
+  source: CVM
+  type: csv
+  url: "https://dados.cvm.gov.br/dados/CIA_ABERTA/CAD/dados/cad_cia_aberta.csv"
+  enabled: true
+
+documents:
+  itr:
+    enabled: true
+    url_template: "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_{year}.zip"
+    initial_years:
+      - 2025
+      - 2026
+
+  dfp:
+    enabled: true
+    url_template: "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_{year}.zip"
+    initial_years:
+      - 2024
+      - 2025
+
+statement_types:
+  - BPA
+  - BPP
+  - DRE
+  - DFC_MI
+  - DFC_MD
+
+processing:
+  keep_individual: true
+  keep_consolidated: true
+  retain_raw_zip: true
+  retain_extracted_csv: false

@@ -27,8 +27,8 @@ async def main():
     pipeline = MacroIngestionPipeline(settings)
     
     end_dt = date.today()
-    start_dt = end_dt - timedelta(days=365)     # 1 ano de historico para ingestao inicial agil
-    since_focus = end_dt - timedelta(days=60)   # 60 dias de expectativas Focus
+    start_dt = end_dt - timedelta(days=365)
+    since_focus = end_dt - timedelta(days=60)
     
     print(f"📥 [1/2] Coletando series do BCB SGS ({start_dt} ate {end_dt})...")
     res_sgs = await pipeline.ingest_bcb_sgs(start_date=start_dt, end_date=end_dt)
@@ -42,23 +42,25 @@ async def main():
     print("BCB SGS")
     print("--------------------------------------------------------------------------")
     print(f"Séries configuradas:            {res_sgs.get('series_count')}")
-    print(f"Observações recebidas:          {res_sgs.get('received'):,}")
-    print(f"Observações novas:              {res_sgs.get('valid'):,}")
-    print(f"Observações rejeitadas:         {res_sgs.get('rejected')}")
+    print(f"SGS recebidos:                  {res_sgs.get('received'):,}")
+    print(f"SGS novos:                      {res_sgs.get('inserted'):,}")
+    print(f"SGS duplicados:                 {res_sgs.get('duplicated'):,}")
+    print(f"SGS rejeitados:                 {res_sgs.get('rejected')}")
     print("")
     print("BCB Focus")
     print("--------------------------------------------------------------------------")
     print(f"Indicadores configurados:       {res_focus.get('indicators_count')}")
-    print(f"Registros recebidos:            {res_focus.get('received'):,}")
-    print(f"Registros novos:                {res_focus.get('valid'):,}")
-    print(f"Registros rejeitados:           {res_focus.get('rejected')}")
+    print(f"Focus recebidos:                {res_focus.get('received'):,}")
+    print(f"Focus novos:                    {res_focus.get('inserted'):,}")
+    print(f"Focus duplicados:               {res_focus.get('duplicated'):,}")
+    print(f"Focus rejeitados:               {res_focus.get('rejected')}")
     print("")
     print("Qualidade")
     print("--------------------------------------------------------------------------")
     print("Checksums válidos:              100%")
     print("Datas inválidas:                0")
     print("Valores não numéricos:          0")
-    print(f"BUY habilitado:                 NÃO (Modo Pesquisa Ativo)")
+    print("BUY habilitado:                 NÃO (Modo Pesquisa Ativo)")
     print("==========================================================================\n")
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import hashlib
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
@@ -24,6 +25,17 @@ def compute_raw_checksum(data: bytes | str) -> str:
     if isinstance(data, str):
         data = data.encode("utf-8")
     return hashlib.sha256(data).hexdigest()
+
+def record_checksum(record: dict) -> str:
+    """Gera hash SHA-256 canônico e único para cada registro individual."""
+    canonical = json.dumps(
+        record,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 def split_date_range(start: date, end: date, max_years: int = 5) -> list[tuple[date, date]]:
     """

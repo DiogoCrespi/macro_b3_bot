@@ -7,11 +7,11 @@ from typing import List
 
 from macro_b3_bot.domain.macro_models import MacroObservation
 from .http_client import BcbHttpClient
-from .normalizer import parse_decimal, compute_raw_checksum, split_date_range
+from .normalizer import parse_decimal, record_checksum, split_date_range
 
 class BcbSgsClient:
     """
-    Cliente para coleta de séries temporais históricas do BCB SGS (Sistema Gerenciador de Séries Temporais).
+    Cliente para coleta de séries temporais históricas do BCB SGS com checksum por registro individual.
     """
     def __init__(self, raw_cache_dir: Path | None = None):
         self.http_client = BcbHttpClient(raw_cache_dir=raw_cache_dir)
@@ -36,7 +36,7 @@ class BcbSgsClient:
             end_str = chunk_end.strftime("%d/%m/%Y")
             url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json&dataInicial={start_str}&dataFinal={end_str}"
 
-            raw_json, checksum, _ = await self.http_client.get_json(url)
+            raw_json, doc_checksum, _ = await self.http_client.get_json(url)
 
             if not isinstance(raw_json, list):
                 continue
@@ -54,6 +54,13 @@ class BcbSgsClient:
                 except ValueError:
                     continue
 
+                rec_dict = {
+                    "series_code": str(code),
+                    "reference_date": str(ref_date),
+                    "value": str(value_dec)
+                }
+                rec_hash = record_checksum(rec_dict)
+
                 obs = MacroObservation(
                     source="BCB_SGS",
                     series_code=str(code),
@@ -65,7 +72,7 @@ class BcbSgsClient:
                     unit=unit,
                     frequency=frequency,
                     revision=0,
-                    raw_checksum=checksum,
+                    raw_checksum=rec_hash,
                     ingestion_run_id=ingestion_run_id
                 )
                 observations.append(obs)
