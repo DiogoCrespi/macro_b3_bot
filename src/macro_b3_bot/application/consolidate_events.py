@@ -11,10 +11,8 @@ Regras:
 from __future__ import annotations
 
 import uuid
-import json
-from datetime import datetime, timezone
-from decimal import Decimal
-from typing import Dict, Any, List, Optional
+from datetime import datetime
+from typing import Dict, Any, List
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore
@@ -119,7 +117,6 @@ class EventConsolidator:
         }
 
         events_created = 0
-        now = datetime.now(timezone.utc)
 
         for key, claims in groups.items():
             cvm_code = claims[0]["cvm_code"]

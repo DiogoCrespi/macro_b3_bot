@@ -1,4 +1,6 @@
-import sys, tempfile, traceback
+import sys
+import tempfile
+import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))

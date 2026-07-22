@@ -2,7 +2,6 @@ import unittest
 import tempfile
 from pathlib import Path
 from datetime import datetime, timezone
-import duckdb
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore

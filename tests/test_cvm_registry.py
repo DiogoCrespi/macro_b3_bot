@@ -11,7 +11,7 @@ if str(BASE_DIR) not in sys.path:
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from macro_b3_bot.domain.cvm_models import CvmCompany, CvmDocument, FinancialStatementLine
+from macro_b3_bot.domain.cvm_models import CvmCompany, CvmDocument
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
 class TestCvmRegistryAndStore(unittest.TestCase):

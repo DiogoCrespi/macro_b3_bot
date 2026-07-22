@@ -53,7 +53,7 @@ def audit_events() -> None:
     print("--------------------------------------------------------------------------")
     print(f"Eventos sem ticker:                       {no_ticker}")
     print(f"Eventos sem evidência:                    {no_claims}")
-    print(f"BUY e Execução de Ordens Habilitados:     NÃO (Research Mode Ativo)")
+    print("BUY e Execução de Ordens Habilitados:     NÃO (Research Mode Ativo)")
     print("--------------------------------------------------------------------------\n")
 
 if __name__ == "__main__":

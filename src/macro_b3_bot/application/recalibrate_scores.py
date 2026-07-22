@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import date, datetime, timezone
-from typing import Dict, Any, List, Optional
+from datetime import date
+from typing import Dict, Any
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore
 

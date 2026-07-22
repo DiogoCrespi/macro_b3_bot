@@ -8,7 +8,6 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 from datetime import datetime, timezone
-from pathlib import Path
 import json
 import typer
 from rich.console import Console
@@ -164,7 +163,7 @@ def map_event_tickers() -> None:
     settings = Settings()
     mapper = EventTickerMapper(settings)
     res = mapper.run_mapping()
-    console.print(f"[green]Ticker mapping completed successfully![/green]")
+    console.print("[green]Ticker mapping completed successfully![/green]")
     console.print(res)
 
 @app.command("ingest-event-market-history")
@@ -197,7 +196,7 @@ def calculate_event_reactions() -> None:
     settings = Settings()
     calc = EventReturnsCalculator(settings)
     res = calc.run_calculator()
-    console.print(f"[green]Event returns and CAR calculation completed successfully![/green]")
+    console.print("[green]Event returns and CAR calculation completed successfully![/green]")
     console.print(res)
 
 @app.command("audit-event-reactions")

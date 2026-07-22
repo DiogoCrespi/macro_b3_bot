@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.domain.document_models import ExtractedDocument

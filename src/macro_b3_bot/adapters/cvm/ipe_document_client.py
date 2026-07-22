@@ -4,7 +4,7 @@ import asyncio
 import httpx
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Optional
 
 from macro_b3_bot.domain.document_models import DownloadedDocument
 from macro_b3_bot.adapters.bcb.normalizer import compute_raw_checksum

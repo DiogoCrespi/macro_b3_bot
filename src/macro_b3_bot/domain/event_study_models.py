@@ -8,10 +8,9 @@ Sprint 3B Domain Models:
 from __future__ import annotations
 
 import hashlib
-import json
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Dict, List, Literal, Optional
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field, model_validator
 
 

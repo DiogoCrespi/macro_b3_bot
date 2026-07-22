@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore
-from macro_b3_bot.domain.event_study_models import EventMarketMapping
 
 logger = logging.getLogger(__name__)
 

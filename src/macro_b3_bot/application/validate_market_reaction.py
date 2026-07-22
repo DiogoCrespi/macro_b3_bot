@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import random
 from datetime import datetime, date, timedelta, timezone
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Optional
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore

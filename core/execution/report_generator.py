@@ -24,7 +24,7 @@ class ExecutiveReportGenerator:
         
         lines = []
         lines.append("==========================================================================")
-        lines.append(f"   MACRO B3 BOT - RELATORIO DE ALOCACAO E TESE TASTICA DE MERCADO")
+        lines.append("   MACRO B3 BOT - RELATORIO DE ALOCACAO E TESE TASTICA DE MERCADO")
         lines.append(f"   Data de Emissao: {now_str}")
         lines.append("==========================================================================")
         lines.append("")

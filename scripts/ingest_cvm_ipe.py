@@ -38,7 +38,7 @@ async def main():
     print("==========================================================================")
     print("METADATOS IPE CVM")
     print("--------------------------------------------------------------------------")
-    print(f"Anos processados:               2025 - 2026")
+    print("Anos processados:               2025 - 2026")
     print(f"Registros recebidos:            {res.get('received'):,}")
     print(f"Registros novos:                {res.get('inserted'):,}")
     print(f"Registros duplicados:           {res.get('duplicated'):,}")

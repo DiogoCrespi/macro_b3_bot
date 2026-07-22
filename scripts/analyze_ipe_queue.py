@@ -69,7 +69,7 @@ def analyze_queue() -> dict:
     print(f"Score P99:                      {p99:.4f}")
     print("--------------------------------------------------------------------------")
     print(f"Elegíveis para Piloto 2026:      {pilot_count:,}")
-    print(f"Limite do Lote Piloto:          500 documentos")
+    print("Limite do Lote Piloto:          500 documentos")
     print("==========================================================================\n")
 
     store.close()

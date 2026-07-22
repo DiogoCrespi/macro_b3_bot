@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import math
-from decimal import Decimal
-from datetime import date
 from typing import List, Optional
 from macro_b3_bot.domain.macro_models import MacroObservation, MarketExpectation, MacroSurprise
 

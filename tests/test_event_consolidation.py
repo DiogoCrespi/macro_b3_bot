@@ -4,8 +4,7 @@ Tests for Sprint 3A: EventConsolidator - consolidação de EvidenceClaims em Eve
 import sys
 import unittest
 import tempfile
-from decimal import Decimal
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,7 +88,7 @@ class TestEventConsolidator(unittest.TestCase):
         _seed_claim(self.store, "CLM002", "004170", "PETR4", "JCP", 0.25)
 
         ec = self._consolidator()
-        res = ec.consolidate()
+        ec.consolidate()
 
         events = self.store.connection.execute(
             "SELECT event_type FROM event_candidates"
@@ -102,7 +101,7 @@ class TestEventConsolidator(unittest.TestCase):
             _seed_claim(self.store, f"CLM01{i}", "004170", "PETR4", "DIVIDEND", 1.0 + i * 0.1, doc_id="DOC_MULTI")
 
         ec = self._consolidator()
-        res = ec.consolidate()
+        ec.consolidate()
 
         count = self.store.connection.execute(
             "SELECT COUNT(*) FROM event_candidates WHERE event_type = 'DIVIDEND_DECLARED' AND cvm_code = '004170'"
@@ -117,7 +116,7 @@ class TestEventConsolidator(unittest.TestCase):
 
         # Insere novo claim (segunda ocorrência)
         _seed_claim(self.store, "CLM_A2", "004170", "PETR4", "DIVIDEND", 1.5)
-        res = ec.consolidate()
+        ec.consolidate()
 
         scores = self.store.connection.execute(
             "SELECT novelty_score FROM event_candidates ORDER BY created_at"

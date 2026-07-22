@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import csv
 import logging
-from pathlib import Path
 from typing import Dict, Any
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore

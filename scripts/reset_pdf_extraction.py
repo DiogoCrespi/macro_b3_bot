@@ -1,4 +1,5 @@
-import sys, duckdb
+import sys
+import duckdb
 from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):

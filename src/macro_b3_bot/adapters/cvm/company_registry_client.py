@@ -3,9 +3,9 @@ from __future__ import annotations
 import csv
 import io
 import httpx
-from datetime import datetime, date, timezone
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List
 
 from macro_b3_bot.domain.cvm_models import CvmCompany
 from macro_b3_bot.adapters.bcb.normalizer import record_checksum

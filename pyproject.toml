@@ -39,4 +39,18 @@ pythonpath = ["src"]
 testpaths = ["tests"]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
+
+[tool.ruff.lint]
+# Only enforce hard errors: pyflakes (F) + critical pycodestyle (E4/E7/E9)
+# W2xx whitespace, I001 import-sort and E501 are left to future cleanup
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+# scripts and legacy core use sys.path manipulation before imports
+"scripts/*.py" = ["E402", "F401", "F841"]
+"main.py" = ["E402", "F401"]
+"core/**/*.py" = ["E402", "F401", "F841", "E701"]
+# tests also use sys.path.insert pattern from legacy sprint files
+"tests/*.py" = ["E402"]

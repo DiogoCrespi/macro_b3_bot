@@ -4,9 +4,9 @@ import csv
 import io
 import zipfile
 import httpx
-from datetime import datetime, date, timezone
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict
 
 from macro_b3_bot.domain.cvm_models import CvmDocument, FinancialStatementLine
 from macro_b3_bot.adapters.bcb.normalizer import compute_raw_checksum, record_checksum, parse_decimal

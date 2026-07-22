@@ -3,8 +3,7 @@ from __future__ import annotations
 import logging
 import math
 from datetime import datetime, date, timedelta, timezone
-from decimal import Decimal
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Tuple
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore
 from macro_b3_bot.adapters.historical_price_client import YahooFinanceProvider

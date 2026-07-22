@@ -8,8 +8,6 @@ if str(BASE_DIR) not in sys.path:
 
 from core.data_ingestion.b3_screener_bridge import B3ScreenerBridge
 from core.mirofish_engine.swarm_simulation import SwarmSimulationEngine
-from core.analytics.asset_screener import AssetScreener
-from core.analytics.tribunal_consensus import MacroTribunalConsensus
 from core.execution.portfolio_allocator import PortfolioAllocator
 
 class TestMacroB3Bot(unittest.TestCase):

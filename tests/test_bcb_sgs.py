@@ -1,6 +1,5 @@
 import sys
 import unittest
-import asyncio
 from pathlib import Path
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -13,7 +12,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from macro_b3_bot.adapters.bcb.normalizer import parse_decimal, compute_raw_checksum, split_date_range
-from macro_b3_bot.domain.macro_models import MacroObservation, MarketExpectation, MacroSurprise
+from macro_b3_bot.domain.macro_models import MacroObservation, MarketExpectation
 from macro_b3_bot.application.macro_surprise import MacroSurpriseDetector
 
 class TestBcbSgsAndNormalizer(unittest.TestCase):

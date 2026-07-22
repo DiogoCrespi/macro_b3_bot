@@ -21,8 +21,7 @@ from macro_b3_bot.application.market_session_scheduler import MarketSessionSched
 from macro_b3_bot.application.calculate_event_returns import EventReturnsCalculator, run_ols
 from macro_b3_bot.application.significance_bootstrap import SignificanceBootstrapper
 from macro_b3_bot.application.recalibrate_scores import ScoreRecalibrator
-from macro_b3_bot.application.audit_event_reactions import EventReactionsAuditor
-from macro_b3_bot.domain.event_study_models import MarketPrice, EffectiveMarketEvent, EventMarketMapping
+from macro_b3_bot.domain.event_study_models import MarketPrice
 from macro_b3_bot.domain.models import OpportunityAssessment, AssetClass
 from macro_b3_bot.application.pipeline import DecisionPipeline
 

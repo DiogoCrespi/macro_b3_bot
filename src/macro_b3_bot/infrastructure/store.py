@@ -5,7 +5,6 @@ from pathlib import Path
 from datetime import datetime, timezone, date
 from typing import Optional
 import duckdb
-from pydantic import BaseModel
 
 class DatabaseStore:
     """

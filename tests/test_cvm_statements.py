@@ -2,7 +2,7 @@ import sys
 import unittest
 import tempfile
 from pathlib import Path
-from datetime import date, datetime, timezone
+from datetime import date
 from decimal import Decimal
 
 BASE_DIR = Path(__file__).resolve().parent.parent

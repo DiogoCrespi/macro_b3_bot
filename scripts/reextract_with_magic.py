@@ -110,7 +110,7 @@ for doc_id, doc_checksum, raw_path_str in rows:
         )
         fail_count += 1
 
-print(f"Resultados:")
+print("Resultados:")
 print(f"  PDF (magic):   {pdf_count}")
 print(f"  HTML (magic):  {html_count}")
 print(f"  TXT (fallback): {txt_count}")

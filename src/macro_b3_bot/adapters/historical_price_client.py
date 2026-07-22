@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from datetime import date, datetime, timezone
 from decimal import Decimal
-from typing import List, Protocol, Optional
+from typing import List, Protocol
 import pandas as pd
 from macro_b3_bot.domain.event_study_models import MarketPrice
 

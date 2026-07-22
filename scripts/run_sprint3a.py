@@ -215,10 +215,10 @@ print("=" * 70)
 print(f"Documentos extraídos total:     {total_extracted}")
 print(f"EvidenceClaims total:           {total_claims}")
 print(f"EventCandidates total:          {total_events}")
-print(f"\nDistribuição da fila:")
+print("\nDistribuição da fila:")
 for status, cnt in queue_dist:
     print(f"  {status:<25} {cnt:>6}")
-print(f"\nTipos de claim:")
+print("\nTipos de claim:")
 for claim_type, cnt in claim_types:
     print(f"  {claim_type:<25} {cnt:>6}")
 print("=" * 70)

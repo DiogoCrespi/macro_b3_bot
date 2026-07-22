@@ -11,9 +11,7 @@ if str(BASE_DIR) not in sys.path:
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from macro_b3_bot.config import Settings
 from macro_b3_bot.domain.ipe_models import IpeProcessingState
-from macro_b3_bot.application.prioritize_ipe import IpePrioritizer
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
 class TestIpePrioritization(unittest.TestCase):

@@ -3,9 +3,9 @@ from __future__ import annotations
 import uuid
 import yaml
 from dataclasses import dataclass
-from datetime import date, datetime, timezone, timedelta
+from datetime import date
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.adapters.bcb.sgs_client import BcbSgsClient

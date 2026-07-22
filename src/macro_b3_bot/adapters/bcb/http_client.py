@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import httpx
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 from datetime import datetime, timezone
 from .normalizer import compute_raw_checksum
 

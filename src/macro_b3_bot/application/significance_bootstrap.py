@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import logging
 import random
-from datetime import date, datetime, timezone
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from macro_b3_bot.config import Settings
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
