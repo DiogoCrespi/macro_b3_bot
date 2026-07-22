@@ -1,0 +1,25 @@
+sources:
+  - id: bcb_sgs
+    tier: 1
+    kind: macro
+    enabled: true
+  - id: cvm_open_data
+    tier: 1
+    kind: filings
+    enabled: true
+  - id: fred
+    tier: 1
+    kind: macro
+    enabled: false
+  - id: eia
+    tier: 1
+    kind: energy
+    enabled: false
+  - id: b3_screener_export
+    tier: 2
+    kind: market_and_fundamentals
+    enabled: true
+  - id: youtube
+    tier: 3
+    kind: narrative_discovery
+    enabled: false

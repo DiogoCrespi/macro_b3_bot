@@ -1,0 +1,843 @@
+{
+  "schema_version": 1,
+  "candidates": [
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "MiroFish\\scripts\\fetch_star_count.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "dfe9e0060d9abb0b3e1cda61bd73bba77fe878815adcbea14601666dce30e927",
+      "imports": [
+        "__future__",
+        "json",
+        "os",
+        "sys",
+        "typing",
+        "urllib.error",
+        "urllib.request"
+      ],
+      "functions": [
+        "_build_opener",
+        "_read_response",
+        "_status_error",
+        "fetch_star_count",
+        "main",
+        "redirect_request"
+      ],
+      "classes": [
+        "FetchError",
+        "NoRedirectHandler"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "MiroFish\\tests\\test_local_star_count_fetch.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "6c524bc1fbdf521c5f61d5dfa129bec88f8b5f895a55ecdceb775e6d40bb3379",
+      "imports": [
+        "ast",
+        "contextlib",
+        "http.server",
+        "io",
+        "json",
+        "os",
+        "pathlib",
+        "scripts",
+        "threading",
+        "unittest",
+        "unittest.mock"
+      ],
+      "functions": [
+        "__enter__",
+        "__exit__",
+        "__init__",
+        "do_GET",
+        "log_message",
+        "open",
+        "run_main",
+        "test_fetcher_is_standalone_stdlib_only_and_has_fixed_api",
+        "test_malformed_oversized_and_invalid_counts_are_sanitized",
+        "test_missing_or_newline_token_is_rejected_without_stdout",
+        "test_redirect_is_refused_without_forwarding_token",
+        "test_status_and_network_errors_do_not_echo_exception_data",
+        "test_success_stdout_is_only_one_decimal_count",
+        "test_workflow_keeps_credentials_out_of_record_and_render_steps"
+      ],
+      "classes": [
+        "FailingOpener",
+        "FetchStarCountTests",
+        "LocalHttpServer",
+        "RecordingHandler"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "logic\\tribunal.py",
+      "language": "py",
+      "capability": "decision_consensus",
+      "sha256": "f56ecb3ef962685e6f031f4d6ce8b18a57689833e99ee8c8e39796ee618d1c45",
+      "imports": [],
+      "functions": [
+        "__init__",
+        "evaluate_signals"
+      ],
+      "classes": [
+        "ConsensusTribunal"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tests\\unit\\test_tribunal.py",
+      "language": "py",
+      "capability": "decision_consensus",
+      "sha256": "4d2208d829a932745b1051689077773f93aa31326fd56af73693acd198eaa899",
+      "imports": [
+        "logic.tribunal",
+        "pytest"
+      ],
+      "functions": [
+        "test_ancestral_veto_caution",
+        "test_ancestral_veto_divergence",
+        "test_consensus_buy_strong",
+        "test_consensus_buy_weak",
+        "test_consensus_neutral",
+        "test_consensus_sell_strong",
+        "test_failure_analogy_veto",
+        "test_indecisao_colegiada",
+        "test_isolated_signal",
+        "test_macro_veto",
+        "test_macro_veto_not_applied_for_sell",
+        "test_total_conflict",
+        "tribunal"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "logic\\macro_radar.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "e5f0980d79c2ab4b41919e2412f0f25f5d4e1271ed76d77d0fd99299a46e47ce",
+      "imports": [
+        "numpy",
+        "pandas"
+      ],
+      "functions": [
+        "__init__",
+        "get_macro_score",
+        "get_recommended_position_mult",
+        "is_risk_off_extreme"
+      ],
+      "classes": [
+        "MacroRadar"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tests\\unit\\test_macro_radar.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "83d068f48731a5d7862d763b853e8412fc107e4d599076862fc17cd794cb080d",
+      "imports": [
+        "logic.macro_radar",
+        "pytest"
+      ],
+      "functions": [
+        "test_get_macro_score_clamping",
+        "test_get_macro_score_extreme_negative",
+        "test_get_macro_score_extreme_positive",
+        "test_get_macro_score_neutral",
+        "test_get_recommended_position_mult",
+        "test_is_risk_off_extreme"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "logic\\news_fetcher.py",
+      "language": "py",
+      "capability": "news_ingestion",
+      "sha256": "020ba5cd43107fb59177ef11316777a3533a71096dce59bff7187b204576a3b0",
+      "imports": [
+        "__future__",
+        "aiohttp",
+        "asyncio",
+        "dotenv",
+        "json",
+        "logging",
+        "logic.mirofish_client",
+        "os",
+        "re",
+        "time",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "_calculate_keyword_score",
+        "_fetch_miro_score",
+        "_fetch_newsapi",
+        "_fetch_tavily",
+        "_maybe_reset_flags",
+        "_update_cache",
+        "active_provider",
+        "fetch",
+        "fetch_async",
+        "get_sentiment_keywords"
+      ],
+      "classes": [
+        "NewsFetcher"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tests\\benchmarks\\benchmark_news.py",
+      "language": "py",
+      "capability": "news_ingestion",
+      "sha256": "3e077fe53ba5b9f1f4bad84e85423ec68a1eb704c738f171098dff5b963fc3bb",
+      "imports": [
+        "aiohttp",
+        "asyncio",
+        "logic.news_fetcher",
+        "time",
+        "unittest.mock"
+      ],
+      "functions": [
+        "__aenter__",
+        "__aexit__",
+        "__init__",
+        "async_mock_get",
+        "async_mock_post",
+        "benchmark",
+        "get",
+        "json",
+        "mock_get",
+        "mock_post",
+        "post",
+        "run_benchmark",
+        "text"
+      ],
+      "classes": [
+        "AsyncMockResponse",
+        "Ctx",
+        "FakeSession",
+        "MockResponse",
+        "MockSession"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "MiroFish\\backend\\app\\utils\\logger.py",
+      "language": "py",
+      "capability": "observability",
+      "sha256": "e05bb408d6400ffa744394bf87019cfb73f9fbca797479999a953bd9d0dc1794",
+      "imports": [
+        "datetime",
+        "logging",
+        "logging.handlers",
+        "os",
+        "sys"
+      ],
+      "functions": [
+        "_ensure_utf8_stdout",
+        "critical",
+        "debug",
+        "error",
+        "get_logger",
+        "info",
+        "setup_logger",
+        "warning"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "MiroFish\\backend\\scripts\\action_logger.py",
+      "language": "py",
+      "capability": "observability",
+      "sha256": "2f446d46d95b334fc2fa07f3cf1b69c11dbd33b625d8c4a0cd6b9d9b076d7632",
+      "imports": [
+        "datetime",
+        "json",
+        "logging",
+        "os",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "_ensure_dir",
+        "_setup_main_logger",
+        "debug",
+        "error",
+        "get_logger",
+        "get_reddit_logger",
+        "get_twitter_logger",
+        "info",
+        "log",
+        "log_action",
+        "log_round_end",
+        "log_round_start",
+        "log_simulation_end",
+        "log_simulation_start",
+        "warning"
+      ],
+      "classes": [
+        "ActionLogger",
+        "PlatformActionLogger",
+        "SimulationLogManager"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "logic\\risk_manager.py",
+      "language": "py",
+      "capability": "risk_management",
+      "sha256": "f1191af0ab96b70973ed6ea9c035e274e47b2f65d04404aac4f888e6586557f0",
+      "imports": [
+        "argparse",
+        "datetime",
+        "dotenv",
+        "os",
+        "rich.console",
+        "rich.theme",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "_log_audit",
+        "_parse_config",
+        "_trigger_cooldown",
+        "calculate_bunker_allocation",
+        "calculate_kelly_fraction",
+        "calibrate_ego_buffer",
+        "check_exit_conditions",
+        "check_liquidation_risk",
+        "check_max_drawdown",
+        "cleanup_tracking",
+        "get_kelly_trade_amount",
+        "is_in_cooldown",
+        "update_equity_high"
+      ],
+      "classes": [
+        "RiskManager"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tests\\test_risk_math.py",
+      "language": "py",
+      "capability": "risk_management",
+      "sha256": "11dbf9f1f83499c06656d0bfdebf62d46d46d90d9ffd1183a4df060662f891dc",
+      "imports": [
+        "logic.risk_manager",
+        "os",
+        "sys",
+        "unittest"
+      ],
+      "functions": [
+        "setUp",
+        "test_bunker_allocation",
+        "test_ego_calibration",
+        "test_kelly_strong_edge",
+        "test_kelly_zero_edge"
+      ],
+      "classes": [
+        "TestRiskMath"
+      ]
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tests\\unit\\test_risk_manager.py",
+      "language": "py",
+      "capability": "risk_management",
+      "sha256": "53b82e492f7ea51fb8be54eb760039a0526f975d1e52fd7325e91dc588f425d7",
+      "imports": [
+        "logic.risk_manager",
+        "pytest"
+      ],
+      "functions": [
+        "test_check_liquidation_risk_leverage_10",
+        "test_check_liquidation_risk_leverage_1_or_less",
+        "test_check_liquidation_risk_leverage_2"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "tools\\test_risk.py",
+      "language": "py",
+      "capability": "risk_management",
+      "sha256": "a6aba8da29b31023ab8f4a611cd764736d7fea7dec01d67812fc0bde16dc0f22",
+      "imports": [
+        "argparse",
+        "dotenv",
+        "os"
+      ],
+      "functions": [
+        "get_config"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "Advanced_Btc_Bot",
+      "path": "scripts\\diagnose_mirofish_impact.py",
+      "language": "py",
+      "capability": "scenario_simulation",
+      "sha256": "70fbdbcda1bb8f98509349134c3322d8bcdd852160e30a0980ecf2efc4bcef4a",
+      "imports": [
+        "asyncio",
+        "data.data_engine",
+        "datetime",
+        "dotenv",
+        "logic.ml_brain",
+        "logic.strategist_agent",
+        "os",
+        "pandas",
+        "sys"
+      ],
+      "functions": [
+        "run_diagnostic"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "history\\cache-yahoo-prices.json",
+      "language": "json",
+      "capability": "cache",
+      "sha256": "36e907553d4f3f521fb634fc15409790ab2879c76ac9e9113590300de83226ba",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\Stock-Screener-bovespa\\scraper_fundamentus.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "ef9eb8d21e7cce98922278036f0e118e05e670258e540bfc16d101eca08bc620",
+      "imports": [
+        "scraper_tools"
+      ],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\Stock-Screener-bovespa\\scraper_investidor10.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "9c36e4e5ccc00c7fbba26c8d623458ec6c955cc28b75e8e9663d0bc6b7a9e7a4",
+      "imports": [
+        "scraper_tools"
+      ],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\Stock-Screener-bovespa\\scraper_investsite.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "6ead9831d8f8d8cf49d677bd7909305be26dbda28269bb7e86c0fb1a24946da1",
+      "imports": [
+        "scraper_tools"
+      ],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\Stock-Screener-bovespa\\scraper_statusinvst.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "a671bcb39cd6fec4ace6e95f24e96b5e6c24b2ade5d6b9a7c3c4f8b300b6092b",
+      "imports": [
+        "scraper_tools"
+      ],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\Stock-Screener-bovespa\\scraper_tools.py",
+      "language": "py",
+      "capability": "data_ingestion",
+      "sha256": "25056a1c1fa95c59742b855884acf45f6681956dd3defefad565f07701815c9e",
+      "imports": [
+        "bs4",
+        "datetime",
+        "pandas",
+        "requests",
+        "statistics"
+      ],
+      "functions": [
+        "fetch_html",
+        "get_tickers_urls",
+        "parse_sitemap",
+        "parse_stock_data",
+        "save_to_csv",
+        "scrape_stock_data"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\maxun\\maxun-core\\src\\browserSide\\scraper.js",
+      "language": "js",
+      "capability": "data_ingestion",
+      "sha256": "04d3471e4b22a976a9b27217dd891b8e8682a4289705b175bcb9fd575bb6e0a6",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\maxun\\server\\src\\markdownify\\scrape.ts",
+      "language": "ts",
+      "capability": "data_ingestion",
+      "sha256": "1e670c0333d29ed22748ea479f1f63cdd40ed646e11e5da3e81406d2ad371600",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\node-stock-data\\util\\fetchData.js",
+      "language": "js",
+      "capability": "data_ingestion",
+      "sha256": "87f02d437f45f8a6ea2a645cd439951d5c977d752a36a54f9f1fe23c6f9356f0",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "debug\\debug_investidor10_scraper.js",
+      "language": "js",
+      "capability": "data_ingestion",
+      "sha256": "080a0a14386263ca6d53fad4e728e04dd634d23da4431d9ab5a0db87ca93b56e",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "debug\\fetch_tickers.js",
+      "language": "js",
+      "capability": "data_ingestion",
+      "sha256": "2c9087ef2fef93d4dea842b22153e0d107dc71cbdc2960aca9b890fc379844c2",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "fetch_investidor10.js",
+      "language": "js",
+      "capability": "data_ingestion",
+      "sha256": "b3d0c61aa158a713f4851cf43c593c971214b89f43bcec779719d4a3fbb8deeb",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\core\\analytics\\tribunal_consensus.py",
+      "language": "py",
+      "capability": "decision_consensus",
+      "sha256": "bc21413fe6ca9e7328b0d45f334a6aaaa514a5a464a92d9980aaceb323e0d034",
+      "imports": [
+        "config.settings",
+        "pathlib",
+        "sys",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "evaluate_allocation_consensus"
+      ],
+      "classes": [
+        "MacroTribunalConsensus"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "services\\adapters\\brapi-stock-adapter.js",
+      "language": "js",
+      "capability": "integration_adapter",
+      "sha256": "02cfa2d0f262d1219793de098507fd8009fbf96e5886e09dbabdd98dc451a29a",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "services\\adapters\\brapi-stock-adapter.test.js",
+      "language": "js",
+      "capability": "integration_adapter",
+      "sha256": "82a58dada219ff20aa684dff5a9f15242ae124ba094fd69cca833333624cf94f",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "services\\adapters\\fundamentus-stock-adapter.js",
+      "language": "js",
+      "capability": "integration_adapter",
+      "sha256": "400c50c91e38b19d126ff2dae9413755f0fa47e4600fdf076993943227d9a321",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\test_macro.js",
+      "language": "js",
+      "capability": "macro_analysis",
+      "sha256": "7f612e33f0021a00e676e399f993c11c4c508834c955a53b985d5cc3d57b2b5b",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\REFERENCES\\macro_b3_bot_blueprint\\src\\macro_b3_bot\\adapters\\macro_sources.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "217dc42db01eb1e861353da6af6fd33349a29085358722210e7f0d5bb49c787d",
+      "imports": [
+        "__future__",
+        "datetime",
+        "httpx",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "get"
+      ],
+      "classes": [
+        "BcbSgsClient",
+        "FredClient"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\core\\data_ingestion\\macro_api_client.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "98c92907c0d4f956a794657940e4aac88bf16658a42d110f92529fe4669f8ada",
+      "imports": [
+        "json",
+        "pathlib",
+        "sys",
+        "typing",
+        "urllib.request"
+      ],
+      "functions": [
+        "__init__",
+        "fetch_yahoo_quote",
+        "get_global_macro_snapshot"
+      ],
+      "classes": [
+        "MacroApiClient"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\src\\macro_b3_bot\\adapters\\macro_sources.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "217dc42db01eb1e861353da6af6fd33349a29085358722210e7f0d5bb49c787d",
+      "imports": [
+        "__future__",
+        "datetime",
+        "httpx",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "get"
+      ],
+      "classes": [
+        "BcbSgsClient",
+        "FredClient"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\tests\\test_macro_bot.py",
+      "language": "py",
+      "capability": "macro_analysis",
+      "sha256": "122e3ee537af68a1dc80538b8fa6744a73e6c1bf697943c2f50dedf58c1f9a85",
+      "imports": [
+        "core.analytics.asset_screener",
+        "core.analytics.tribunal_consensus",
+        "core.data_ingestion.b3_screener_bridge",
+        "core.execution.portfolio_allocator",
+        "core.mirofish_engine.swarm_simulation",
+        "pathlib",
+        "sys",
+        "unittest"
+      ],
+      "functions": [
+        "test_b3_screener_bridge",
+        "test_portfolio_allocator",
+        "test_swarm_simulation"
+      ],
+      "classes": [
+        "TestMacroB3Bot"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\tradingview-mcp\\src\\tradingview_mcp\\core\\services\\news_service.py",
+      "language": "py",
+      "capability": "news_ingestion",
+      "sha256": "1a6ce3df4d82db398109dc00894c71699b3071ed115ba53c18c7a41f50b5c6b0",
+      "imports": [
+        "__future__",
+        "datetime",
+        "feedparser",
+        "re",
+        "typing"
+      ],
+      "functions": [
+        "_clean_html",
+        "fetch_news",
+        "fetch_news_summary"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\core\\data_ingestion\\scrapers\\news_scraper.py",
+      "language": "py",
+      "capability": "news_ingestion",
+      "sha256": "d1844b4dd30b9865c37f605ffd331f7eb7b070852d142db985e0e6a332adfd88",
+      "imports": [
+        "pathlib",
+        "sys",
+        "typing",
+        "urllib.request",
+        "xml.etree.ElementTree"
+      ],
+      "functions": [
+        "__init__",
+        "fetch_rss_articles"
+      ],
+      "classes": [
+        "NewsScraper"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\maxun\\maxun-core\\src\\utils\\logger.ts",
+      "language": "ts",
+      "capability": "observability",
+      "sha256": "8a0fc385bbeb27a282401f99575f668277c96493661bb419591631e4185a75bd",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\maxun\\server\\src\\logger.ts",
+      "language": "ts",
+      "capability": "observability",
+      "sha256": "f19e46f5ad663955ddf25e6e437b3bd1f5841ec2e3d61ce1dddf9fbd332fbc3b",
+      "imports": [],
+      "functions": [],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "REFERENCIAS\\tradingview-mcp\\src\\tradingview_mcp\\core\\portfolio.py",
+      "language": "py",
+      "capability": "portfolio_management",
+      "sha256": "ede690a839793c24879d14dbb7afe8b0a0c8649dd891dc023b72e7ea27869dc1",
+      "imports": [
+        "datetime",
+        "os",
+        "sqlite3",
+        "typing"
+      ],
+      "functions": [
+        "execute_trade",
+        "get_or_create_user",
+        "get_portfolio",
+        "init_db"
+      ],
+      "classes": []
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\core\\execution\\portfolio_allocator.py",
+      "language": "py",
+      "capability": "portfolio_management",
+      "sha256": "f88f2a3f88875180b25dc1974311725d8972c63e2994bb61ea937bc8428f9c7e",
+      "imports": [
+        "config.settings",
+        "pathlib",
+        "sys",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "compute_portfolio_weights"
+      ],
+      "classes": [
+        "PortfolioAllocator"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\REFERENCES\\macro_b3_bot_blueprint\\src\\macro_b3_bot\\adapters\\mirofish.py",
+      "language": "py",
+      "capability": "scenario_simulation",
+      "sha256": "fcf7760bf364c41a9b2efe7eb7f2bc56c6773e0c1ad54251856bbad03276d6e9",
+      "imports": [
+        "__future__",
+        "httpx",
+        "pathlib",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "close",
+        "create_simulation",
+        "generate_ontology",
+        "healthcheck",
+        "list_reports"
+      ],
+      "classes": [
+        "MiroFishClient"
+      ]
+    },
+    {
+      "repository": "b3_screener",
+      "path": "macro_b3_bot\\src\\macro_b3_bot\\adapters\\mirofish.py",
+      "language": "py",
+      "capability": "scenario_simulation",
+      "sha256": "fcf7760bf364c41a9b2efe7eb7f2bc56c6773e0c1ad54251856bbad03276d6e9",
+      "imports": [
+        "__future__",
+        "httpx",
+        "pathlib",
+        "typing"
+      ],
+      "functions": [
+        "__init__",
+        "close",
+        "create_simulation",
+        "generate_ontology",
+        "healthcheck",
+        "list_reports"
+      ],
+      "classes": [
+        "MiroFishClient"
+      ]
+    }
+  ]
+}

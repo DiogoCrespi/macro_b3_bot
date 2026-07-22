@@ -1,0 +1,34 @@
+{
+  "drivers": {
+    "EL_NINO_SECAGEM": {
+      "name": "El Niño & Seca em Reservatórios",
+      "beneficiaries": ["AGRO3", "SLCE3", "KLBN11", "SUZB3"],
+      "penalized": ["EGIE3", "CPFE3", "AURE3", "ELET3"],
+      "reason": "Favorece alta de preços de soft commodities (soja, milho, celulose); eleva custo de geração térmica e reduz margem de geradoras hídricas."
+    },
+    "SUPER_CICLO_COMMODITIES": {
+      "name": "Alta Globais de Commodities (Minério, Petróleo, Cobre)",
+      "beneficiaries": ["VALE3", "PETR4", "PRIO3", "CMIN3", "GGBR4", "BOVA11"],
+      "penalized": ["AZUL4", "GOLL4", "CVCB3"],
+      "reason": "Empresas exportadoras ganham em receita em dólar e caixa; empresas aéreas e de consumo sofrem com querosene de aviação e insumos caros."
+    },
+    "CORTE_JUROS_BACEN": {
+      "name": "Ciclo de Queda da Taxa Selic",
+      "beneficiaries": ["HGLG11", "KNRI11", "XPLG11", "BTLG11", "VISC11", "LREN3", "ARZZ3", "RENT3"],
+      "penalized": ["KNCR11", "VGIP11"],
+      "reason": "FIIs de Tijolo e papéis de Varejo/Consumo/Locação valorizam com menor custo de capital e reprificação do Yield; FIIs de Papel (CDI/IPCA) reduzem distribuição relativa."
+    },
+    "ALTA_JUROS_FED_DXY": {
+      "name": "Aperto Monetário nos EUA & Dólar Forte (Risk-Off Global)",
+      "beneficiaries": ["IVVB11", "USDBRL", "SUZB3", "EMBR3", "VALE3"],
+      "penalized": ["MGLU3", "BHIA3", "CVCB3", "SMAL11"],
+      "reason": "Fuga de capital dos emergentes; beneficia papéis dolarizados e ETFs de S&P500, penaliza consumo interno brasileiro dependente de crédito."
+    },
+    "RISCO_FISCAL_BRASIL": {
+      "name": "Aumento de Risco Fiscal e Inflação no Brasil",
+      "beneficiaries": ["B5P211", "NTNB_TIJOLO", "VALE3", "PBR"],
+      "penalized": ["CVIZ3", "MULT3", "QUAL3"],
+      "reason": "Abertura da curva de juros longa derruba valuation por DCF de empresas de crescimento e FIIs de longo prazo; beneficia ativos atrelados a inflação (IPCA+)."
+    }
+  }
+}

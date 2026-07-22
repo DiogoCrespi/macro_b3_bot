@@ -1,0 +1,17 @@
+agents:
+  - id: evidence
+    mandate: Extract timestamped claims and reject unsupported statements.
+  - id: macro
+    mandate: Identify regime, surprise and scenario probabilities.
+  - id: causal
+    mandate: Build the transmission chain from event to cash flow.
+  - id: exposure
+    mandate: Validate company and sector exposure using filings.
+  - id: valuation
+    mandate: Estimate value ranges under scenarios.
+  - id: timing
+    mandate: Assess whether the thesis is already priced and define entry bands.
+  - id: skeptic
+    mandate: Search for alternative explanations, disconfirming evidence and crowded trades.
+  - id: risk
+    mandate: Size positions and veto excessive liquidity, drawdown or concentration risk.

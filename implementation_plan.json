@@ -1,0 +1,38 @@
+{
+  "project": "macro_b3_bot",
+  "architecture": "python_orchestrator_with_sidecar_adapters",
+  "phases": [
+    {
+      "id": 0,
+      "name": "inventory",
+      "exit": "reuse_manifest reviewed"
+    },
+    {
+      "id": 1,
+      "name": "trusted_data",
+      "exit": "versioned snapshots and provenance"
+    },
+    {
+      "id": 2,
+      "name": "events_and_causality",
+      "exit": "structured causal graph"
+    },
+    {
+      "id": 3,
+      "name": "mirofish_scenarios",
+      "exit": "ScenarioSet schema validated"
+    },
+    {
+      "id": 4,
+      "name": "decision_and_risk",
+      "exit": "paper recommendations with vetoes"
+    },
+    {
+      "id": 5,
+      "name": "walk_forward_validation",
+      "exit": "out-of-sample metrics approved"
+    }
+  ],
+  "default_mode": "research_only",
+  "automatic_execution": false
+}
