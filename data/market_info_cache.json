@@ -1,0 +1,57 @@
+{
+  "FIQE3.SA": {
+    "marketCap": 2227274496,
+    "totalDebt": 1238998016,
+    "sharesOutstanding": 389383694
+  },
+  "YDUQ3.SA": {
+    "marketCap": 2027956608,
+    "totalDebt": 5369524224,
+    "sharesOutstanding": 254448770
+  },
+  "LIGT3.SA": {
+    "marketCap": 1918631552,
+    "totalDebt": 10130407424,
+    "sharesOutstanding": 611029092
+  },
+  "PGMN3.SA": {
+    "marketCap": 2477307904,
+    "totalDebt": 3574750976,
+    "sharesOutstanding": 720147635
+  },
+  "RECV3.SA": {
+    "marketCap": 3111756032,
+    "totalDebt": 3219229952,
+    "sharesOutstanding": 293009070
+  },
+  "SEQL3.SA": {
+    "marketCap": 382229312,
+    "totalDebt": 368267008,
+    "sharesOutstanding": 6370488672
+  },
+  "ORVR3.SA": {
+    "marketCap": 9821418496,
+    "totalDebt": 2333149952,
+    "sharesOutstanding": 137324101
+  },
+  "RIAA3.SA": {
+    "marketCap": 3976339200,
+    "totalDebt": 3712553984,
+    "sharesOutstanding": 502063039
+  },
+  "EQTL3.SA": {
+    "marketCap": 49155059712,
+    "totalDebt": 58052804608,
+    "sharesOutstanding": 1254916065
+  },
+  "ENBR3.SA": {
+    "marketCap": null,
+    "totalDebt": null,
+    "sharesOutstanding": null
+  },
+  "RDOR3.SA": {
+    "marketCap": 74868326400,
+    "totalDebt": 54575902720,
+    "sharesOutstanding": 2180207649
+  }
+}

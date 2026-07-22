@@ -12,16 +12,37 @@ from macro_b3_bot.adapters.cvm.extractors.text_extractor import TextExtractor
 from macro_b3_bot.adapters.bcb.normalizer import compute_raw_checksum
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
+# Magic bytes para detecção real de tipo
+_PDF_MAGIC  = b"%PDF-"
+_HTML_MAGIC = (b"<", b"<!",)
+
 class IpeExtractionPipeline:
     """
-    Pipeline de extração textual de documentos baixados (HTML, PDF, TXT) com suporte a hashing de texto normalizado.
+    Pipeline de extração textual de documentos baixados (HTML, PDF, TXT).
+    Detecta o tipo real pelo magic byte do arquivo, ignorando o MIME type
+    reportado pela CVM (que frequentemente serve PDFs como text/html).
     """
     def __init__(self, settings: Settings):
         self.settings = settings
         self.db_path = settings.data_dir / "audit.duckdb"
         self.html_extractor = HtmlExtractor()
-        self.pdf_extractor = PdfExtractor()
+        self.pdf_extractor  = PdfExtractor()
         self.text_extractor = TextExtractor()
+
+    def _detect_extractor(self, content_bytes: bytes, file_path: Path):
+        """Retorna (extractor, method_name) baseado no magic byte real do arquivo."""
+        header = content_bytes[:8].lstrip()
+        if header.startswith(_PDF_MAGIC):
+            return self.pdf_extractor, "PDF_DIRECT"
+        suffix = file_path.suffix.lower()
+        if suffix == ".pdf":
+            return self.pdf_extractor, "PDF_DIRECT"
+        if suffix in (".html", ".htm"):
+            return self.html_extractor, "HTML_PARSER"
+        # Heurística: se começa com '<' provavelmente é HTML
+        if header.startswith(b"<"):
+            return self.html_extractor, "HTML_PARSER"
+        return self.text_extractor, "TEXT_PARSER"
 
     def extract_downloaded_batch(self, limit: int = 500) -> Dict[str, Any]:
         store = DatabaseStore(self.db_path)
@@ -49,19 +70,17 @@ class IpeExtractionPipeline:
                 continue
 
             content_bytes = file_path.read_bytes()
-            mime_clean = (mime_type or "").lower()
+            extractor, method = self._detect_extractor(content_bytes, file_path)
 
-            if "pdf" in mime_clean or file_path.suffix == ".pdf":
-                extractor = self.pdf_extractor
-                method = "PDF_DIRECT"
-            elif "html" in mime_clean or file_path.suffix in [".html", ".htm"]:
-                extractor = self.html_extractor
-                method = "HTML_PARSER"
-            else:
-                extractor = self.text_extractor
-                method = "TEXT_PARSER"
+            try:
+                text, pages, quality = extractor.extract_text(content_bytes)
+            except Exception as e:
+                conn.execute(
+                    "UPDATE ipe_processing_queue SET status = 'EXTRACTION_FAILED', last_error = ?, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?",
+                    [str(e)[:500], doc_id]
+                )
+                continue
 
-            text, pages, quality = extractor.extract_text(content_bytes)
             norm_checksum = compute_raw_checksum(text)
 
             extracted_doc = ExtractedDocument(

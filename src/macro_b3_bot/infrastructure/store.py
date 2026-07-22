@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
+from typing import Optional
 import duckdb
 from pydantic import BaseModel
 
@@ -347,6 +348,91 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL
             );
         """)
+        # --- Sprint 3B Tables ---
+        # Market Prices (OHLCV imutável com versionamento por source+checksum)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS market_prices (
+                ticker VARCHAR NOT NULL,
+                trading_date DATE NOT NULL,
+                open DECIMAL(28, 8),
+                high DECIMAL(28, 8),
+                low DECIMAL(28, 8),
+                close DECIMAL(28, 8) NOT NULL,
+                adjusted_close DECIMAL(28, 8),
+                volume DECIMAL(28, 4),
+                source VARCHAR NOT NULL,
+                collected_at TIMESTAMP NOT NULL,
+                record_checksum VARCHAR NOT NULL,
+                PRIMARY KEY (ticker, trading_date, source, record_checksum)
+            );
+        """)
+        # Event Market Mappings (cvm_code → primary_ticker)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS event_market_mappings (
+                event_id VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                primary_ticker VARCHAR NOT NULL,
+                related_tickers VARCHAR NOT NULL DEFAULT '[]',
+                market_symbol VARCHAR NOT NULL,
+                asset_class VARCHAR NOT NULL DEFAULT 'STOCK',
+                mapping_confidence DOUBLE NOT NULL,
+                mapping_source VARCHAR NOT NULL,
+                validated BOOLEAN NOT NULL DEFAULT FALSE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (event_id, primary_ticker)
+            );
+        """)
+        # Effective Market Events (sessão de publicação + datas efetivas B3)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS effective_market_events (
+                event_id VARCHAR PRIMARY KEY,
+                publication_timestamp TIMESTAMP NOT NULL,
+                publication_session VARCHAR NOT NULL,
+                previous_trading_date DATE,
+                effective_trading_date DATE NOT NULL,
+                first_full_trading_date DATE NOT NULL,
+                calculated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        # Event Market Outcomes (resultados do event study)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS event_market_outcomes (
+                event_id VARCHAR NOT NULL,
+                ticker VARCHAR NOT NULL,
+                publication_timestamp TIMESTAMP NOT NULL,
+                effective_trading_date DATE NOT NULL,
+                publication_session VARCHAR NOT NULL,
+                prior_close DOUBLE,
+                raw_return_1d DOUBLE,
+                raw_return_5d DOUBLE,
+                raw_return_20d DOUBLE,
+                raw_return_60d DOUBLE,
+                car_1d DOUBLE,
+                car_5d DOUBLE,
+                car_20d DOUBLE,
+                car_60d DOUBLE,
+                pre_event_car_5d DOUBLE,
+                event_window_car DOUBLE,
+                beta DOUBLE,
+                historical_volatility DOUBLE,
+                volume_zscore DOUBLE,
+                bootstrap_pvalue_1d DOUBLE,
+                bootstrap_pvalue_5d DOUBLE,
+                bootstrap_pvalue_20d DOUBLE,
+                bh_adjusted_pvalue_5d DOUBLE,
+                bh_threshold_5d DOUBLE,
+                outcome_label VARCHAR NOT NULL,
+                calculated_at TIMESTAMP NOT NULL,
+                PRIMARY KEY (event_id, ticker)
+            );
+        """)
+        
+        # Alter table para bases existentes
+        for col in ["bh_adjusted_pvalue_5d", "bh_threshold_5d"]:
+            try:
+                self.connection.execute(f"ALTER TABLE event_market_outcomes ADD COLUMN {col} DOUBLE;")
+            except Exception:
+                pass
 
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
@@ -745,6 +831,190 @@ class DatabaseStore:
     def count_event_candidates(self) -> int:
         res = self.connection.execute("SELECT COUNT(*) FROM event_candidates").fetchone()
         return res[0] if res else 0
+
+    def save_event_market_mapping(self, mapping: dict) -> None:
+        import json
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO event_market_mappings (
+                event_id, cvm_code, primary_ticker, related_tickers,
+                market_symbol, asset_class, mapping_confidence, mapping_source, validated, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                mapping["event_id"], mapping["cvm_code"], mapping["primary_ticker"],
+                json.dumps(mapping.get("related_tickers", [])),
+                mapping["market_symbol"], mapping.get("asset_class", "STOCK"),
+                mapping["mapping_confidence"], mapping["mapping_source"],
+                mapping.get("validated", False), datetime.now(timezone.utc)
+            ]
+        )
+
+    def get_event_market_mapping(self, event_id: str) -> Optional[dict]:
+        row = self.connection.execute(
+            """
+            SELECT event_id, cvm_code, primary_ticker, related_tickers,
+                   market_symbol, asset_class, mapping_confidence, mapping_source, validated
+            FROM event_market_mappings WHERE event_id = ?
+            """,
+            [event_id]
+        ).fetchone()
+        if not row:
+            return None
+        import json
+        return {
+            "event_id": row[0],
+            "cvm_code": row[1],
+            "primary_ticker": row[2],
+            "related_tickers": json.loads(row[3]),
+            "market_symbol": row[4],
+            "asset_class": row[5],
+            "mapping_confidence": row[6],
+            "mapping_source": row[7],
+            "validated": bool(row[8]),
+        }
+
+    def save_market_price(self, price: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO market_prices (
+                ticker, trading_date, open, high, low, close, adjusted_close, volume, source, collected_at, record_checksum
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                price["ticker"], price["trading_date"],
+                price.get("open"), price.get("high"), price.get("low"),
+                price["close"], price.get("adjusted_close"), price.get("volume"),
+                price["source"], price.get("collected_at", datetime.now(timezone.utc)),
+                price.get("record_checksum", "")
+            ]
+        )
+
+    def get_market_prices(self, ticker: str, start_date: date, end_date: date) -> list[dict]:
+        rows = self.connection.execute(
+            """
+            SELECT ticker, trading_date, open, high, low, close, adjusted_close, volume, source, collected_at, record_checksum
+            FROM market_prices
+            WHERE ticker = ? AND trading_date >= ? AND trading_date <= ?
+            ORDER BY trading_date ASC
+            """,
+            [ticker, start_date, end_date]
+        ).fetchall()
+        return [
+            {
+                "ticker": r[0],
+                "trading_date": r[1] if isinstance(r[1], date) else date.fromisoformat(str(r[1])[:10]),
+                "open": r[2],
+                "high": r[3],
+                "low": r[4],
+                "close": r[5],
+                "adjusted_close": r[6],
+                "volume": r[7],
+                "source": r[8],
+                "collected_at": r[9],
+                "record_checksum": r[10]
+            }
+            for r in rows
+        ]
+
+    def save_effective_market_event(self, event: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO effective_market_events (
+                event_id, publication_timestamp, publication_session,
+                previous_trading_date, effective_trading_date, first_full_trading_date, calculated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                event["event_id"], event["publication_timestamp"], event["publication_session"],
+                event.get("previous_trading_date"), event["effective_trading_date"],
+                event["first_full_trading_date"], datetime.now(timezone.utc)
+            ]
+        )
+
+    def get_effective_market_event(self, event_id: str) -> Optional[dict]:
+        row = self.connection.execute(
+            """
+            SELECT event_id, publication_timestamp, publication_session,
+                   previous_trading_date, effective_trading_date, first_full_trading_date
+            FROM effective_market_events WHERE event_id = ?
+            """,
+            [event_id]
+        ).fetchone()
+        if not row:
+            return None
+        return {
+            "event_id": row[0],
+            "publication_timestamp": row[1],
+            "publication_session": row[2],
+            "previous_trading_date": row[3] if isinstance(row[3], date) or row[3] is None else date.fromisoformat(str(row[3])[:10]),
+            "effective_trading_date": row[4] if isinstance(row[4], date) else date.fromisoformat(str(row[4])[:10]),
+            "first_full_trading_date": row[5] if isinstance(row[5], date) else date.fromisoformat(str(row[5])[:10]),
+        }
+
+    def save_event_market_outcome(self, outcome: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO event_market_outcomes (
+                event_id, ticker, publication_timestamp, effective_trading_date, publication_session,
+                prior_close, raw_return_1d, raw_return_5d, raw_return_20d, raw_return_60d,
+                car_1d, car_5d, car_20d, car_60d, pre_event_car_5d, event_window_car,
+                beta, historical_volatility, volume_zscore,
+                bootstrap_pvalue_1d, bootstrap_pvalue_5d, bootstrap_pvalue_20d, outcome_label, calculated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                outcome["event_id"], outcome["ticker"], outcome["publication_timestamp"],
+                outcome["effective_trading_date"], outcome["publication_session"],
+                outcome.get("prior_close"), outcome.get("raw_return_1d"), outcome.get("raw_return_5d"),
+                outcome.get("raw_return_20d"), outcome.get("raw_return_60d"),
+                outcome.get("car_1d"), outcome.get("car_5d"), outcome.get("car_20d"), outcome.get("car_60d"),
+                outcome.get("pre_event_car_5d"), outcome.get("event_window_car"),
+                outcome.get("beta"), outcome.get("historical_volatility"), outcome.get("volume_zscore"),
+                outcome.get("bootstrap_pvalue_1d"), outcome.get("bootstrap_pvalue_5d"),
+                outcome.get("bootstrap_pvalue_20d"), outcome["outcome_label"], datetime.now(timezone.utc)
+            ]
+        )
+
+    def get_event_market_outcome(self, event_id: str, ticker: str) -> Optional[dict]:
+        row = self.connection.execute(
+            """
+            SELECT event_id, ticker, publication_timestamp, effective_trading_date, publication_session,
+                   prior_close, raw_return_1d, raw_return_5d, raw_return_20d, raw_return_60d,
+                   car_1d, car_5d, car_20d, car_60d, pre_event_car_5d, event_window_car,
+                   beta, historical_volatility, volume_zscore,
+                   bootstrap_pvalue_1d, bootstrap_pvalue_5d, bootstrap_pvalue_20d, outcome_label
+            FROM event_market_outcomes WHERE event_id = ? AND ticker = ?
+            """,
+            [event_id, ticker]
+        ).fetchone()
+        if not row:
+            return None
+        return {
+            "event_id": row[0],
+            "ticker": row[1],
+            "publication_timestamp": row[2],
+            "effective_trading_date": row[3] if isinstance(row[3], date) else date.fromisoformat(str(row[3])[:10]),
+            "publication_session": row[4],
+            "prior_close": row[5],
+            "raw_return_1d": row[6],
+            "raw_return_5d": row[7],
+            "raw_return_20d": row[8],
+            "raw_return_60d": row[9],
+            "car_1d": row[10],
+            "car_5d": row[11],
+            "car_20d": row[12],
+            "car_60d": row[13],
+            "pre_event_car_5d": row[14],
+            "event_window_car": row[15],
+            "beta": row[16],
+            "historical_volatility": row[17],
+            "volume_zscore": row[18],
+            "bootstrap_pvalue_1d": row[19],
+            "bootstrap_pvalue_5d": row[20],
+            "bootstrap_pvalue_20d": row[21],
+            "outcome_label": row[22]
+        }
 
     def close(self) -> None:
         self.connection.close()

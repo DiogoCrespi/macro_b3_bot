@@ -27,9 +27,7 @@ class EventCandidateBuilder:
             SELECT c.claim_id, c.document_id, c.cvm_code, c.ticker, c.claim_type,
                    c.subject, c.numeric_value, c.confidence, c.source_excerpt
             FROM evidence_claims c
-            JOIN ipe_processing_queue q USING (document_id)
-            WHERE q.status = 'EVIDENCE_BUILT'
-              AND c.ticker IS NOT NULL
+            WHERE c.ticker IS NOT NULL
               AND c.ticker != ''
             LIMIT ?
         """, [limit]).fetchall()
