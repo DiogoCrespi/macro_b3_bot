@@ -4,6 +4,7 @@ import csv
 import io
 import zipfile
 import httpx
+import unicodedata
 from datetime import datetime, date, timezone
 from pathlib import Path
 from typing import List, Tuple
@@ -45,14 +46,18 @@ class CvmIpeIndexClient:
                 file_bytes = zf.read(filename)
                 text_data = file_bytes.decode("iso-8859-1", errors="ignore")
                 reader = csv.DictReader(io.StringIO(text_data), delimiter=";")
-
                 for row in reader:
-                    cvm_code = str(row.get("CD_CVM") or row.get("Codigo_CVM") or row.get("CD_CIA") or "").strip()
-                    company_name = str(row.get("DENOM_CIA") or row.get("Nome_Companhia") or row.get("DENOM_SOCIAL") or "").strip()
-                    category = str(row.get("CATEGORIA") or row.get("Categoria") or "Outros").strip()
-                    doc_type = str(row.get("TIPO") or row.get("Tipo") or "").strip() or None
-                    subject = str(row.get("ASSUNTO") or row.get("Assunto") or "").strip() or None
-                    dt_receb = str(row.get("DT_RECEB") or row.get("Data_Entrega") or row.get("DT_ENTREGA") or row.get("DT_RECEBIMENTO") or "").strip()
+                    cvm_code = str(row.get("Codigo_CVM") or row.get("CD_CVM") or row.get("CD_CIA") or "").strip()
+                    company_name = str(row.get("Nome_Companhia") or row.get("DENOM_CIA") or row.get("DENOM_SOCIAL") or "").strip()
+                    category_raw = str(row.get("Categoria") or row.get("CATEGORIA") or "Outros").strip()
+                    category = unicodedata.normalize("NFKC", category_raw)
+                    
+                    doc_type_raw = str(row.get("Tipo") or row.get("TIPO") or "").strip() or None
+                    doc_type = unicodedata.normalize("NFKC", doc_type_raw) if doc_type_raw else None
+                    
+                    subj_raw = str(row.get("Assunto") or row.get("ASSUNTO") or "").strip() or None
+                    subject = unicodedata.normalize("NFKC", subj_raw) if subj_raw else None
+                    dt_receb = str(row.get("Data_Entrega") or row.get("DT_RECEB") or row.get("DT_ENTREGA") or "").strip()
 
                     if not cvm_code and not dt_receb:
                         continue
@@ -73,9 +78,9 @@ class CvmIpeIndexClient:
                         except ValueError:
                             pass
 
-                    protocol = str(row.get("NUM_PROTOCOL_ENTREGA", "")).strip() or None
-                    version = int(row.get("VERSAO", "1") or "1")
-                    source_url = str(row.get("LINK_DOWNLOAD", "")).strip() or None
+                    protocol = str(row.get("Protocolo_Entrega") or row.get("NUM_PROTOCOL_ENTREGA") or "").strip() or None
+                    version = int(row.get("Versao") or row.get("VERSAO") or "1" or "1")
+                    source_url = str(row.get("Link_Download") or row.get("LINK_DOWNLOAD") or row.get("URL") or "").strip() or None
 
                     doc_id = f"IPE_{cvm_code}_{protocol or delivery_date.strftime('%Y%m%d%H%M%S')}_v{version}"
 

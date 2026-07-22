@@ -231,6 +231,92 @@ class DatabaseStore:
                 PRIMARY KEY (document_id, version)
             );
         """)
+        # Downloaded Documents
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS downloaded_documents (
+                document_id VARCHAR NOT NULL,
+                source_url VARCHAR NOT NULL,
+                http_status INTEGER NOT NULL,
+                mime_type VARCHAR NOT NULL,
+                file_extension VARCHAR,
+                file_size_bytes BIGINT NOT NULL,
+                raw_path VARCHAR NOT NULL,
+                document_checksum VARCHAR NOT NULL,
+                downloaded_at TIMESTAMP NOT NULL,
+                ingestion_run_id VARCHAR NOT NULL,
+                PRIMARY KEY (document_id, document_checksum)
+            );
+        """)
+        # Extracted Documents
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS extracted_documents (
+                document_id VARCHAR NOT NULL,
+                document_checksum VARCHAR NOT NULL,
+                extraction_method VARCHAR NOT NULL,
+                extracted_text VARCHAR NOT NULL,
+                text_length INTEGER NOT NULL,
+                page_count INTEGER,
+                language VARCHAR,
+                normalized_text_checksum VARCHAR NOT NULL,
+                extraction_quality DOUBLE NOT NULL,
+                extracted_at TIMESTAMP NOT NULL,
+                PRIMARY KEY (
+                    document_id,
+                    document_checksum,
+                    normalized_text_checksum
+                )
+            );
+        """)
+        # Document Processing Errors
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS document_processing_errors (
+                document_id VARCHAR NOT NULL,
+                stage VARCHAR NOT NULL,
+                error_type VARCHAR NOT NULL,
+                error_message VARCHAR,
+                attempt INTEGER NOT NULL,
+                occurred_at TIMESTAMP NOT NULL
+            );
+        """)
+        # Document Duplicate Links
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS document_duplicate_links (
+                canonical_document_id VARCHAR NOT NULL,
+                duplicate_document_id VARCHAR NOT NULL,
+                duplicate_type VARCHAR NOT NULL,
+                similarity DOUBLE NOT NULL,
+                detected_at TIMESTAMP NOT NULL,
+                PRIMARY KEY (
+                    canonical_document_id,
+                    duplicate_document_id
+                )
+            );
+        """)
+        # Evidence Claims
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS evidence_claims (
+                claim_id VARCHAR PRIMARY KEY,
+                document_id VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                ticker VARCHAR,
+                claim_type VARCHAR NOT NULL,
+                subject VARCHAR NOT NULL,
+                predicate VARCHAR NOT NULL,
+                object_text VARCHAR NOT NULL,
+                numeric_value DECIMAL(28, 4),
+                unit VARCHAR,
+                currency VARCHAR,
+                effective_date DATE,
+                horizon_end DATE,
+                source_page INTEGER,
+                source_start INTEGER,
+                source_end INTEGER,
+                source_excerpt VARCHAR NOT NULL,
+                extraction_method VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                created_at TIMESTAMP NOT NULL
+            );
+        """)
 
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
@@ -505,6 +591,103 @@ class DatabaseStore:
 
     def count_snapshots(self) -> int:
         res = self.connection.execute("SELECT COUNT(*) FROM asset_snapshots").fetchone()
+        return res[0] if res else 0
+
+    def save_downloaded_document(self, doc: dict) -> bool:
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM downloaded_documents WHERE document_id = ? AND document_checksum = ?",
+            [doc["document_id"], doc["document_checksum"]]
+        ).fetchone()[0]
+
+        if existing > 0:
+            return False
+
+        self.connection.execute(
+            """
+            INSERT INTO downloaded_documents (
+                document_id, source_url, http_status, mime_type, file_extension,
+                file_size_bytes, raw_path, document_checksum, downloaded_at, ingestion_run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                doc["document_id"], doc["source_url"], doc["http_status"], doc["mime_type"],
+                doc.get("file_extension"), doc["file_size_bytes"], doc["raw_path"],
+                doc["document_checksum"], doc["downloaded_at"], doc["ingestion_run_id"]
+            ]
+        )
+        return True
+
+    def save_extracted_document(self, doc: dict) -> bool:
+        existing = self.connection.execute(
+            """
+            SELECT COUNT(*) FROM extracted_documents
+            WHERE document_id = ? AND document_checksum = ? AND normalized_text_checksum = ?
+            """,
+            [doc["document_id"], doc["document_checksum"], doc["normalized_text_checksum"]]
+        ).fetchone()[0]
+
+        if existing > 0:
+            return False
+
+        self.connection.execute(
+            """
+            INSERT INTO extracted_documents (
+                document_id, document_checksum, extraction_method, extracted_text,
+                text_length, page_count, language, normalized_text_checksum,
+                extraction_quality, extracted_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                doc["document_id"], doc["document_checksum"], doc["extraction_method"],
+                doc["text"], doc["text_length"], doc.get("page_count"), doc.get("language"),
+                doc["normalized_text_checksum"], doc["extraction_quality"], doc["extracted_at"]
+            ]
+        )
+        return True
+
+    def save_duplicate_link(self, link: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO document_duplicate_links (
+                canonical_document_id, duplicate_document_id, duplicate_type, similarity, detected_at
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            [
+                link["canonical_document_id"], link["duplicate_document_id"],
+                link["duplicate_type"], link["similarity"], datetime.now(timezone.utc)
+            ]
+        )
+
+    def save_evidence_claim(self, claim: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO evidence_claims (
+                claim_id, document_id, cvm_code, ticker, claim_type, subject, predicate,
+                object_text, numeric_value, unit, currency, effective_date, horizon_end,
+                source_page, source_start, source_end, source_excerpt, extraction_method,
+                confidence, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                claim["claim_id"], claim["document_id"], claim["cvm_code"], claim.get("ticker"),
+                claim["claim_type"], claim["subject"], claim["predicate"], claim["object_text"],
+                claim.get("numeric_value"), claim.get("unit"), claim.get("currency"),
+                claim.get("effective_date"), claim.get("horizon_end"), claim.get("source_page"),
+                claim.get("source_start"), claim.get("source_end"), claim["source_excerpt"],
+                claim["extraction_method"], claim["confidence"], claim["created_at"]
+            ]
+        )
+
+    def count_downloaded_documents(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM downloaded_documents").fetchone()
+        return res[0] if res else 0
+
+    def count_extracted_documents(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM extracted_documents").fetchone()
+        return res[0] if res else 0
+
+    def count_evidence_claims(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM evidence_claims").fetchone()
         return res[0] if res else 0
 
     def close(self) -> None:

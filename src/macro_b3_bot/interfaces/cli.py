@@ -86,14 +86,17 @@ def ingest_cvm_ipe_index() -> None:
     asyncio.run(run_ipe())
 
 
-@app.command("prioritize-cvm-ipe")
-def prioritize_cvm_ipe() -> None:
-    from macro_b3_bot.config import Settings
-    from macro_b3_bot.application.prioritize_ipe import IpePrioritizer
-    settings = Settings()
-    prioritizer = IpePrioritizer(settings)
-    res = prioritizer.prioritize_queue(min_score_threshold=0.65)
-    print(f"✓ Priorização concluída! {res['high_priority_queued']} de {res['total_processed']} documentos possuem prioridade alta (>= 0.65).")
+@app.command("analyze-ipe-queue")
+def analyze_ipe_queue() -> None:
+    from scripts.analyze_ipe_queue import analyze_queue
+    analyze_queue()
+
+
+@app.command("process-cvm-ipe")
+def process_cvm_ipe(limit: int = 500, min_priority: float = 0.65) -> None:
+    import asyncio
+    from scripts.process_cvm_ipe import main as run_proc
+    asyncio.run(run_proc(limit=limit, min_priority=min_priority))
 
 
 @app.command("demo")
