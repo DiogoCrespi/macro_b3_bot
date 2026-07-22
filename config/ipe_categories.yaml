@@ -1,0 +1,32 @@
+categories:
+  "Fato Relevante": 1.00
+  "Informações de Companhias em Recuperação Judicial ou Extrajudicial": 1.00
+  "Comunicado ao Mercado": 0.85
+  "Dados Econômico-Financeiros": 0.80
+  "Aviso aos Acionistas": 0.75
+  "Comunicação sobre Transação entre Partes Relacionadas": 0.75
+  "Reunião da Administração": 0.65
+  "Assembleia": 0.50
+
+material_terms:
+  - aquisição
+  - incorporação
+  - fusão
+  - venda de ativos
+  - recuperação judicial
+  - pedido de falência
+  - dividendos
+  - juros sobre capital próprio
+  - aumento de capital
+  - recompra
+  - guidance
+  - projeções
+  - revisão
+  - suspensão
+  - investigação
+  - acordo
+  - dívida
+  - covenant
+  - acidente
+  - desastre
+  - licença ambiental

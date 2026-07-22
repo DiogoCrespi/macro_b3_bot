@@ -162,7 +162,7 @@ class DatabaseStore:
                 ingestion_run_id VARCHAR NOT NULL
             );
         """)
-        # Financial Statement Lines (Linhas Contábeis DRE, BPA, BPP, DFC)
+        # Financial Statement Lines
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS financial_statement_lines (
                 document_id VARCHAR NOT NULL,
@@ -185,6 +185,50 @@ class DatabaseStore:
                     account_code,
                     record_checksum
                 )
+            );
+        """)
+        # IPE Document Index
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS ipe_document_index (
+                document_id VARCHAR PRIMARY KEY,
+                cvm_code VARCHAR NOT NULL,
+                company_name VARCHAR NOT NULL,
+                category VARCHAR NOT NULL,
+                document_type VARCHAR,
+                subject VARCHAR,
+                reference_date DATE,
+                delivery_date TIMESTAMP NOT NULL,
+                protocol VARCHAR,
+                version INTEGER NOT NULL,
+                source_url VARCHAR,
+                raw_index_checksum VARCHAR NOT NULL,
+                record_checksum VARCHAR NOT NULL,
+                ingestion_run_id VARCHAR NOT NULL
+            );
+        """)
+        # IPE Processing Queue
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS ipe_processing_queue (
+                document_id VARCHAR PRIMARY KEY,
+                status VARCHAR NOT NULL,
+                priority_score DOUBLE NOT NULL,
+                materiality_score DOUBLE,
+                attempts INTEGER NOT NULL DEFAULT 0,
+                last_error VARCHAR,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL
+            );
+        """)
+        # IPE Document Versions
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS ipe_document_versions (
+                document_id VARCHAR NOT NULL,
+                version INTEGER NOT NULL,
+                delivery_date TIMESTAMP NOT NULL,
+                source_url VARCHAR,
+                document_checksum VARCHAR,
+                collected_at TIMESTAMP,
+                PRIMARY KEY (document_id, version)
             );
         """)
 
@@ -302,10 +346,28 @@ class DatabaseStore:
             ]
         )
 
-    def save_cvm_document(self, doc: dict) -> None:
+    def save_cvm_document_with_status(self, doc: dict) -> tuple[bool, bool]:
+        """
+        Salva um documento CVM.
+        Retorna (was_inserted, was_restatement).
+        """
+        existing = self.connection.execute(
+            "SELECT document_id, version FROM cvm_documents WHERE document_id = ?",
+            [doc["document_id"]]
+        ).fetchone()
+
+        if existing:
+            return (False, False) # Duplicado idêntico (mesma versão e ID)
+
+        # Verifica se existe outra versão do mesmo documento (reapresentação)
+        has_other_version = self.connection.execute(
+            "SELECT COUNT(*) FROM cvm_documents WHERE document_type = ? AND cvm_code = ? AND reference_date = ?",
+            [doc["document_type"], doc["cvm_code"], doc["reference_date"]]
+        ).fetchone()[0]
+
         self.connection.execute(
             """
-            INSERT OR REPLACE INTO cvm_documents (
+            INSERT INTO cvm_documents (
                 document_id, document_type, cvm_code, cnpj, reference_date,
                 received_at, version, raw_zip_checksum, ingestion_run_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -316,6 +378,7 @@ class DatabaseStore:
                 doc["raw_zip_checksum"], doc["ingestion_run_id"]
             ]
         )
+        return (True, has_other_version > 0)
 
     def save_financial_line(self, line: dict) -> bool:
         existing = self.connection.execute(
@@ -385,6 +448,60 @@ class DatabaseStore:
     def count_market_expectations(self) -> int:
         res = self.connection.execute("SELECT COUNT(*) FROM market_expectations").fetchone()
         return res[0] if res else 0
+
+    def save_ipe_document_index(self, doc: dict) -> bool:
+        """Salva um documento de índice IPE. Retorna True se inserido, False se já existia (duplicado)."""
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM ipe_document_index WHERE document_id = ?",
+            [doc["document_id"]]
+        ).fetchone()[0]
+
+        if existing > 0:
+            return False
+
+        self.connection.execute(
+            """
+            INSERT INTO ipe_document_index (
+                document_id, cvm_code, company_name, category, document_type,
+                subject, reference_date, delivery_date, protocol, version,
+                source_url, raw_index_checksum, record_checksum, ingestion_run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                doc["document_id"], doc["cvm_code"], doc["company_name"], doc["category"],
+                doc.get("document_type"), doc.get("subject"), doc.get("reference_date"),
+                doc["delivery_date"], doc.get("protocol"), doc.get("version", 1),
+                doc.get("source_url"), doc["raw_index_checksum"], doc["record_checksum"],
+                doc["ingestion_run_id"]
+            ]
+        )
+        return True
+
+    def save_ipe_processing_state(self, state: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO ipe_processing_queue (
+                document_id, status, priority_score, materiality_score,
+                attempts, last_error, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                state["document_id"], state["status"], state["priority_score"],
+                state.get("materiality_score"), state.get("attempts", 0),
+                state.get("last_error"), datetime.now(timezone.utc), datetime.now(timezone.utc)
+            ]
+        )
+
+    def count_ipe_documents(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM ipe_document_index").fetchone()
+        return res[0] if res else 0
+
+    def count_ipe_queue(self) -> int:
+        res = self.connection.execute("SELECT COUNT(*) FROM ipe_processing_queue").fetchone()
+        return res[0] if res else 0
+
+    def save_cvm_document(self, doc: dict) -> None:
+        self.save_cvm_document_with_status(doc)
 
     def count_snapshots(self) -> int:
         res = self.connection.execute("SELECT COUNT(*) FROM asset_snapshots").fetchone()

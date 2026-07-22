@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-import yaml
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Any, List
 
@@ -11,9 +11,23 @@ from macro_b3_bot.adapters.cvm.zip_reader import CvmZipReader
 from macro_b3_bot.adapters.b3_screener import B3ScreenerJsonBridge
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
+@dataclass
+class CvmIngestionResult:
+    documents_received: int = 0
+    documents_inserted: int = 0
+    documents_duplicated: int = 0
+    documents_restatement: int = 0
+
+    lines_received: int = 0
+    lines_inserted: int = 0
+    lines_duplicated: int = 0
+    lines_revised: int = 0
+    lines_rejected: int = 0
+
 class CvmIngestionPipeline:
     """
     Orquestrador de ingestão do Cadastro de Cias Abertas e Demonstrações Financeiras ITR/DFP da CVM.
+    Comprova 100% de idempotência entre documentos e linhas contábeis.
     """
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -38,8 +52,7 @@ class CvmIngestionPipeline:
             else:
                 duplicated += 1
 
-        # Mapeia vínculos b3_screener.ticker <-> CVM CNPJ
-        mapped_count = self._map_tickers_to_cvm(store)
+        mapped_stats = self.map_tickers_with_asset_class_breakdown(store)
 
         store.finish_ingestion_run(run_id, "SUCCESS", len(companies), inserted, 0)
         store.close()
@@ -50,19 +63,33 @@ class CvmIngestionPipeline:
             "received": len(companies),
             "inserted": inserted,
             "duplicated": duplicated,
-            "mapped_tickers": mapped_count
+            "mapped_stats": mapped_stats
         }
 
-    def _map_tickers_to_cvm(self, store: DatabaseStore) -> int:
+    def map_tickers_with_asset_class_breakdown(self, store: DatabaseStore) -> Dict[str, Any]:
         export_path = self.settings.b3_screener_export
         if not export_path.exists():
-            return 0
+            return {"total": 0, "mapped": 0, "coverage_pct": 0.0}
 
         bridge = B3ScreenerJsonBridge(export_path)
         assets = bridge.load_assets()
-        mapped = 0
+
+        total_universe = len(assets)
+        by_class: Dict[str, Dict[str, int]] = {
+            "STOCK": {"total": 0, "mapped": 0},
+            "FII": {"total": 0, "mapped": 0},
+            "ETF": {"total": 0, "mapped": 0},
+            "BDR": {"total": 0, "mapped": 0},
+            "OTHER": {"total": 0, "mapped": 0}
+        }
+
+        total_mapped = 0
 
         for asset in assets:
+            aclass = str(asset.asset_class).upper()
+            cls_key = aclass if aclass in by_class else "OTHER"
+            by_class[cls_key]["total"] += 1
+
             cnpj_raw = asset.metrics.get("cnpj") or asset.metrics.get("cnpj_cia")
             if cnpj_raw:
                 cnpj_clean = str(cnpj_raw).replace(".", "").replace("/", "").replace("-", "").strip().zfill(14)
@@ -80,43 +107,53 @@ class CvmIngestionPipeline:
                     "validated": True if cvm_code else False
                 })
                 if cvm_code:
-                    mapped += 1
+                    total_mapped += 1
+                    by_class[cls_key]["mapped"] += 1
 
-        return mapped
+        stock_total = by_class["STOCK"]["total"]
+        stock_mapped = by_class["STOCK"]["mapped"]
+        stock_coverage = (stock_mapped / stock_total * 100.0) if stock_total > 0 else 0.0
 
-    async def ingest_statements(self, doc_type: str, years: List[int]) -> Dict[str, Any]:
+        return {
+            "total_universe": total_universe,
+            "total_mapped": total_mapped,
+            "stock_total": stock_total,
+            "stock_mapped": stock_mapped,
+            "stock_coverage_pct": round(stock_coverage, 2),
+            "by_class": by_class
+        }
+
+    async def ingest_statements(self, doc_type: str, years: List[int]) -> CvmIngestionResult:
         run_id = f"RUN_CVM_{doc_type.upper()}_{uuid.uuid4().hex[:8]}"
         store = DatabaseStore(self.db_path)
         store.start_ingestion_run(run_id, f"CVM_{doc_type.upper()}")
 
-        total_docs = 0
-        total_lines = 0
-        total_inserted = 0
+        res = CvmIngestionResult()
 
         for year in years:
             docs, lines = await self.zip_reader.fetch_and_parse_statements(
                 doc_type=doc_type, year=year, ingestion_run_id=run_id
             )
-            total_docs += len(docs)
-            total_lines += len(lines)
+            res.documents_received += len(docs)
+            res.lines_received += len(lines)
 
             for doc in docs:
-                store.save_cvm_document(doc.model_dump(mode="json"))
+                was_inserted, was_reversion = store.save_cvm_document_with_status(doc.model_dump(mode="json"))
+                if was_inserted:
+                    res.documents_inserted += 1
+                elif was_reversion:
+                    res.documents_restatement += 1
+                else:
+                    res.documents_duplicated += 1
 
             for line in lines:
                 was_inserted = store.save_financial_line(line.model_dump(mode="json"))
                 if was_inserted:
-                    total_inserted += 1
+                    res.lines_inserted += 1
+                else:
+                    res.lines_duplicated += 1
 
-        store.finish_ingestion_run(run_id, "SUCCESS", total_lines, total_inserted, 0)
+        store.finish_ingestion_run(run_id, "SUCCESS", res.lines_received, res.lines_inserted, res.lines_rejected)
         store.close()
 
-        return {
-            "run_id": run_id,
-            "status": "SUCCESS",
-            "doc_type": doc_type.upper(),
-            "years": years,
-            "documents_count": total_docs,
-            "statement_lines_received": total_lines,
-            "statement_lines_inserted": total_inserted
-        }
+        return res
