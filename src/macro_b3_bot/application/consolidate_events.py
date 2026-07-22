@@ -33,8 +33,7 @@ class EventConsolidator:
         store = DatabaseStore(self.db_path)
         conn = store.connection
 
-        # Carrega claims não processados ainda
-        # DuckDB não tem JSON_CONTAINS — usamos LEFT JOIN + NOT EXISTS via LIKE
+        # Carrega claims não processados ainda com o timestamp de publicação (delivery_date) do documento correspondente
         rows = conn.execute("""
             SELECT
                 c.claim_id,
@@ -48,8 +47,10 @@ class EventConsolidator:
                 c.currency,
                 c.effective_date,
                 c.confidence,
-                c.created_at
+                c.created_at,
+                idx.delivery_date as publication_timestamp
             FROM evidence_claims c
+            JOIN ipe_document_index idx ON c.document_id = idx.document_id
             WHERE NOT EXISTS (
                 SELECT 1 FROM event_candidates ec
                 WHERE ec.claim_ids LIKE '%' || c.claim_id || '%'
@@ -61,14 +62,26 @@ class EventConsolidator:
             LIMIT ?
         """, [limit]).fetchall()
 
-        # Agrupa por (cvm_code, document_id)
+        # Agrupa por evento econômico (cvm_code, data de anúncio)
         groups: Dict[str, List[dict]] = {}
         for row in rows:
             (claim_id, doc_id, cvm_code, ticker, claim_type,
              subject, object_text, numeric_value, currency,
-             effective_date, confidence, created_at) = row
+             effective_date, confidence, created_at, pub_ts) = row
 
-            key = f"{cvm_code}|{doc_id}"
+            if pub_ts is not None:
+                if isinstance(pub_ts, str):
+                    try:
+                        dt = datetime.fromisoformat(pub_ts)
+                    except ValueError:
+                        dt = datetime.strptime(pub_ts.split(".")[0], "%Y-%m-%d %H:%M:%S")
+                    announcement_date = dt.date().isoformat()
+                else:
+                    announcement_date = pub_ts.date().isoformat()
+            else:
+                announcement_date = "UNKNOWN"
+
+            key = f"{cvm_code}|{announcement_date}"
             if key not in groups:
                 groups[key] = []
             groups[key].append({
@@ -83,7 +96,9 @@ class EventConsolidator:
                 "currency": currency,
                 "effective_date": effective_date,
                 "confidence": confidence,
-                "created_at": created_at
+                "created_at": created_at,
+                "publication_timestamp": pub_ts,
+                "announcement_date": announcement_date
             })
 
         CLAIM_TO_EVENT_TYPE = {
@@ -109,7 +124,7 @@ class EventConsolidator:
         for key, claims in groups.items():
             cvm_code = claims[0]["cvm_code"]
             ticker = claims[0]["ticker"] or cvm_code
-            doc_id = claims[0]["document_id"]
+            announcement_date = claims[0]["announcement_date"]
 
             # Ordena claims pela prioridade do tipo
             sorted_claims = sorted(claims, key=lambda x: CLAIM_PRIORITY.get(x["claim_type"], 99))
@@ -149,7 +164,7 @@ class EventConsolidator:
                 "cvm_code": cvm_code,
                 "event_type": event_type,
                 "title": f"{event_type.replace('_', ' ')} — {ticker} ({len(claims)} claims)",
-                "effective_date": primary_claim["effective_date"],
+                "effective_date": announcement_date,
                 "claim_ids": claim_ids,
                 "evidence_count": len(claims),
                 "novelty_score": novelty_score,
@@ -157,6 +172,7 @@ class EventConsolidator:
                 "persistence_score": 0.8,
                 "quantitative_impact": quant_impact,
                 "invalidators": [],
+                "publication_timestamp": primary_claim["publication_timestamp"],
                 "status": "CANDIDATE",
             }
 

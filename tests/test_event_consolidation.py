@@ -30,6 +30,15 @@ def _seed_claim(store: DatabaseStore, claim_id: str, cvm_code: str,
     """Insere um EvidenceClaim de teste diretamente."""
     d_id = doc_id if doc_id is not None else f"DOC_{claim_id}"
     store.connection.execute("""
+        INSERT OR IGNORE INTO ipe_document_index (
+            document_id, cvm_code, company_name, category, document_type,
+            delivery_date, version, raw_index_checksum, record_checksum, ingestion_run_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, [
+        d_id, cvm_code, "TEST COMPANY", "Aumento de Capital", "IPE",
+        "2025-12-29 09:30:00", 1, "raw_hash", "rec_hash", "run_id"
+    ])
+    store.connection.execute("""
         INSERT OR IGNORE INTO evidence_claims (
             claim_id, document_id, cvm_code, ticker, claim_type,
             subject, predicate, object_text, numeric_value, unit, currency,

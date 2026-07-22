@@ -1,6 +1,10 @@
-*.duckdb
-*.duckdb.wal
-__pycache__/
-*.pyc
 .env
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 data/raw/
+data/*.duckdb*
+data/market_info_cache.json

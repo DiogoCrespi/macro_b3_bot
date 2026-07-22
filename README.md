@@ -58,6 +58,21 @@ macro-b3 validate-config
 macro-b3 demo
 ```
 
-## Regra central
+## 📊 Estudo de Eventos (Sprint 3B.1)
+
+O bot conta com um pipeline unificado e robusto de estudo de eventos para notícias e fatos relevantes da CVM (IPE):
+
+```powershell
+# Executa o pipeline completo (consolidação, mapeamento, download de preços, CAR, bootstrap + Benjamini-Hochberg)
+python src/macro_b3_bot/interfaces/cli.py run-event-study --bootstrap-iterations 10000 --seed 42
+```
+
+### Premissas e Metodologia:
+* **Consolidação por Evento Econômico**: As claims são agrupadas por `(cvm_code, data_anuncio)`, tratando múltiplos anúncios/versões no mesmo dia como um único evento corporativo, evitando a pseudo-replicação estatística.
+* **Calendário B3 Fiel**: Resolução de timezones para manter os pregões de segunda-feira ativos (evitando o bug de deslocamento de data UTC).
+* **Mapeamento Point-in-Time**: O ticker Guararapes é processado localmente como `GUAR3` e mapeado dinamicamente para `RIAA3.SA` apenas no momento da consulta de cotações históricas no Yahoo Finance.
+* **Correção Múltipla**: Aplicação do procedimento de False Discovery Rate de Benjamini-Hochberg a 10% nos p-values das reações acumuladas (CAR 5 dias).
+
+## Central Rule
 
 O bot deve poder responder **“nenhuma compra agora”**. Um sistema obrigado a indicar ativos em toda execução é um gerador de narrativas, não um sistema de decisão.

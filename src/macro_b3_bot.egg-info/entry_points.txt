@@ -1,2 +1,0 @@
-[console_scripts]
-macro-b3 = macro_b3_bot.interfaces.cli:app

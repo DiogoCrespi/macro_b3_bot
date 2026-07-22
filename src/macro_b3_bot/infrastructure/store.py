@@ -319,10 +319,17 @@ class DatabaseStore:
                 persistence_score DOUBLE NOT NULL,
                 quantitative_impact VARCHAR,
                 invalidators VARCHAR,
+                publication_timestamp TIMESTAMP,
                 status VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL
             );
         """)
+        
+        # Alter table para bases existentes
+        try:
+            self.connection.execute("ALTER TABLE event_candidates ADD COLUMN publication_timestamp TIMESTAMP;")
+        except Exception:
+            pass
         # Evidence Claims
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS evidence_claims (
@@ -808,13 +815,23 @@ class DatabaseStore:
 
     def save_event_candidate(self, candidate: dict) -> None:
         import json
+        from datetime import date, time, datetime
+        pub_ts = candidate.get("publication_timestamp")
+        if pub_ts is None and candidate.get("effective_date") is not None:
+            eff = candidate.get("effective_date")
+            if isinstance(eff, str):
+                eff = date.fromisoformat(eff)
+            pub_ts = datetime.combine(eff, time(0, 0))
+        if pub_ts is None:
+            pub_ts = datetime.now(timezone.utc)
+
         self.connection.execute(
             """
             INSERT OR REPLACE INTO event_candidates (
                 event_id, ticker, cvm_code, event_type, title, effective_date,
                 claim_ids, evidence_count, novelty_score, materiality_score,
-                persistence_score, quantitative_impact, invalidators, status, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                persistence_score, quantitative_impact, invalidators, publication_timestamp, status, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 candidate["event_id"], candidate["ticker"], candidate["cvm_code"],
@@ -824,6 +841,7 @@ class DatabaseStore:
                 candidate.get("persistence_score", 0.8),
                 json.dumps(candidate.get("quantitative_impact", {})),
                 json.dumps(candidate.get("invalidators", [])),
+                pub_ts,
                 candidate["status"], datetime.now(timezone.utc)
             ]
         )

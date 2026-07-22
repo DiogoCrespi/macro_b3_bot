@@ -62,12 +62,9 @@ class EventReturnsCalculator:
         # Busca eventos com tickers mapeados válidos (exclui UNKNOWN e códigos de CVM residuais)
         events = conn.execute(
             """
-            SELECT ec.event_id, ec.ticker, ec.cvm_code, i.delivery_date
+            SELECT ec.event_id, ec.ticker, ec.cvm_code, ec.publication_timestamp as delivery_date
             FROM event_candidates ec
-            JOIN evidence_claims c ON ec.claim_ids LIKE '%' || c.claim_id || '%'
-            JOIN ipe_document_index i ON c.document_id = i.document_id
             WHERE ec.ticker != 'UNKNOWN' AND TRY_CAST(ec.ticker AS INTEGER) IS NULL
-            QUALIFY ROW_NUMBER() OVER (PARTITION BY ec.event_id ORDER BY i.delivery_date ASC) = 1
             """
         ).fetchall()
 
