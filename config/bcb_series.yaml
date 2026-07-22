@@ -1,0 +1,20 @@
+series:
+  - code: "11"
+    name: selic_daily
+    unit: percent_daily
+    frequency: daily
+
+  - code: "1178"
+    name: selic_annualized_252
+    unit: percent_annual
+    frequency: daily
+
+  - code: "1"
+    name: usdbrl_sell
+    unit: brl_per_usd
+    frequency: daily
+
+  - code: "24363"
+    name: ibc_br
+    unit: index
+    frequency: monthly

@@ -59,6 +59,13 @@ def ingest_b3() -> None:
     run_ingest_b3()
 
 
+@app.command("ingest-bcb")
+def ingest_bcb() -> None:
+    import asyncio
+    from scripts.ingest_bcb import main as run_bcb
+    asyncio.run(run_bcb())
+
+
 @app.command("demo")
 def demo() -> None:
     settings = Settings()
