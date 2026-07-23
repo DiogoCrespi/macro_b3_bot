@@ -460,7 +460,7 @@ class MacroEventBuilder:
         min_surprise = gate_rules.get("min_surprise_score", 0.60)
         min_regime = gate_rules.get("min_regime_shift_score", 0.65)
         min_novelty = gate_rules.get("min_novelty_score", 0.50)
-        min_quality = gate_rules.get("min_data_quality_score", 0.80)
+        min_quality = gate_rules.get("min_data_quality_score", 0.70)
         min_watch_surprise = gate_rules.get("watch_min_surprise_score", 0.40)
 
         passes_primary = (surprise >= min_surprise) or (regime_shift >= min_regime)

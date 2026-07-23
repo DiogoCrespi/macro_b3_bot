@@ -1,0 +1,342 @@
+# Deterministic Causal Graph Database — Sprint 4B
+# Version: 1.0.0
+# Nodes: MacroEvent -> MacroVariable -> MarketFactor -> B3Sector
+# Edges: direction (+1 or -1), strength (0..1), confidence (0..1), lag_days, horizon_days, half_life_days, rationale
+
+edges:
+  # ── MONETARY POLICY & DI CURVE ──────────────────────────────────────────
+  - edge_id: "edge_monetary_base_to_selic"
+    source_node: "MONETARY_POLICY_SURPRISE"
+    target_node: "VAR_SELIC_RATE"
+    direction: 1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Monetary policy surprise directly impacts Selic rate expectations."
+
+  - edge_id: "edge_monetary_to_selic"
+    source_node: "HAWKISH_MONETARY_SURPRISE"
+    target_node: "VAR_SELIC_RATE"
+    direction: 1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Hawkish monetary surprise directly raises Selic rate expectations."
+
+  - edge_id: "edge_selic_to_bank_margins"
+    source_node: "VAR_SELIC_RATE"
+    target_node: "B3_SECTOR_BANCOS"
+    direction: 1
+    strength: 0.70
+    confidence: 0.85
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher Selic rate widens net interest margins (NIM) for large commercial banks."
+
+  - edge_id: "edge_selic_to_retail"
+    source_node: "VAR_SELIC_RATE"
+    target_node: "B3_SECTOR_VAREJO"
+    direction: -1
+    strength: 0.85
+    confidence: 0.90
+    lag_days: 30
+    horizon_days: 360
+    half_life_days: 180
+    rationale: "Higher Selic rate increases consumer credit costs and restricts discretionary retail spending."
+
+  - edge_id: "edge_selic_to_real_estate"
+    source_node: "VAR_SELIC_RATE"
+    target_node: "B3_SECTOR_CONSTRUCAO"
+    direction: -1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 45
+    horizon_days: 360
+    half_life_days: 180
+    rationale: "Higher Selic increases mortgage rates and reduces homebuilder affordability."
+
+  - edge_id: "edge_selic_to_education"
+    source_node: "VAR_SELIC_RATE"
+    target_node: "B3_SECTOR_EDUCACAO"
+    direction: -1
+    strength: 0.75
+    confidence: 0.80
+    lag_days: 60
+    horizon_days: 360
+    half_life_days: 180
+    rationale: "Higher interest rates increase student loan delinquency and reduce enrollment growth."
+
+  # ── INFLATION & REAL YIELDS ──────────────────────────────────────────────
+  - edge_id: "edge_inflation_to_real_yields"
+    source_node: "INFLATION_SURPRISE_UP"
+    target_node: "VAR_REAL_YIELDS"
+    direction: 1
+    strength: 0.85
+    confidence: 0.85
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Surprise inflation increase drives real yields higher on NTN-B bonds."
+
+  - edge_id: "edge_real_yields_to_utilities"
+    source_node: "VAR_REAL_YIELDS"
+    target_node: "B3_SECTOR_ENERGIA_ELETRICA"
+    direction: -1
+    strength: 0.80
+    confidence: 0.85
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher real yields increase equity discount rates for long-duration dividend utilities."
+
+  - edge_id: "edge_real_yields_to_sanitation"
+    source_node: "VAR_REAL_YIELDS"
+    target_node: "B3_SECTOR_SANEAMENTO"
+    direction: -1
+    strength: 0.75
+    confidence: 0.80
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher discount rates reduce valuation multiples for concession utility assets."
+
+  - edge_id: "edge_inflation_to_consumer_staples"
+    source_node: "INFLATION_SURPRISE_UP"
+    target_node: "B3_SECTOR_AGRO_ALIMENTOS"
+    direction: 1
+    strength: 0.65
+    confidence: 0.75
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Food inflation allows agricultural producers and food processors to pass through price hikes."
+
+  # ── GROWTH & INDUSTRIAL ACTIVITY ────────────────────────────────────────
+  - edge_id: "edge_growth_base_to_activity"
+    source_node: "GROWTH_SURPRISE"
+    target_node: "VAR_GDP_GROWTH"
+    direction: 1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Growth surprise impacts broad economic output."
+
+  - edge_id: "edge_growth_up_to_activity"
+    source_node: "GROWTH_SURPRISE_UP"
+    target_node: "VAR_GDP_GROWTH"
+    direction: 1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Positive growth surprise elevates broad economic output."
+
+  - edge_id: "edge_gdp_to_logistics"
+    source_node: "VAR_GDP_GROWTH"
+    target_node: "B3_SECTOR_LOGISTICA"
+    direction: 1
+    strength: 0.85
+    confidence: 0.85
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher economic output drives freight volume, toll road traffic, and logistics demand."
+
+  - edge_id: "edge_gdp_to_capital_goods"
+    source_node: "VAR_GDP_GROWTH"
+    target_node: "B3_SECTOR_BENS_CAPITAL"
+    direction: 1
+    strength: 0.80
+    confidence: 0.80
+    lag_days: 30
+    horizon_days: 270
+    half_life_days: 135
+    rationale: "Economic expansion triggers corporate capex investments and machinery purchases."
+
+  - edge_id: "edge_gdp_to_healthcare"
+    source_node: "VAR_GDP_GROWTH"
+    target_node: "B3_SECTOR_SAUDE"
+    direction: 1
+    strength: 0.70
+    confidence: 0.80
+    lag_days: 45
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Employment expansion increases corporate health insurance coverage and elective procedures."
+
+  # ── USD / BRL FX RATE ──────────────────────────────────────────────────
+  - edge_id: "edge_usd_up_to_fx"
+    source_node: "USD_BRL_SHOCK_UP"
+    target_node: "VAR_BRL_USD_RATE"
+    direction: 1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Dollar appreciation increases BRL/USD exchange rate."
+
+  - edge_id: "edge_fx_to_pulp_paper"
+    source_node: "VAR_BRL_USD_RATE"
+    target_node: "B3_SECTOR_PAPEL_CELULOSE"
+    direction: 1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Weaker BRL boosts net revenues for dollar-denominated pulp & paper exporters."
+
+  - edge_id: "edge_fx_to_mining_steel"
+    source_node: "VAR_BRL_USD_RATE"
+    target_node: "B3_SECTOR_MINERACAO_SIDERURGIA"
+    direction: 1
+    strength: 0.85
+    confidence: 0.85
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Weaker BRL expands EBITDA margins for iron ore and mining exporters."
+
+  - edge_id: "edge_fx_to_aviation"
+    source_node: "VAR_BRL_USD_RATE"
+    target_node: "B3_SECTOR_AVIACAO"
+    direction: -1
+    strength: 0.90
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Weaker BRL inflates jet fuel costs and dollar-denominated aircraft lease obligations."
+
+  # ── OIL & COMMODITIES ──────────────────────────────────────────────────
+  - edge_id: "edge_oil_base_to_brent"
+    source_node: "OIL_PRICE_SHOCK"
+    target_node: "VAR_BRENT_OIL"
+    direction: 1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Oil price shock drives international Brent crude prices."
+
+  - edge_id: "edge_oil_up_to_brent"
+    source_node: "OIL_PRICE_SHOCK_UP"
+    target_node: "VAR_BRENT_OIL"
+    direction: 1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Oil supply shock drives international Brent crude prices higher."
+
+  - edge_id: "edge_brent_to_oil_gas"
+    source_node: "VAR_BRENT_OIL"
+    target_node: "B3_SECTOR_PETROLEO_GAS"
+    direction: 1
+    strength: 0.90
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher Brent crude directly increases cash flows for E&P oil producers."
+
+  - edge_id: "edge_brent_to_aviation_cost"
+    source_node: "VAR_BRENT_OIL"
+    target_node: "B3_SECTOR_AVIACAO"
+    direction: -1
+    strength: 0.85
+    confidence: 0.90
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher oil prices increase jet fuel expense, reducing airline operating margins."
+
+  - edge_id: "edge_brent_to_transport_cost"
+    source_node: "VAR_BRENT_OIL"
+    target_node: "B3_SECTOR_LOGISTICA"
+    direction: -1
+    strength: 0.65
+    confidence: 0.80
+    lag_days: 30
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher diesel prices increase operating costs for road freight haulers."
+
+  # ── ENSO / HYDROLOGY / AGRO ─────────────────────────────────────────────
+  - edge_id: "edge_enso_to_hydrology"
+    source_node: "ENSO_INTENSIFICATION"
+    target_node: "VAR_HYDROLOGY_RESERVOIRS"
+    direction: -1
+    strength: 0.85
+    confidence: 0.85
+    lag_days: 60
+    horizon_days: 270
+    half_life_days: 135
+    rationale: "El Niño intensification reduces rainfall in Northern/Northeastern hydro basins."
+
+  - edge_id: "edge_hydro_to_power_generation"
+    source_node: "VAR_HYDROLOGY_RESERVOIRS"
+    target_node: "B3_SECTOR_ENERGIA_ELETRICA"
+    direction: -1
+    strength: 0.80
+    confidence: 0.85
+    lag_days: 30
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Lower reservoir levels trigger thermal dispatch and higher spot energy prices (PLD)."
+
+  - edge_id: "edge_enso_to_agro_yield"
+    source_node: "ENSO_INTENSIFICATION"
+    target_node: "B3_SECTOR_AGRO_ALIMENTOS"
+    direction: -1
+    strength: 0.75
+    confidence: 0.80
+    lag_days: 90
+    horizon_days: 360
+    half_life_days: 180
+    rationale: "Severe climate anomalies impact crop yields for soy, corn, and sugar producers."
+
+  # ── BRAZIL COUNTRY RISK & CDS ──────────────────────────────────────────
+  - edge_id: "edge_risk_to_cds"
+    source_node: "BRAZIL_RISK_REPRICING"
+    target_node: "VAR_BRAZIL_CDS"
+    direction: 1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Fiscal uncertainty or external shock spikes Brazil 5Y CDS spread."
+
+  - edge_id: "edge_cds_to_financials"
+    source_node: "VAR_BRAZIL_CDS"
+    target_node: "B3_SECTOR_BANCOS"
+    direction: -1
+    strength: 0.75
+    confidence: 0.85
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher country risk increases sovereign bond yields, pressuring bank capital ratios."
+
+  - edge_id: "edge_cds_to_insurance"
+    source_node: "VAR_BRAZIL_CDS"
+    target_node: "B3_SECTOR_SEGUROS"
+    direction: 1
+    strength: 0.65
+    confidence: 0.75
+    lag_days: 15
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Higher interest rates boost financial float returns for insurance companies."

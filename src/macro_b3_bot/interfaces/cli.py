@@ -601,23 +601,107 @@ def audit_macro_events(
     console.print("[bold]BUY habilitado: NÃO[/bold]")
 
 
+@app.command("evaluate-sector-impacts")
+def evaluate_sector_impacts(
+    since: Optional[str] = typer.Option(None, "--since", help="Start date (YYYY-MM-DD) for candidate evaluation"),
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Ingestion run ID"),
+) -> None:
+    """Propagate approved macro events through the Causal Graph to evaluate B3 sector impacts."""
+    from datetime import date, timedelta
+    from macro_b3_bot.application.evaluate_sector_impacts import CausalGraphEngine
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    db_path = settings.data_dir / "audit.duckdb"
+    store = DatabaseStore(db_path)
+
+    since_date = date.fromisoformat(since) if since else (date.today() - timedelta(days=180))
+
+    console.print("\n[bold cyan]=== SPRINT 4B: SECTOR IMPACT EVALUATION ===[/bold cyan]")
+    console.print(f"Avaliando impactos setoriais desde {since_date}...")
+
+    target_run_id = run_id or store.get_latest_macro_event_run_id() or "run_sector_eval"
+    engine = CausalGraphEngine(store, target_run_id)
+    summary = engine.evaluate_events_window(since_date=since_date)
+    store.close()
+
+    table = Table(title="Sector Impact Candidates Summary")
+    table.add_column("Métrica")
+    table.add_column("Contagem")
+    for k, v in summary.items():
+        table.add_row(str(k), str(v))
+    console.print(table)
+    console.print("[bold]BUY / Seleção de Ticker: 100% DESABILITADO[/bold]")
+
+
+@app.command("audit-sector-impacts")
+def audit_sector_impacts(
+    status: Optional[str] = typer.Option(None, "--status", help="Filter sector candidates by status"),
+) -> None:
+    """Print an audit summary of evaluated SectorImpactCandidates in DuckDB."""
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    db_path = settings.data_dir / "audit.duckdb"
+    store = DatabaseStore(db_path)
+
+    candidates = store.get_sector_impact_candidates(status=status)
+    store.close()
+
+    console.print("\n[bold cyan]=== AUDITORIA DE IMPACTOS SETORIAIS (SPRINT 4B) ===[/bold cyan]")
+    console.print(f"Total de Candidatos Avaliados: {len(candidates)}\n")
+
+    table = Table(title=f"SectorImpactCandidates ({len(candidates)} total)")
+    table.add_column("EventId")
+    table.add_column("EventType")
+    table.add_column("Setor")
+    table.add_column("Direção")
+    table.add_column("Score")
+    table.add_column("Confiança")
+    table.add_column("Conflito")
+    table.add_column("Status")
+
+    for c in candidates:
+        table.add_row(
+            str(c["event_id"])[:10],
+            str(c["event_type"]),
+            str(c["sector"]),
+            str(c["direction"]),
+            f"{float(c['impact_score']):.3f}",
+            f"{float(c['confidence']):.3f}",
+            "SIM" if c.get("conflict_detected") else "NÃO",
+            str(c["status"]),
+        )
+    console.print(table)
+
+    approved = sum(1 for c in candidates if c["status"] == "SECTOR_IMPACT_APPROVED")
+    watch = sum(1 for c in candidates if c["status"] == "SECTOR_IMPACT_WATCH")
+    rejected = sum(1 for c in candidates if c["status"] == "SECTOR_IMPACT_REJECTED")
+    console.print(f"\nAprovados={approved} | Watch={watch} | Rejeitados={rejected}")
+    console.print("[bold]BUY / Ordens: PERMANENTEMENTE BLOQUEADOS[/bold]")
+
+
 @app.command("run-macro-engine")
 def run_macro_engine(
     sources: str = typer.Option("fred,eia,noaa", "--sources"),
     incremental: bool = typer.Option(True, "--incremental/--full"),
     since: str = typer.Option(None, "--since"),
 ) -> None:
-    """Run the full Sprint 4A Macro Event Engine pipeline end-to-end."""
-    console.print("\n[bold cyan]=== SPRINT 4A: MACRO EVENT ENGINE ===[/bold cyan]\n")
+    """Run the full Sprint 4A & 4B Macro Event -> Sector Engine pipeline end-to-end."""
+    console.print("\n[bold cyan]=== SPRINT 4A & 4B: MACRO TO SECTOR PIPELINE ===[/bold cyan]\n")
 
-    console.print("[bold]Passo 1/3: Ingestão de Dados Macro Globais...[/bold]")
+    console.print("[bold]Passo 1/4: Ingestão de Dados Macro Globais...[/bold]")
     ingest_global_macro(sources=sources, incremental=incremental)
 
-    console.print("\n[bold]Passo 2/3: Detecção de Regime e Eventos Macro...[/bold]")
+    console.print("\n[bold]Passo 2/4: Detecção de Regime e Eventos Macro...[/bold]")
     detect_macro_events(since=since)
 
-    console.print("\n[bold]Passo 3/3: Auditoria...[/bold]")
+    console.print("\n[bold]Passo 3/4: Avaliação de Impactos Setoriais (Grafo Causal)...[/bold]")
+    evaluate_sector_impacts(since=since)
+
+    console.print("\n[bold]Passo 4/4: Auditoria Completa...[/bold]")
     audit_macro_events()
+    audit_sector_impacts()
 
     console.print("\n[bold green]✓ Macro Engine executado com sucesso![/bold green]")
     console.print("[bold red]BUY: DESABILITADO | ORDENS: DESABILITADAS[/bold red]")

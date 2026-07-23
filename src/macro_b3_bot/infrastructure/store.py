@@ -569,6 +569,30 @@ class DatabaseStore:
             );
         """)
 
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS sector_impact_candidates (
+                candidate_id VARCHAR PRIMARY KEY,
+                event_id VARCHAR NOT NULL,
+                event_type VARCHAR NOT NULL,
+                sector VARCHAR NOT NULL,
+                subsector VARCHAR,
+                direction VARCHAR NOT NULL,
+                impact_score DOUBLE NOT NULL,
+                confidence DOUBLE NOT NULL,
+                horizon_months INTEGER NOT NULL,
+                causal_paths VARCHAR NOT NULL,
+                direct_effects VARCHAR NOT NULL,
+                second_order_effects VARCHAR NOT NULL,
+                positive_paths_count INTEGER NOT NULL,
+                negative_paths_count INTEGER NOT NULL,
+                conflict_detected BOOLEAN NOT NULL,
+                invalidators VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                detected_at TIMESTAMP NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
         self.connection.execute("""
@@ -1433,9 +1457,81 @@ class DatabaseStore:
             "volume_zscore": row[18],
             "bootstrap_pvalue_1d": row[19],
             "bootstrap_pvalue_5d": row[20],
-            "bootstrap_pvalue_20d": row[21],
             "outcome_label": row[22]
         }
+
+    def save_sector_impact_candidate(self, cand: dict) -> bool:
+        """Idempotent save of a SectorImpactCandidate."""
+        existing = self.connection.execute(
+            "SELECT COUNT(*) FROM sector_impact_candidates WHERE candidate_id = ?",
+            [cand["candidate_id"]]
+        ).fetchone()[0]
+        if existing > 0:
+            return False
+
+        import json as _json
+        causal_paths = _json.dumps(cand.get("causal_paths", []))
+        direct_effects = _json.dumps(cand.get("direct_effects", []))
+        second_order_effects = _json.dumps(cand.get("second_order_effects", []))
+        invalidators = _json.dumps(cand.get("invalidators", []))
+
+        self.connection.execute(
+            """
+            INSERT INTO sector_impact_candidates (
+                candidate_id, event_id, event_type, sector, subsector,
+                direction, impact_score, confidence, horizon_months,
+                causal_paths, direct_effects, second_order_effects,
+                positive_paths_count, negative_paths_count, conflict_detected, invalidators,
+                status, detected_at, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                cand["candidate_id"], cand["event_id"], cand["event_type"], cand["sector"], cand.get("subsector"),
+                cand["direction"], cand["impact_score"], cand["confidence"], cand.get("horizon_months", 3),
+                causal_paths, direct_effects, second_order_effects,
+                cand.get("positive_paths_count", 0), cand.get("negative_paths_count", 0),
+                cand.get("conflict_detected", False), invalidators,
+                cand["status"], cand["detected_at"], datetime.now(timezone.utc)
+            ]
+        )
+        return True
+
+    def get_sector_impact_candidates(self, status: Optional[str] = None) -> list[dict]:
+        if status:
+            rows = self.connection.execute(
+                """
+                SELECT candidate_id, event_id, event_type, sector, subsector,
+                       direction, impact_score, confidence, horizon_months,
+                       causal_paths, direct_effects, second_order_effects,
+                       positive_paths_count, negative_paths_count, conflict_detected, invalidators,
+                       status, detected_at
+                FROM sector_impact_candidates
+                WHERE status = ?
+                ORDER BY detected_at DESC
+                """,
+                [status]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT candidate_id, event_id, event_type, sector, subsector,
+                       direction, impact_score, confidence, horizon_months,
+                       causal_paths, direct_effects, second_order_effects,
+                       positive_paths_count, negative_paths_count, conflict_detected, invalidators,
+                       status, detected_at
+                FROM sector_impact_candidates
+                ORDER BY detected_at DESC
+                """
+            ).fetchall()
+
+        cols = [
+            "candidate_id", "event_id", "event_type", "sector", "subsector",
+            "direction", "impact_score", "confidence", "horizon_months",
+            "causal_paths", "direct_effects", "second_order_effects",
+            "positive_paths_count", "negative_paths_count", "conflict_detected", "invalidators",
+            "status", "detected_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
 
     def close(self) -> None:
         self.connection.close()

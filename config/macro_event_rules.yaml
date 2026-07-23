@@ -8,7 +8,7 @@ gate:
   min_surprise_score: 0.60         # OR regime_shift_score must pass
   min_regime_shift_score: 0.65
   min_novelty_score: 0.50          # AND condition
-  min_data_quality_score: 0.80     # AND condition
+  min_data_quality_score: 0.70     # AND condition
 
   # Outputs
   approved_label: "MACRO_EVENT_APPROVED"
