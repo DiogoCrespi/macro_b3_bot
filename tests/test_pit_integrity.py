@@ -1,12 +1,14 @@
 """
-Unit and integration tests for Sprint 4A.1-PIT — Point-In-Time Integrity & Revisions Engine.
+Unit and integration tests for Sprint 4A.1-PIT2 — Point-In-Time Integrity & Revisions Engine.
 
 Tests cover:
 - Z-score historical order correctness (delta compares actual vs immediately preceding period)
 - Vintage tracking and automatic `is_latest = False` update for older vintages
+- Exact timestamp equality (`available_at == as_of_timestamp`) availability contract
 - Point-in-time filtering in MacroEventBuilder with `as_of_timestamp`
-- Point-in-time filtering in RegimeDetector with `as_of_timestamp`
-- Severe penalty for `availability_precision = UNKNOWN` in data quality score
+- Isolation of historical context in score calculations as of `as_of_timestamp`
+- Strict gate lockout for `availability_precision = UNKNOWN` (never MACRO_EVENT_APPROVED)
+- Regime detector snapshot_date alignment with `as_of_timestamp.date()`
 - BCB Focus integration
 """
 from __future__ import annotations
@@ -97,6 +99,42 @@ def test_is_latest_vintage_update() -> None:
         store.close()
 
 
+def test_exact_equality_as_of_timestamp() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = Path(tmpdir) / "audit.duckdb"
+        store = DatabaseStore(db_path)
+
+        t_exact = datetime(2024, 3, 15, 14, 30, tzinfo=timezone.utc)
+
+        rel = {
+            "release_id": "rel_exact",
+            "source": "FRED",
+            "series_code": "CPIAUCSL",
+            "indicator": "Consumer Price Index",
+            "geography": ["US"],
+            "frequency": "MONTHLY",
+            "unit": "%",
+            "reference_date": date(2024, 2, 1),
+            "published_at": t_exact,
+            "available_at": t_exact,
+            "actual_value": Decimal("3.5"),
+            "previous_value": Decimal("3.1"),
+            "consensus_value": Decimal("3.1"),
+            "raw_checksum": "rex",
+            "record_checksum": "rcex",
+            "ingestion_run_id": "run_ex",
+            "availability_precision": "EXACT",
+        }
+        store.save_macro_release(rel)
+
+        builder = MacroEventBuilder(store, "run_exact")
+        # Exact equality available_at == as_of MUST be evaluated (skipped == 0)
+        res = builder.process_since(date(2024, 2, 1), as_of_timestamp=t_exact)
+        assert res["skipped"] == 0
+        assert res["releases_evaluated"] == 1
+        store.close()
+
+
 def test_point_in_time_builder_as_of_filtering() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = Path(tmpdir) / "audit.duckdb"
@@ -159,6 +197,67 @@ def test_point_in_time_builder_as_of_filtering() -> None:
         store.close()
 
 
+def test_score_history_as_of_isolation() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = Path(tmpdir) / "audit.duckdb"
+        store = DatabaseStore(db_path)
+
+        t1 = datetime(2024, 1, 15, tzinfo=timezone.utc)
+        t2 = datetime(2024, 2, 15, tzinfo=timezone.utc)
+
+        # Release 1 available in Jan
+        r1 = {
+            "release_id": "r1", "source": "FRED", "series_code": "DFF",
+            "indicator": "Fed Funds", "geography": ["US"], "frequency": "DAILY",
+            "unit": "%", "reference_date": date(2024, 1, 1),
+            "published_at": t1, "available_at": t1,
+            "actual_value": Decimal("5.25"), "previous_value": Decimal("5.0"),
+            "consensus_value": None, "raw_checksum": "ck1", "record_checksum": "rck1",
+            "ingestion_run_id": "run1", "availability_precision": "EXACT"
+        }
+        # Release 2 available in Feb
+        r2 = {
+            "release_id": "r2", "source": "FRED", "series_code": "DFF",
+            "indicator": "Fed Funds", "geography": ["US"], "frequency": "DAILY",
+            "unit": "%", "reference_date": date(2024, 2, 1),
+            "published_at": t2, "available_at": t2,
+            "actual_value": Decimal("5.50"), "previous_value": Decimal("5.25"),
+            "consensus_value": None, "raw_checksum": "ck2", "record_checksum": "rck2",
+            "ingestion_run_id": "run2", "availability_precision": "EXACT"
+        }
+        store.save_macro_release(r1)
+        store.save_macro_release(r2)
+
+        # Historical query as of t1 must NOT see r2
+        releases_t1 = store.get_macro_releases_for_series("FRED", "DFF", limit=10, as_of_timestamp=t1)
+        assert len(releases_t1) == 1
+        assert releases_t1[0]["release_id"] == "r1"
+
+        # Historical query as of t2 sees both
+        releases_t2 = store.get_macro_releases_for_series("FRED", "DFF", limit=10, as_of_timestamp=t2)
+        assert len(releases_t2) == 2
+
+        store.close()
+
+
+def test_unknown_precision_gate_lockout() -> None:
+    builder = MacroEventBuilder.__new__(MacroEventBuilder)
+
+    gate_rules = {
+        "min_surprise_score": 0.50,
+        "min_regime_shift_score": 0.50,
+        "min_novelty_score": 0.50,
+        "min_data_quality_score": 0.40,
+        "watch_min_surprise_score": 0.30,
+    }
+    # High scores that would qualify for MACRO_EVENT_APPROVED
+    status_exact = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="EXACT")
+    status_unknown = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="UNKNOWN")
+
+    assert status_exact == "MACRO_EVENT_APPROVED"
+    assert status_unknown == "MACRO_EVENT_WATCH"  # Lockout forces WATCH for UNKNOWN
+
+
 def test_unknown_precision_penalty() -> None:
     score_exact = compute_data_quality_score("EIA", "MONTHLY", True, True, True, "EXACT")
     score_unknown = compute_data_quality_score("EIA", "MONTHLY", True, True, True, "UNKNOWN")
@@ -172,10 +271,11 @@ def test_regime_detector_as_of_filtering() -> None:
         db_path = Path(tmpdir) / "audit.duckdb"
         store = DatabaseStore(db_path)
 
-        t1 = datetime(2024, 2, 1, tzinfo=timezone.utc)
+        t1 = datetime(2024, 2, 1, 12, 0, tzinfo=timezone.utc)
         detector = RegimeDetector(store, "run_regime")
         snap = detector.detect_and_snapshot(as_of_timestamp=t1)
 
         assert snap is not None
         assert snap["captured_at"] == t1
+        assert snap["snapshot_date"] == t1.date()
         store.close()

@@ -151,16 +151,56 @@ class GlobalMacroIngester:
             raise ValueError("FRED_API_KEY not configured — set FRED_API_KEY in .env")
 
         client = FredClient(api_key)
-        observations = client.fetch_series_observations(
+
+        # 1. Fetch initial release observations (output_type=4)
+        initial_obs = client.fetch_series_observations(
             series_id=cfg["series_code"],
             observation_start=start_date,
             observation_end=end_date,
-            realtime_start=start_date,   # ALFRED: use realtime to get vintage info
+            realtime_start=start_date,
+            output_type=4,
         )
+
+        # 2. Fetch vintage dates for revisions (output_type=3)
+        revision_obs = []
+        try:
+            vint_dates = client.fetch_vintage_dates(cfg["series_code"])
+            recent_vintages = [v for v in vint_dates if start_date <= date.fromisoformat(v) <= end_date]
+            if recent_vintages:
+                for i in range(0, len(recent_vintages), 50):
+                    chunk = recent_vintages[i:i + 50]
+                    revs = client.fetch_series_observations(
+                        series_id=cfg["series_code"],
+                        observation_start=start_date,
+                        observation_end=end_date,
+                        output_type=3,
+                        vintage_dates=chunk,
+                    )
+                    revision_obs.extend(revs)
+        except Exception as err:
+            logger.warning("Could not fetch ALFRED vintage dates for %s: %s", cfg["series_code"], err)
+
+        all_obs = []
+        for obs in initial_obs:
+            obs["_is_initial"] = True
+            all_obs.append(obs)
+        for obs in revision_obs:
+            obs["_is_initial"] = False
+            all_obs.append(obs)
+
+        # Deduplicate all_obs by (date, realtime_start)
+        seen = set()
+        dedup_obs = []
+        for obs in all_obs:
+            key = (obs.get("date"), obs.get("realtime_start"))
+            if key not in seen:
+                seen.add(key)
+                dedup_obs.append(obs)
 
         new = 0
         skipped = 0
-        for obs in observations:
+        for obs in dedup_obs:
+            is_initial = obs.get("_is_initial", True)
             payload = normalize_fred_observation(
                 obs=obs,
                 series_code=cfg["series_code"],
@@ -174,6 +214,10 @@ class GlobalMacroIngester:
             if payload is None:
                 skipped += 1
                 continue
+
+            payload["is_initial_release"] = is_initial
+            if not is_initial:
+                payload["revision_number"] = 1
 
             # Attach previous_value from stored history
             payload["previous_value"] = _get_previous_value(
@@ -194,8 +238,14 @@ class GlobalMacroIngester:
                 "source": "FRED",
                 "reference_date": payload["reference_date"],
                 "vintage_date": vint_date,
+                "realtime_start": payload.get("realtime_start"),
+                "realtime_end": payload.get("realtime_end"),
+                "available_at": payload.get("available_at", self.available_at),
                 "value": payload["actual_value"],
+                "revision_number": payload.get("revision_number", 0),
+                "is_initial_release": is_initial,
                 "is_latest": True,
+                "record_checksum": payload.get("record_checksum", ""),
                 "ingestion_run_id": self.run_id,
             }
             self.store.save_macro_vintage(vint_payload)

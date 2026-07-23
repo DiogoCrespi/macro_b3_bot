@@ -18,7 +18,7 @@ Regimes:
 import hashlib
 import logging
 import statistics
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
@@ -49,8 +49,8 @@ class RegimeDetector:
         Run regime detection and persist a MacroRegimeSnapshot as of as_of_timestamp.
         Returns the snapshot dict.
         """
-        today = date.today()
         eff_now = as_of_timestamp or datetime.now(timezone.utc)
+        snapshot_date = eff_now.date()
 
         growth_dir, growth_releases = self._detect_growth_direction(as_of_timestamp=eff_now)
         inflation_dir, inflation_releases = self._detect_inflation_direction(as_of_timestamp=eff_now)
@@ -74,12 +74,12 @@ class RegimeDetector:
         confidence = self._compute_regime_confidence(all_evidence)
 
         snapshot_id = hashlib.sha256(
-            f"{today.isoformat()}|{regime_label}|{enso_phase}|{oil_regime}|{eff_now.isoformat()}".encode()
+            f"{snapshot_date.isoformat()}|{regime_label}|{enso_phase}|{oil_regime}|{eff_now.isoformat()}".encode()
         ).hexdigest()[:24]
 
         snap = {
             "snapshot_id": snapshot_id,
-            "snapshot_date": today,
+            "snapshot_date": snapshot_date,
             "captured_at": eff_now,
             "growth_direction": growth_dir,
             "inflation_direction": inflation_dir,

@@ -225,7 +225,7 @@ class MacroEventBuilder:
         consensus = Decimal(str(rel["consensus_value"])) if rel["consensus_value"] is not None else None
 
         # Historical context (reverse so order is chronological: oldest -> newest)
-        historical_releases = self.store.get_macro_releases_for_series(source, series_code, limit=60)
+        historical_releases = self.store.get_macro_releases_for_series(source, series_code, limit=60, as_of_timestamp=eff_now)
         hist_values = [Decimal(str(r["actual_value"])) for r in reversed(historical_releases) if r["actual_value"] is not None]
         if hist_values and hist_values[-1] == actual:
             hist_values = hist_values[:-1]
@@ -290,7 +290,8 @@ class MacroEventBuilder:
         gate_rules = self.rules.get("gate", {})
         status = self._apply_gate(
             surprise_score, novelty_score, persistence_score,
-            regime_shift_score, data_quality_score, gate_rules
+            regime_shift_score, data_quality_score, gate_rules,
+            availability_precision=precision,
         )
 
         # ── Build candidate ─────────────────────────────────────────────────
@@ -349,6 +350,7 @@ class MacroEventBuilder:
         regime_shift: float,
         quality: float,
         gate_rules: dict,
+        availability_precision: str = "EXACT",
     ) -> str:
         min_surprise = gate_rules.get("min_surprise_score", 0.60)
         min_regime = gate_rules.get("min_regime_shift_score", 0.65)
@@ -360,11 +362,17 @@ class MacroEventBuilder:
         passes_novelty = novelty >= min_novelty
         passes_quality = quality >= min_quality
 
+        status = "MACRO_EVENT_REJECTED"
         if passes_primary and passes_novelty and passes_quality:
-            return "MACRO_EVENT_APPROVED"
-        if passes_novelty and passes_quality and surprise >= min_watch_surprise:
-            return "MACRO_EVENT_WATCH"
-        return "MACRO_EVENT_REJECTED"
+            status = "MACRO_EVENT_APPROVED"
+        elif passes_novelty and passes_quality and surprise >= min_watch_surprise:
+            status = "MACRO_EVENT_WATCH"
+
+        # Explicit lockout: UNKNOWN availability precision can NEVER be MACRO_EVENT_APPROVED
+        if availability_precision == "UNKNOWN" and status == "MACRO_EVENT_APPROVED":
+            status = "MACRO_EVENT_WATCH"
+
+        return status
 
     def _days_since_last_event(self, source: str, series_code: str, event_family: str, ref_date: date) -> Optional[int]:
         row = self.store.connection.execute(
