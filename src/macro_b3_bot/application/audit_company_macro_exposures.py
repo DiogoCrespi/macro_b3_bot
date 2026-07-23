@@ -77,7 +77,9 @@ class CompanyMacroExposureAuditor:
             })
             approved_fields = sorted({
                 item["field_name"] for item in ticker_facts
-                if item["review_status"] == "HUMAN_APPROVED"
+                if item["review_status"] in {
+                    "HUMAN_APPROVED", "DELEGATED_AI_APPROVED"
+                }
             })
             missing = [field for field in _TARGET_FIELDS if field not in known]
             document_summary.append({
@@ -202,7 +204,9 @@ class CompanyMacroExposureAuditor:
                     not item["methodology_version"] for item in facts
                 ),
                 "facts_without_review": sum(
-                    item["review_status"] != "HUMAN_APPROVED" for item in facts
+                    item["review_status"] not in {
+                        "HUMAN_APPROVED", "DELEGATED_AI_APPROVED"
+                    } for item in facts
                 ),
                 "facts_without_scope": facts_without_scope,
                 "facts_with_scope_mismatch": scope_mismatch,

@@ -41,6 +41,7 @@ class ExtractionRule:
     scope_type: str = "COMPANY_CONSOLIDATED"
     scope_period: str | None = None
     denominator_basis: str | None = None
+    rate_exposure_basis: str | None = None
     formula: str | None = None
     derivation_components: dict[str, float] | None = None
     is_derived: bool = False
@@ -270,6 +271,7 @@ _RULES = (
         re.compile(r"62%\s+38%\s+BRL\s+USD\s+Dívida em Dólar", re.I),
         lambda _: 0.38, "share_of_gross_debt",
         "Consolidated debt currency chart states 62% BRL and 38% USD.",
+        scope_period="1Q26",
         denominator_basis="CONSOLIDATED_GROSS_DEBT",
         extraction_match_confidence=0.98,
         semantic_scope_confidence=0.98,
@@ -280,6 +282,7 @@ _RULES = (
         re.compile(r"25%\s+75%\s+SOFR\s+USD Fixo\s+5%\s+93%\s+IPCA\s+CDI\s+2%\s+Outros\s+62%\s+38%\s+BRL\s+USD", re.I),
         lambda _: round(0.38 * 0.25 + 0.62 * 0.93, 4), "share_of_gross_debt",
         "Derived from disclosed currency and indexer mix: USD×SOFR plus BRL×CDI.",
+        scope_period="1Q26",
         denominator_basis="CONSOLIDATED_GROSS_DEBT",
         formula="usd_share*sofr_within_usd + brl_share*cdi_within_brl",
         derivation_components={
@@ -296,6 +299,7 @@ _RULES = (
         re.compile(r"25%\s+75%\s+SOFR\s+USD Fixo\s+5%\s+93%\s+IPCA\s+CDI\s+2%\s+Outros\s+62%\s+38%\s+BRL\s+USD", re.I),
         lambda _: round(0.62 * 0.05, 4), "share_of_gross_debt",
         "Derived from disclosed currency and indexer mix: BRL share × IPCA share.",
+        scope_period="1Q26",
         denominator_basis="CONSOLIDATED_GROSS_DEBT",
         formula="brl_share*ipca_within_brl",
         derivation_components={"brl_share": 0.62, "ipca_within_brl": 0.05},
@@ -457,6 +461,7 @@ _RULES = (
         "All material debt in the FRE table is CDI-linked after the disclosed swap.",
         scope_type="ECONOMIC_EXPOSURE_AFTER_HEDGE",
         denominator_basis="CONSOLIDATED_GROSS_DEBT",
+        rate_exposure_basis="INCLUDES_HEDGED_DEBT",
         formula="(cdi_debentures+usd_financing_swapped_to_cdi)/total_gross_debt",
         derivation_components={
             "cdi_debentures": 3_929_623,
@@ -645,16 +650,17 @@ _RULES = (
     ExtractionRule(
         "SLCE3", "foreign_currency_debt_pct",
         re.compile(
-            r"Subtotal Endividamento USD.{0,80}(?P<usd>141[.]888).*?"
-            r"Subtotal Endividamento Geral.{0,80}(?P<total>7[.]318[.]579)",
+            r"Subtotal Endividamento USD.{0,80}(?P<usd>206[.]948).*?"
+            r"Subtotal Endividamento Geral.{0,80}(?P<total>7[.]779[.]679)",
             re.I,
         ),
         lambda match: round(_number(match["usd"]) / _number(match["total"]), 6),
         "share_of_gross_debt",
         "Derived from explicitly disclosed USD and total gross debt subtotals.",
+        scope_period="1Q26",
         denominator_basis="CONSOLIDATED_GROSS_DEBT",
         formula="usd_debt/total_gross_debt",
-        derivation_components={"usd_debt": 141888, "total_gross_debt": 7318579},
+        derivation_components={"usd_debt": 206948, "total_gross_debt": 7779679},
         is_derived=True,
         extraction_match_confidence=0.92,
         semantic_scope_confidence=0.95,
@@ -863,6 +869,7 @@ class CompanyMacroExposureExtractor:
                     scope_type=rule.scope_type,
                     scope_period=rule.scope_period,
                     denominator_basis=rule.denominator_basis,
+                    rate_exposure_basis=rule.rate_exposure_basis,
                     formula=rule.formula,
                     derivation_components=rule.derivation_components,
                     available_at=document.available_at.replace(tzinfo=timezone.utc),

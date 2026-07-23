@@ -815,6 +815,7 @@ def export_company_exposure_review(
 @app.command("apply-company-exposure-review")
 def apply_company_exposure_review(
     manifest: str = typer.Option(..., "--manifest"),
+    reviewer_type: str = typer.Option("HUMAN", "--reviewer-type"),
 ) -> None:
     """Apply explicit HUMAN approval/rejection decisions bound to excerpt hashes."""
     from pathlib import Path
@@ -829,12 +830,20 @@ def apply_company_exposure_review(
     import getpass
 
     reviewer_identity = getpass.getuser()
+    if reviewer_type not in {"HUMAN", "DELEGATED_AI"}:
+        raise typer.BadParameter("reviewer type must be HUMAN or DELEGATED_AI")
+    manifest_path = Path(manifest)
+    manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest_payload.get("reviewer_type") != reviewer_type:
+        raise typer.BadParameter(
+            "manifest reviewer_type does not match --reviewer-type"
+        )
     confirmed = typer.confirm(
         f"Confirm that you are the reviewer '{reviewer_identity}' and personally "
         "made every decision in this manifest?"
     )
     result = CompanyMacroExposureReviewer(store).apply_manifest(
-        Path(manifest),
+        manifest_path,
         confirmed_identity=reviewer_identity,
         confirmed=confirmed,
     )
@@ -922,6 +931,35 @@ def dry_run_company_impact_pilot(
     store = DatabaseStore(settings.data_dir / "audit.duckdb")
     result = CompanyImpactPilotDryRun(store).run(
         exposure_run_id, selection_run_id, sector_run_id
+    )
+    store.close()
+    rendered = json.dumps(result, ensure_ascii=False, indent=2, default=str)
+    if output:
+        Path(output).write_text(rendered, encoding="utf-8")
+    console.print_json(rendered)
+
+
+@app.command("run-approved-company-impact-pilot")
+def run_approved_company_impact_pilot(
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+    sector_run_id: str = typer.Option(..., "--sector-run-id"),
+    as_of: str = typer.Option(..., "--as-of"),
+    output: Optional[str] = typer.Option(None, "--output"),
+) -> None:
+    """Build five approved snapshots and compare both company decision policies."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.run_approved_company_impact_pilot import (
+        ApprovedCompanyImpactPilot,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = ApprovedCompanyImpactPilot(store).run(
+        selection_run_id=selection_run_id,
+        sector_run_id=sector_run_id,
+        as_of_timestamp=datetime.fromisoformat(as_of),
     )
     store.close()
     rendered = json.dumps(result, ensure_ascii=False, indent=2, default=str)

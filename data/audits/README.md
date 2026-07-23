@@ -40,3 +40,19 @@ confirmed identity assertion, not cryptographic authentication. The current
 packet has 15/15 extraction coverage, only 8/15 issuers with at least one
 direct impact input, 0/15 with three calculable impact components, and 0
 approved facts.
+
+Sprint 4C.5B freeze artifacts:
+
+- `exposure_4c5b_delegated_review.json`: selective, user-delegated AI evidence
+  review for 11 facts required by the five-company pilot. The log records
+  `DELEGATED_AI`, never `HUMAN`;
+- `exposure_4c5b_approved_coverage.json`: five approved snapshots, approved
+  versus pending fields, and impact-compatible components;
+- `exposure_4c5b_impact_pilot.json`: side-by-side `THREE_COMPONENTS` and
+  `MATERIALITY_COVERAGE` results for SUZB3, KLBN11, MGLU3, RAIL3 and SLCE3.
+
+The pilot freezes Sprint 4C. It persists ten candidates, has calculable
+contributions for three companies, preserves two no-active-signal
+`NO_ACTION` cases, and emits no BUY or order. The proposed materiality policy
+produces one `WATCH` (MGLU3); the legacy policy produces none. These pilot
+thresholds are comparative and are not yet a permanent production rule.

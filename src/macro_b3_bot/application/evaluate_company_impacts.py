@@ -46,7 +46,12 @@ class CompanyImpactEngine:
         factor_impacts: dict[tuple[str, str], float] | None,
         as_of_timestamp: datetime,
         factor_channels: list[CompanyFactorChannel] | None = None,
+        decision_policy: str = "THREE_COMPONENTS",
+        materiality_threshold: float = 0.02,
+        confidence_threshold: float = 0.10,
     ) -> CompanyImpactCandidate:
+        if decision_policy not in {"THREE_COMPONENTS", "MATERIALITY_COVERAGE"}:
+            raise ValueError("invalid decision policy")
         if sector.sector != exposure.sector:
             raise ValueError("sector snapshot and company exposure do not match")
         null_sector_state = sector.status in {
@@ -85,7 +90,8 @@ class CompanyImpactEngine:
             sum(item.exposure_confidence for item in contributions) / len(contributions)
             if contributions else 0.0
         )
-        confidence = field_quality * sector.confidence * (len(known) / 4)
+        coverage_penalty = len(known) / 4
+        confidence = field_quality * sector.confidence * coverage_penalty
         evidence_status = (
             "HYPOTHESIS"
             if not inputs or any(
@@ -93,12 +99,32 @@ class CompanyImpactEngine:
             )
             else "VALIDATED"
         )
-        status = "WATCH" if len(known) >= 3 and confidence >= 0.5 else "NO_ACTION"
+        if null_sector_state:
+            status = "NO_ACTION"
+            reason = sector.status
+        elif not contributions:
+            status = "NO_ACTION"
+            reason = "NO_APPROVED_COMPATIBLE_CONTRIBUTION"
+        elif decision_policy == "THREE_COMPONENTS":
+            status = "WATCH" if len(known) >= 3 and confidence >= 0.5 else "NO_ACTION"
+            reason = (
+                "THREE_COMPONENT_RULE_PASSED"
+                if status == "WATCH" else "THREE_COMPONENT_RULE_NOT_MET"
+            )
+        else:
+            material = net is not None and abs(net) >= materiality_threshold
+            confident = confidence >= confidence_threshold
+            status = "WATCH" if material and confident else "NO_ACTION"
+            reason = (
+                "MATERIAL_APPROVED_CONTRIBUTION"
+                if status == "WATCH"
+                else "BELOW_MATERIALITY_OR_CONFIDENCE"
+            )
         if evidence_status == "HYPOTHESIS" and status not in {"WATCH", "NO_ACTION"}:
             status = "WATCH"
         identity = (
             f"{self.run_id}|{sector.snapshot_id}|{exposure.exposure_id}|"
-            f"{as_of_timestamp.isoformat()}"
+            f"{as_of_timestamp.isoformat()}|{decision_policy}"
         )
         return CompanyImpactCandidate(
             candidate_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
@@ -126,7 +152,18 @@ class CompanyImpactEngine:
             causal_evidence_status=evidence_status,
             missing_exposures=missing_components,
             status=status,
-            reason=sector.status if null_sector_state else None,
+            reason=reason,
+            decision_policy=decision_policy,
+            known_component_count=len(known),
+            coverage_penalty=coverage_penalty,
+            materiality_threshold=(
+                materiality_threshold
+                if decision_policy == "MATERIALITY_COVERAGE" else None
+            ),
+            confidence_threshold=(
+                confidence_threshold
+                if decision_policy == "MATERIALITY_COVERAGE" else None
+            ),
             run_id=self.run_id,
         )
 
@@ -224,6 +261,10 @@ class CompanyImpactEngine:
         modifier: tuple[str, float, float] | None,
     ) -> FactorContribution:
         exposure_confidence = self._field_confidence(exposure, field_name)
+        field_evidence = [
+            item for item in exposure.field_evidence
+            if item.field_name == field_name
+        ]
         value = adjusted_impact * field_value * exposure_confidence
         modifier_fields: list[str] = []
         if modifier:
@@ -237,6 +278,16 @@ class CompanyImpactEngine:
             adjusted_factor_impact=round(adjusted_impact, 4),
             exposure_field=field_name, exposure_value=field_value,
             exposure_confidence=exposure_confidence,
+            exposure_evidence_ids=sorted({
+                item.evidence_id for item in field_evidence
+            }),
+            exposure_scope_types=sorted({
+                item.scope_type for item in field_evidence if item.scope_type
+            }),
+            exposure_rate_basis=next((
+                item.rate_exposure_basis for item in reversed(field_evidence)
+                if item.rate_exposure_basis
+            ), None),
             modifier_fields=modifier_fields,
             modifier_methodology_version=(
                 MODIFIER_METHODOLOGY_VERSION if modifier else None

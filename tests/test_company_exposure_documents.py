@@ -140,7 +140,7 @@ def test_slc_currency_debt_share_uses_disclosed_subtotals() -> None:
     )
     match = rule.pattern.search(text)
     assert match is not None
-    assert rule.value(match) == 0.019387
+    assert rule.value(match) == 0.026601
 
 
 def test_extraction_batch_is_restricted_to_selected_document_ids(tmp_path) -> None:

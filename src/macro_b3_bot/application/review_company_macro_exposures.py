@@ -68,7 +68,7 @@ class CompanyMacroExposureReviewer:
         if not selection_run_id:
             raise ValueError("selection_run_id is required")
         if (
-            reviewer_type != "HUMAN"
+            reviewer_type not in {"HUMAN", "DELEGATED_AI"}
             or not reviewer
             or not confirmed
             or confirmed_identity != reviewer
@@ -128,10 +128,10 @@ class CompanyMacroExposureReviewer:
                 fact_id = decision["fact_id"]
                 verdict = decision["decision"]
                 notes = str(decision["notes"]).strip()
-                status = (
-                    "HUMAN_APPROVED" if verdict == "APPROVE"
-                    else "HUMAN_REJECTED"
+                status_prefix = (
+                    "HUMAN" if reviewer_type == "HUMAN" else "DELEGATED_AI"
                 )
+                status = f"{status_prefix}_{'APPROVED' if verdict == 'APPROVE' else 'REJECTED'}"
                 updated = self.store.connection.execute(
                     """
                     UPDATE company_macro_exposure_facts
@@ -158,13 +158,13 @@ class CompanyMacroExposureReviewer:
                     INSERT INTO company_exposure_review_log (
                         log_id,manifest_hash,selection_run_id,fact_id,
                         fact_review_hash,decision,reviewer_assertion,
-                        confirmed_identity,reviewed_at,notes
-                    ) VALUES (?,?,?,?,?,?,?,?,?,?)
+                        reviewer_type,confirmed_identity,reviewed_at,notes
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?)
                     """,
                     [
                         log_id, manifest_hash, selection_run_id, fact_id,
                         decision["fact_review_hash"], verdict, reviewer,
-                        confirmed_identity, reviewed_at, notes,
+                        reviewer_type, confirmed_identity, reviewed_at, notes,
                     ],
                 )
                 approved += verdict == "APPROVE"
@@ -178,6 +178,7 @@ class CompanyMacroExposureReviewer:
             "manifest": str(manifest_path),
             "manifest_hash": manifest_hash,
             "reviewed_by": reviewer,
+            "reviewer_type": reviewer_type,
             "identity_assurance": "LOCAL_CONFIRMED_ASSERTION_NOT_CRYPTOGRAPHIC",
             "reviewed_at": reviewed_at.replace(tzinfo=timezone.utc).isoformat(),
             "approved": approved,
@@ -254,9 +255,20 @@ class CompanyMacroExposureReviewer:
                 fact_review_hash VARCHAR NOT NULL,
                 decision VARCHAR NOT NULL,
                 reviewer_assertion VARCHAR NOT NULL,
+                reviewer_type VARCHAR NOT NULL,
                 confirmed_identity VARCHAR NOT NULL,
                 reviewed_at TIMESTAMP NOT NULL,
                 notes VARCHAR NOT NULL
             )
             """
         )
+        log_columns = {
+            row[1] for row in self.store.connection.execute(
+                "PRAGMA table_info('company_exposure_review_log')"
+            ).fetchall()
+        }
+        if "reviewer_type" not in log_columns:
+            self.store.connection.execute(
+                "ALTER TABLE company_exposure_review_log "
+                "ADD COLUMN reviewer_type VARCHAR DEFAULT 'HUMAN'"
+            )

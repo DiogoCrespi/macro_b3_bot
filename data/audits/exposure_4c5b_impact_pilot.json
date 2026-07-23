@@ -1,0 +1,1372 @@
+{
+  "selection_run_id": "RUN_COMPANY_EXPOSURE_DOCS_6c3ecebd",
+  "sector_run_id": "sector_4c3c_20260722",
+  "exposure_run_id": "exposure_4c5b_approved_pilot",
+  "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+  "companies_requested": 5,
+  "snapshots_built": 5,
+  "candidate_rows_written": 10,
+  "candidate_rows_inserted": 0,
+  "companies_with_calculable_contributions": 3,
+  "unapproved_fact_inputs_used": 0,
+  "unapproved_input_details": [],
+  "no_active_signal_no_action_pass": true,
+  "comparisons": [
+    {
+      "ticker": "SUZB3",
+      "sector_state": "SECTOR_STATE_WATCH",
+      "approved_snapshot_id": "6de950a76036975af547d229",
+      "approved_fields": [
+        "export_revenue_pct",
+        "gross_financial_debt",
+        "revenue_foreign_currency_pct",
+        "total_debt",
+        "total_revenue"
+      ],
+      "policies": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "e6d9e582a8511b4faac24df0",
+          "ticker": "SUZB3",
+          "sector_snapshot_id": "4d366a014e31063916352a24",
+          "company_exposure_id": "6de950a76036975af547d229",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": 0.0007,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0007,
+          "confidence": 0.2097,
+          "conflict_ratio": 0.6524,
+          "supporting_event_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "opposing_event_ids": [
+            "1686a5e15f14a811bbaeb5b3",
+            "1f868a896127e3428b8758ee",
+            "35df06988a75a6edbb108790",
+            "56dc8604580e75112fcb8e83",
+            "769d02c641172ff633de4662",
+            "82c067e905e3c651c26f0d94",
+            "8988b917dfd33f5a83364b5a",
+            "95295c2efe1e180e23f57511",
+            "9669f96f4ad0ef729b5548dc",
+            "9bd9d01044aa95ddeca910bd",
+            "d8b20be4e07b18a71550293e",
+            "e6c5f2d62196d7f4fa3a9bc0",
+            "e764bc91d5e3c9359f73a324",
+            "f5efe20a281d55a4b6ac20cf"
+          ],
+          "source_path_ids": [
+            "7c6c722d59a006d13c8bea5a",
+            "f5a111eb3d4fc241261b5146"
+          ],
+          "causal_edge_ids": [
+            "edge_fx_to_pulp_paper",
+            "edge_usd_down_to_fx",
+            "edge_usd_up_to_fx"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": -0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0398,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.8,
+              "exposure_confidence": 0.981,
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0312,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": 0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0407,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.8,
+              "exposure_confidence": 0.981,
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0319,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            }
+          ],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "decision_policy": "THREE_COMPONENTS",
+          "known_component_count": 1,
+          "coverage_penalty": 0.25,
+          "materiality_threshold": null,
+          "confidence_threshold": null,
+          "run_id": "company_4c5b_three_components"
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "89a1dc763abf6f467f7269b5",
+          "ticker": "SUZB3",
+          "sector_snapshot_id": "4d366a014e31063916352a24",
+          "company_exposure_id": "6de950a76036975af547d229",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": 0.0007,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0007,
+          "confidence": 0.2097,
+          "conflict_ratio": 0.6524,
+          "supporting_event_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "opposing_event_ids": [
+            "1686a5e15f14a811bbaeb5b3",
+            "1f868a896127e3428b8758ee",
+            "35df06988a75a6edbb108790",
+            "56dc8604580e75112fcb8e83",
+            "769d02c641172ff633de4662",
+            "82c067e905e3c651c26f0d94",
+            "8988b917dfd33f5a83364b5a",
+            "95295c2efe1e180e23f57511",
+            "9669f96f4ad0ef729b5548dc",
+            "9bd9d01044aa95ddeca910bd",
+            "d8b20be4e07b18a71550293e",
+            "e6c5f2d62196d7f4fa3a9bc0",
+            "e764bc91d5e3c9359f73a324",
+            "f5efe20a281d55a4b6ac20cf"
+          ],
+          "source_path_ids": [
+            "7c6c722d59a006d13c8bea5a",
+            "f5a111eb3d4fc241261b5146"
+          ],
+          "causal_edge_ids": [
+            "edge_fx_to_pulp_paper",
+            "edge_usd_down_to_fx",
+            "edge_usd_up_to_fx"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": -0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0398,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.8,
+              "exposure_confidence": 0.981,
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0312,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": 0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0407,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.8,
+              "exposure_confidence": 0.981,
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0319,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            }
+          ],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "BELOW_MATERIALITY_OR_CONFIDENCE",
+          "decision_policy": "MATERIALITY_COVERAGE",
+          "known_component_count": 1,
+          "coverage_penalty": 0.25,
+          "materiality_threshold": 0.02,
+          "confidence_threshold": 0.1,
+          "run_id": "company_4c5b_materiality_coverage"
+        }
+      }
+    },
+    {
+      "ticker": "KLBN11",
+      "sector_state": "SECTOR_STATE_WATCH",
+      "approved_snapshot_id": "cd402742f7da2ebe0a16c828",
+      "approved_fields": [
+        "export_revenue_pct",
+        "floating_rate_debt_pct",
+        "foreign_currency_debt_pct",
+        "gross_financial_debt",
+        "inflation_linked_debt_pct",
+        "total_debt",
+        "total_revenue"
+      ],
+      "policies": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "2b0e9e05d105e0f31a210c86",
+          "ticker": "KLBN11",
+          "sector_snapshot_id": "4d366a014e31063916352a24",
+          "company_exposure_id": "cd402742f7da2ebe0a16c828",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": 0.0003,
+          "cost_impact_score": null,
+          "debt_impact_score": -0.0003,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0,
+          "confidence": 0.422,
+          "conflict_ratio": 0.6524,
+          "supporting_event_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "opposing_event_ids": [
+            "1686a5e15f14a811bbaeb5b3",
+            "1f868a896127e3428b8758ee",
+            "35df06988a75a6edbb108790",
+            "56dc8604580e75112fcb8e83",
+            "769d02c641172ff633de4662",
+            "82c067e905e3c651c26f0d94",
+            "8988b917dfd33f5a83364b5a",
+            "95295c2efe1e180e23f57511",
+            "9669f96f4ad0ef729b5548dc",
+            "9bd9d01044aa95ddeca910bd",
+            "d8b20be4e07b18a71550293e",
+            "e6c5f2d62196d7f4fa3a9bc0",
+            "e764bc91d5e3c9359f73a324",
+            "f5efe20a281d55a4b6ac20cf"
+          ],
+          "source_path_ids": [
+            "7c6c722d59a006d13c8bea5a",
+            "f5a111eb3d4fc241261b5146"
+          ],
+          "causal_edge_ids": [
+            "edge_fx_to_pulp_paper",
+            "edge_usd_down_to_fx",
+            "edge_usd_up_to_fx"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "causal_factor_impact": -0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0407,
+              "exposure_field": "foreign_currency_debt_pct",
+              "exposure_value": 0.38,
+              "exposure_confidence": 0.983,
+              "exposure_evidence_ids": [
+                "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0152,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "causal_factor_impact": 0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0398,
+              "exposure_field": "foreign_currency_debt_pct",
+              "exposure_value": 0.38,
+              "exposure_confidence": 0.983,
+              "exposure_evidence_ids": [
+                "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0149,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": -0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0398,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "exposure_confidence": 0.9915,
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0146,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": 0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0407,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "exposure_confidence": 0.9915,
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0149,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            }
+          ],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "cost",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "decision_policy": "THREE_COMPONENTS",
+          "known_component_count": 2,
+          "coverage_penalty": 0.5,
+          "materiality_threshold": null,
+          "confidence_threshold": null,
+          "run_id": "company_4c5b_three_components"
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "83b5c91d4d75b982075723cb",
+          "ticker": "KLBN11",
+          "sector_snapshot_id": "4d366a014e31063916352a24",
+          "company_exposure_id": "cd402742f7da2ebe0a16c828",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": 0.0003,
+          "cost_impact_score": null,
+          "debt_impact_score": -0.0003,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0,
+          "confidence": 0.422,
+          "conflict_ratio": 0.6524,
+          "supporting_event_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "opposing_event_ids": [
+            "1686a5e15f14a811bbaeb5b3",
+            "1f868a896127e3428b8758ee",
+            "35df06988a75a6edbb108790",
+            "56dc8604580e75112fcb8e83",
+            "769d02c641172ff633de4662",
+            "82c067e905e3c651c26f0d94",
+            "8988b917dfd33f5a83364b5a",
+            "95295c2efe1e180e23f57511",
+            "9669f96f4ad0ef729b5548dc",
+            "9bd9d01044aa95ddeca910bd",
+            "d8b20be4e07b18a71550293e",
+            "e6c5f2d62196d7f4fa3a9bc0",
+            "e764bc91d5e3c9359f73a324",
+            "f5efe20a281d55a4b6ac20cf"
+          ],
+          "source_path_ids": [
+            "7c6c722d59a006d13c8bea5a",
+            "f5a111eb3d4fc241261b5146"
+          ],
+          "causal_edge_ids": [
+            "edge_fx_to_pulp_paper",
+            "edge_usd_down_to_fx",
+            "edge_usd_up_to_fx"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "causal_factor_impact": -0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0407,
+              "exposure_field": "foreign_currency_debt_pct",
+              "exposure_value": 0.38,
+              "exposure_confidence": 0.983,
+              "exposure_evidence_ids": [
+                "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0152,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "causal_factor_impact": 0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0398,
+              "exposure_field": "foreign_currency_debt_pct",
+              "exposure_value": 0.38,
+              "exposure_confidence": 0.983,
+              "exposure_evidence_ids": [
+                "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0149,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": -0.0995,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": -0.0398,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "exposure_confidence": 0.9915,
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": -0.0146,
+              "source_path_ids": [
+                "f5a111eb3d4fc241261b5146"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_down_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            },
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "causal_factor_impact": 0.1017,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0407,
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "exposure_confidence": 0.9915,
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "exposure_scope_types": [
+                "COMPANY_CONSOLIDATED"
+              ],
+              "exposure_rate_basis": null,
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0149,
+              "source_path_ids": [
+                "7c6c722d59a006d13c8bea5a"
+              ],
+              "causal_edge_ids": [
+                "edge_fx_to_pulp_paper",
+                "edge_usd_up_to_fx"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "MISSING_EXPOSURE_VALUE",
+              "expected_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            }
+          ],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "cost",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "BELOW_MATERIALITY_OR_CONFIDENCE",
+          "decision_policy": "MATERIALITY_COVERAGE",
+          "known_component_count": 2,
+          "coverage_penalty": 0.5,
+          "materiality_threshold": 0.02,
+          "confidence_threshold": 0.1,
+          "run_id": "company_4c5b_materiality_coverage"
+        }
+      }
+    },
+    {
+      "ticker": "MGLU3",
+      "sector_state": "SECTOR_STATE_ACTIVE",
+      "approved_snapshot_id": "8ee54aa7ec04e780636d267d",
+      "approved_fields": [
+        "contractual_foreign_currency_debt_pct",
+        "currency_hedge_pct",
+        "floating_rate_debt_pct",
+        "foreign_currency_debt_pct",
+        "gross_financial_debt",
+        "net_foreign_currency_debt_pct",
+        "post_hedge_floating_rate_debt_pct",
+        "total_debt",
+        "total_revenue"
+      ],
+      "policies": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "06ec17ab09c5845036a97aab",
+          "ticker": "MGLU3",
+          "sector_snapshot_id": "f050fc9db0ed6c1ad1f4ed75",
+          "company_exposure_id": "8ee54aa7ec04e780636d267d",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": 0.0557,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0556,
+          "confidence": 0.1973,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [
+            "05449fcb9b8994a009a38822",
+            "05dda0f700f86f0db19cf071",
+            "06c2a05eb2d7bd1229241340",
+            "1029be4418b54aa8001e7f8b",
+            "140e540cda41231f69312d32",
+            "1aa3b2de7a8f2a14ff668281",
+            "1c71d7fd5a8a3ccecdb462c2",
+            "1d757102fe39029cd674cdd8",
+            "217d549822d3ecf953896ac2",
+            "2188ffc34d522a90b0c33333",
+            "23bbc420da37cc0765c82dfd",
+            "2860fb16447e27e140e96d5f",
+            "289d23547a5d613d0a112b25",
+            "2906e997c9ed9ccc9567467f",
+            "291495548ef29f767b8bfa39",
+            "2da2475052efff29d229d634",
+            "2dd74e12122f9af650f8907a",
+            "2fcdf4a3cdc4e8cfc46159b0",
+            "3554d1f96bed7a0ea681e57a",
+            "37c894cc65b7dd11115469be",
+            "3c659a2ee233637479990213",
+            "3e18bae3554040bbb89ad58e",
+            "402ec8bc232d67c780c374fd",
+            "407f16da6db65447af44c751",
+            "44ea587903a50fe052d97fac",
+            "4688eb7ebe0e20203594f902",
+            "498083080f3ee213ac3f7a9f",
+            "4a3ec4506bbb8416ee96dcbf",
+            "4d88669bc470e36aba8d5c1a",
+            "5045a5337732e550e01cee07",
+            "5182c9aa0e637c117c92e909",
+            "51c14be73e667b900add9f29",
+            "56424bf19240ab89eff95f23",
+            "56e16324d645a624872095bb",
+            "5a74ce3e977ee67150639131",
+            "5f0255961dc6a9534a3bf024",
+            "6433e7f612796f350a857678",
+            "69f62cb4f614e978abf902d3",
+            "6fe7c699360491c377ff32ce",
+            "70183506a59690c19b59f2d0",
+            "70da9cbed02438e2b5379469",
+            "7197f2831a2971242a08cc44",
+            "733549a0cb33eafd2db4abf2",
+            "744b7d9d1ae38881f6b78c80",
+            "76f79296dbfc2cdc8e1551d4",
+            "78d06ba60febf332d4d99744",
+            "7f2bccd3d1b07efdc7649132",
+            "813950cf5c590a48927cda15",
+            "815d97192ca4637ea5834ab0",
+            "85728019c60b15b58079148c",
+            "8a116b8fd89effa96104fb5b",
+            "8ae9eb87290e8f535b98b7c1",
+            "8b71db2722c05f653350299a",
+            "8eec0a182e43868d6d5491a4",
+            "9723bd24b1dfc0e575b3f04b",
+            "9d687d50641d1c44585d0e4f",
+            "9ddd2e08e575a3cdf3eb7a0d",
+            "a30d97defc95a2c60ead6a3a",
+            "a793db92faa673d0e7add3f2",
+            "a82b0c596a742339f67d6c7d",
+            "a82ecada6fa3f79ac3257902",
+            "a83ad87c537c41a1b3922ffb",
+            "a856e539a694f8f0371ee3f0",
+            "abc6b913ca00856b98b58e95",
+            "ac0b1fd97d0cc1d6a53734ca",
+            "ae16980eb70bb355925c32e7",
+            "b04e9a2f286071d1850f9d9c",
+            "b25bd272973424060dd4c997",
+            "b2bd38e11170d980ca1c3ad8",
+            "b5f200c43322c16d091a2fec",
+            "c1f2916b524013158e7b6f6c",
+            "c2ce6a5decf81dadf1bc77e6",
+            "c32267e963ce1a604c21ff11",
+            "c72ad1f0023ab92961f6929e",
+            "c912beda51c042651a3fae12",
+            "d10c8599d67d7a08a90dae95",
+            "d1aaa9f2d16018c0b25e80f8",
+            "d1bd7ca686d6ca5274143e76",
+            "d6f9ab9473d5dbb00574031c",
+            "d7562f43349474bb2c8db5e1",
+            "d85a3bace05acb3c0f2315e8",
+            "d88c30b42435c88de5ad7143",
+            "dd3cbfac77395d327670d15b",
+            "dd46bcb1412bc9848d353898",
+            "e173eb2c8fafc6b5cf1a4140",
+            "e3a3ad1129fe00db0ab1e55a",
+            "ea1653f7de451a7565233778",
+            "ebfb0e34e7de7aa9142e16d5",
+            "ed164a62895a9caabc2dacad",
+            "f0bd291ffc6dc886919a9f32",
+            "f1ee353e6f4fcf7bf386b36a",
+            "f2ff5e0967ae603c7eec2499",
+            "f4616e3addf6ba0bb38075a3",
+            "f605b7726298eca0e4468c67",
+            "f9ba69ae4d854ecb11edc363",
+            "fa23443bfb700513eab37347",
+            "faa8e50255b51f1adce7d899"
+          ],
+          "opposing_event_ids": [],
+          "source_path_ids": [
+            "581ea79dfb17767764628d13"
+          ],
+          "causal_edge_ids": [
+            "edge_monetary_to_selic",
+            "edge_selic_to_retail"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "causal_factor_impact": 0.1512,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0605,
+              "exposure_field": "post_hedge_floating_rate_debt_pct",
+              "exposure_value": 1.0,
+              "exposure_confidence": 0.923,
+              "exposure_evidence_ids": [
+                "FRE:159326"
+              ],
+              "exposure_scope_types": [
+                "ECONOMIC_EXPOSURE_AFTER_HEDGE"
+              ],
+              "exposure_rate_basis": "INCLUDES_HEDGED_DEBT",
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0558,
+              "source_path_ids": [
+                "581ea79dfb17767764628d13"
+              ],
+              "causal_edge_ids": [
+                "edge_monetary_to_selic",
+                "edge_selic_to_retail"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "demand",
+              "reason": "NO_EXPOSURE_MAPPING",
+              "expected_fields": []
+            }
+          ],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "decision_policy": "THREE_COMPONENTS",
+          "known_component_count": 1,
+          "coverage_penalty": 0.25,
+          "materiality_threshold": null,
+          "confidence_threshold": null,
+          "run_id": "company_4c5b_three_components"
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "a25cb808b28673dcac364d0c",
+          "ticker": "MGLU3",
+          "sector_snapshot_id": "f050fc9db0ed6c1ad1f4ed75",
+          "company_exposure_id": "8ee54aa7ec04e780636d267d",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": 0.0557,
+          "demand_impact_score": null,
+          "net_company_impact": 0.0556,
+          "confidence": 0.1973,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [
+            "05449fcb9b8994a009a38822",
+            "05dda0f700f86f0db19cf071",
+            "06c2a05eb2d7bd1229241340",
+            "1029be4418b54aa8001e7f8b",
+            "140e540cda41231f69312d32",
+            "1aa3b2de7a8f2a14ff668281",
+            "1c71d7fd5a8a3ccecdb462c2",
+            "1d757102fe39029cd674cdd8",
+            "217d549822d3ecf953896ac2",
+            "2188ffc34d522a90b0c33333",
+            "23bbc420da37cc0765c82dfd",
+            "2860fb16447e27e140e96d5f",
+            "289d23547a5d613d0a112b25",
+            "2906e997c9ed9ccc9567467f",
+            "291495548ef29f767b8bfa39",
+            "2da2475052efff29d229d634",
+            "2dd74e12122f9af650f8907a",
+            "2fcdf4a3cdc4e8cfc46159b0",
+            "3554d1f96bed7a0ea681e57a",
+            "37c894cc65b7dd11115469be",
+            "3c659a2ee233637479990213",
+            "3e18bae3554040bbb89ad58e",
+            "402ec8bc232d67c780c374fd",
+            "407f16da6db65447af44c751",
+            "44ea587903a50fe052d97fac",
+            "4688eb7ebe0e20203594f902",
+            "498083080f3ee213ac3f7a9f",
+            "4a3ec4506bbb8416ee96dcbf",
+            "4d88669bc470e36aba8d5c1a",
+            "5045a5337732e550e01cee07",
+            "5182c9aa0e637c117c92e909",
+            "51c14be73e667b900add9f29",
+            "56424bf19240ab89eff95f23",
+            "56e16324d645a624872095bb",
+            "5a74ce3e977ee67150639131",
+            "5f0255961dc6a9534a3bf024",
+            "6433e7f612796f350a857678",
+            "69f62cb4f614e978abf902d3",
+            "6fe7c699360491c377ff32ce",
+            "70183506a59690c19b59f2d0",
+            "70da9cbed02438e2b5379469",
+            "7197f2831a2971242a08cc44",
+            "733549a0cb33eafd2db4abf2",
+            "744b7d9d1ae38881f6b78c80",
+            "76f79296dbfc2cdc8e1551d4",
+            "78d06ba60febf332d4d99744",
+            "7f2bccd3d1b07efdc7649132",
+            "813950cf5c590a48927cda15",
+            "815d97192ca4637ea5834ab0",
+            "85728019c60b15b58079148c",
+            "8a116b8fd89effa96104fb5b",
+            "8ae9eb87290e8f535b98b7c1",
+            "8b71db2722c05f653350299a",
+            "8eec0a182e43868d6d5491a4",
+            "9723bd24b1dfc0e575b3f04b",
+            "9d687d50641d1c44585d0e4f",
+            "9ddd2e08e575a3cdf3eb7a0d",
+            "a30d97defc95a2c60ead6a3a",
+            "a793db92faa673d0e7add3f2",
+            "a82b0c596a742339f67d6c7d",
+            "a82ecada6fa3f79ac3257902",
+            "a83ad87c537c41a1b3922ffb",
+            "a856e539a694f8f0371ee3f0",
+            "abc6b913ca00856b98b58e95",
+            "ac0b1fd97d0cc1d6a53734ca",
+            "ae16980eb70bb355925c32e7",
+            "b04e9a2f286071d1850f9d9c",
+            "b25bd272973424060dd4c997",
+            "b2bd38e11170d980ca1c3ad8",
+            "b5f200c43322c16d091a2fec",
+            "c1f2916b524013158e7b6f6c",
+            "c2ce6a5decf81dadf1bc77e6",
+            "c32267e963ce1a604c21ff11",
+            "c72ad1f0023ab92961f6929e",
+            "c912beda51c042651a3fae12",
+            "d10c8599d67d7a08a90dae95",
+            "d1aaa9f2d16018c0b25e80f8",
+            "d1bd7ca686d6ca5274143e76",
+            "d6f9ab9473d5dbb00574031c",
+            "d7562f43349474bb2c8db5e1",
+            "d85a3bace05acb3c0f2315e8",
+            "d88c30b42435c88de5ad7143",
+            "dd3cbfac77395d327670d15b",
+            "dd46bcb1412bc9848d353898",
+            "e173eb2c8fafc6b5cf1a4140",
+            "e3a3ad1129fe00db0ab1e55a",
+            "ea1653f7de451a7565233778",
+            "ebfb0e34e7de7aa9142e16d5",
+            "ed164a62895a9caabc2dacad",
+            "f0bd291ffc6dc886919a9f32",
+            "f1ee353e6f4fcf7bf386b36a",
+            "f2ff5e0967ae603c7eec2499",
+            "f4616e3addf6ba0bb38075a3",
+            "f605b7726298eca0e4468c67",
+            "f9ba69ae4d854ecb11edc363",
+            "fa23443bfb700513eab37347",
+            "faa8e50255b51f1adce7d899"
+          ],
+          "opposing_event_ids": [],
+          "source_path_ids": [
+            "581ea79dfb17767764628d13"
+          ],
+          "causal_edge_ids": [
+            "edge_monetary_to_selic",
+            "edge_selic_to_retail"
+          ],
+          "factor_contributions": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "causal_factor_impact": 0.1512,
+              "evidence_weight": 0.4,
+              "adjusted_factor_impact": 0.0605,
+              "exposure_field": "post_hedge_floating_rate_debt_pct",
+              "exposure_value": 1.0,
+              "exposure_confidence": 0.923,
+              "exposure_evidence_ids": [
+                "FRE:159326"
+              ],
+              "exposure_scope_types": [
+                "ECONOMIC_EXPOSURE_AFTER_HEDGE"
+              ],
+              "exposure_rate_basis": "INCLUDES_HEDGED_DEBT",
+              "modifier_fields": [],
+              "modifier_methodology_version": null,
+              "modifier_beta": null,
+              "final_contribution": 0.0558,
+              "source_path_ids": [
+                "581ea79dfb17767764628d13"
+              ],
+              "causal_edge_ids": [
+                "edge_monetary_to_selic",
+                "edge_selic_to_retail"
+              ],
+              "evidence_ids": [],
+              "evidence_status": "HYPOTHESIS"
+            }
+          ],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "demand",
+              "reason": "NO_EXPOSURE_MAPPING",
+              "expected_fields": []
+            }
+          ],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "demand"
+          ],
+          "status": "WATCH",
+          "reason": "MATERIAL_APPROVED_CONTRIBUTION",
+          "decision_policy": "MATERIALITY_COVERAGE",
+          "known_component_count": 1,
+          "coverage_penalty": 0.25,
+          "materiality_threshold": 0.02,
+          "confidence_threshold": 0.1,
+          "run_id": "company_4c5b_materiality_coverage"
+        }
+      }
+    },
+    {
+      "ticker": "RAIL3",
+      "sector_state": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+      "approved_snapshot_id": "4e6f9b9155ec8a45a0d4d627",
+      "approved_fields": [
+        "gross_financial_debt",
+        "inflation_linked_debt_pct",
+        "total_debt",
+        "total_revenue"
+      ],
+      "policies": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "3016941847abfdcacf7de2ce",
+          "ticker": "RAIL3",
+          "sector_snapshot_id": "74f3717dd28c6e5c04e9ba05",
+          "company_exposure_id": "4e6f9b9155ec8a45a0d4d627",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": null,
+          "confidence": 0.0,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [],
+          "opposing_event_ids": [],
+          "source_path_ids": [],
+          "causal_edge_ids": [],
+          "factor_contributions": [],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "decision_policy": "THREE_COMPONENTS",
+          "known_component_count": 0,
+          "coverage_penalty": 0.0,
+          "materiality_threshold": null,
+          "confidence_threshold": null,
+          "run_id": "company_4c5b_three_components"
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "e5d33300d7b8f4e771e533ec",
+          "ticker": "RAIL3",
+          "sector_snapshot_id": "74f3717dd28c6e5c04e9ba05",
+          "company_exposure_id": "4e6f9b9155ec8a45a0d4d627",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": null,
+          "confidence": 0.0,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [],
+          "opposing_event_ids": [],
+          "source_path_ids": [],
+          "causal_edge_ids": [],
+          "factor_contributions": [],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "decision_policy": "MATERIALITY_COVERAGE",
+          "known_component_count": 0,
+          "coverage_penalty": 0.0,
+          "materiality_threshold": 0.02,
+          "confidence_threshold": 0.1,
+          "run_id": "company_4c5b_materiality_coverage"
+        }
+      }
+    },
+    {
+      "ticker": "SLCE3",
+      "sector_state": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+      "approved_snapshot_id": "78131de5dbb206d07d31cc22",
+      "approved_fields": [
+        "foreign_currency_debt_pct",
+        "gross_financial_debt",
+        "total_debt",
+        "total_revenue"
+      ],
+      "policies": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "b76a18b90d3247a37d69d965",
+          "ticker": "SLCE3",
+          "sector_snapshot_id": "a5aa41a5e259823a8380cc65",
+          "company_exposure_id": "78131de5dbb206d07d31cc22",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": null,
+          "confidence": 0.0,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [],
+          "opposing_event_ids": [],
+          "source_path_ids": [],
+          "causal_edge_ids": [],
+          "factor_contributions": [],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "decision_policy": "THREE_COMPONENTS",
+          "known_component_count": 0,
+          "coverage_penalty": 0.0,
+          "materiality_threshold": null,
+          "confidence_threshold": null,
+          "run_id": "company_4c5b_three_components"
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "8395914dacb4df8165fd22ab",
+          "ticker": "SLCE3",
+          "sector_snapshot_id": "a5aa41a5e259823a8380cc65",
+          "company_exposure_id": "78131de5dbb206d07d31cc22",
+          "as_of_timestamp": "2026-07-22T23:59:59-03:00",
+          "revenue_impact_score": null,
+          "cost_impact_score": null,
+          "debt_impact_score": null,
+          "demand_impact_score": null,
+          "net_company_impact": null,
+          "confidence": 0.0,
+          "conflict_ratio": 0.0,
+          "supporting_event_ids": [],
+          "opposing_event_ids": [],
+          "source_path_ids": [],
+          "causal_edge_ids": [],
+          "factor_contributions": [],
+          "missing_factor_exposures": [],
+          "unsupported_factor_channels": [],
+          "causal_evidence_status": "HYPOTHESIS",
+          "missing_exposures": [
+            "revenue",
+            "cost",
+            "debt",
+            "demand"
+          ],
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "decision_policy": "MATERIALITY_COVERAGE",
+          "known_component_count": 0,
+          "coverage_penalty": 0.0,
+          "materiality_threshold": 0.02,
+          "confidence_threshold": 0.1,
+          "run_id": "company_4c5b_materiality_coverage"
+        }
+      }
+    }
+  ],
+  "sprint_4c_frozen": true,
+  "valuation_enabled": false,
+  "buy_enabled": false,
+  "orders_enabled": false
+}

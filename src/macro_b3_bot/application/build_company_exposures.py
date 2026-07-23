@@ -187,7 +187,7 @@ class CompanyExposureBuilder:
                 SELECT field_name,evidence_payload
                 FROM company_macro_exposure_facts
                 WHERE selection_run_id=? AND ticker=?
-                  AND review_status='HUMAN_APPROVED'
+                  AND review_status IN ('HUMAN_APPROVED','DELEGATED_AI_APPROVED')
                   AND is_active=TRUE
                 QUALIFY ROW_NUMBER() OVER (
                     PARTITION BY field_name
@@ -230,12 +230,6 @@ class CompanyExposureBuilder:
             values["net_foreign_currency_debt_pct"] = net_fx
             # Compatibility field now means economic, post-hedge FX debt only.
             values["foreign_currency_debt_pct"] = net_fx
-            current_float = float(values["floating_rate_debt_pct"] or 0)
-            post_hedge_float = round(
-                min(1.0, max(current_float, contractual_fx * hedge_coverage)), 6
-            )
-            values["post_hedge_floating_rate_debt_pct"] = post_hedge_float
-            values["floating_rate_debt_pct"] = post_hedge_float
             source_evidence = [
                 item for item in evidence
                 if item.field_name in {
@@ -248,6 +242,24 @@ class CompanyExposureBuilder:
             )
             evidence_ids = sorted({item.evidence_id for item in source_evidence})
             available_at = max(item.available_at for item in source_evidence)
+            rate_basis = next((
+                item.rate_exposure_basis for item in reversed(source_evidence)
+                if item.field_name == "floating_rate_debt_pct"
+                and item.rate_exposure_basis
+            ), "UNKNOWN")
+            current_float = (
+                float(values["floating_rate_debt_pct"])
+                if values["floating_rate_debt_pct"] is not None else 0.0
+            )
+            post_hedge_float = self._post_hedge_floating_rate(
+                current_float, contractual_fx, hedge_coverage, rate_basis
+            )
+            if post_hedge_float is None:
+                # A pre/post-swap basis ambiguity must not leak into the rate engine.
+                values["floating_rate_debt_pct"] = None
+            values["post_hedge_floating_rate_debt_pct"] = post_hedge_float
+            if post_hedge_float is not None:
+                values["floating_rate_debt_pct"] = post_hedge_float
             common = {
                 "source_type": "RULE_DERIVED_POST_HEDGE",
                 "evidence_id": "+".join(evidence_ids),
@@ -260,7 +272,7 @@ class CompanyExposureBuilder:
                 "scope_type": "ECONOMIC_EXPOSURE_AFTER_HEDGE",
                 "denominator_basis": "CONSOLIDATED_GROSS_DEBT",
             }
-            for field_name, value, formula in (
+            derived_fields = [
                 (
                     "net_foreign_currency_debt_pct", net_fx,
                     "contractual_fx_debt*(1-hedge_coverage)",
@@ -269,15 +281,20 @@ class CompanyExposureBuilder:
                     "foreign_currency_debt_pct", net_fx,
                     "compatibility_alias(net_foreign_currency_debt_pct)",
                 ),
-                (
+            ]
+            if post_hedge_float is not None:
+                derived_fields.extend([
+                    (
                     "post_hedge_floating_rate_debt_pct", post_hedge_float,
-                    "max(disclosed_floating_debt,contractual_fx_debt*hedge_coverage)",
+                    "rate_basis_transform(disclosed_floating_debt,"
+                    "contractual_fx_debt,hedge_coverage)",
                 ),
                 (
                     "floating_rate_debt_pct", post_hedge_float,
                     "compatibility_alias(post_hedge_floating_rate_debt_pct)",
                 ),
-            ):
+                ])
+            for field_name, value, formula in derived_fields:
                 evidence.append(ExposureFieldEvidence(
                     field_name=field_name, value=value, normalized_value=value,
                     formula=formula,
@@ -286,6 +303,7 @@ class CompanyExposureBuilder:
                         "hedge_coverage": hedge_coverage,
                         "disclosed_floating_debt": current_float,
                     },
+                    rate_exposure_basis=rate_basis,
                     rationale=(
                         "FX debt converted by swap is removed from FX exposure and "
                         "migrated to post-hedge floating-rate exposure."
@@ -362,3 +380,18 @@ class CompanyExposureBuilder:
     @staticmethod
     def _db_timestamp(value: datetime) -> datetime:
         return value.astimezone(timezone.utc).replace(tzinfo=None)
+
+    @staticmethod
+    def _post_hedge_floating_rate(
+        disclosed_floating: float,
+        contractual_fx: float,
+        hedge_coverage: float,
+        rate_basis: str,
+    ) -> float | None:
+        if rate_basis == "INCLUDES_HEDGED_DEBT":
+            return disclosed_floating
+        if rate_basis == "EXCLUDES_HEDGED_DEBT":
+            return round(
+                min(1.0, disclosed_floating + contractual_fx * hedge_coverage), 6
+            )
+        return None

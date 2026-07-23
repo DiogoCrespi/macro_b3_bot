@@ -1794,11 +1794,10 @@ class DatabaseStore:
 
     def save_company_impact_candidate(self, candidate: dict) -> bool:
         import json as _json
-        if self.connection.execute(
+        exists = self.connection.execute(
             "SELECT COUNT(*) FROM company_impact_candidates WHERE candidate_id = ?",
             [candidate["candidate_id"]],
-        ).fetchone()[0]:
-            return False
+        ).fetchone()[0] > 0
         payload_keys = {
             "revenue_impact_score", "cost_impact_score", "debt_impact_score",
             "demand_impact_score", "net_company_impact",
@@ -1806,10 +1805,12 @@ class DatabaseStore:
             "causal_edge_ids", "factor_contributions",
             "missing_factor_exposures", "unsupported_factor_channels",
             "causal_evidence_status", "reason",
+            "decision_policy", "known_component_count", "coverage_penalty",
+            "materiality_threshold", "confidence_threshold",
         }
         self.connection.execute(
             """
-            INSERT INTO company_impact_candidates (
+            INSERT OR REPLACE INTO company_impact_candidates (
                 candidate_id,ticker,sector_snapshot_id,company_exposure_id,
                 as_of_timestamp,impact_payload,confidence,conflict_ratio,
                 missing_exposures,status,run_id
@@ -1825,7 +1826,7 @@ class DatabaseStore:
                 candidate["run_id"],
             ],
         )
-        return True
+        return not exists
 
     def get_sector_impact_candidates(self, status: Optional[str] = None) -> list[dict]:
         if status:

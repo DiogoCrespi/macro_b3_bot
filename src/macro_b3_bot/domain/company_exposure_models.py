@@ -36,6 +36,9 @@ class ExposureFieldEvidence(BaseModel):
     scope_type: str | None = None
     scope_period: str | None = None
     denominator_basis: str | None = None
+    rate_exposure_basis: Literal[
+        "INCLUDES_HEDGED_DEBT", "EXCLUDES_HEDGED_DEBT", "UNKNOWN"
+    ] | None = None
     formula: str | None = None
     derivation_components: dict[str, float] | None = None
     available_at: datetime
@@ -197,6 +200,9 @@ class FactorContribution(BaseModel):
     exposure_field: str
     exposure_value: float
     exposure_confidence: float = Field(ge=0, le=1)
+    exposure_evidence_ids: list[str] = Field(default_factory=list)
+    exposure_scope_types: list[str] = Field(default_factory=list)
+    exposure_rate_basis: str | None = None
     modifier_fields: list[str] = Field(default_factory=list)
     modifier_methodology_version: str | None = None
     modifier_beta: float | None = None
@@ -238,4 +244,9 @@ class CompanyImpactCandidate(BaseModel):
     missing_exposures: list[str] = Field(default_factory=list)
     status: str
     reason: str | None = None
+    decision_policy: Literal["THREE_COMPONENTS", "MATERIALITY_COVERAGE"]
+    known_component_count: int = Field(ge=0, le=4)
+    coverage_penalty: float = Field(ge=0, le=1)
+    materiality_threshold: float | None = None
+    confidence_threshold: float | None = None
     run_id: str

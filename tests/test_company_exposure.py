@@ -302,6 +302,33 @@ def test_review_hash_covers_semantics_and_manifest_application_is_atomic(
         "SELECT COUNT(*) FROM company_exposure_review_log"
     ).fetchone()[0] == 0
 
+    delegated = reviewer.pending_manifest("SOURCE-ATOMIC")
+    delegated["reviewer_type"] = "DELEGATED_AI"
+    delegated["reviewed_by"] = "Codex delegated review"
+    for decision in delegated["decisions"]:
+        decision["decision"] = "APPROVE"
+        decision["notes"] = "Evidence, value, scope and denominator were reviewed."
+    delegated_path = tmp_path / "delegated.json"
+    delegated_path.write_text(json.dumps(delegated), encoding="utf-8")
+    result = reviewer.apply_manifest(
+        delegated_path,
+        confirmed_identity="Codex delegated review",
+        confirmed=True,
+    )
+    assert result["approved"] == 2
+    assert store.connection.execute(
+        """
+        SELECT COUNT(*) FROM company_macro_exposure_facts
+        WHERE review_status='DELEGATED_AI_APPROVED'
+        """
+    ).fetchone()[0] == 2
+    assert store.connection.execute(
+        """
+        SELECT COUNT(*) FROM company_exposure_review_log
+        WHERE reviewer_type='DELEGATED_AI'
+        """
+    ).fetchone()[0] == 2
+
     original = reviewer.fact_review_hash(
         "FACT-A", "TEST3", "export_revenue_pct", "0.4", base, "test-v1"
     )
@@ -336,6 +363,15 @@ def test_company_impact_requires_explicit_factor_context_and_never_buys() -> Non
     )
     assert incomplete.status == "NO_ACTION"
     assert set(incomplete.missing_exposures) == {"cost", "debt", "demand"}
+    proposed = CompanyImpactEngine("impact-run-proposed").evaluate(
+        sector, exposure(), {("FX", "revenue"): .5}, AS_OF,
+        decision_policy="MATERIALITY_COVERAGE",
+        materiality_threshold=.01,
+        confidence_threshold=.05,
+    )
+    assert proposed.status == "WATCH"
+    assert proposed.known_component_count == 1
+    assert proposed.coverage_penalty == .25
 
 
 def test_fx_swap_uses_net_debt_and_migrates_to_post_hedge_rates() -> None:
@@ -395,6 +431,7 @@ def test_builder_derives_post_hedge_economic_debt_exposure(tmp_path: Path) -> No
     facts = (
         ("contractual_foreign_currency_debt_pct", .2),
         ("currency_hedge_pct", 1.0),
+        ("floating_rate_debt_pct", 0.0),
     )
     for index, (field_name, value) in enumerate(facts):
         item = evidence(field_name, value).model_copy(update={
@@ -403,6 +440,10 @@ def test_builder_derives_post_hedge_economic_debt_exposure(tmp_path: Path) -> No
             "scope_type": "CONTRACTUAL_CURRENCY_BEFORE_HEDGE",
             "denominator_basis": "CONSOLIDATED_GROSS_DEBT",
             "evidence_excerpt": f"Explicit {field_name} disclosure.",
+            "rate_exposure_basis": (
+                "EXCLUDES_HEDGED_DEBT"
+                if field_name == "floating_rate_debt_pct" else None
+            ),
         })
         store.connection.execute(
             """
@@ -436,6 +477,13 @@ def test_builder_derives_post_hedge_economic_debt_exposure(tmp_path: Path) -> No
         "post_hedge_floating_rate_debt_pct",
     })
     store.close()
+
+
+def test_unknown_swap_rate_basis_blocks_post_hedge_rate_derivation() -> None:
+    derive = CompanyExposureBuilder._post_hedge_floating_rate
+    assert derive(.4, .2, 1.0, "UNKNOWN") is None
+    assert derive(.4, .2, 1.0, "INCLUDES_HEDGED_DEBT") == .4
+    assert derive(.4, .2, 1.0, "EXCLUDES_HEDGED_DEBT") == .6
 
 
 def test_no_active_sector_signal_forces_no_action_without_contributions() -> None:
