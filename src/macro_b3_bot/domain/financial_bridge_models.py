@@ -256,6 +256,40 @@ class NormalizedCashFlowSnapshot(BaseModel):
     run_id: str
 
 
+class DescriptiveMarketMetric(BaseModel):
+    """Observed multiple; never a fair-value or trading recommendation."""
+
+    value: float | None = None
+    classification: Literal["DESCRIPTIVE_ONLY"] = "DESCRIPTIVE_ONLY"
+    not_a_fair_value: Literal[True] = True
+    not_buy_eligible: Literal[True] = True
+
+
+class ValuationReadinessAssessment(BaseModel):
+    """Explicit readiness gate separating diagnostics from valuation."""
+
+    assessment_id: str
+    ticker: str
+    as_of_timestamp: datetime
+    status: Literal[
+        "VALUATION_READY",
+        "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+        "VALUATION_BLOCKED_FCF_NOT_READY",
+        "VALUATION_BLOCKED_CONFLICTING_MACRO_DIRECTION",
+        "VALUATION_BLOCKED_MISSING_MARKET_DATA",
+        "VALUATION_BLOCKED_INSUFFICIENT_HISTORY",
+    ]
+    valuation_eligible: Literal[False] = False
+    dcf_eligible: Literal[False] = False
+    blockers: list[str] = Field(default_factory=list)
+    reasons: list[str] = Field(default_factory=list)
+    evidence_ids: list[str] = Field(default_factory=list)
+    inputs: dict[str, object] = Field(default_factory=dict)
+    descriptive_metrics: dict[str, DescriptiveMarketMetric] = Field(default_factory=dict)
+    methodology_version: str
+    run_id: str
+
+
 class BridgeReplayObservation(BaseModel):
     ticker: str
     bridge: str

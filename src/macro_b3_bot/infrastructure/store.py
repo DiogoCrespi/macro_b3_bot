@@ -815,6 +815,18 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS valuation_readiness_assessments (
+                assessment_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                assessment_payload VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                valuation_eligible BOOLEAN NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
 
 
     def _init_views(self) -> None:
@@ -2025,6 +2037,21 @@ class DatabaseStore:
                 item["diagnostic_id"], item["ticker"], item["factor"],
                 item["as_of_timestamp"], json.dumps(item, default=str),
                 item["classification"], item["run_id"],
+            ],
+        )
+
+    def save_valuation_readiness_assessment(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO valuation_readiness_assessments
+            (assessment_id,ticker,as_of_timestamp,assessment_payload,status,
+             valuation_eligible,run_id)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            [
+                item["assessment_id"], item["ticker"], item["as_of_timestamp"],
+                json.dumps(item, default=str), item["status"],
+                item["valuation_eligible"], item["run_id"],
             ],
         )
 

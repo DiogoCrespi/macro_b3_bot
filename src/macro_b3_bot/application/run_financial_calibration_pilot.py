@@ -8,6 +8,7 @@ import math
 from macro_b3_bot.application.calibrate_financial_bridges import (
     FinancialBridgeCalibrator,
 )
+from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
 from macro_b3_bot.domain.financial_bridge_models import FinancialBaselineSnapshot
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
@@ -59,6 +60,20 @@ class FinancialCalibrationPilot:
             self.store.save_normalized_cash_flow_snapshot(
                 item.model_dump(mode="json")
             )
+        readiness_assessments = []
+        for ticker, baseline in baselines.items():
+            assessment = ValuationReadinessGate().assess(
+                baseline=baseline,
+                calibrations=[item for item in calibrations if item.ticker == ticker],
+                normalized_cash_flow=next(item for item in normalized if item.ticker == ticker),
+                conflict_diagnostics=[item for item in diagnostics if item.ticker == ticker],
+                run_id=run_id,
+                as_of_timestamp=as_of_timestamp,
+            )
+            self.store.save_valuation_readiness_assessment(
+                assessment.model_dump(mode="json")
+            )
+            readiness_assessments.append(assessment)
 
         controlled = [
             row
@@ -100,6 +115,9 @@ class FinancialCalibrationPilot:
             "financial_outcome_intervals": outcome_intervals,
             "normalized_cash_flows": [
                 item.model_dump(mode="json") for item in normalized
+            ],
+            "valuation_readiness_assessments": [
+                item.model_dump(mode="json") for item in readiness_assessments
             ],
             "acceptance_checks": {
                 "conflicts_identified": len(diagnostics) == 2,
