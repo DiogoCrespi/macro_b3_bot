@@ -138,6 +138,91 @@ class MacroEventBuilder:
         self.series_map = _load_series_map()
         self.now = datetime.now(timezone.utc)
 
+    def process_window(
+        self,
+        history_start: date,
+        history_end: date,
+        as_of_timestamp: Optional[datetime] = None,
+    ) -> dict:
+        """
+        Process MacroReleases within a strict Point-In-Time window [history_start, history_end]
+        as of as_of_timestamp.
+
+        Returns detailed summary:
+        - records_scanned
+        - records_eligible
+        - future_excluded
+        - releases_evaluated
+        - events_approved / watch / rejected
+        """
+        effective_now = as_of_timestamp or self.now
+
+        # 1. Total records scanned in date window
+        scanned_row = self.store.connection.execute(
+            "SELECT COUNT(*) FROM macro_releases WHERE reference_date >= ? AND reference_date <= ?",
+            [history_start, history_end]
+        ).fetchone()
+        records_scanned = scanned_row[0] if scanned_row else 0
+
+        # 2. Query eligible records available as of effective_now
+        releases = self.store.connection.execute(
+            """
+            SELECT release_id, source, series_code, indicator, geography, frequency, unit,
+                   reference_date, published_at, available_at,
+                   actual_value, previous_value, consensus_value,
+                   raw_checksum, record_checksum, availability_precision
+            FROM macro_releases
+            WHERE reference_date >= ? AND reference_date <= ? AND available_at <= ?
+            ORDER BY source, series_code, reference_date
+            """,
+            [history_start, history_end, effective_now]
+        ).fetchall()
+
+        cols = ["release_id", "source", "series_code", "indicator", "geography", "frequency", "unit",
+                "reference_date", "published_at", "available_at",
+                "actual_value", "previous_value", "consensus_value",
+                "raw_checksum", "record_checksum", "availability_precision"]
+        release_list = [dict(zip(cols, r)) for r in releases]
+
+        records_eligible = len(release_list)
+        future_excluded = max(0, records_scanned - records_eligible)
+
+        approved = 0
+        watch = 0
+        rejected = 0
+        skipped = 0
+
+        for rel in release_list:
+            series_key = (rel["source"], rel["series_code"])
+            series_cfg = self.series_map.get(series_key)
+            if not series_cfg:
+                skipped += 1
+                continue
+
+            event_family = series_cfg.get("event_family", "")
+            if event_family not in MACRO_EVENT_TYPES:
+                skipped += 1
+                continue
+
+            status = self._build_and_gate(rel, series_cfg, event_family, effective_now=effective_now)
+            if status == "MACRO_EVENT_APPROVED":
+                approved += 1
+            elif status == "MACRO_EVENT_WATCH":
+                watch += 1
+            else:
+                rejected += 1
+
+        return {
+            "records_scanned": records_scanned,
+            "records_eligible": records_eligible,
+            "future_excluded": future_excluded,
+            "releases_evaluated": len(release_list) - skipped,
+            "events_approved": approved,
+            "events_watch": watch,
+            "events_rejected": rejected,
+            "skipped": skipped,
+        }
+
     def process_since(self, since_date: date, as_of_timestamp: Optional[datetime] = None) -> dict:
         """
         Process all MacroReleases published since since_date and generate
@@ -146,7 +231,7 @@ class MacroEventBuilder:
         Returns summary dict.
         """
         effective_now = as_of_timestamp or self.now
-        # Fetch new releases from the store available as of effective_now
+        # Fetch new releases from the store
         releases = self.store.connection.execute(
             """
             SELECT release_id, source, series_code, indicator, geography, frequency, unit,
@@ -172,11 +257,9 @@ class MacroEventBuilder:
         skipped = 0
 
         for rel in release_list:
-            # Look-ahead safety check against effective_now
             if _SAFETY_CHECK_LOOKAHEAD:
                 avail = rel["available_at"]
                 if avail is not None:
-                    # DuckDB may return naive datetimes — assume UTC
                     if isinstance(avail, datetime) and avail.tzinfo is None:
                         avail = avail.replace(tzinfo=timezone.utc)
                     if isinstance(avail, datetime) and avail > effective_now:
@@ -239,9 +322,9 @@ class MacroEventBuilder:
         )
 
         # Novelty
-        days_since = self._days_since_last_event(source, series_code, event_family, ref_date)
+        days_since = self._days_since_last_event(source, series_code, event_family, ref_date, as_of_timestamp=eff_now)
         magnitude_pct = self._magnitude_percentile(actual, hist_values)
-        recent_30d = self._recent_event_count(source, series_code, event_family, 30)
+        recent_30d = self._recent_event_count(source, series_code, event_family, 30, as_of_timestamp=eff_now)
         novelty_score, novelty_breakdown = compute_novelty_score(
             event_type=event_family,
             series_code=series_code,
@@ -278,8 +361,6 @@ class MacroEventBuilder:
             source=source,
             frequency=series_cfg.get("frequency", "MONTHLY"),
             has_vintage=has_vintage,
-            has_consensus=(consensus is not None),
-            has_previous_value=(previous is not None),
             availability_precision=precision,
         )
 
@@ -309,7 +390,7 @@ class MacroEventBuilder:
 
         horizon_months = self.rules.get("horizons", {}).get(event_family, 3)
         affected_variables = self._get_affected_variables(event_family, series_code)
-        current_regime = self._get_current_regime()
+        current_regime = self._get_current_regime(as_of_timestamp=eff_now)
 
         evt = {
             "event_id": event_id,
@@ -385,25 +466,35 @@ class MacroEventBuilder:
 
         return status, failed_conditions
 
-    def _days_since_last_event(self, source: str, series_code: str, event_family: str, ref_date: date) -> Optional[int]:
+    def _days_since_last_event(
+        self, source: str, series_code: str, event_family: str, ref_date: date, as_of_timestamp: Optional[datetime] = None
+    ) -> Optional[int]:
+        eff_now = as_of_timestamp or self.now
         row = self.store.connection.execute(
             """
             SELECT MAX(reference_date) FROM macro_event_candidates
-            WHERE event_type = ? AND reference_date < ?
+            WHERE event_type = ? AND reference_date < ? AND detected_at <= ?
             """,
-            [event_family, ref_date]
+            [event_family, ref_date, eff_now]
         ).fetchone()
         if row and row[0]:
             last = row[0] if isinstance(row[0], date) else date.fromisoformat(str(row[0]))
             return (ref_date - last).days
         return None
 
-    def _recent_event_count(self, source: str, series_code: str, event_family: str, days: int) -> int:
+    def _recent_event_count(
+        self, source: str, series_code: str, event_family: str, days: int, as_of_timestamp: Optional[datetime] = None
+    ) -> int:
         from datetime import timedelta
-        cutoff = date.today() - timedelta(days=days)
+        eff_now = as_of_timestamp or self.now
+        as_of_dt = eff_now.date() if isinstance(eff_now, datetime) else eff_now
+        cutoff = as_of_dt - timedelta(days=days)
         row = self.store.connection.execute(
-            "SELECT COUNT(*) FROM macro_event_candidates WHERE event_type = ? AND reference_date >= ?",
-            [event_family, cutoff]
+            """
+            SELECT COUNT(*) FROM macro_event_candidates
+            WHERE event_type = ? AND reference_date >= ? AND reference_date <= ? AND detected_at <= ?
+            """,
+            [event_family, cutoff, as_of_dt, eff_now]
         ).fetchone()
         return row[0] if row else 0
 
@@ -457,9 +548,12 @@ class MacroEventBuilder:
         }
         return mapping.get(event_family, [])
 
-    def _get_current_regime(self) -> str:
-        """Return the most recent regime label from the snapshot table."""
+    def _get_current_regime(self, as_of_timestamp: Optional[datetime] = None) -> str:
+        """Return the most recent regime label as of as_of_timestamp from snapshot table."""
+        eff_now = as_of_timestamp or self.now
+        as_of_dt = eff_now.date() if isinstance(eff_now, datetime) else eff_now
         row = self.store.connection.execute(
-            "SELECT regime_label FROM macro_regime_snapshots ORDER BY snapshot_date DESC LIMIT 1"
+            "SELECT regime_label FROM macro_regime_snapshots WHERE snapshot_date <= ? ORDER BY snapshot_date DESC, captured_at DESC LIMIT 1",
+            [as_of_dt]
         ).fetchone()
         return row[0] if row else "MIXED"

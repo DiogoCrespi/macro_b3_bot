@@ -32,8 +32,12 @@ NOAA_ONI_URL = "https://origin.cpc.ncep.noaa.gov/products/analysis_monitoring/en
 # NOAA NCEI Niño 3.4 monthly data
 NOAA_NINO34_URL = "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr-only/"
 
-# CPC SST anomaly data (best source for Niño 3.4 + ONI)
-NOAA_CPC_SST_URL = "https://origin.cpc.ncep.noaa.gov/data/indices/ersst5.nino.mth.91-20.ascii"
+# CPC SST anomaly data (best source for Niño 3.4 + ONI) with fallback endpoints
+NOAA_CPC_SST_URLS = [
+    "https://origin.cpc.ncep.noaa.gov/data/indices/ersst5.nino.mth.91-20.ascii",
+    "https://www.cpc.ncep.noaa.gov/data/indices/ersst5.nino.mth.91-20.ascii",
+    "https://www.ncei.noaa.gov/pub/data/cmb/teleconnections/ersst5.nino.mth.91-20.ascii",
+]
 
 
 # ENSO classification thresholds (ONI-based)
@@ -60,17 +64,21 @@ class NoaaEnsoClient:
         Returns list of dicts with keys:
             year, month, nino34_sst, nino34_anom, oni_3month
         """
-        raw_text = self._fetch_text(NOAA_CPC_SST_URL)
+        raw_text = self._fetch_text_with_fallbacks(NOAA_CPC_SST_URLS)
         return self._parse_cpc_sst_table(raw_text)
 
-    def _fetch_text(self, url: str) -> str:
-        try:
-            with httpx.Client(timeout=self._timeout) as client:
-                resp = client.get(url)
-                resp.raise_for_status()
-                return resp.text
-        except (httpx.HTTPError, httpx.TimeoutException) as exc:
-            raise RuntimeError(f"NOAA request failed for {url}: {exc}") from exc
+    def _fetch_text_with_fallbacks(self, urls: list[str]) -> str:
+        last_error = None
+        for url in urls:
+            try:
+                with httpx.Client(timeout=self._timeout, follow_redirects=True) as client:
+                    resp = client.get(url)
+                    resp.raise_for_status()
+                    return resp.text
+            except (httpx.HTTPError, httpx.TimeoutException, Exception) as exc:
+                logger.warning("NOAA request failed for %s: %s", url, exc)
+                last_error = exc
+        raise RuntimeError(f"All NOAA endpoints failed. Last error: {last_error}")
 
     def _parse_cpc_sst_table(self, text: str) -> list[dict]:
         """

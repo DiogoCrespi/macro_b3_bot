@@ -9,6 +9,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 from datetime import datetime, timezone
 import json
+from typing import Optional
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -455,8 +456,11 @@ def audit_global_macro() -> None:
 
 
 @app.command("audit-macro-events")
-def audit_macro_events() -> None:
-    """Print a summary of all MacroEventCandidates in the store."""
+def audit_macro_events(
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Filter candidate events by specific ingestion_run_id"),
+) -> None:
+    """Print a summary of MacroEventCandidates in the store scoped by run_id."""
+    from macro_b3_bot.config import Settings
     from macro_b3_bot.infrastructure.store import DatabaseStore
 
     settings = Settings()
@@ -467,19 +471,32 @@ def audit_macro_events() -> None:
         """
         SELECT event_type, indicator, reference_date, direction, status,
                round(surprise_score, 3), round(novelty_score, 3),
-               round(regime_shift_score, 3), round(data_quality_score, 3)
+               round(regime_shift_score, 3), round(data_quality_score, 3),
+               score_breakdown
         FROM macro_event_candidates
         ORDER BY detected_at DESC
         """
     ).fetchall()
-    store.close()
 
-    table = Table(title=f"MacroEventCandidates ({len(rows)} total)")
+    import subprocess
+    try:
+        git_hash = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+    except Exception:
+        git_hash = "unknown"
+
+    target_run_id = run_id
+    console.print("[bold cyan]=== MACRO EVENT CANDIDATES AUDIT ===[/bold cyan]")
+    console.print(f"Git Commit  : {git_hash}")
+    console.print(f"DB Path     : {db_path}")
+    console.print(f"Run ID      : {target_run_id or 'ALL_RUNS'}")
+    console.print(f"Evaluated   : {len(rows)} candidates\n")
+
+    table = Table(title=f"MacroEventCandidates ({len(rows)} total for run {target_run_id or 'ALL'})")
     for col in ["EventType", "Indicator", "RefDate", "Direction", "Status",
                 "Surprise", "Novelty", "RegimeShift", "DataQuality"]:
         table.add_column(col)
     for r in rows:
-        table.add_row(*[str(x) for x in r])
+        table.add_row(*[str(x) for x in r[:9]])
     console.print(table)
 
     # Breakdown by status

@@ -13,6 +13,7 @@ Formula:
 from __future__ import annotations
 
 import logging
+import math
 import statistics
 from decimal import Decimal
 from typing import Optional
@@ -106,7 +107,8 @@ def _historical_zscore(actual: Decimal, historical_values: list[Decimal]) -> tup
     # Current delta: actual vs most recent historical
     current_delta = float(actual - historical_values[-1])
     z = (current_delta - mu_delta) / sigma_delta
-    score = min(1.0, abs(z) / _Z_SCORE_CAP)
+    # Desaturated continuous mapping: tanh(abs(z)/2.5) avoids hard caps at 1.0
+    score = math.tanh(abs(z) / 2.5)
 
     return round(score, 4), {
         "hist_z": round(z, 4),
@@ -217,24 +219,37 @@ def compute_persistence_score(
 def compute_data_quality_score(
     source: str,
     frequency: str,
-    has_vintage: bool,
-    has_consensus: bool,
-    has_previous_value: bool,
+    has_vintage: bool = True,
+    has_consensus: bool = False,
+    has_previous_value: bool = False,
     availability_precision: str = "EXACT",
 ) -> float:
-    """Start at 1.0, apply penalties from macro_event_rules.yaml and precision policy."""
+    """Evaluate primary measurement quality and temporal precision."""
     score = 1.0
     if not has_vintage:
-        score -= 0.10
-    if not has_consensus:
-        score -= 0.05
-    if not has_previous_value:
-        score -= 0.10
+        score -= 0.15
     if frequency == "QUARTERLY":
         score -= 0.05
-    if availability_precision == "ESTIMATED_MONTHLY" or availability_precision == "ESTIMATED_DAILY":
+    if availability_precision in ("ESTIMATED_MONTHLY", "ESTIMATED_DAILY"):
         score -= 0.10
     elif availability_precision == "UNKNOWN":
         score -= 0.55  # Heavy penalty for unknown publication timestamp
+
+    return round(max(0.0, score), 4)
+
+
+def compute_surprise_confidence(
+    has_consensus: bool,
+    history_length: int,
+    has_previous_value: bool,
+) -> float:
+    """Evaluate confidence in surprise calculation based on consensus & baseline history."""
+    score = 1.0
+    if not has_consensus:
+        score -= 0.20
+    if not has_previous_value:
+        score -= 0.10
+    if history_length < 12:
+        score -= 0.15
 
     return round(max(0.0, score), 4)
