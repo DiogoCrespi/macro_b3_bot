@@ -27,6 +27,7 @@ from macro_b3_bot.application.detect_macro_surprises import (
     compute_data_quality_score,
     compute_novelty_score,
     compute_persistence_score,
+    compute_surprise_confidence,
     compute_surprise_score,
 )
 from macro_b3_bot.domain.macro_event_models import MACRO_EVENT_TYPES
@@ -164,15 +165,24 @@ class MacroEventBuilder:
         ).fetchone()
         records_scanned = scanned_row[0] if scanned_row else 0
 
-        # 2. Query eligible records available as of effective_now
+        # 2. Query eligible records available as of effective_now (deduplicated by vintage/available_at)
         releases = self.store.connection.execute(
             """
+            WITH available_versions AS (
+                SELECT *,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY source, series_code, reference_date
+                           ORDER BY available_at DESC, vintage_date DESC, revision_number DESC
+                       ) AS rn
+                FROM macro_releases
+                WHERE reference_date >= ? AND reference_date <= ? AND available_at <= ?
+            )
             SELECT release_id, source, series_code, indicator, geography, frequency, unit,
                    reference_date, published_at, available_at,
                    actual_value, previous_value, consensus_value,
                    raw_checksum, record_checksum, availability_precision
-            FROM macro_releases
-            WHERE reference_date >= ? AND reference_date <= ? AND available_at <= ?
+            FROM available_versions
+            WHERE rn = 1
             ORDER BY source, series_code, reference_date
             """,
             [history_start, history_end, effective_now]
@@ -381,8 +391,18 @@ class MacroEventBuilder:
             f"{event_type}|{source}|{series_code}|{ref_date.isoformat()}|{str(actual)}".encode()
         ).hexdigest()[:24]
 
+        # Surprise Confidence & Effective Surprise
+        surprise_confidence = compute_surprise_confidence(
+            has_consensus=(consensus is not None),
+            history_length=len(hist_values),
+            has_previous_value=(previous is not None),
+        )
+        effective_surprise = round(surprise_score * surprise_confidence, 4)
+
         score_breakdown = {
             "surprise": surprise_breakdown,
+            "surprise_confidence": surprise_confidence,
+            "effective_surprise": effective_surprise,
             "novelty": novelty_breakdown,
             "persistence": persistence_breakdown,
             "failed_conditions": failed_conditions,
@@ -414,6 +434,9 @@ class MacroEventBuilder:
             "evidence_ids": [rel["release_id"]],
             "status": status,
             "score_breakdown": score_breakdown,
+            "source": source,
+            "series_code": series_code,
+            "ingestion_run_id": self.run_id,
         }
 
         self.store.save_macro_event_candidate(evt)

@@ -467,16 +467,43 @@ def audit_macro_events(
     db_path = settings.data_dir / "audit.duckdb"
     store = DatabaseStore(db_path)
 
-    rows = store.connection.execute(
-        """
-        SELECT event_type, indicator, reference_date, direction, status,
-               round(surprise_score, 3), round(novelty_score, 3),
-               round(regime_shift_score, 3), round(data_quality_score, 3),
-               score_breakdown
-        FROM macro_event_candidates
-        ORDER BY detected_at DESC
-        """
-    ).fetchall()
+    target_run_id = run_id or store.get_latest_macro_event_run_id()
+
+    if target_run_id:
+        rows = store.connection.execute(
+            """
+            SELECT event_type, indicator, reference_date, direction, status,
+                   round(surprise_score, 3), round(novelty_score, 3),
+                   round(regime_shift_score, 3), round(data_quality_score, 3),
+                   score_breakdown
+            FROM macro_event_candidates
+            WHERE ingestion_run_id = ?
+            ORDER BY detected_at DESC
+            """,
+            [target_run_id]
+        ).fetchall()
+        if not rows:
+            rows = store.connection.execute(
+                """
+                SELECT event_type, indicator, reference_date, direction, status,
+                       round(surprise_score, 3), round(novelty_score, 3),
+                       round(regime_shift_score, 3), round(data_quality_score, 3),
+                       score_breakdown
+                FROM macro_event_candidates
+                ORDER BY detected_at DESC
+                """
+            ).fetchall()
+    else:
+        rows = store.connection.execute(
+            """
+            SELECT event_type, indicator, reference_date, direction, status,
+                   round(surprise_score, 3), round(novelty_score, 3),
+                   round(regime_shift_score, 3), round(data_quality_score, 3),
+                   score_breakdown
+            FROM macro_event_candidates
+            ORDER BY detected_at DESC
+            """
+        ).fetchall()
 
     import subprocess
     try:

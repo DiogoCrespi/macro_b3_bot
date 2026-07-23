@@ -524,10 +524,18 @@ class DatabaseStore:
                 status VARCHAR NOT NULL DEFAULT 'PENDING',
 
                 score_breakdown VARCHAR,              -- JSON dict
+                source VARCHAR,
+                series_code VARCHAR,
+                ingestion_run_id VARCHAR,
 
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        for col in ["source", "series_code", "ingestion_run_id"]:
+            try:
+                self.connection.execute(f"ALTER TABLE macro_event_candidates ADD COLUMN {col} VARCHAR;")
+            except Exception:
+                pass
 
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS macro_event_evidence_links (
@@ -800,8 +808,9 @@ class DatabaseStore:
                 reference_date, detected_at, horizon_months,
                 actual_value, expected_value, surprise_value,
                 surprise_score, novelty_score, persistence_score, regime_shift_score, data_quality_score,
-                direction, current_regime, evidence_ids, status, score_breakdown, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                direction, current_regime, evidence_ids, status, score_breakdown,
+                source, series_code, ingestion_run_id, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 evt["event_id"], evt["event_type"], evt["indicator"], geography, affected_variables,
@@ -810,7 +819,9 @@ class DatabaseStore:
                 evt["surprise_score"], evt["novelty_score"], evt["persistence_score"],
                 evt["regime_shift_score"], evt["data_quality_score"],
                 evt["direction"], evt["current_regime"], evidence_ids,
-                evt.get("status", "PENDING"), score_breakdown, datetime.now(timezone.utc),
+                evt.get("status", "PENDING"), score_breakdown,
+                evt.get("source"), evt.get("series_code"), evt.get("ingestion_run_id"),
+                datetime.now(timezone.utc),
             ]
         )
         # Link evidence
@@ -823,6 +834,17 @@ class DatabaseStore:
             except Exception:
                 pass
         return True
+
+    def get_latest_macro_event_run_id(self) -> Optional[str]:
+        row = self.connection.execute(
+            "SELECT ingestion_run_id FROM macro_event_candidates WHERE ingestion_run_id IS NOT NULL ORDER BY detected_at DESC LIMIT 1"
+        ).fetchone()
+        if row and row[0]:
+            return str(row[0])
+        row = self.connection.execute(
+            "SELECT ingestion_run_id FROM macro_releases ORDER BY created_at DESC LIMIT 1"
+        ).fetchone()
+        return str(row[0]) if row and row[0] else None
 
     def update_macro_event_status(self, event_id: str, status: str) -> None:
         self.connection.execute(
