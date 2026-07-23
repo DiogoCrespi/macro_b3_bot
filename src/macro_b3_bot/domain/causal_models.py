@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class CausalNodeType(str, Enum):
@@ -43,7 +43,14 @@ class CausalEdge(BaseModel):
 
     regime_conditions: list[str] = Field(default_factory=list)
     evidence_ids: list[str] = Field(default_factory=list)
+    hypothesis: bool = True
     rationale: str
+
+    @model_validator(mode="after")
+    def evidence_or_hypothesis(self) -> "CausalEdge":
+        if not self.evidence_ids and not self.hypothesis:
+            raise ValueError("An edge without evidence_ids must be marked as a hypothesis")
+        return self
 
 
 class SectorImpactCandidate(BaseModel):
@@ -54,13 +61,16 @@ class SectorImpactCandidate(BaseModel):
     candidate_id: str
     event_id: str
     event_type: str
+    causal_root: str
     sector: str
     subsector: Optional[str] = None
 
     direction: str          # "BULLISH" or "BEARISH"
-    impact_score: float     # tanh(sum(pathImpact))
+    impact_score: float     # signed tanh(sum(pathImpact))
+    event_strength: float
     confidence: float       # weighted average path confidence
     horizon_months: int = 3
+    horizon_days: int = 90
 
     causal_paths: list[list[str]] = Field(default_factory=list)
     direct_effects: list[str] = Field(default_factory=list)
@@ -69,6 +79,28 @@ class SectorImpactCandidate(BaseModel):
     negative_paths_count: int = 0
     conflict_detected: bool = False
     invalidators: list[str] = Field(default_factory=list)
+    evidence_status: str = "HYPOTHESIS"
 
     status: str = SectorImpactStatus.SECTOR_IMPACT_WATCH.value
     detected_at: datetime
+    event_available_at: datetime
+    as_of_timestamp: datetime
+    run_id: str
+    source_event_run_id: str
+    graph_version: str
+
+
+class SectorStateSnapshot(BaseModel):
+    snapshot_id: str
+    sector: str
+    as_of_timestamp: datetime
+    net_impact: float
+    bullish_impact: float
+    bearish_impact: float
+    conflict_ratio: float
+    supporting_event_ids: list[str] = Field(default_factory=list)
+    opposing_event_ids: list[str] = Field(default_factory=list)
+    confidence: float
+    status: str
+    run_id: str
+    graph_version: str

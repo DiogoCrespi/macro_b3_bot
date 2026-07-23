@@ -605,9 +605,12 @@ def audit_macro_events(
 def evaluate_sector_impacts(
     since: Optional[str] = typer.Option(None, "--since", help="Start date (YYYY-MM-DD) for candidate evaluation"),
     run_id: Optional[str] = typer.Option(None, "--run-id", help="Ingestion run ID"),
+    sector_run_id: Optional[str] = typer.Option(None, "--sector-run-id", help="Sector evaluation run ID"),
+    as_of: Optional[str] = typer.Option(None, "--as-of", help="Point-in-time cutoff (ISO-8601)"),
 ) -> None:
     """Propagate approved macro events through the Causal Graph to evaluate B3 sector impacts."""
     from datetime import date, timedelta
+    from uuid import uuid4
     from macro_b3_bot.application.evaluate_sector_impacts import CausalGraphEngine
     from macro_b3_bot.infrastructure.store import DatabaseStore
 
@@ -621,8 +624,12 @@ def evaluate_sector_impacts(
     console.print(f"Avaliando impactos setoriais desde {since_date}...")
 
     target_run_id = run_id or store.get_latest_macro_event_run_id() or "run_sector_eval"
-    engine = CausalGraphEngine(store, target_run_id)
-    summary = engine.evaluate_events_window(since_date=since_date)
+    target_sector_run_id = sector_run_id or f"sector_{uuid4()}"
+    engine = CausalGraphEngine(store, target_sector_run_id)
+    as_of_timestamp = datetime.fromisoformat(as_of) if as_of else datetime.now(timezone.utc)
+    summary = engine.evaluate_events_window(
+        since_date=since_date, as_of_timestamp=as_of_timestamp, event_run_id=target_run_id
+    )
     store.close()
 
     table = Table(title="Sector Impact Candidates Summary")

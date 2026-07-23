@@ -1,12 +1,15 @@
 # Deterministic Causal Graph Database — Sprint 4B
-# Version: 1.0.0
+# Version: 1.1.0
+# Validation: every edge in this file is an explicit UNVALIDATED_HYPOTHESIS
+# until evidence_ids are populated. Rationale text alone is not evidence.
 # Nodes: MacroEvent -> MacroVariable -> MarketFactor -> B3Sector
 # Edges: direction (+1 or -1), strength (0..1), confidence (0..1), lag_days, horizon_days, half_life_days, rationale
 
+graph_version: "1.1.0"
 edges:
   # ── MONETARY POLICY & DI CURVE ──────────────────────────────────────────
   - edge_id: "edge_monetary_base_to_selic"
-    source_node: "MONETARY_POLICY_SURPRISE"
+    source_node: "MONETARY_POLICY_HAWKISH"
     target_node: "VAR_SELIC_RATE"
     direction: 1
     strength: 0.95
@@ -17,15 +20,15 @@ edges:
     rationale: "Monetary policy surprise directly impacts Selic rate expectations."
 
   - edge_id: "edge_monetary_to_selic"
-    source_node: "HAWKISH_MONETARY_SURPRISE"
+    source_node: "MONETARY_POLICY_DOVISH"
     target_node: "VAR_SELIC_RATE"
-    direction: 1
+    direction: -1
     strength: 0.95
     confidence: 0.95
     lag_days: 0
     horizon_days: 180
     half_life_days: 90
-    rationale: "Hawkish monetary surprise directly raises Selic rate expectations."
+    rationale: "Dovish monetary surprise lowers Selic rate expectations."
 
   - edge_id: "edge_selic_to_bank_margins"
     source_node: "VAR_SELIC_RATE"
@@ -116,17 +119,28 @@ edges:
     half_life_days: 90
     rationale: "Food inflation allows agricultural producers and food processors to pass through price hikes."
 
+  - edge_id: "edge_inflation_down_to_real_yields"
+    source_node: "INFLATION_SURPRISE_DOWN"
+    target_node: "VAR_REAL_YIELDS"
+    direction: -1
+    strength: 0.85
+    confidence: 0.85
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Downside inflation surprise reduces real-yield pressure."
+
   # ── GROWTH & INDUSTRIAL ACTIVITY ────────────────────────────────────────
   - edge_id: "edge_growth_base_to_activity"
-    source_node: "GROWTH_SURPRISE"
+    source_node: "GROWTH_SURPRISE_DOWN"
     target_node: "VAR_GDP_GROWTH"
-    direction: 1
+    direction: -1
     strength: 0.90
     confidence: 0.90
     lag_days: 0
     horizon_days: 180
     half_life_days: 90
-    rationale: "Growth surprise impacts broad economic output."
+    rationale: "Negative growth surprise lowers expected economic output."
 
   - edge_id: "edge_growth_up_to_activity"
     source_node: "GROWTH_SURPRISE_UP"
@@ -174,7 +188,7 @@ edges:
 
   # ── USD / BRL FX RATE ──────────────────────────────────────────────────
   - edge_id: "edge_usd_up_to_fx"
-    source_node: "USD_BRL_SHOCK_UP"
+    source_node: "USD_REGIME_SHIFT_UP"
     target_node: "VAR_BRL_USD_RATE"
     direction: 1
     strength: 0.95
@@ -183,6 +197,17 @@ edges:
     horizon_days: 180
     half_life_days: 90
     rationale: "Dollar appreciation increases BRL/USD exchange rate."
+
+  - edge_id: "edge_usd_down_to_fx"
+    source_node: "USD_REGIME_SHIFT_DOWN"
+    target_node: "VAR_BRL_USD_RATE"
+    direction: -1
+    strength: 0.95
+    confidence: 0.95
+    lag_days: 0
+    horizon_days: 180
+    half_life_days: 90
+    rationale: "Dollar weakening reduces the BRL/USD exchange rate."
 
   - edge_id: "edge_fx_to_pulp_paper"
     source_node: "VAR_BRL_USD_RATE"
@@ -219,15 +244,15 @@ edges:
 
   # ── OIL & COMMODITIES ──────────────────────────────────────────────────
   - edge_id: "edge_oil_base_to_brent"
-    source_node: "OIL_PRICE_SHOCK"
+    source_node: "OIL_PRICE_SHOCK_DOWN"
     target_node: "VAR_BRENT_OIL"
-    direction: 1
+    direction: -1
     strength: 0.95
     confidence: 0.95
     lag_days: 0
     horizon_days: 180
     half_life_days: 90
-    rationale: "Oil price shock drives international Brent crude prices."
+    rationale: "Negative oil-price shock lowers international Brent crude prices."
 
   - edge_id: "edge_oil_up_to_brent"
     source_node: "OIL_PRICE_SHOCK_UP"
@@ -275,7 +300,7 @@ edges:
 
   # ── ENSO / HYDROLOGY / AGRO ─────────────────────────────────────────────
   - edge_id: "edge_enso_to_hydrology"
-    source_node: "ENSO_INTENSIFICATION"
+    source_node: "ENSO_INTENSIFICATION_EL_NINO"
     target_node: "VAR_HYDROLOGY_RESERVOIRS"
     direction: -1
     strength: 0.85
@@ -297,7 +322,7 @@ edges:
     rationale: "Lower reservoir levels trigger thermal dispatch and higher spot energy prices (PLD)."
 
   - edge_id: "edge_enso_to_agro_yield"
-    source_node: "ENSO_INTENSIFICATION"
+    source_node: "ENSO_INTENSIFICATION_EL_NINO"
     target_node: "B3_SECTOR_AGRO_ALIMENTOS"
     direction: -1
     strength: 0.75
@@ -309,7 +334,7 @@ edges:
 
   # ── BRAZIL COUNTRY RISK & CDS ──────────────────────────────────────────
   - edge_id: "edge_risk_to_cds"
-    source_node: "BRAZIL_RISK_REPRICING"
+    source_node: "BRAZIL_EXPECTATION_REPRICING_UP"
     target_node: "VAR_BRAZIL_CDS"
     direction: 1
     strength: 0.90
@@ -318,6 +343,117 @@ edges:
     horizon_days: 90
     half_life_days: 45
     rationale: "Fiscal uncertainty or external shock spikes Brazil 5Y CDS spread."
+
+  - edge_id: "edge_brazil_expectations_down_to_cds"
+    source_node: "BRAZIL_EXPECTATION_REPRICING_DOWN"
+    target_node: "VAR_BRAZIL_CDS"
+    direction: -1
+    strength: 0.90
+    confidence: 0.90
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Improving expectations reduce Brazil sovereign risk premia."
+
+  # ── ROOT COVERAGE HYPOTHESES (Sprint 4A contract) ───────────────────────
+  - edge_id: "edge_yield_curve_up_to_banks"
+    source_node: "YIELD_CURVE_REGIME_SHIFT_UP"
+    target_node: "B3_SECTOR_BANCOS"
+    direction: -1
+    strength: 0.60
+    confidence: 0.55
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Curve steepening can increase duration and funding pressure."
+
+  - edge_id: "edge_yield_curve_down_to_banks"
+    source_node: "YIELD_CURVE_REGIME_SHIFT_DOWN"
+    target_node: "B3_SECTOR_BANCOS"
+    direction: 1
+    strength: 0.60
+    confidence: 0.55
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Curve compression can reduce duration and funding pressure."
+
+  - edge_id: "edge_inventory_up_to_brent"
+    source_node: "OIL_INVENTORY_SHOCK_UP"
+    target_node: "VAR_BRENT_OIL"
+    direction: -1
+    strength: 0.65
+    confidence: 0.60
+    lag_days: 0
+    horizon_days: 30
+    half_life_days: 14
+    rationale: "Unexpected inventory builds pressure crude prices lower."
+
+  - edge_id: "edge_inventory_down_to_brent"
+    source_node: "OIL_INVENTORY_SHOCK_DOWN"
+    target_node: "VAR_BRENT_OIL"
+    direction: 1
+    strength: 0.65
+    confidence: 0.60
+    lag_days: 0
+    horizon_days: 30
+    half_life_days: 14
+    rationale: "Unexpected inventory draws support crude prices."
+
+  - edge_id: "edge_energy_supply_up_to_brent"
+    source_node: "ENERGY_SUPPLY_SHOCK_UP"
+    target_node: "VAR_BRENT_OIL"
+    direction: -1
+    strength: 0.70
+    confidence: 0.55
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Positive supply shock pressures crude prices lower."
+
+  - edge_id: "edge_energy_supply_down_to_brent"
+    source_node: "ENERGY_SUPPLY_SHOCK_DOWN"
+    target_node: "VAR_BRENT_OIL"
+    direction: 1
+    strength: 0.70
+    confidence: 0.55
+    lag_days: 0
+    horizon_days: 90
+    half_life_days: 45
+    rationale: "Negative supply shock supports crude prices."
+
+  - edge_id: "edge_enso_phase_el_nino_to_hydrology"
+    source_node: "ENSO_PHASE_CHANGE_EL_NINO"
+    target_node: "VAR_HYDROLOGY_RESERVOIRS"
+    direction: -1
+    strength: 0.70
+    confidence: 0.55
+    lag_days: 60
+    horizon_days: 270
+    half_life_days: 135
+    rationale: "El Nino may reduce rainfall in relevant hydro basins."
+
+  - edge_id: "edge_enso_phase_la_nina_to_hydrology"
+    source_node: "ENSO_PHASE_CHANGE_LA_NINA"
+    target_node: "VAR_HYDROLOGY_RESERVOIRS"
+    direction: 1
+    strength: 0.60
+    confidence: 0.50
+    lag_days: 60
+    horizon_days: 270
+    half_life_days: 135
+    rationale: "La Nina may improve rainfall in relevant hydro basins."
+
+  - edge_id: "edge_enso_intensification_la_nina_to_hydrology"
+    source_node: "ENSO_INTENSIFICATION_LA_NINA"
+    target_node: "VAR_HYDROLOGY_RESERVOIRS"
+    direction: 1
+    strength: 0.65
+    confidence: 0.50
+    lag_days: 60
+    horizon_days: 270
+    half_life_days: 135
+    rationale: "La Nina intensification may improve rainfall in relevant hydro basins."
 
   - edge_id: "edge_cds_to_financials"
     source_node: "VAR_BRAZIL_CDS"

@@ -589,9 +589,48 @@ class DatabaseStore:
                 invalidators VARCHAR NOT NULL,
                 status VARCHAR NOT NULL,
                 detected_at TIMESTAMP NOT NULL,
+                causal_root VARCHAR,
+                event_strength DOUBLE,
+                horizon_days INTEGER,
+                evidence_status VARCHAR,
+                event_available_at TIMESTAMP,
+                as_of_timestamp TIMESTAMP,
+                run_id VARCHAR,
+                source_event_run_id VARCHAR,
+                graph_version VARCHAR,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        for col, kind in {
+            "causal_root": "VARCHAR", "event_strength": "DOUBLE", "horizon_days": "INTEGER",
+            "evidence_status": "VARCHAR", "event_available_at": "TIMESTAMP",
+            "as_of_timestamp": "TIMESTAMP", "run_id": "VARCHAR",
+            "source_event_run_id": "VARCHAR", "graph_version": "VARCHAR",
+        }.items():
+            try:
+                self.connection.execute(f"ALTER TABLE sector_impact_candidates ADD COLUMN {col} {kind};")
+            except Exception:
+                pass
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS sector_state_snapshots (
+                snapshot_id VARCHAR PRIMARY KEY,
+                sector VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                net_impact DOUBLE NOT NULL,
+                bullish_impact DOUBLE NOT NULL,
+                bearish_impact DOUBLE NOT NULL,
+                conflict_ratio DOUBLE NOT NULL,
+                supporting_event_ids VARCHAR NOT NULL,
+                opposing_event_ids VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                status VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                graph_version VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
 
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
@@ -1483,7 +1522,9 @@ class DatabaseStore:
                 causal_paths, direct_effects, second_order_effects,
                 positive_paths_count, negative_paths_count, conflict_detected, invalidators,
                 status, detected_at, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                , causal_root, event_strength, horizon_days, evidence_status,
+                event_available_at, as_of_timestamp, run_id, source_event_run_id, graph_version
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 cand["candidate_id"], cand["event_id"], cand["event_type"], cand["sector"], cand.get("subsector"),
@@ -1491,8 +1532,34 @@ class DatabaseStore:
                 causal_paths, direct_effects, second_order_effects,
                 cand.get("positive_paths_count", 0), cand.get("negative_paths_count", 0),
                 cand.get("conflict_detected", False), invalidators,
-                cand["status"], cand["detected_at"], datetime.now(timezone.utc)
+                cand["status"], cand["detected_at"], datetime.now(timezone.utc),
+                cand.get("causal_root"), cand.get("event_strength"), cand.get("horizon_days"),
+                cand.get("evidence_status"), cand.get("event_available_at"), cand.get("as_of_timestamp"),
+                cand.get("run_id"), cand.get("source_event_run_id"), cand.get("graph_version")
             ]
+        )
+        return True
+
+    def save_sector_state_snapshot(self, snapshot: dict) -> bool:
+        """Idempotently persist the aggregate sector state for one run/as-of."""
+        import json as _json
+        if self.connection.execute(
+            "SELECT COUNT(*) FROM sector_state_snapshots WHERE snapshot_id = ?", [snapshot["snapshot_id"]]
+        ).fetchone()[0]:
+            return False
+        self.connection.execute(
+            """
+            INSERT INTO sector_state_snapshots (
+                snapshot_id, sector, as_of_timestamp, net_impact, bullish_impact,
+                bearish_impact, conflict_ratio, supporting_event_ids, opposing_event_ids,
+                confidence, status, run_id, graph_version, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [snapshot["snapshot_id"], snapshot["sector"], snapshot["as_of_timestamp"],
+             snapshot["net_impact"], snapshot["bullish_impact"], snapshot["bearish_impact"],
+             snapshot["conflict_ratio"], _json.dumps(snapshot.get("supporting_event_ids", [])),
+             _json.dumps(snapshot.get("opposing_event_ids", [])), snapshot["confidence"],
+             snapshot["status"], snapshot["run_id"], snapshot["graph_version"], datetime.now(timezone.utc)]
         )
         return True
 
