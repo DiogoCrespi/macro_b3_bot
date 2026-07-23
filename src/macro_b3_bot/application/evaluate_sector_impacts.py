@@ -102,7 +102,7 @@ class CausalGraphEngine:
               AND e.reference_date BETWEEN ? AND CAST(? AS DATE)
               AND e.detected_at <= ?
             ORDER BY e.detected_at, e.event_id
-            """, [source_run_id, since_date, eff_now, eff_now]
+            """, [source_run_id, since_date, eff_now.date(), self._db_timestamp(eff_now)]
         ).fetchall()
         cols = [desc[0] for desc in self.store.connection.description]
         events = [dict(zip(cols, row)) for row in rows]
@@ -279,6 +279,11 @@ class CausalGraphEngine:
     def _utc(value: datetime | str) -> datetime:
         parsed = datetime.fromisoformat(value) if isinstance(value, str) else value
         return parsed.replace(tzinfo=timezone.utc) if parsed.tzinfo is None else parsed.astimezone(timezone.utc)
+
+    @staticmethod
+    def _db_timestamp(value: datetime) -> datetime:
+        """DuckDB TIMESTAMP columns store UTC instants without timezone metadata."""
+        return value.astimezone(timezone.utc).replace(tzinfo=None)
 
     def _summary(
         self,

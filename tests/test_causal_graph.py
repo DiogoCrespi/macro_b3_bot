@@ -163,6 +163,17 @@ def test_run_id_as_of_idempotency_and_replay(tmp_path: Path) -> None:
     store.close()
 
 
+def test_timezone_aware_as_of_compares_against_naive_utc_storage(tmp_path: Path) -> None:
+    store = DatabaseStore(tmp_path / "timezone.duckdb")
+    detected_naive_utc = datetime(2026, 7, 22, 22, 26, 48)
+    insert_event(store, "utc-event", "utc-run", detected_naive_utc)
+    engine = CausalGraphEngine(store, "sector-utc", temporal_graph(tmp_path))
+    cutoff = datetime.fromisoformat("2026-07-22T23:59:59+00:00")
+    summary = engine.evaluate_events_window(date(2025, 1, 1), cutoff, "utc-run")
+    assert summary["macro_events_processed"] == 1
+    store.close()
+
+
 def test_no_ticker_or_buy_fields(engine: CausalGraphEngine) -> None:
     for candidate in engine.propagate_event(event("oil", "OIL_PRICE_SHOCK", "BULLISH_OIL"), NOW):
         assert "ticker" not in candidate.model_dump()
