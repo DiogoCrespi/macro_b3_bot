@@ -172,14 +172,16 @@ def normalize_noaa_observation(
     if value is None:
         return None
 
-    # NOAA data is published monthly; use first day of following month as published_at
+    # NOAA data is published monthly; use first day of following month as estimated published_at & available_at
     pub_month = month + 1 if month < 12 else 1
     pub_year = year if month < 12 else year + 1
     published_at = datetime(pub_year, pub_month, 1, tzinfo=timezone.utc)
+    rel_available_at = published_at
+    collected_at = available_at
 
     release_id = make_release_id("NOAA", series_code, ref_date, published_at)
     raw_chk = make_raw_checksum({"source": "NOAA", "series": series_code, "year": year, "month": month, "value": str(value)})
-    rec_chk = make_record_checksum("NOAA", series_code, ref_date, str(value))
+    rec_chk = make_record_checksum("NOAA", series_code, ref_date, str(value), unit)
 
     # Derived metadata for ENSO
     enso_phase = classify_enso_phase(value) if series_code in ("NINO34", "ONI") else "N/A"
@@ -195,7 +197,14 @@ def normalize_noaa_observation(
         "unit": unit,
         "reference_date": ref_date,
         "published_at": published_at,
-        "available_at": available_at,
+        "available_at": rel_available_at,
+        "collected_at": collected_at,
+        "vintage_date": ref_date,
+        "realtime_start": None,
+        "realtime_end": None,
+        "availability_precision": "ESTIMATED_MONTHLY",
+        "revision_number": 0,
+        "is_initial_release": True,
         "actual_value": value,
         "previous_value": None,        # populated by ingest layer
         "revised_previous_value": None,

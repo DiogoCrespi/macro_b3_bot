@@ -186,10 +186,17 @@ def normalize_fred_observation(
 
     # Use realtime_start as the publication date (earliest vintage where value exists)
     rt_start = obs.get("realtime_start", ref_date_str)
+    rt_end = obs.get("realtime_end", "9999-12-31")
     try:
         published_at = datetime.fromisoformat(rt_start).replace(tzinfo=timezone.utc)
+        vint_date = date.fromisoformat(rt_start)
     except ValueError:
         published_at = datetime(ref_date.year, ref_date.month, ref_date.day, tzinfo=timezone.utc)
+        vint_date = ref_date
+
+    # Historical releases became available when published; collected_at is bot run time
+    rel_available_at = published_at
+    collected_at = available_at
 
     release_id = make_release_id("FRED", series_code, ref_date, published_at)
 
@@ -199,9 +206,10 @@ def normalize_fred_observation(
         "reference_date": ref_date_str,
         "value": str(value),
         "realtime_start": rt_start,
+        "realtime_end": rt_end,
     }
     raw_chk = make_raw_checksum(raw_payload)
-    rec_chk = make_record_checksum("FRED", series_code, ref_date, str(value))
+    rec_chk = make_record_checksum("FRED", series_code, ref_date, vint_date, rt_start, rt_end, str(value), unit)
 
     return {
         "release_id": release_id,
@@ -213,7 +221,14 @@ def normalize_fred_observation(
         "unit": unit,
         "reference_date": ref_date,
         "published_at": published_at,
-        "available_at": available_at,
+        "available_at": rel_available_at,
+        "collected_at": collected_at,
+        "vintage_date": vint_date,
+        "realtime_start": date.fromisoformat(rt_start) if rt_start and rt_start != "9999-12-31" else None,
+        "realtime_end": date.fromisoformat(rt_end) if rt_end and rt_end != "9999-12-31" else None,
+        "availability_precision": "EXACT",
+        "revision_number": 0,
+        "is_initial_release": True,
         "actual_value": value,
         "previous_value": None,        # populated by caller in context
         "revised_previous_value": None,

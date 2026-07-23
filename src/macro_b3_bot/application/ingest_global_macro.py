@@ -138,8 +138,7 @@ class GlobalMacroIngester:
         elif source == "NOAA":
             return self._ingest_noaa(cfg)
         elif source in ("BCB_SGS", "BCB_FOCUS"):
-            logger.debug("BCB series %s/%s handled by existing BCB ingestor", source, series_code)
-            return 0, 0
+            return self._ingest_bcb(cfg, start_date, end_date)
         else:
             logger.warning("Unknown source '%s', skipping %s", source, series_code)
             return 0, 0
@@ -187,7 +186,88 @@ class GlobalMacroIngester:
             else:
                 skipped += 1
 
+            # Persist historical vintage tracking
+            vint_date = payload.get("vintage_date") or payload["reference_date"]
+            vint_payload = {
+                "vintage_id": f"FRED_{cfg['series_code']}_{payload['reference_date']}_{vint_date}",
+                "series_code": cfg["series_code"],
+                "source": "FRED",
+                "reference_date": payload["reference_date"],
+                "vintage_date": vint_date,
+                "value": payload["actual_value"],
+                "is_latest": True,
+                "ingestion_run_id": self.run_id,
+            }
+            self.store.save_macro_vintage(vint_payload)
+
         return new, skipped
+
+    def _ingest_bcb(self, cfg: dict, start_date: date, end_date: date) -> tuple[int, int]:
+        import asyncio
+        import hashlib
+        from macro_b3_bot.adapters.bcb.sgs_client import BcbSgsClient
+
+        source = cfg["source"]
+        series_code = cfg["series_code"]
+        indicator = cfg["indicator"]
+
+        if source == "BCB_SGS":
+            client = BcbSgsClient()
+            try:
+                obs_list = asyncio.run(
+                    client.fetch_series(
+                        code=series_code,
+                        name=indicator,
+                        unit=cfg.get("unit", "%"),
+                        frequency=cfg.get("frequency", "MONTHLY"),
+                        start_date=start_date,
+                        end_date=end_date,
+                        ingestion_run_id=self.run_id,
+                    )
+                )
+            except Exception as e:
+                logger.warning("BCB_SGS fetch failed for %s: %s", series_code, e)
+                return 0, 0
+
+            new = 0
+            skipped = 0
+            for obs in obs_list:
+                pub_dt = datetime(obs.reference_date.year, obs.reference_date.month, obs.reference_date.day, tzinfo=timezone.utc)
+                rec_chk = hashlib.sha256(f"BCB_SGS|{series_code}|{obs.reference_date}|{obs.value}|{cfg.get('unit', '%')}".encode()).hexdigest()
+                payload = {
+                    "release_id": f"BCB_SGS_{series_code}_{obs.reference_date}",
+                    "source": "BCB_SGS",
+                    "series_code": series_code,
+                    "indicator": indicator,
+                    "geography": cfg.get("geography", ["BR"]),
+                    "frequency": cfg.get("frequency", "MONTHLY"),
+                    "unit": cfg.get("unit", "%"),
+                    "reference_date": obs.reference_date,
+                    "published_at": pub_dt,
+                    "available_at": pub_dt,
+                    "collected_at": self.available_at,
+                    "vintage_date": obs.reference_date,
+                    "realtime_start": None,
+                    "realtime_end": None,
+                    "availability_precision": "EXACT",
+                    "revision_number": 0,
+                    "is_initial_release": True,
+                    "actual_value": obs.value,
+                    "previous_value": _get_previous_value(self.store, "BCB_SGS", series_code, obs.reference_date),
+                    "revised_previous_value": None,
+                    "consensus_value": None,
+                    "raw_checksum": obs.raw_checksum,
+                    "record_checksum": rec_chk,
+                    "ingestion_run_id": self.run_id,
+                }
+                saved = self.store.save_macro_release(payload)
+                if saved:
+                    new += 1
+                else:
+                    skipped += 1
+            return new, skipped
+
+        return 0, 0
 
     def _ingest_eia(self, cfg: dict, start_date: date, end_date: date) -> tuple[int, int]:
         from macro_b3_bot.adapters.macro.eia_client import EiaClient, normalize_eia_observation

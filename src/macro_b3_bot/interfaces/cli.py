@@ -401,8 +401,8 @@ def audit_global_macro() -> None:
         table1.add_row(*[str(x) for x in r])
     console.print(table1)
 
-    # 2. Look-ahead anomaly check: available_at < reference_date
-    anomalies_count = store.connection.execute(
+    # 2a. Chronological anomaly check: available_at < reference_date
+    chrono_anomalies = store.connection.execute(
         """
         SELECT COUNT(*)
         FROM macro_releases
@@ -410,10 +410,26 @@ def audit_global_macro() -> None:
         """
     ).fetchone()[0]
 
-    if anomalies_count > 0:
-        console.print(f"[bold red]⚠ Look-ahead warning: {anomalies_count} records have available_at < reference_date[/bold red]")
+    if chrono_anomalies > 0:
+        console.print(f"[bold red]⚠ Chronology warning: {chrono_anomalies} records have available_at < reference_date[/bold red]")
     else:
-        console.print("[bold green]✓ Zero look-ahead anomalies detected (available_at >= reference_date)[/bold green]")
+        console.print("[bold green]✓ Zero chronological anomalies detected (available_at >= reference_date)[/bold green]")
+
+    # 2b. True Look-ahead anomaly check: evidence available_at > event detected_at
+    lookahead_anomalies = store.connection.execute(
+        """
+        SELECT COUNT(*)
+        FROM macro_event_evidence_links l
+        JOIN macro_releases r ON r.release_id = l.release_id
+        JOIN macro_event_candidates e ON e.event_id = l.event_id
+        WHERE r.available_at > e.detected_at
+        """
+    ).fetchone()[0]
+
+    if lookahead_anomalies > 0:
+        console.print(f"[bold red]⚠ Look-ahead violation: {lookahead_anomalies} evidence links have available_at > event detected_at[/bold red]")
+    else:
+        console.print("[bold green]✓ Zero look-ahead violations detected (evidence available_at <= event detected_at)[/bold green]")
 
     # 3. Vintages check: multiple versions for same reference_date
     vintages_rows = store.connection.execute(

@@ -48,17 +48,24 @@ class MacroRelease:
     unit: str
 
     reference_date: date
-    published_at: datetime
+    published_at: Optional[datetime]
     available_at: datetime
+    collected_at: Optional[datetime] = None
+    vintage_date: Optional[date] = None
+    realtime_start: Optional[date] = None
+    realtime_end: Optional[date] = None
+    availability_precision: str = "EXACT"  # 'EXACT' | 'ESTIMATED_MONTHLY' | 'UNKNOWN'
+    revision_number: int = 0
+    is_initial_release: bool = True
 
-    actual_value: Decimal
-    previous_value: Optional[Decimal]
-    revised_previous_value: Optional[Decimal]
-    consensus_value: Optional[Decimal]
+    actual_value: Decimal = Decimal(0)
+    previous_value: Optional[Decimal] = None
+    revised_previous_value: Optional[Decimal] = None
+    consensus_value: Optional[Decimal] = None
 
-    raw_checksum: str
-    record_checksum: str
-    ingestion_run_id: str
+    raw_checksum: str = ""
+    record_checksum: str = ""
+    ingestion_run_id: str = ""
 
 
 @dataclass

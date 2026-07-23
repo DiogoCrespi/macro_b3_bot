@@ -452,8 +452,15 @@ class DatabaseStore:
                 unit VARCHAR NOT NULL,
 
                 reference_date DATE NOT NULL,
-                published_at TIMESTAMP NOT NULL,
+                published_at TIMESTAMP,
                 available_at TIMESTAMP NOT NULL,
+                collected_at TIMESTAMP,
+                vintage_date DATE,
+                realtime_start DATE,
+                realtime_end DATE,
+                availability_precision VARCHAR NOT NULL DEFAULT 'EXACT',
+                revision_number INTEGER NOT NULL DEFAULT 0,
+                is_initial_release BOOLEAN NOT NULL DEFAULT TRUE,
 
                 actual_value DECIMAL(28, 10) NOT NULL,
                 previous_value DECIMAL(28, 10),
@@ -578,8 +585,8 @@ class DatabaseStore:
 
     def save_macro_observation(self, obs: dict) -> bool:
         existing = self.connection.execute(
-            "SELECT COUNT(*) FROM macro_observations WHERE source = ? AND series_code = ? AND reference_date = ? AND raw_checksum = ?",
-            [obs["source"], obs["series_code"], obs["reference_date"], obs["raw_checksum"]]
+            "SELECT COUNT(*) FROM macro_observations WHERE source = ? AND series_code = ? AND reference_date = ? AND value = ?",
+            [obs["source"], obs["series_code"], obs["reference_date"], obs["value"]]
         ).fetchone()[0]
 
         if existing > 0:
@@ -605,7 +612,7 @@ class DatabaseStore:
     def save_macro_release(self, rel: dict) -> bool:
         """
         Idempotent upsert of a MacroRelease.
-        Uses record_checksum for deduplication (same series/date/value = same record).
+        Uses record_checksum for deduplication (same series/date/value/vintage = same record).
         Returns True if a new record was inserted, False if it already existed.
         """
         existing = self.connection.execute(
@@ -621,15 +628,18 @@ class DatabaseStore:
             """
             INSERT INTO macro_releases (
                 release_id, source, series_code, indicator, geography, frequency, unit,
-                reference_date, published_at, available_at,
+                reference_date, published_at, available_at, collected_at, vintage_date,
+                realtime_start, realtime_end, availability_precision, revision_number, is_initial_release,
                 actual_value, previous_value, revised_previous_value, consensus_value,
                 raw_checksum, record_checksum, ingestion_run_id, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 rel["release_id"], rel["source"], rel["series_code"], rel["indicator"],
                 geography, rel["frequency"], rel["unit"],
-                rel["reference_date"], rel["published_at"], rel["available_at"],
+                rel["reference_date"], rel.get("published_at"), rel["available_at"],
+                rel.get("collected_at"), rel.get("vintage_date"), rel.get("realtime_start"), rel.get("realtime_end"),
+                rel.get("availability_precision", "EXACT"), rel.get("revision_number", 0), rel.get("is_initial_release", True),
                 rel["actual_value"], rel.get("previous_value"), rel.get("revised_previous_value"),
                 rel.get("consensus_value"),
                 rel["raw_checksum"], rel["record_checksum"], rel["ingestion_run_id"],

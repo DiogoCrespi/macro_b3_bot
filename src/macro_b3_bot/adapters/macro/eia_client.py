@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Optional
 from urllib.parse import urlencode
@@ -170,12 +170,14 @@ def normalize_eia_observation(
     except InvalidOperation:
         return None
 
-    # EIA doesn't publish release timestamps — use available_at as published_at
-    published_at = available_at
+    # EIA doesn't publish exact release timestamps in v2 history API; mark precision UNKNOWN
+    published_at = None
+    rel_available_at = datetime(ref_date.year, ref_date.month, ref_date.day, tzinfo=timezone.utc)
+    collected_at = available_at
 
-    release_id = make_release_id("EIA", series_code, ref_date, published_at)
+    release_id = make_release_id("EIA", series_code, ref_date, rel_available_at)
     raw_chk = make_raw_checksum({"source": "EIA", "series": series_code, "period": period_str, "value": str(value)})
-    rec_chk = make_record_checksum("EIA", series_code, ref_date, str(value))
+    rec_chk = make_record_checksum("EIA", series_code, ref_date, str(value), unit)
 
     return {
         "release_id": release_id,
@@ -187,7 +189,14 @@ def normalize_eia_observation(
         "unit": unit,
         "reference_date": ref_date,
         "published_at": published_at,
-        "available_at": available_at,
+        "available_at": rel_available_at,
+        "collected_at": collected_at,
+        "vintage_date": ref_date,
+        "realtime_start": None,
+        "realtime_end": None,
+        "availability_precision": "UNKNOWN",
+        "revision_number": 0,
+        "is_initial_release": True,
         "actual_value": value,
         "previous_value": None,
         "revised_previous_value": None,
