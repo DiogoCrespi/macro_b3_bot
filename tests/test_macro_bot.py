@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -13,11 +14,17 @@ from core.execution.portfolio_allocator import PortfolioAllocator
 class TestMacroB3Bot(unittest.TestCase):
 
     def test_b3_screener_bridge(self):
-        bridge = B3ScreenerBridge()
-        data = bridge.load_data()
-        self.assertIn("stocks", data)
-        self.assertIn("fiis", data)
-        self.assertGreater(len(bridge.get_stocks()), 0)
+        with tempfile.TemporaryDirectory() as directory:
+            data_path = Path(directory) / "data.js"
+            data_path.write_text(
+                'window.INVEST_DATA = {"stocks":[{"ticker":"TEST3"}],"fiis":[],"etfs":[]};',
+                encoding="utf-8",
+            )
+            bridge = B3ScreenerBridge(Path(directory))
+            data = bridge.load_data()
+            self.assertIn("stocks", data)
+            self.assertIn("fiis", data)
+            self.assertGreater(len(bridge.get_stocks()), 0)
 
     def test_swarm_simulation(self):
         engine = SwarmSimulationEngine()
