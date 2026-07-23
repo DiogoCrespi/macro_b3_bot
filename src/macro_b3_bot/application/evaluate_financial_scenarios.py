@@ -53,7 +53,7 @@ class FinancialScenarioEngine:
     def __init__(
         self,
         run_id: str,
-        methodology_version: str = "4D.2-directional-cash-semantics-v1",
+        methodology_version: str = "4D.2A-explicit-factor-direction-v1",
     ) -> None:
         self.run_id = run_id
         self.methodology_version = methodology_version
@@ -102,7 +102,13 @@ class FinancialScenarioEngine:
         exposure: CompanyExposureSnapshot,
         candidate: CompanyImpactCandidate,
     ) -> list[FinancialScenarioOutcome]:
-        directions = self._factor_directions(candidate.factor_contributions)
+        directions, conflicts = self.validated_factor_directions(
+            candidate.factor_contributions
+        )
+        if conflicts:
+            return self._conflicting_direction_outcomes(
+                baseline, candidate, conflicts
+            )
         scenarios = self.scenarios(candidate.as_of_timestamp, directions)
         by_shock_case = {
             shock_case: [
@@ -311,6 +317,8 @@ class FinancialScenarioEngine:
         common = {
             "factor": factor.factor,
             "channel": factor.channel,
+            "factor_direction": factor.factor_direction,
+            "channel_effect_direction": factor.channel_effect_direction,
             "scenario_id": scenario.scenario_id,
             "source_candidate_id": candidate.candidate_id,
             "causal_direction": scenario.direction,
@@ -540,18 +548,58 @@ class FinancialScenarioEngine:
         return hashlib.sha256(identity.encode()).hexdigest()[:24]
 
     @staticmethod
-    def _factor_directions(
+    def validated_factor_directions(
         factors: list[FactorContribution],
-    ) -> dict[str, int]:
-        totals: dict[str, float] = {}
+    ) -> tuple[dict[str, int], list[str]]:
+        observed: dict[str, set[int]] = {}
         for item in factors:
-            totals[item.factor] = (
-                totals.get(item.factor, 0) + item.adjusted_factor_impact
+            observed.setdefault(item.factor, set()).add(item.factor_direction)
+        conflicts = sorted(
+            factor for factor, directions in observed.items()
+            if len(directions) > 1
+        )
+        return (
+            {
+                factor: next(iter(directions))
+                for factor, directions in observed.items()
+                if len(directions) == 1
+            },
+            conflicts,
+        )
+
+    def _conflicting_direction_outcomes(
+        self,
+        baseline: FinancialBaselineSnapshot,
+        candidate: CompanyImpactCandidate,
+        conflicting_factors: list[str],
+    ) -> list[FinancialScenarioOutcome]:
+        metrics = self._baseline_metrics(baseline)
+        outcomes: list[FinancialScenarioOutcome] = []
+        for shock_case, result_case in zip(
+            ("LOW_SHOCK", "BASE_SHOCK", "HIGH_SHOCK"),
+            ("PESSIMISTIC", "BASE", "OPTIMISTIC"),
+            strict=True,
+        ):
+            blocked = [
+                BlockedFinancialChannel(
+                    factor=factor,
+                    channel="all",
+                    reason="SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION",
+                    required_fields=["factor_direction"],
+                )
+                for factor in conflicting_factors
+            ]
+            item = self._no_action(
+                baseline,
+                candidate,
+                shock_case,
+                result_case,
+                metrics,
+                "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION",
+                blocked,
             )
-        return {
-            factor: 1 if total >= 0 else -1
-            for factor, total in totals.items()
-        }
+            outcomes.append(item.model_copy(update={"status": "BLOCKED"}))
+        return outcomes
 
     @staticmethod
     def _baseline_metrics(

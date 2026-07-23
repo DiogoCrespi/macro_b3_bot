@@ -138,10 +138,25 @@ def _baseline_store(tmp_path) -> DatabaseStore:
 
 
 def _factor(
-    factor: str, channel: str, field: str, value: float, adjusted: float = .5
+    factor: str,
+    channel: str,
+    field: str,
+    value: float,
+    adjusted: float = .5,
+    *,
+    factor_direction: int | None = None,
+    channel_effect_direction: int = 1,
 ) -> FactorContribution:
+    macro_direction = (
+        factor_direction
+        if factor_direction is not None
+        else (1 if adjusted >= 0 else -1)
+    )
     return FactorContribution(
-        factor=factor, channel=channel, causal_factor_impact=.8,
+        factor=factor, channel=channel,
+        factor_direction=macro_direction,
+        channel_effect_direction=channel_effect_direction,
+        causal_factor_impact=.8,
         evidence_weight=.4, adjusted_factor_impact=adjusted,
         exposure_field=field, exposure_value=value, exposure_confidence=.9,
         exposure_evidence_ids=[f"E-{field}"], final_contribution=.1,
@@ -326,6 +341,86 @@ def test_result_labels_are_assigned_after_company_financial_effect(tmp_path) -> 
     )
     assert by_result["PESSIMISTIC"].shock_case == "LOW_SHOCK"
     assert by_result["OPTIMISTIC"].shock_case == "HIGH_SHOCK"
+    store.close()
+
+
+@pytest.mark.parametrize(
+    ("factor_direction", "expected_revenue_sign", "expected_debt_sign"),
+    [(1, 1, -1), (-1, -1, 1)],
+)
+def test_fx_macro_direction_survives_opposing_company_channels(
+    tmp_path,
+    factor_direction,
+    expected_revenue_sign,
+    expected_debt_sign,
+) -> None:
+    store = _baseline_store(tmp_path)
+    exposure = _exposure()
+    baseline = FinancialBaselineBuilder(store, "baseline").build(
+        "TEST3", AS_OF, exposure
+    )
+    candidate = _candidate([
+        _factor(
+            "FX", "revenue", "revenue_foreign_currency_pct", .4,
+            adjusted=.5 * factor_direction,
+            factor_direction=factor_direction,
+            channel_effect_direction=1,
+        ),
+        _factor(
+            "FX", "debt", "net_foreign_currency_debt_pct", .1,
+            adjusted=-.5 * factor_direction,
+            factor_direction=factor_direction,
+            channel_effect_direction=-1,
+        ),
+    ])
+    outcome = next(
+        item
+        for item in FinancialScenarioEngine("bridge").evaluate(
+            baseline, exposure, candidate
+        )
+        if item.shock_case == "BASE_SHOCK"
+    )
+    by_channel = {item.channel: item for item in outcome.contributions}
+    assert by_channel["revenue"].factor_direction == factor_direction
+    assert by_channel["debt"].factor_direction == factor_direction
+    assert by_channel["revenue"].delta_revenue * expected_revenue_sign > 0
+    assert (
+        by_channel["debt"].delta_financial_result * expected_debt_sign
+        > 0
+    )
+    store.close()
+
+
+def test_conflicting_macro_directions_block_scenario(tmp_path) -> None:
+    store = _baseline_store(tmp_path)
+    exposure = _exposure()
+    baseline = FinancialBaselineBuilder(store, "baseline").build(
+        "TEST3", AS_OF, exposure
+    )
+    candidate = _candidate([
+        _factor(
+            "FX", "revenue", "revenue_foreign_currency_pct", .4,
+            adjusted=.5, factor_direction=1,
+        ),
+        _factor(
+            "FX", "debt", "net_foreign_currency_debt_pct", .1,
+            adjusted=-.5, factor_direction=-1,
+        ),
+    ])
+    outcomes = FinancialScenarioEngine("bridge").evaluate(
+        baseline, exposure, candidate
+    )
+    assert all(item.status == "BLOCKED" for item in outcomes)
+    assert all(
+        item.reason == "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION"
+        for item in outcomes
+    )
+    assert all(not item.contributions for item in outcomes)
+    assert all(
+        item.blocked_channels[0].reason
+        == "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION"
+        for item in outcomes
+    )
     store.close()
 
 

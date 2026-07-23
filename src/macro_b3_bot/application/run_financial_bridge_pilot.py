@@ -1,4 +1,4 @@
-"""Sprint 4D.2 directional, cash-aware financial bridge pilot."""
+"""Sprint 4D.2A explicit-factor-direction financial bridge pilot."""
 from __future__ import annotations
 
 from datetime import datetime
@@ -38,7 +38,7 @@ class FinancialBridgePilot:
         selection_run_id: str,
         sector_run_id: str,
         as_of_timestamp: datetime,
-        run_id: str = "financial_4d2_pilot",
+        run_id: str = "financial_4d2a_pilot",
     ) -> dict[str, object]:
         exposure_run_id = f"{run_id}_exposures"
         CompanyExposureBuilder(
@@ -102,11 +102,11 @@ class FinancialBridgePilot:
                 for available in item.available_at
             )
             outcomes = scenario_engine.evaluate(baseline, exposure, candidate)
+            factor_directions, _ = scenario_engine.validated_factor_directions(
+                candidate.factor_contributions
+            )
             actual_scenarios = scenario_engine.scenarios(
-                as_of_timestamp,
-                scenario_engine._factor_directions(
-                    candidate.factor_contributions
-                ),
+                as_of_timestamp, factor_directions
             )
             for scenario in actual_scenarios:
                 self.store.save_economic_shock_scenario(
@@ -188,6 +188,13 @@ class FinancialBridgePilot:
                 "normalized_score_used_as_percentage_zero": (
                     score_as_percentage == 0
                 ),
+                "factor_direction_explicit": all(
+                    contribution["factor_direction"] in {-1, 1}
+                    and contribution["channel_effect_direction"] in {-1, 1}
+                    for company in companies
+                    for outcome in company.get("outcomes", [])
+                    for contribution in outcome["contributions"]
+                ),
                 "outcomes_ordered_by_company_result": all(
                     [
                         item["metrics"]["fcf"],
@@ -226,37 +233,23 @@ class FinancialBridgePilot:
                 "mglu_financial_impact_calculated": bool(
                     mglu and mglu["contributions"]
                 ),
-                "suzb_revenue_and_net_fx_debt_separated": bool(
+                "suzb_conflicting_fx_direction_blocked": bool(
                     suzb
-                    and any(
-                        item["bridge_type"] == "FX_REVENUE_TRANSLATION"
-                        for item in suzb["contributions"]
-                    )
+                    and suzb["status"] == "BLOCKED"
                     and any(
                         item["reason"]
-                        == "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE"
+                        == "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION"
                         for item in suzb["blocked_channels"]
                     )
                 ),
-                "klbn_fx_interest_inflation_separated": bool(
+                "klbn_conflicting_fx_direction_blocked": bool(
                     klbn
+                    and klbn["status"] == "BLOCKED"
                     and any(
-                        item["bridge_type"] == "FX_REVENUE_TRANSLATION"
-                        for item in klbn["contributions"]
-                    )
-                    and {
-                        (item["factor"], item["reason"])
+                        item["reason"]
+                        == "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION"
                         for item in klbn["blocked_channels"]
-                    }.issuperset({
-                        (
-                            "INTEREST_RATES",
-                            "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
-                        ),
-                        (
-                            "INFLATION",
-                            "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
-                        ),
-                    })
+                    )
                 ),
                 "missing_elasticities_blocked": any(
                     gap["reason"] == "BRIDGE_BLOCKED_MISSING_ELASTICITY"

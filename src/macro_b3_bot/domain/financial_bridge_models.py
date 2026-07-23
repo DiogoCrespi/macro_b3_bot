@@ -108,6 +108,8 @@ class EconomicShockScenario(BaseModel):
 class FinancialBridgeContribution(BaseModel):
     factor: str
     channel: Literal["revenue", "cost", "debt", "demand"]
+    factor_direction: Literal[-1, 1]
+    channel_effect_direction: Literal[-1, 1]
     bridge_type: str
     scenario_id: str
     source_candidate_id: str
@@ -154,6 +156,7 @@ class BlockedFinancialChannel(BaseModel):
         "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
         "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
         "BRIDGE_BLOCKED_UNSUPPORTED_FACTOR_CHANNEL",
+        "SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION",
     ]
     required_fields: list[str] = Field(default_factory=list)
 

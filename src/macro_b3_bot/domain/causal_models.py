@@ -67,12 +67,18 @@ class CausalPath(BaseModel):
     causal_edge_ids: list[str] = Field(min_length=1)
     factor: str
     company_channel_effects: dict[str, int]
-    factor_direction: int
+    factor_direction: int = Field(ge=-1, le=1)
     direction: int
     strength: float = Field(ge=0, le=1)
     confidence: float = Field(ge=0, le=1)
     evidence_ids: list[str] = Field(default_factory=list)
     evidence_status: str
+
+    @model_validator(mode="after")
+    def factor_direction_is_signed(self) -> "CausalPath":
+        if self.factor_direction not in {-1, 1}:
+            raise ValueError("factor_direction must be -1 or +1")
+        return self
 
 
 class SectorImpactCandidate(BaseModel):

@@ -540,6 +540,10 @@ def test_channel_transport_preserves_fx_channels_and_opposite_direction() -> Non
     ])
     directions = {item.channel: item.direction for item in channels}
     assert directions == {"cost": -1, "debt": -1, "revenue": 1}
+    assert {item.factor_direction for item in channels} == {1}
+    assert {
+        item.channel: item.channel_effect_direction for item in channels
+    } == {"cost": -1, "debt": -1, "revenue": 1}
 
     candidate = CompanyImpactEngine("impact-run").evaluate(
         SectorStateSnapshot(
@@ -571,12 +575,14 @@ def test_channel_transport_preserves_fx_channels_and_opposite_direction() -> Non
 def test_factor_channel_requires_traceable_evidence() -> None:
     with pytest.raises(ValueError):
         CompanyFactorChannel(
-            factor="FX", channel="revenue", direction=1, strength=.5,
+            factor="FX", channel="revenue", factor_direction=1,
+            channel_effect_direction=1, direction=1, strength=.5,
             confidence=.5, source_path_ids=[], causal_edge_ids=[],
             evidence_ids=[], evidence_status="HYPOTHESIS",
         )
     hypothesis = CompanyFactorChannel(
-        factor="FX", channel="revenue", direction=1, strength=.5,
+        factor="FX", channel="revenue", factor_direction=1,
+        channel_effect_direction=1, direction=1, strength=.5,
         confidence=.5, source_path_ids=["PATH-1"], causal_edge_ids=["EDGE-1"],
         evidence_ids=[], evidence_status="HYPOTHESIS",
     )
@@ -678,7 +684,8 @@ def test_operating_leverage_has_neutral_midpoint_and_symmetric_beta() -> None:
 
 def test_factor_contribution_keeps_trace_and_hypothesis_weight() -> None:
     common = {
-        "factor": "FX", "channel": "debt", "direction": -1,
+        "factor": "FX", "channel": "debt", "factor_direction": 1,
+        "channel_effect_direction": -1, "direction": -1,
         "strength": 1, "confidence": 1, "source_path_ids": ["PATH-1"],
         "causal_edge_ids": ["EDGE-1"],
     }

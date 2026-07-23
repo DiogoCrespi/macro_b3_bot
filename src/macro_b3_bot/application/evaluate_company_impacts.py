@@ -187,6 +187,8 @@ class CompanyImpactEngine:
             (
                 CompanyFactorChannel(
                     factor=factor, channel=channel,
+                    factor_direction=1 if impact >= 0 else -1,
+                    channel_effect_direction=1,
                     direction=1 if impact >= 0 else -1,
                     strength=abs(impact), confidence=1,
                     source_path_ids=["DIRECT_FACTOR_INPUT"],
@@ -273,6 +275,8 @@ class CompanyImpactEngine:
             modifier_fields.append(modifier_name)
         return FactorContribution(
             factor=channel.factor, channel=channel.channel,
+            factor_direction=channel.factor_direction,
+            channel_effect_direction=channel.channel_effect_direction,
             causal_factor_impact=round(causal_impact, 4),
             evidence_weight=evidence_weight,
             adjusted_factor_impact=round(adjusted_impact, 4),

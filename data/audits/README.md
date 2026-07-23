@@ -98,3 +98,12 @@ Sprint 4D.2 directional and cash-flow semantics artifact:
   assumptions. The baseline identifies FCF as
   `CFO_PLUS_REPORTED_CAPEX / NOT_NORMALIZED`, average debt as a
   `TWO_POINT_AVERAGE_PROXY`, and net debt as `STANDARDIZED_CASH_ONLY`.
+
+Sprint 4D.2A factor-direction hotfix artifact:
+
+- `financial_4d2a_pilot.json`: preserves macro `factor_direction` separately
+  from `channel_effect_direction`; financial shock direction no longer depends
+  on aggregating company effects.
+- Conflicting macro directions for one factor block the scenario as
+  `SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION`; a zero company-effect sum
+  never implies a positive macro direction.

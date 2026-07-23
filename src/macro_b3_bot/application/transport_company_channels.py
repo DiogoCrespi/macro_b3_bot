@@ -14,7 +14,7 @@ class CompanyChannelTransport:
         self, candidates: list[SectorImpactCandidate]
     ) -> list[CompanyFactorChannel]:
         grouped: dict[
-            tuple[str, str, int, str],
+            tuple[str, str, int, int, int, str],
             list[tuple[float, float, str, list[str], list[str]]],
         ] = defaultdict(list)
         for candidate in candidates:
@@ -22,19 +22,25 @@ class CompanyChannelTransport:
                 for channel, channel_direction in path.company_channel_effects.items():
                     direction = path.factor_direction * channel_direction
                     grouped[
-                        (path.factor, channel, direction, path.evidence_status)
+                        (
+                            path.factor, channel, path.factor_direction,
+                            channel_direction, direction, path.evidence_status,
+                        )
                     ].append((
                         path.strength, path.confidence, path.path_id,
                         path.causal_edge_ids, path.evidence_ids,
                     ))
 
         output: list[CompanyFactorChannel] = []
-        for (factor, channel, direction, evidence_status), observations in sorted(
-            grouped.items()
-        ):
+        for (
+            factor, channel, factor_direction, channel_effect_direction,
+            direction, evidence_status,
+        ), observations in sorted(grouped.items()):
             output.append(CompanyFactorChannel(
                 factor=factor,
                 channel=channel,
+                factor_direction=factor_direction,
+                channel_effect_direction=channel_effect_direction,
                 direction=direction,
                 strength=round(
                     sum(item[0] for item in observations) / len(observations), 4

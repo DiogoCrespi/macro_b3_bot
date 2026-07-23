@@ -163,6 +163,8 @@ class CompanyExposureSnapshot(BaseModel):
 class CompanyFactorChannel(BaseModel):
     factor: str
     channel: Literal["revenue", "cost", "debt", "demand"]
+    factor_direction: int = Field(ge=-1, le=1)
+    channel_effect_direction: int = Field(ge=-1, le=1)
     direction: int = Field(ge=-1, le=1)
     strength: float = Field(ge=0, le=1)
     confidence: float = Field(ge=0, le=1)
@@ -173,8 +175,16 @@ class CompanyFactorChannel(BaseModel):
 
     @model_validator(mode="after")
     def direction_is_signed(self) -> "CompanyFactorChannel":
-        if self.direction not in {-1, 1}:
-            raise ValueError("channel direction must be -1 or +1")
+        if (
+            self.factor_direction not in {-1, 1}
+            or self.channel_effect_direction not in {-1, 1}
+            or self.direction not in {-1, 1}
+        ):
+            raise ValueError("factor and channel directions must be -1 or +1")
+        if self.direction != self.factor_direction * self.channel_effect_direction:
+            raise ValueError(
+                "direction must equal factor_direction * channel_effect_direction"
+            )
         return self
 
 
@@ -195,6 +205,8 @@ class CompanyExposureOverride(BaseModel):
 class FactorContribution(BaseModel):
     factor: str
     channel: Literal["revenue", "cost", "debt", "demand"]
+    factor_direction: int = Field(ge=-1, le=1)
+    channel_effect_direction: int = Field(ge=-1, le=1)
     causal_factor_impact: float = Field(ge=-1, le=1)
     evidence_weight: float = Field(ge=0, le=1)
     adjusted_factor_impact: float = Field(ge=-1, le=1)

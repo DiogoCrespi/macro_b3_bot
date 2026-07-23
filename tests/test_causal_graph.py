@@ -95,6 +95,8 @@ def test_opposite_macro_directions_reverse_sector_sign(engine: CausalGraphEngine
     first = {c.sector: c for c in engine.propagate_event(event("up", event_type, up), NOW)}[sector]
     second = {c.sector: c for c in engine.propagate_event(event("down", event_type, down), NOW)}[sector]
     assert first.impact_score * second.impact_score < 0
+    assert {path.factor_direction for path in first.causal_paths} == {1}
+    assert {path.factor_direction for path in second.causal_paths} == {-1}
 
 
 def test_effective_surprise_and_watch_weight(engine: CausalGraphEngine) -> None:
