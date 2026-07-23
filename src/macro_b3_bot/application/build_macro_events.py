@@ -138,31 +138,32 @@ class MacroEventBuilder:
         self.series_map = _load_series_map()
         self.now = datetime.now(timezone.utc)
 
-    def process_since(self, since_date: date) -> dict:
+    def process_since(self, since_date: date, as_of_timestamp: Optional[datetime] = None) -> dict:
         """
         Process all MacroReleases published since since_date and generate
-        MacroEventCandidates for those that pass the gate.
+        MacroEventCandidates for those that pass the gate as of as_of_timestamp.
 
         Returns summary dict.
         """
-        # Fetch new releases from the store
+        effective_now = as_of_timestamp or self.now
+        # Fetch new releases from the store available as of effective_now
         releases = self.store.connection.execute(
             """
             SELECT release_id, source, series_code, indicator, geography, frequency, unit,
                    reference_date, published_at, available_at,
                    actual_value, previous_value, consensus_value,
-                   raw_checksum, record_checksum
+                   raw_checksum, record_checksum, availability_precision
             FROM macro_releases
-            WHERE reference_date >= ?
+            WHERE reference_date >= ? AND available_at <= ?
             ORDER BY source, series_code, reference_date
             """,
-            [since_date]
+            [since_date, effective_now]
         ).fetchall()
 
         cols = ["release_id", "source", "series_code", "indicator", "geography", "frequency", "unit",
                 "reference_date", "published_at", "available_at",
                 "actual_value", "previous_value", "consensus_value",
-                "raw_checksum", "record_checksum"]
+                "raw_checksum", "record_checksum", "availability_precision"]
         release_list = [dict(zip(cols, r)) for r in releases]
 
         approved = 0
@@ -171,14 +172,14 @@ class MacroEventBuilder:
         skipped = 0
 
         for rel in release_list:
-            # Look-ahead safety check
+            # Look-ahead safety check against effective_now
             if _SAFETY_CHECK_LOOKAHEAD:
                 avail = rel["available_at"]
                 if avail is not None:
                     # DuckDB may return naive datetimes — assume UTC
                     if isinstance(avail, datetime) and avail.tzinfo is None:
                         avail = avail.replace(tzinfo=timezone.utc)
-                    if isinstance(avail, datetime) and avail > self.now:
+                    if isinstance(avail, datetime) and avail > effective_now:
                         logger.warning("LOOK-AHEAD DETECTED: %s available_at=%s, skipping", rel["release_id"], avail)
                         skipped += 1
                         continue
@@ -194,7 +195,7 @@ class MacroEventBuilder:
                 skipped += 1
                 continue
 
-            status = self._build_and_gate(rel, series_cfg, event_family)
+            status = self._build_and_gate(rel, series_cfg, event_family, effective_now=effective_now)
             if status == "MACRO_EVENT_APPROVED":
                 approved += 1
             elif status == "MACRO_EVENT_WATCH":
@@ -210,11 +211,12 @@ class MacroEventBuilder:
             "skipped": skipped,
         }
 
-    def _build_and_gate(self, rel: dict, series_cfg: dict, event_family: str) -> str:
+    def _build_and_gate(self, rel: dict, series_cfg: dict, event_family: str, effective_now: Optional[datetime] = None) -> str:
         """Build a MacroEventCandidate and apply the gate. Returns final status."""
         source = rel["source"]
         series_code = rel["series_code"]
         ref_date = rel["reference_date"]
+        eff_now = effective_now or self.now
         if isinstance(ref_date, str):
             ref_date = date.fromisoformat(ref_date)
 
@@ -222,11 +224,12 @@ class MacroEventBuilder:
         previous = Decimal(str(rel["previous_value"])) if rel["previous_value"] is not None else None
         consensus = Decimal(str(rel["consensus_value"])) if rel["consensus_value"] is not None else None
 
-        # Historical context
+        # Historical context (reverse so order is chronological: oldest -> newest)
         historical_releases = self.store.get_macro_releases_for_series(source, series_code, limit=60)
-        hist_values = [Decimal(str(r["actual_value"])) for r in historical_releases if r["actual_value"] is not None]
-        # Remove current from history
-        hist_values = [v for v in hist_values if v != actual][:50]
+        hist_values = [Decimal(str(r["actual_value"])) for r in reversed(historical_releases) if r["actual_value"] is not None]
+        if hist_values and hist_values[-1] == actual:
+            hist_values = hist_values[:-1]
+        hist_values = hist_values[-50:]
 
         # ── Scores ─────────────────────────────────────────────────────────
         surprise_score, surprise_breakdown = compute_surprise_score(
@@ -263,13 +266,21 @@ class MacroEventBuilder:
         # Regime shift (simplified: same as persistence for now)
         regime_shift_score = round(0.5 * surprise_score + 0.5 * persistence_score, 4)
 
-        # Data quality
+        # Data quality — check actual vintage count for this release
+        vint_count = self.store.connection.execute(
+            "SELECT COUNT(*) FROM macro_data_vintages WHERE source = ? AND series_code = ? AND reference_date = ?",
+            [source, series_code, ref_date]
+        ).fetchone()[0]
+        has_vintage = (vint_count > 0) or (source == "FRED")
+        precision = rel.get("availability_precision", "EXACT")
+
         data_quality_score = compute_data_quality_score(
             source=source,
             frequency=series_cfg.get("frequency", "MONTHLY"),
-            has_vintage=(source == "FRED"),
+            has_vintage=has_vintage,
             has_consensus=(consensus is not None),
             has_previous_value=(previous is not None),
+            availability_precision=precision,
         )
 
         # Direction
@@ -305,7 +316,7 @@ class MacroEventBuilder:
             "geography": json.loads(rel["geography"]) if isinstance(rel["geography"], str) else rel["geography"],
             "affected_variables": affected_variables,
             "reference_date": ref_date,
-            "detected_at": self.now,
+            "detected_at": eff_now,
             "horizon_months": horizon_months,
             "actual_value": actual,
             "expected_value": consensus,

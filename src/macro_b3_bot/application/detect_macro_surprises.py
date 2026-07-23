@@ -220,8 +220,9 @@ def compute_data_quality_score(
     has_vintage: bool,
     has_consensus: bool,
     has_previous_value: bool,
+    availability_precision: str = "EXACT",
 ) -> float:
-    """Start at 1.0, apply penalties from macro_event_rules.yaml."""
+    """Start at 1.0, apply penalties from macro_event_rules.yaml and precision policy."""
     score = 1.0
     if not has_vintage:
         score -= 0.10
@@ -231,4 +232,9 @@ def compute_data_quality_score(
         score -= 0.10
     if frequency == "QUARTERLY":
         score -= 0.05
+    if availability_precision == "ESTIMATED_MONTHLY" or availability_precision == "ESTIMATED_DAILY":
+        score -= 0.10
+    elif availability_precision == "UNKNOWN":
+        score -= 0.55  # Heavy penalty for unknown publication timestamp
+
     return round(max(0.0, score), 4)

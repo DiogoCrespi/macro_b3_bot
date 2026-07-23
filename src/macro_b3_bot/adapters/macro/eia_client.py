@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from typing import Optional
 from urllib.parse import urlencode
@@ -170,10 +170,10 @@ def normalize_eia_observation(
     except InvalidOperation:
         return None
 
-    # EIA doesn't publish exact release timestamps in v2 history API; mark precision UNKNOWN
+    # EIA doesn't publish exact release timestamps in v2 history API; mark precision UNKNOWN and set available_at to collected_at
     published_at = None
-    rel_available_at = datetime(ref_date.year, ref_date.month, ref_date.day, tzinfo=timezone.utc)
     collected_at = available_at
+    rel_available_at = collected_at
 
     release_id = make_release_id("EIA", series_code, ref_date, rel_available_at)
     raw_chk = make_raw_checksum({"source": "EIA", "series": series_code, "period": period_str, "value": str(value)})

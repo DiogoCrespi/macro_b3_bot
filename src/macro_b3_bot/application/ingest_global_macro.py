@@ -206,6 +206,7 @@ class GlobalMacroIngester:
         import asyncio
         import hashlib
         from macro_b3_bot.adapters.bcb.sgs_client import BcbSgsClient
+        from macro_b3_bot.adapters.bcb.expectations_client import BcbExpectationsClient
 
         source = cfg["source"]
         series_code = cfg["series_code"]
@@ -249,7 +250,7 @@ class GlobalMacroIngester:
                     "vintage_date": obs.reference_date,
                     "realtime_start": None,
                     "realtime_end": None,
-                    "availability_precision": "EXACT",
+                    "availability_precision": "ESTIMATED_DAILY",
                     "revision_number": 0,
                     "is_initial_release": True,
                     "actual_value": obs.value,
@@ -257,6 +258,60 @@ class GlobalMacroIngester:
                     "revised_previous_value": None,
                     "consensus_value": None,
                     "raw_checksum": obs.raw_checksum,
+                    "record_checksum": rec_chk,
+                    "ingestion_run_id": self.run_id,
+                }
+                saved = self.store.save_macro_release(payload)
+                if saved:
+                    new += 1
+                else:
+                    skipped += 1
+            return new, skipped
+
+        elif source == "BCB_FOCUS":
+            client_exp = BcbExpectationsClient()
+            try:
+                exp_list = asyncio.run(
+                    client_exp.fetch_annual_expectations(
+                        indicator=indicator,
+                        since=start_date,
+                        ingestion_run_id=self.run_id,
+                    )
+                )
+            except Exception as e:
+                logger.warning("BCB_FOCUS fetch failed for %s: %s", series_code, e)
+                return 0, 0
+
+            new = 0
+            skipped = 0
+            for exp in exp_list:
+                if exp.statistic != "Mediana":
+                    continue
+                pub_dt = datetime(exp.reference_date.year, exp.reference_date.month, exp.reference_date.day, tzinfo=timezone.utc)
+                rec_chk = hashlib.sha256(f"BCB_FOCUS|{series_code}|{exp.reference_date}|{exp.target_period}|{exp.value}".encode()).hexdigest()
+                payload = {
+                    "release_id": f"BCB_FOCUS_{series_code}_{exp.reference_date}_{exp.target_period}",
+                    "source": "BCB_FOCUS",
+                    "series_code": series_code,
+                    "indicator": f"Focus Expectation {indicator} ({exp.target_period})",
+                    "geography": cfg.get("geography", ["BR"]),
+                    "frequency": cfg.get("frequency", "ANNUAL"),
+                    "unit": cfg.get("unit", "%"),
+                    "reference_date": exp.reference_date,
+                    "published_at": pub_dt,
+                    "available_at": pub_dt,
+                    "collected_at": self.available_at,
+                    "vintage_date": exp.reference_date,
+                    "realtime_start": None,
+                    "realtime_end": None,
+                    "availability_precision": "ESTIMATED_DAILY",
+                    "revision_number": 0,
+                    "is_initial_release": True,
+                    "actual_value": exp.value,
+                    "previous_value": _get_previous_value(self.store, "BCB_FOCUS", series_code, exp.reference_date),
+                    "revised_previous_value": None,
+                    "consensus_value": None,
+                    "raw_checksum": exp.raw_checksum,
                     "record_checksum": rec_chk,
                     "ingestion_run_id": self.run_id,
                 }

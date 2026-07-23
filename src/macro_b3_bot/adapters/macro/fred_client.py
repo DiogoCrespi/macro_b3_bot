@@ -54,15 +54,19 @@ class FredClient:
         observation_end: Optional[date] = None,
         realtime_start: Optional[date] = None,
         realtime_end: Optional[date] = None,
+        output_type: Optional[int] = None,
+        vintage_dates: Optional[list[str]] = None,
     ) -> list[dict]:
         """
-        Fetch observations for a series.
+        Fetch series observations from FRED / ALFRED.
 
-        If realtime_start / realtime_end are provided, this becomes an
-        ALFRED vintage query (returns the value *as known at that date*).
-
-        Returns list of raw dicts with keys:
-            date, value, realtime_start, realtime_end
+        If realtime_start / realtime_end or vintage_dates are provided,
+        this becomes an ALFRED vintage query.
+        output_type:
+            1 = Default (observation values)
+            2 = Observations by vintage date (all)
+            3 = Observations by vintage date (revised/new only)
+            4 = Initial release observations only
         """
         params: dict = {
             "series_id": series_id,
@@ -77,6 +81,10 @@ class FredClient:
             params["realtime_start"] = realtime_start.isoformat()
         if realtime_end:
             params["realtime_end"] = realtime_end.isoformat()
+        if output_type is not None:
+            params["output_type"] = str(output_type)
+        if vintage_dates:
+            params["vintage_dates"] = ",".join(vintage_dates)
 
         url = f"{FRED_BASE}/series/observations?{urlencode(params)}"
         raw = self._get(url)

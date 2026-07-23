@@ -482,8 +482,14 @@ class DatabaseStore:
                 source VARCHAR NOT NULL,
                 reference_date DATE NOT NULL,
                 vintage_date DATE NOT NULL,
+                realtime_start DATE,
+                realtime_end DATE,
+                available_at TIMESTAMP NOT NULL,
                 value DECIMAL(28, 10) NOT NULL,
+                revision_number INTEGER NOT NULL DEFAULT 0,
+                is_initial_release BOOLEAN NOT NULL DEFAULT TRUE,
                 is_latest BOOLEAN NOT NULL DEFAULT FALSE,
+                record_checksum VARCHAR NOT NULL,
                 ingestion_run_id VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
@@ -657,18 +663,34 @@ class DatabaseStore:
         if existing > 0:
             return False
 
+        if vint.get("is_latest", True):
+            self.connection.execute(
+                """
+                UPDATE macro_data_vintages
+                SET is_latest = FALSE
+                WHERE source = ? AND series_code = ? AND reference_date = ?
+                """,
+                [vint["source"], vint["series_code"], vint["reference_date"]]
+            )
+
         self.connection.execute(
             """
             INSERT INTO macro_data_vintages (
                 vintage_id, series_code, source, reference_date, vintage_date,
-                value, is_latest, ingestion_run_id, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                realtime_start, realtime_end, available_at, value,
+                revision_number, is_initial_release, is_latest, record_checksum,
+                ingestion_run_id, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 vint["vintage_id"], vint["series_code"], vint["source"],
                 vint["reference_date"], vint["vintage_date"],
-                vint["value"], vint.get("is_latest", False),
-                vint["ingestion_run_id"], datetime.now(timezone.utc),
+                vint.get("realtime_start"), vint.get("realtime_end"),
+                vint.get("available_at", datetime.now(timezone.utc)),
+                vint["value"], vint.get("revision_number", 0),
+                vint.get("is_initial_release", True), vint.get("is_latest", True),
+                vint.get("record_checksum", ""), vint["ingestion_run_id"],
+                datetime.now(timezone.utc),
             ]
         )
         return True
@@ -756,20 +778,33 @@ class DatabaseStore:
         return True
 
     def get_macro_releases_for_series(
-        self, source: str, series_code: str, limit: int = 500
+        self, source: str, series_code: str, limit: int = 500, as_of_timestamp: Optional[datetime] = None
     ) -> list[dict]:
-        """Return recent releases ordered by reference_date DESC."""
-        rows = self.connection.execute(
-            """
-            SELECT release_id, reference_date, published_at, available_at,
-                   actual_value, previous_value, consensus_value
-            FROM macro_releases
-            WHERE source = ? AND series_code = ?
-            ORDER BY reference_date DESC
-            LIMIT ?
-            """,
-            [source, series_code, limit]
-        ).fetchall()
+        """Return recent releases ordered by reference_date DESC, optionally filtered as of as_of_timestamp."""
+        if as_of_timestamp:
+            rows = self.connection.execute(
+                """
+                SELECT release_id, reference_date, published_at, available_at,
+                       actual_value, previous_value, consensus_value
+                FROM macro_releases
+                WHERE source = ? AND series_code = ? AND available_at <= ?
+                ORDER BY reference_date DESC
+                LIMIT ?
+                """,
+                [source, series_code, as_of_timestamp, limit]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT release_id, reference_date, published_at, available_at,
+                       actual_value, previous_value, consensus_value
+                FROM macro_releases
+                WHERE source = ? AND series_code = ?
+                ORDER BY reference_date DESC
+                LIMIT ?
+                """,
+                [source, series_code, limit]
+            ).fetchall()
         cols = ["release_id", "reference_date", "published_at", "available_at",
                 "actual_value", "previous_value", "consensus_value"]
         return [dict(zip(cols, r)) for r in rows]

@@ -15,13 +15,12 @@ Regimes:
     OIL_SHOCK_UP / OIL_SHOCK_DOWN
     ENSO_EL_NINO / ENSO_LA_NINA
 """
-from __future__ import annotations
-
 import hashlib
 import logging
 import statistics
 from datetime import date, datetime, timezone
 from decimal import Decimal
+from typing import Optional
 
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
@@ -45,18 +44,19 @@ class RegimeDetector:
         self.store = store
         self.run_id = ingestion_run_id
 
-    def detect_and_snapshot(self) -> dict:
+    def detect_and_snapshot(self, as_of_timestamp: Optional[datetime] = None) -> dict:
         """
-        Run regime detection and persist a MacroRegimeSnapshot.
+        Run regime detection and persist a MacroRegimeSnapshot as of as_of_timestamp.
         Returns the snapshot dict.
         """
         today = date.today()
+        eff_now = as_of_timestamp or datetime.now(timezone.utc)
 
-        growth_dir, growth_releases = self._detect_growth_direction()
-        inflation_dir, inflation_releases = self._detect_inflation_direction()
-        liquidity, liquidity_releases = self._detect_liquidity_stance()
-        oil_regime, oil_releases = self._detect_oil_regime()
-        enso_phase, enso_releases = self._detect_enso_phase()
+        growth_dir, growth_releases = self._detect_growth_direction(as_of_timestamp=eff_now)
+        inflation_dir, inflation_releases = self._detect_inflation_direction(as_of_timestamp=eff_now)
+        liquidity, liquidity_releases = self._detect_liquidity_stance(as_of_timestamp=eff_now)
+        oil_regime, oil_releases = self._detect_oil_regime(as_of_timestamp=eff_now)
+        enso_phase, enso_releases = self._detect_enso_phase(as_of_timestamp=eff_now)
 
         # Composite label
         if growth_dir in ("UP", "STABLE") and inflation_dir == "DOWN":
@@ -74,13 +74,13 @@ class RegimeDetector:
         confidence = self._compute_regime_confidence(all_evidence)
 
         snapshot_id = hashlib.sha256(
-            f"{today.isoformat()}|{regime_label}|{enso_phase}|{oil_regime}".encode()
+            f"{today.isoformat()}|{regime_label}|{enso_phase}|{oil_regime}|{eff_now.isoformat()}".encode()
         ).hexdigest()[:24]
 
         snap = {
             "snapshot_id": snapshot_id,
             "snapshot_date": today,
-            "captured_at": datetime.now(timezone.utc),
+            "captured_at": eff_now,
             "growth_direction": growth_dir,
             "inflation_direction": inflation_dir,
             "liquidity_stance": liquidity,
@@ -96,7 +96,7 @@ class RegimeDetector:
         logger.info("Regime snapshot: %s (confidence=%.2f)", regime_label, confidence)
         return snap
 
-    def _detect_growth_direction(self) -> tuple[str, list[str]]:
+    def _detect_growth_direction(self, as_of_timestamp: Optional[datetime] = None) -> tuple[str, list[str]]:
         """Use IBC-Br + US Industrial Production + US Unemployment."""
         growth_series = [
             ("BCB_SGS", "24364"),  # IBC-Br
@@ -106,7 +106,7 @@ class RegimeDetector:
         release_ids = []
 
         for source, series_code in growth_series:
-            releases = self.store.get_macro_releases_for_series(source, series_code, limit=6)
+            releases = self.store.get_macro_releases_for_series(source, series_code, limit=6, as_of_timestamp=as_of_timestamp)
             if len(releases) < 3:
                 continue
             vals = [float(r["actual_value"]) for r in releases]
@@ -129,7 +129,7 @@ class RegimeDetector:
             return "DOWN", release_ids
         return "STABLE", release_ids
 
-    def _detect_inflation_direction(self) -> tuple[str, list[str]]:
+    def _detect_inflation_direction(self, as_of_timestamp: Optional[datetime] = None) -> tuple[str, list[str]]:
         """Use IPCA Focus + US CPI."""
         inflation_series = [
             ("FRED", "CPIAUCSL"),   # US CPI
@@ -139,7 +139,7 @@ class RegimeDetector:
         release_ids = []
 
         for source, series_code in inflation_series:
-            releases = self.store.get_macro_releases_for_series(source, series_code, limit=6)
+            releases = self.store.get_macro_releases_for_series(source, series_code, limit=6, as_of_timestamp=as_of_timestamp)
             if len(releases) < 3:
                 continue
             vals = [float(r["actual_value"]) for r in releases]
@@ -159,12 +159,12 @@ class RegimeDetector:
             return "DOWN", release_ids
         return "STABLE", release_ids
 
-    def _detect_liquidity_stance(self) -> tuple[str, list[str]]:
+    def _detect_liquidity_stance(self, as_of_timestamp: Optional[datetime] = None) -> tuple[str, list[str]]:
         """Use Fed Funds + Selic + T10Y2Y spread."""
         release_ids = []
 
         # Yield curve
-        spread_releases = self.store.get_macro_releases_for_series("FRED", "T10Y2Y", limit=5)
+        spread_releases = self.store.get_macro_releases_for_series("FRED", "T10Y2Y", limit=5, as_of_timestamp=as_of_timestamp)
         if spread_releases:
             latest_spread = float(spread_releases[0]["actual_value"])
             release_ids.extend([r["release_id"] for r in spread_releases[:2]])
@@ -174,7 +174,7 @@ class RegimeDetector:
                 return "EASING", release_ids
 
         # Fed Funds direction
-        ff_releases = self.store.get_macro_releases_for_series("FRED", "DFF", limit=10)
+        ff_releases = self.store.get_macro_releases_for_series("FRED", "DFF", limit=10, as_of_timestamp=as_of_timestamp)
         if len(ff_releases) >= 5:
             recent = float(ff_releases[0]["actual_value"])
             older = float(ff_releases[4]["actual_value"])
@@ -186,11 +186,11 @@ class RegimeDetector:
 
         return "NEUTRAL", release_ids
 
-    def _detect_oil_regime(self) -> tuple[str, list[str]]:
+    def _detect_oil_regime(self, as_of_timestamp: Optional[datetime] = None) -> tuple[str, list[str]]:
         """WTI + Brent: 15% move in last 20 trading days."""
         release_ids = []
         for source, series_code in [("EIA", "PET.RWTC.D"), ("EIA", "PET.RBRTE.D")]:
-            releases = self.store.get_macro_releases_for_series(source, series_code, limit=25)
+            releases = self.store.get_macro_releases_for_series(source, series_code, limit=25, as_of_timestamp=as_of_timestamp)
             if len(releases) < 5:
                 continue
             latest = float(releases[0]["actual_value"])
@@ -206,10 +206,10 @@ class RegimeDetector:
 
         return "STABLE", release_ids
 
-    def _detect_enso_phase(self) -> tuple[str, list[str]]:
+    def _detect_enso_phase(self, as_of_timestamp: Optional[datetime] = None) -> tuple[str, list[str]]:
         """ONI 3-month mean ≥ +0.5 → EL_NINO, ≤ -0.5 → LA_NINA."""
         release_ids = []
-        oni_releases = self.store.get_macro_releases_for_series("NOAA", "ONI", limit=5)
+        oni_releases = self.store.get_macro_releases_for_series("NOAA", "ONI", limit=5, as_of_timestamp=as_of_timestamp)
         if not oni_releases:
             return "NEUTRAL", release_ids
 
