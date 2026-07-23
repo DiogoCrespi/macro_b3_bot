@@ -5,6 +5,7 @@ import io
 import zipfile
 import httpx
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import List, Tuple, Dict
 
@@ -25,7 +26,8 @@ class CvmZipReader:
         self,
         doc_type: str, # "ITR" ou "DFP"
         year: int,
-        ingestion_run_id: str
+        ingestion_run_id: str,
+        cvm_codes: set[str] | None = None,
     ) -> Tuple[List[CvmDocument], List[FinancialStatementLine]]:
 
         url = f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{doc_type.upper()}/DADOS/{doc_type.lower()}_cia_aberta_{year}.zip"
@@ -34,6 +36,12 @@ class CvmZipReader:
             resp = await client.get(url)
             resp.raise_for_status()
             raw_bytes = resp.content
+        last_modified = resp.headers.get("Last-Modified")
+        resource_available_at = (
+            parsedate_to_datetime(last_modified).astimezone(timezone.utc)
+            if last_modified
+            else datetime.now(timezone.utc)
+        )
 
         zip_checksum = compute_raw_checksum(raw_bytes)
 
@@ -44,11 +52,12 @@ class CvmZipReader:
 
         documents_map: Dict[str, CvmDocument] = {}
         statement_lines: List[FinancialStatementLine] = []
-        observed_now = datetime.now(timezone.utc)
-
         with zipfile.ZipFile(io.BytesIO(raw_bytes)) as zf:
             for filename in zf.namelist():
                 if not filename.endswith(".csv"):
+                    continue
+                statement_type = self._statement_type_from_filename(filename)
+                if statement_type is None:
                     continue
 
                 # Extrai tipo de demonstração (ex: DRE_con, BPA_con, DRE_ind)
@@ -57,11 +66,13 @@ class CvmZipReader:
                 reader = csv.DictReader(io.StringIO(text_data), delimiter=";")
 
                 for row in reader:
-                    cvm_code = str(row.get("CD_CVM", "")).strip()
+                    cvm_code = self._normalize_cvm_code(row.get("CD_CVM", ""))
                     cnpj = str(row.get("CNPJ_CIA", "")).strip()
                     dt_refer = str(row.get("DT_REFER", "")).strip()
 
                     if not cvm_code or not dt_refer:
+                        continue
+                    if cvm_codes is not None and cvm_code not in cvm_codes:
                         continue
 
                     try:
@@ -79,10 +90,12 @@ class CvmZipReader:
                             cvm_code=cvm_code,
                             cnpj=cnpj,
                             reference_date=ref_date,
-                            received_at=observed_now,
+                            received_at=resource_available_at,
                             version=version,
                             raw_zip_checksum=zip_checksum,
-                            ingestion_run_id=ingestion_run_id
+                            ingestion_run_id=ingestion_run_id,
+                            availability_basis="RESOURCE_LAST_MODIFIED",
+                            source_url=url,
                         )
 
                     account_code = str(row.get("CD_CONTA", "")).strip()
@@ -98,8 +111,6 @@ class CvmZipReader:
                         continue
 
                     scope = "CONSOLIDATED" if ("CON" in filename.upper() or row.get("GRUPO_DFP", "").endswith("CON")) else "INDIVIDUAL"
-                    stmt_type = str(row.get("ORDEM_EXERC", "DRE")).strip()
-
                     start_date = None
                     dt_ini = str(row.get("DT_INI_EXERC", "")).strip()
                     if dt_ini:
@@ -110,7 +121,7 @@ class CvmZipReader:
 
                     rec_hash = record_checksum({
                         "doc_id": doc_id,
-                        "stmt_type": stmt_type,
+                        "stmt_type": statement_type,
                         "scope": scope,
                         "account_code": account_code,
                         "value": str(val_dec)
@@ -129,7 +140,7 @@ class CvmZipReader:
 
                     line = FinancialStatementLine(
                         document_id=doc_id,
-                        statement_type=stmt_type,
+                        statement_type=statement_type,
                         scope=scope,
                         fiscal_order=str(row.get("ORDEM_EXERC", "ÚLTIMO")),
                         account_code=account_code,
@@ -144,3 +155,16 @@ class CvmZipReader:
                     statement_lines.append(line)
 
         return list(documents_map.values()), statement_lines
+
+    @staticmethod
+    def _statement_type_from_filename(filename: str) -> str | None:
+        upper = filename.upper()
+        for statement_type in ("BPA", "BPP", "DRE", "DRA", "DFC_MD", "DFC_MI", "DMPL", "DVA"):
+            if statement_type in upper:
+                return statement_type.replace("_", "-")
+        return None
+
+    @staticmethod
+    def _normalize_cvm_code(value: object) -> str:
+        raw = str(value).strip()
+        return raw.lstrip("0") or "0"

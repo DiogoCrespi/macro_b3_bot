@@ -79,15 +79,19 @@ class CompanyExposureBuilder:
         mapping = self.store.connection.execute(
             """
             SELECT ticker,cvm_code FROM company_ticker_map
-            WHERE ticker = ? AND validated = TRUE AND created_at <= ?
+            WHERE ticker = ? AND validated = TRUE
+              AND review_status = 'VALIDATED'
+              AND valid_from <= CAST(? AS DATE)
+              AND (valid_to IS NULL OR valid_to >= CAST(? AS DATE))
+              AND created_at <= ?
             ORDER BY confidence DESC,created_at DESC LIMIT 1
             """,
-            [ticker, cutoff],
+            [ticker, as_of.date(), as_of.date(), cutoff],
         ).fetchone()
         if not mapping or not mapping[1]:
             return None, "MISSING_MAPPING"
         cvm_code = str(mapping[1])
-        document = self.store.connection.execute(
+        documents = self.store.connection.execute(
             """
             WITH available_documents AS (
                 SELECT *,
@@ -102,37 +106,52 @@ class CompanyExposureBuilder:
             SELECT document_id,document_type,reference_date,received_at,version
             FROM available_documents
             WHERE rn = 1
-            ORDER BY reference_date DESC,
-                     CASE WHEN document_type='DFP' THEN 0 ELSE 1 END,
-                     received_at DESC
-            LIMIT 1
+            QUALIFY ROW_NUMBER() OVER (
+                PARTITION BY document_type
+                ORDER BY reference_date DESC,received_at DESC,version DESC
+            ) = 1
+            ORDER BY CASE WHEN document_type='ITR' THEN 0 ELSE 1 END
             """,
             [cvm_code, cutoff],
-        ).fetchone()
-        if not document:
+        ).fetchall()
+        if not documents:
             return None, "MISSING_DOCUMENT"
 
-        document_id, document_type, reference_date, received_at, version = document
+        primary = documents[0]
+        document_id, document_type, reference_date, received_at, version = primary
         values: dict[str, object] = {field: None for field in _EXPOSURE_FIELDS}
         evidence: list[ExposureFieldEvidence] = []
-        revenue = self._statement_value(document_id, "3.01")
-        debt_current = self._statement_value(document_id, "2.01.04")
-        debt_long = self._statement_value(document_id, "2.02.01")
-        total_debt = (
-            sum(item for item in (debt_current, debt_long) if item is not None)
-            if debt_current is not None or debt_long is not None else None
-        )
-        source_type = f"CVM_{document_type}"
+        revenue, revenue_doc = self._best_statement_value(documents, "3.01")
+        # Those standardized accounts represent interbank relations/deposits
+        # for financial institutions, not comparable corporate debt.
+        if sector == "BANCOS":
+            debt_current = debt_long = None
+            current_doc = long_doc = None
+            total_debt = None
+        else:
+            debt_current, current_doc = self._best_statement_value(documents, "2.01.04")
+            debt_long, long_doc = self._best_statement_value(documents, "2.02.01")
+            total_debt = (
+                sum(item for item in (debt_current, debt_long) if item is not None)
+                if debt_current is not None or debt_long is not None else None
+            )
         if revenue is not None:
             values["total_revenue"] = revenue
+            assert revenue_doc is not None
             evidence.append(self._evidence(
-                "total_revenue", revenue, source_type, str(document_id), received_at,
+                "total_revenue", revenue, f"CVM_{revenue_doc[1]}",
+                str(revenue_doc[0]), revenue_doc[3],
                 "Standardized DRE account 3.01 from the selected point-in-time filing.",
             ))
         if total_debt is not None:
             values["total_debt"] = total_debt
+            debt_docs = [item for item in (current_doc, long_doc) if item is not None]
+            debt_evidence_id = "+".join(sorted({str(item[0]) for item in debt_docs}))
+            debt_available_at = max(item[3] for item in debt_docs)
+            debt_source_types = "+".join(sorted({f"CVM_{item[1]}" for item in debt_docs}))
             evidence.append(self._evidence(
-                "total_debt", total_debt, source_type, str(document_id), received_at,
+                "total_debt", total_debt, debt_source_types, debt_evidence_id,
+                debt_available_at,
                 "Sum of standardized balance-sheet debt accounts 2.01.04 and 2.02.01.",
             ))
 
@@ -157,6 +176,7 @@ class CompanyExposureBuilder:
         )
         identity = (
             f"{ticker}|{cvm_code}|{as_of.isoformat()}|{document_id}|{version}|"
+            f"{','.join(str(item[0]) for item in documents)}|"
             f"{self.methodology_version}|{self.run_id}"
         )
         snapshot = CompanyExposureSnapshot(
@@ -184,6 +204,15 @@ class CompanyExposureBuilder:
             [document_id, account_code],
         ).fetchone()
         return float(row[0]) if row and row[0] is not None else None
+
+    def _best_statement_value(
+        self, documents: list[tuple], account_code: str
+    ) -> tuple[float | None, tuple | None]:
+        for document in documents:
+            value = self._statement_value(str(document[0]), account_code)
+            if value is not None:
+                return value, document
+        return None, None
 
     def _evidence(
         self, field_name: str, value: float, source_type: str, evidence_id: str,

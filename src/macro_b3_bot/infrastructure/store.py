@@ -145,9 +145,24 @@ class DatabaseStore:
                 confidence DOUBLE NOT NULL,
                 validated BOOLEAN NOT NULL DEFAULT FALSE,
                 created_at TIMESTAMP NOT NULL,
+                legal_name VARCHAR,
+                valid_from DATE,
+                valid_to DATE,
+                review_status VARCHAR NOT NULL DEFAULT 'UNREVIEWED',
+                evidence_id VARCHAR,
+                mapping_version VARCHAR,
                 PRIMARY KEY (ticker, cnpj)
             );
         """)
+        for col, kind in {
+            "legal_name": "VARCHAR", "valid_from": "DATE", "valid_to": "DATE",
+            "review_status": "VARCHAR DEFAULT 'UNREVIEWED'", "evidence_id": "VARCHAR",
+            "mapping_version": "VARCHAR",
+        }.items():
+            try:
+                self.connection.execute(f"ALTER TABLE company_ticker_map ADD COLUMN {col} {kind};")
+            except Exception:
+                pass
         # CVM Documents (ITR / DFP)
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS cvm_documents (
@@ -159,9 +174,16 @@ class DatabaseStore:
                 received_at TIMESTAMP NOT NULL,
                 version INTEGER NOT NULL,
                 raw_zip_checksum VARCHAR NOT NULL,
-                ingestion_run_id VARCHAR NOT NULL
+                ingestion_run_id VARCHAR NOT NULL,
+                availability_basis VARCHAR,
+                source_url VARCHAR
             );
         """)
+        for col in ("availability_basis", "source_url"):
+            try:
+                self.connection.execute(f"ALTER TABLE cvm_documents ADD COLUMN {col} VARCHAR;")
+            except Exception:
+                pass
         # Financial Statement Lines
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS financial_statement_lines (
@@ -1060,14 +1082,29 @@ class DatabaseStore:
     def save_ticker_mapping(self, mapping: dict) -> None:
         self.connection.execute(
             """
-            INSERT OR REPLACE INTO company_ticker_map (
+            INSERT INTO company_ticker_map (
                 ticker, cvm_code, cnpj, mapping_source, confidence, validated, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                , legal_name, valid_from, valid_to, review_status, evidence_id, mapping_version
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (ticker, cnpj) DO UPDATE SET
+                cvm_code=excluded.cvm_code,
+                mapping_source=excluded.mapping_source,
+                confidence=excluded.confidence,
+                validated=excluded.validated,
+                legal_name=excluded.legal_name,
+                valid_from=excluded.valid_from,
+                valid_to=excluded.valid_to,
+                review_status=excluded.review_status,
+                evidence_id=excluded.evidence_id,
+                mapping_version=excluded.mapping_version
             """,
             [
                 mapping["ticker"], mapping.get("cvm_code"), mapping.get("cnpj"),
                 mapping["mapping_source"], mapping["confidence"], mapping.get("validated", False),
-                datetime.now(timezone.utc)
+                mapping.get("created_at", datetime.now(timezone.utc)),
+                mapping.get("legal_name"), mapping.get("valid_from"), mapping.get("valid_to"),
+                mapping.get("review_status", "UNREVIEWED"), mapping.get("evidence_id"),
+                mapping.get("mapping_version"),
             ]
         )
 
@@ -1082,6 +1119,19 @@ class DatabaseStore:
         ).fetchone()
 
         if existing:
+            if doc.get("availability_basis"):
+                self.connection.execute(
+                    """
+                    UPDATE cvm_documents
+                    SET received_at = ?, raw_zip_checksum = ?, ingestion_run_id = ?,
+                        availability_basis = ?, source_url = ?
+                    WHERE document_id = ?
+                    """,
+                    [
+                        doc["received_at"], doc["raw_zip_checksum"], doc["ingestion_run_id"],
+                        doc.get("availability_basis"), doc.get("source_url"), doc["document_id"],
+                    ],
+                )
             return (False, False) # Duplicado idêntico (mesma versão e ID)
 
         # Verifica se existe outra versão do mesmo documento (reapresentação)
@@ -1094,13 +1144,15 @@ class DatabaseStore:
             """
             INSERT INTO cvm_documents (
                 document_id, document_type, cvm_code, cnpj, reference_date,
-                received_at, version, raw_zip_checksum, ingestion_run_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                received_at, version, raw_zip_checksum, ingestion_run_id,
+                availability_basis, source_url
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 doc["document_id"], doc["document_type"], doc["cvm_code"], doc["cnpj"],
                 doc["reference_date"], doc["received_at"], doc["version"],
-                doc["raw_zip_checksum"], doc["ingestion_run_id"]
+                doc["raw_zip_checksum"], doc["ingestion_run_id"],
+                doc.get("availability_basis"), doc.get("source_url"),
             ]
         )
         return (True, has_other_version > 0)

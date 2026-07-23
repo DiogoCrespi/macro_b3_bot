@@ -27,6 +27,8 @@ class CvmDocument(BaseModel):
     version: int
     raw_zip_checksum: str
     ingestion_run_id: str
+    availability_basis: str | None = None
+    source_url: str | None = None
 
 class FinancialStatementLine(BaseModel):
     document_id: str

@@ -719,6 +719,42 @@ def build_company_exposures(
     console.print("[bold]Ausências permanecem NULL/UNKNOWN; valuation e BUY desabilitados.[/bold]")
 
 
+@app.command("reconcile-company-mappings")
+def reconcile_company_mappings() -> None:
+    """Validate and persist the 15-company pilot mapping against the CVM registry."""
+    from macro_b3_bot.application.reconcile_company_mappings import PilotMappingReconciler
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = PilotMappingReconciler(store).reconcile()
+    store.close()
+    table = Table(title="Sprint 4C.2 — Pilot Mapping Reconciliation")
+    table.add_column("Métrica")
+    table.add_column("Valor")
+    for key in ("mapping_version", "requested", "validated", "tickers", "failures"):
+        table.add_row(key, str(result[key]))
+    console.print(table)
+
+
+@app.command("ingest-company-pilot")
+def ingest_company_pilot() -> None:
+    """Ingest official ITR/DFP data only for the 15-company Sprint 4C.2 pilot."""
+    import asyncio
+
+    from macro_b3_bot.application.ingest_company_pilot import (
+        ingest_company_pilot as run_pilot_ingestion,
+    )
+
+    result = asyncio.run(run_pilot_ingestion())
+    table = Table(title="Sprint 4C.2 — Targeted CVM Ingestion")
+    table.add_column("Métrica")
+    table.add_column("Valor")
+    for key, value in result.items():
+        table.add_row(key, str(value))
+    console.print(table)
+
+
 @app.command("run-macro-engine")
 def run_macro_engine(
     sources: str = typer.Option("fred,eia,noaa", "--sources"),

@@ -51,7 +51,11 @@ def insert_document(
 ) -> None:
     store.connection.execute(
         """
-        INSERT INTO cvm_documents VALUES (?, 'ITR', '1', '00', DATE '2025-09-30', ?, ?, 'x', 'run')
+        INSERT INTO cvm_documents (
+            document_id,document_type,cvm_code,cnpj,reference_date,received_at,
+            version,raw_zip_checksum,ingestion_run_id,availability_basis,source_url
+        ) VALUES (?, 'ITR', '1', '00', DATE '2025-09-30', ?, ?, 'x', 'run',
+                  'TEST_FIXTURE','fixture://itr')
         """,
         [document_id, received_at.replace(tzinfo=None), version],
     )
@@ -97,7 +101,13 @@ def test_geography_and_commodity_have_distinct_semantics() -> None:
 def test_builder_selects_document_point_in_time_and_excludes_future_override(tmp_path: Path) -> None:
     store = DatabaseStore(tmp_path / "pit-exposure.duckdb")
     store.connection.execute(
-        "INSERT INTO company_ticker_map VALUES ('TEST3','1','00','test',1,TRUE,?)",
+        """
+        INSERT INTO company_ticker_map (
+            ticker,cvm_code,cnpj,mapping_source,confidence,validated,created_at,
+            legal_name,valid_from,valid_to,review_status,evidence_id,mapping_version
+        ) VALUES ('TEST3','1','00','test',1,TRUE,?,'Test SA',DATE '2025-01-01',
+                  NULL,'VALIDATED','registry-test','v1')
+        """,
         [(AS_OF - timedelta(days=300)).replace(tzinfo=None)],
     )
     insert_document(store, "ITR-v1", AS_OF - timedelta(days=30), 1, 1000)
@@ -118,6 +128,31 @@ def test_builder_selects_document_point_in_time_and_excludes_future_override(tmp
     assert snapshot.total_debt == 300
     assert snapshot.export_revenue_pct is None
     assert {item.evidence_id for item in snapshot.field_evidence} == {"ITR-v1"}
+    store.close()
+
+
+def test_builder_does_not_treat_bank_deposits_as_corporate_debt(tmp_path: Path) -> None:
+    store = DatabaseStore(tmp_path / "bank-exposure.duckdb")
+    store.connection.execute(
+        """
+        INSERT INTO company_ticker_map (
+            ticker,cvm_code,cnpj,mapping_source,confidence,validated,created_at,
+            legal_name,valid_from,valid_to,review_status,evidence_id,mapping_version
+        ) VALUES ('TEST3','1','00','test',1,TRUE,?,'Test Bank',DATE '2025-01-01',
+                  NULL,'VALIDATED','registry-test','v1')
+        """,
+        [(AS_OF - timedelta(days=300)).replace(tzinfo=None)],
+    )
+    insert_document(store, "ITR-BANK", AS_OF - timedelta(days=30), 1, 1000)
+    builder = CompanyExposureBuilder(store, "RUN_BANK")
+
+    snapshot, reason = builder.build_snapshot("TEST3", "BANCOS", AS_OF)
+
+    assert reason is None
+    assert snapshot is not None
+    assert snapshot.total_debt is None
+    assert "total_debt" in snapshot.missing_fields
+    assert all(item.field_name != "total_debt" for item in snapshot.field_evidence)
     store.close()
 
 

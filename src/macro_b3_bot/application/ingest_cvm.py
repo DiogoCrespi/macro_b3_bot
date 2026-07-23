@@ -122,7 +122,9 @@ class CvmIngestionPipeline:
             "by_class": by_class
         }
 
-    async def ingest_statements(self, doc_type: str, years: List[int]) -> CvmIngestionResult:
+    async def ingest_statements(
+        self, doc_type: str, years: List[int], cvm_codes: set[str] | None = None
+    ) -> CvmIngestionResult:
         run_id = f"RUN_CVM_{doc_type.upper()}_{uuid.uuid4().hex[:8]}"
         store = DatabaseStore(self.db_path)
         store.start_ingestion_run(run_id, f"CVM_{doc_type.upper()}")
@@ -131,7 +133,10 @@ class CvmIngestionPipeline:
 
         for year in years:
             docs, lines = await self.zip_reader.fetch_and_parse_statements(
-                doc_type=doc_type, year=year, ingestion_run_id=run_id
+                doc_type=doc_type,
+                year=year,
+                ingestion_run_id=run_id,
+                cvm_codes=cvm_codes,
             )
             res.documents_received += len(docs)
             res.lines_received += len(lines)
