@@ -733,6 +733,53 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS financial_baseline_snapshots (
+                baseline_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                latest_quarter DATE NOT NULL,
+                baseline_payload VARCHAR NOT NULL,
+                field_evidence VARCHAR NOT NULL,
+                missing_fields VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS economic_shock_scenarios (
+                scenario_id VARCHAR PRIMARY KEY,
+                factor VARCHAR NOT NULL,
+                scenario_case VARCHAR NOT NULL,
+                magnitude DOUBLE NOT NULL,
+                unit VARCHAR NOT NULL,
+                horizon_years DOUBLE NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                scenario_payload VARCHAR NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS financial_scenario_outcomes (
+                outcome_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                scenario_case VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                baseline_id VARCHAR NOT NULL,
+                company_impact_candidate_id VARCHAR NOT NULL,
+                outcome_payload VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                status VARCHAR NOT NULL,
+                reason VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
 
 
     def _init_views(self) -> None:
@@ -1824,6 +1871,81 @@ class DatabaseStore:
                 candidate["confidence"], candidate["conflict_ratio"],
                 _json.dumps(candidate["missing_exposures"]), candidate["status"],
                 candidate["run_id"],
+            ],
+        )
+        return not exists
+
+    def save_financial_baseline(self, baseline: dict) -> bool:
+        exists = self.connection.execute(
+            "SELECT COUNT(*) FROM financial_baseline_snapshots WHERE baseline_id=?",
+            [baseline["baseline_id"]],
+        ).fetchone()[0] > 0
+        identity = {
+            "baseline_id", "ticker", "cvm_code", "as_of_timestamp",
+            "latest_quarter", "methodology_version", "field_evidence",
+            "missing_fields", "confidence", "run_id", "created_at",
+        }
+        payload = {key: value for key, value in baseline.items() if key not in identity}
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO financial_baseline_snapshots (
+                baseline_id,ticker,cvm_code,as_of_timestamp,latest_quarter,
+                baseline_payload,field_evidence,missing_fields,confidence,
+                methodology_version,run_id,created_at
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            [
+                baseline["baseline_id"], baseline["ticker"], baseline["cvm_code"],
+                baseline["as_of_timestamp"], baseline["latest_quarter"],
+                json.dumps(payload, default=str),
+                json.dumps(baseline["field_evidence"], default=str),
+                json.dumps(baseline["missing_fields"]),
+                baseline["confidence"], baseline["methodology_version"],
+                baseline["run_id"], baseline["created_at"],
+            ],
+        )
+        return not exists
+
+    def save_economic_shock_scenario(self, scenario: dict, run_id: str) -> bool:
+        exists = self.connection.execute(
+            "SELECT COUNT(*) FROM economic_shock_scenarios WHERE scenario_id=?",
+            [scenario["scenario_id"]],
+        ).fetchone()[0] > 0
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO economic_shock_scenarios (
+                scenario_id,factor,scenario_case,magnitude,unit,horizon_years,
+                as_of_timestamp,scenario_payload,methodology_version,run_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?)
+            """,
+            [
+                scenario["scenario_id"], scenario["factor"], scenario["case"],
+                scenario["magnitude"], scenario["unit"], scenario["horizon_years"],
+                scenario["as_of_timestamp"], json.dumps(scenario, default=str),
+                scenario["methodology_version"], run_id,
+            ],
+        )
+        return not exists
+
+    def save_financial_scenario_outcome(self, outcome: dict) -> bool:
+        exists = self.connection.execute(
+            "SELECT COUNT(*) FROM financial_scenario_outcomes WHERE outcome_id=?",
+            [outcome["outcome_id"]],
+        ).fetchone()[0] > 0
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO financial_scenario_outcomes (
+                outcome_id,ticker,scenario_case,as_of_timestamp,baseline_id,
+                company_impact_candidate_id,outcome_payload,confidence,status,
+                reason,run_id
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            [
+                outcome["outcome_id"], outcome["ticker"], outcome["case"],
+                outcome["as_of_timestamp"], outcome["baseline_id"],
+                outcome["company_impact_candidate_id"],
+                json.dumps(outcome, default=str), outcome["confidence"],
+                outcome["status"], outcome["reason"], outcome["run_id"],
             ],
         )
         return not exists

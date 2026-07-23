@@ -328,6 +328,16 @@ def test_review_hash_covers_semantics_and_manifest_application_is_atomic(
         WHERE reviewer_type='DELEGATED_AI'
         """
     ).fetchone()[0] == 2
+    delegated_confidence = store.connection.execute(
+        """
+        SELECT CAST(json_extract(evidence_payload,'$.review_confidence') AS DOUBLE),
+               json_extract_string(evidence_payload,'$.review_assurance')
+          FROM company_macro_exposure_facts
+         WHERE review_status='DELEGATED_AI_APPROVED'
+         LIMIT 1
+        """
+    ).fetchone()
+    assert delegated_confidence == (0.75, "DELEGATED_AI")
 
     original = reviewer.fact_review_hash(
         "FACT-A", "TEST3", "export_revenue_pct", "0.4", base, "test-v1"

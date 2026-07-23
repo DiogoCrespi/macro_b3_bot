@@ -114,12 +114,15 @@ class CompanyMacroExposureReviewer:
                 if row[5] != current_hash or expected_hash != current_hash:
                     raise ValueError(f"reviewed fact content changed for {fact_id}")
                 payload = json.loads(row[3])
-                payload["review_confidence"] = 1.0
+                payload["review_confidence"] = (
+                    1.0 if reviewer_type == "HUMAN" else 0.75
+                )
+                payload["review_assurance"] = reviewer_type
                 payload["confidence"] = round(
                     0.35 * payload["extraction_match_confidence"]
                     + 0.30 * payload["semantic_scope_confidence"]
                     + 0.20 * payload["denominator_confidence"]
-                    + 0.15,
+                    + 0.15 * payload["review_confidence"],
                     4,
                 )
                 prepared.append((decision, row, payload))

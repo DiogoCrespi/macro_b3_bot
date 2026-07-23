@@ -56,3 +56,32 @@ contributions for three companies, preserves two no-active-signal
 `NO_ACTION` cases, and emits no BUY or order. The proposed materiality policy
 produces one `WATCH` (MGLU3); the legacy policy produces none. These pilot
 thresholds are comparative and are not yet a permanent production rule.
+
+Sprint 4D.1 financial bridge artifact:
+
+- `financial_4d1_pilot.json`: five PIT TTM baselines, nine unit-bearing
+  economic shocks and fifteen pessimistic/base/optimistic outcomes.
+
+The artifact preserves formulas, monetary bases, evidence IDs, assumptions,
+confidence and blocked channels. It uses zero future documents and never
+uses a normalized `[-1, 1]` score as a financial percentage.
+
+Base-case read-through:
+
+- MGLU3: `+100 bps` on average post-hedge floating debt produces an
+  approximately `-R$50.0m` financial-result and FCF delta. Demand remains
+  blocked for missing elasticity.
+- SUZB3: FX revenue translation is calculated separately from net FX debt.
+  Net FX debt and cost remain blocked because approved post-hedge exposure or
+  elasticity is unavailable.
+- KLBN11: FX revenue is calculated. FX debt is blocked because the disclosed
+  currency mix is not a net post-hedge balance. Floating and IPCA debt
+  monetary bases are available but inactive because the replay has no active
+  causal interest-rate or inflation channel.
+- RAIL3 and SLCE3: all cases remain `NO_ACTION` with zero deltas because the
+  sector state is `SECTOR_STATE_NO_ACTIVE_SIGNAL`.
+
+TTM FCF is the explicit standardized formula `CFO + capex`; it is not
+normalized recurring FCF. Both decision policies remain comparative, with no
+final policy selection. Valuation, MiroFish, BUY and order execution remain
+disabled.

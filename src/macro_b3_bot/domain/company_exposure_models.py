@@ -49,6 +49,7 @@ class ExposureFieldEvidence(BaseModel):
     semantic_scope_confidence: float = Field(default=0, ge=0, le=1)
     denominator_confidence: float = Field(default=0, ge=0, le=1)
     review_confidence: float = Field(default=0, ge=0, le=1)
+    review_assurance: Literal["HUMAN", "DELEGATED_AI"] | None = None
     is_estimated: bool = False
     rationale: str | None = None
 

@@ -184,7 +184,7 @@ class CompanyExposureBuilder:
         if self.source_selection_run_id:
             fact_rows = self.store.connection.execute(
                 """
-                SELECT field_name,evidence_payload
+                SELECT field_name,evidence_payload,review_status
                 FROM company_macro_exposure_facts
                 WHERE selection_run_id=? AND ticker=?
                   AND review_status IN ('HUMAN_APPROVED','DELEGATED_AI_APPROVED')
@@ -196,12 +196,27 @@ class CompanyExposureBuilder:
                 """,
                 [self.source_selection_run_id, ticker],
             ).fetchall()
-            for field_name, payload_json in fact_rows:
+            for field_name, payload_json, review_status in fact_rows:
                 if field_name not in values:
                     continue
-                field_evidence = ExposureFieldEvidence.model_validate(
-                    json.loads(payload_json)
+                payload = json.loads(payload_json)
+                review_confidence = (
+                    1.0 if review_status == "HUMAN_APPROVED" else 0.75
                 )
+                payload["review_confidence"] = review_confidence
+                payload["review_assurance"] = (
+                    "HUMAN"
+                    if review_status == "HUMAN_APPROVED"
+                    else "DELEGATED_AI"
+                )
+                payload["confidence"] = round(
+                    0.35 * payload["extraction_match_confidence"]
+                    + 0.30 * payload["semantic_scope_confidence"]
+                    + 0.20 * payload["denominator_confidence"]
+                    + 0.15 * review_confidence,
+                    4,
+                )
+                field_evidence = ExposureFieldEvidence.model_validate(payload)
                 if field_evidence.available_at > as_of:
                     continue
                 values[field_name] = field_evidence.normalized_value
