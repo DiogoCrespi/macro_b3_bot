@@ -154,10 +154,10 @@ class MacroEventBuilder:
                    actual_value, previous_value, consensus_value,
                    raw_checksum, record_checksum, availability_precision
             FROM macro_releases
-            WHERE reference_date >= ? AND available_at <= ?
+            WHERE reference_date >= ?
             ORDER BY source, series_code, reference_date
             """,
-            [since_date, effective_now]
+            [since_date]
         ).fetchall()
 
         cols = ["release_id", "source", "series_code", "indicator", "geography", "frequency", "unit",

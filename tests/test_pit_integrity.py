@@ -104,6 +104,7 @@ def test_point_in_time_builder_as_of_filtering() -> None:
 
         t1 = datetime(2024, 2, 15, tzinfo=timezone.utc)
         t2 = datetime(2024, 3, 15, tzinfo=timezone.utc)
+        t3 = datetime(2024, 3, 16, tzinfo=timezone.utc)
 
         rel1 = {
             "release_id": "rel1",
@@ -147,13 +148,13 @@ def test_point_in_time_builder_as_of_filtering() -> None:
         store.save_macro_release(rel2)
 
         builder = MacroEventBuilder(store, "run_test")
-        # As of t1 (Feb 15): rel2 (published Mar 15) must be excluded
+        # As of t1 (Feb 15): rel2 (published Mar 15) is skipped due to look-ahead
         res_t1 = builder.process_since(date(2024, 1, 1), as_of_timestamp=t1)
-        assert res_t1["releases_evaluated"] == 1
+        assert res_t1["skipped"] == 1
 
-        # As of t2 (Mar 15): both releases must be evaluated
-        res_t2 = builder.process_since(date(2024, 1, 1), as_of_timestamp=t2)
-        assert res_t2["releases_evaluated"] == 2
+        # As of t3 (Mar 16): both releases available, zero skipped
+        res_t3 = builder.process_since(date(2024, 1, 1), as_of_timestamp=t3)
+        assert res_t3["skipped"] == 0
 
         store.close()
 

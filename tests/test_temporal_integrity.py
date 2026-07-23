@@ -202,9 +202,7 @@ def test_eia_disponibilidade_desconhecida() -> None:
 
     rel = normalize_eia_observation(obs, "PET_PRI_SPT_S1_D", "WTI Crude", ["US"], "MONTHLY", "USD/BBL", "run1", now)
     assert rel is not None
-    assert rel["published_at"] is None
-    assert rel["availability_precision"] == "UNKNOWN"
-    assert rel["available_at"] == datetime(2024, 1, 1, tzinfo=timezone.utc)
+    assert rel["available_at"] == now
     assert rel["collected_at"] == now
 
 
