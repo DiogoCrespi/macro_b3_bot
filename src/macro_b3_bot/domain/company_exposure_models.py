@@ -28,10 +28,20 @@ class ExposureFieldEvidence(BaseModel):
     raw_value: str | None = None
     unit: str | None = None
     normalized_value: float | str | dict[str, float] | dict[str, str] | None = None
+    scope_entity: str | None = None
+    scope_type: str | None = None
+    scope_period: str | None = None
+    denominator_basis: str | None = None
+    formula: str | None = None
+    derivation_components: dict[str, float] | None = None
     available_at: datetime
     extraction_method: ExtractionMethod
     methodology_version: str
     confidence: float = Field(ge=0, le=1)
+    extraction_match_confidence: float = Field(default=0, ge=0, le=1)
+    semantic_scope_confidence: float = Field(default=0, ge=0, le=1)
+    denominator_confidence: float = Field(default=0, ge=0, le=1)
+    review_confidence: float = Field(default=0, ge=0, le=1)
     is_estimated: bool = False
     rationale: str | None = None
 
@@ -61,6 +71,7 @@ class CompanyExposureSnapshot(BaseModel):
     foreign_currency_debt_pct: float | None = Field(default=None, ge=0, le=1)
     fixed_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
     currency_hedge_pct: float | None = Field(default=None, ge=0, le=1)
+    currency_hedges: dict[str, float] | None = None
     commodity_exposures: dict[str, float] | None = None
     commodity_roles: dict[str, str] | None = None
     commodity_production: dict[str, float] | None = None
@@ -93,6 +104,10 @@ class CompanyExposureSnapshot(BaseModel):
             value < 0 or value > 1 for value in self.commodity_hedges.values()
         ):
             raise ValueError("commodity hedge shares must be between 0 and 1")
+        if self.currency_hedges and any(
+            value < 0 or value > 1 for value in self.currency_hedges.values()
+        ):
+            raise ValueError("currency hedge shares must be between 0 and 1")
         if self.geographic_exposures:
             if any(value < 0 or value > 1 for value in self.geographic_exposures.values()):
                 raise ValueError("geographic revenue shares must be between 0 and 1")
@@ -193,4 +208,5 @@ class CompanyImpactCandidate(BaseModel):
     causal_evidence_status: Literal["VALIDATED", "HYPOTHESIS"]
     missing_exposures: list[str] = Field(default_factory=list)
     status: str
+    reason: str | None = None
     run_id: str

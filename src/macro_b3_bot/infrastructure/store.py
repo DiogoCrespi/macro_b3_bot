@@ -1805,7 +1805,7 @@ class DatabaseStore:
             "supporting_event_ids", "opposing_event_ids", "source_path_ids",
             "causal_edge_ids", "factor_contributions",
             "missing_factor_exposures", "unsupported_factor_channels",
-            "causal_evidence_status",
+            "causal_evidence_status", "reason",
         }
         self.connection.execute(
             """

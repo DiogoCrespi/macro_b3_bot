@@ -40,13 +40,26 @@ def test_results_presentation_and_esg_are_distinct() -> None:
 def test_debt_annual_and_reference_form_families() -> None:
     assert classify_exposure_document(
         "Dados Econômico-Financeiros", "Outros", "Composição do endividamento"
-    ) == ExposureDocumentClass.DEBT_DISCLOSURE
+    ) == ExposureDocumentClass.DEBT_INSTRUMENT_DISCLOSURE
     assert classify_exposure_document(
         "Comunicado ao Mercado", "Outros", "Relatório anual Form 20-F de 2025"
-    ) == ExposureDocumentClass.ANNUAL_REPORT
+    ) == ExposureDocumentClass.ISSUER_ANNUAL_REPORT
     assert classify_exposure_document(
         "Dados Econômico-Financeiros", "FRE", "Formulário de Referência 2026"
-    ) == ExposureDocumentClass.REFERENCE_FORM
+    ) == ExposureDocumentClass.REFERENCE_FORM_DOCUMENT
+
+
+def test_fiduciary_report_and_reference_notice_are_not_issuer_documents() -> None:
+    assert classify_exposure_document(
+        "Dados Econômico-Financeiros",
+        "Relatório de Agente Fiduciário",
+        "Relatório Anual do Agente Fiduciário 2025",
+    ) == ExposureDocumentClass.FIDUCIARY_REPORT
+    assert classify_exposure_document(
+        "Comunicado ao Mercado",
+        "Outros",
+        "Petrobras arquiva Formulário de Referência 2026",
+    ) == ExposureDocumentClass.REFERENCE_FORM_NOTICE
 
 
 def test_kabin_consolidated_debt_mix_rules_are_factor_specific() -> None:

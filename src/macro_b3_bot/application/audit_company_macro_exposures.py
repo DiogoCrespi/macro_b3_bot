@@ -14,7 +14,7 @@ _TARGET_FIELDS = (
     "export_revenue_pct",
     "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct",
-    "currency_hedge_pct",
+    "currency_hedges",
     "commodity_roles",
     "commodity_production",
     "commodity_hedges",
@@ -52,7 +52,15 @@ class CompanyMacroExposureAuditor:
                 "selected": len(ticker_documents),
                 "downloaded": sum(item["document_checksum"] is not None for item in ticker_documents),
                 "extracted": sum(item["extraction_status"] == "EXTRACTED" for item in ticker_documents),
-                "relevant": len(ticker_documents),
+                "informational_candidates": sum(
+                    item["classification"] not in {
+                        "CORPORATE_ACTION", "ESG", "OTHER", "REFERENCE_FORM_NOTICE"
+                    }
+                    for item in ticker_documents
+                ),
+                "used_in_facts": len({
+                    item["document_id"] for item in facts if item["ticker"] == ticker
+                }),
                 "failures": sum(item["extraction_status"].endswith("FAILED") for item in ticker_documents),
             })
             matrix.append({
@@ -80,13 +88,33 @@ class CompanyMacroExposureAuditor:
             "SELECT COUNT(*) FROM company_exposure_snapshots WHERE run_id=?",
             [exposure_run_id],
         ).fetchone()[0]
-        unreviewed = self.store.connection.execute(
-            """
-            SELECT COUNT(*) FROM company_macro_exposure_facts
-            WHERE selection_run_id=? AND review_status <> 'HUMAN_REVIEWED'
-            """,
-            [selection_run_id],
-        ).fetchone()[0]
+        fact_documents = {item["document_id"] for item in facts}
+        facts_without_scope = sum(
+            not item["scope_entity"] or not item["scope_type"] for item in facts
+        )
+        scope_mismatch = sum(
+            (
+                item["field_name"] in {"currency_hedges", "commodity_hedges"}
+                and (not item["scope_period"] or not item["denominator_basis"])
+            )
+            or (
+                item["field_name"] == "commodity_production"
+                and item["scope_type"] not in {
+                    "OPERATED_PRODUCTION", "ASSET_PRODUCTION",
+                    "COMPANY_PRODUCTION", "COMPANY_CONSOLIDATED",
+                }
+            )
+            for item in facts
+        )
+        invalid_denominator = sum(
+            item["field_name"].endswith("_pct") and not item["denominator_basis"]
+            for item in facts
+        )
+        unsupported_derivation = sum(
+            item["method"] == "RULE_DERIVED"
+            and (not item["formula"] or not item["derivation_components"])
+            for item in facts
+        )
         return {
             "selection_run_id": selection_run_id,
             "exposure_run_id": exposure_run_id,
@@ -98,16 +126,26 @@ class CompanyMacroExposureAuditor:
                 "pilot_companies": len(tickers),
                 "snapshots": snapshots,
                 "facts_extracted": len(facts),
+                "documents_used_in_facts": len(fact_documents),
                 "companies_with_three_or_more": sum(
                     item["meets_three"] for item in matrix
                 ),
                 "future_documents_used": future_documents,
-                "facts_without_evidence": sum(
-                    not item["evidence_id"] or not item["evidence_excerpt"]
-                    for item in facts
+                "facts_without_document": sum(not item["document_id"] for item in facts),
+                "facts_without_excerpt": sum(
+                    not item["evidence_excerpt"] for item in facts
                 ),
-                "unreviewed_facts": unreviewed,
-                "invented_values": 0,
+                "facts_without_rule_version": sum(
+                    not item["methodology_version"] for item in facts
+                ),
+                "facts_without_review": sum(
+                    item["review_status"] != "HUMAN_APPROVED" for item in facts
+                ),
+                "facts_without_scope": facts_without_scope,
+                "facts_with_scope_mismatch": scope_mismatch,
+                "facts_with_invalid_denominator": invalid_denominator,
+                "facts_with_unsupported_derivation": unsupported_derivation,
+                "invented_values_check": "NOT_IMPLEMENTED",
             },
         }
 
@@ -140,15 +178,20 @@ class CompanyMacroExposureAuditor:
     def _facts(self, selection_run_id: str) -> list[dict[str, object]]:
         rows = self.store.connection.execute(
             """
-            SELECT ticker,field_name,evidence_payload,review_status
+            SELECT ticker,field_name,evidence_payload,review_status,
+                   reviewed_by,reviewed_at,review_decision,review_notes,
+                   source_excerpt_hash,methodology_version
             FROM company_macro_exposure_facts
-            WHERE selection_run_id=?
+            WHERE selection_run_id=? AND is_active=TRUE
             ORDER BY ticker,field_name
             """,
             [selection_run_id],
         ).fetchall()
         facts = []
-        for ticker, field_name, payload, review_status in rows:
+        for (
+            ticker, field_name, payload, review_status, reviewed_by, reviewed_at,
+            review_decision, review_notes, excerpt_hash, methodology_version,
+        ) in rows:
             item = json.loads(payload)
             facts.append({
                 "ticker": ticker, "field_name": field_name,
@@ -160,7 +203,23 @@ class CompanyMacroExposureAuditor:
                 "raw_value": item["raw_value"], "unit": item["unit"],
                 "method": item["extraction_method"],
                 "confidence": item["confidence"],
+                "extraction_match_confidence": item["extraction_match_confidence"],
+                "semantic_scope_confidence": item["semantic_scope_confidence"],
+                "denominator_confidence": item["denominator_confidence"],
+                "review_confidence": item["review_confidence"],
+                "scope_entity": item["scope_entity"],
+                "scope_type": item["scope_type"],
+                "scope_period": item["scope_period"],
+                "denominator_basis": item["denominator_basis"],
+                "formula": item["formula"],
+                "derivation_components": item["derivation_components"],
+                "methodology_version": methodology_version,
                 "review_status": review_status,
+                "reviewed_by": reviewed_by,
+                "reviewed_at": reviewed_at,
+                "review_decision": review_decision,
+                "review_notes": review_notes,
+                "source_excerpt_hash": excerpt_hash,
                 "evidence_id": item["evidence_id"],
             })
         return facts

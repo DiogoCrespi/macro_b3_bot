@@ -1,0 +1,49 @@
+{
+  "exposure_run_id": "exposure_4c4_pending_20260722",
+  "selection_run_id": "RUN_COMPANY_EXPOSURE_DOCS_6c3ecebd",
+  "sector_run_id": "sector_4c3c_20260722",
+  "results": [
+    {
+      "ticker": "KLBN11",
+      "status": "BLOCKED_HUMAN_REVIEW",
+      "review_counts": {
+        "HUMAN_REVIEW_PENDING": 3
+      },
+      "candidate_generated": false
+    },
+    {
+      "candidate_id": "37d04906ddc689168ce3bb54",
+      "ticker": "SLCE3",
+      "sector_snapshot_id": "a5aa41a5e259823a8380cc65",
+      "company_exposure_id": "2be63c0729deb8284ff5dc91",
+      "as_of_timestamp": "2026-07-23T02:59:59Z",
+      "revenue_impact_score": null,
+      "cost_impact_score": null,
+      "debt_impact_score": null,
+      "demand_impact_score": null,
+      "net_company_impact": null,
+      "confidence": 0.0,
+      "conflict_ratio": 0.0,
+      "supporting_event_ids": [],
+      "opposing_event_ids": [],
+      "source_path_ids": [],
+      "causal_edge_ids": [],
+      "factor_contributions": [],
+      "missing_factor_exposures": [],
+      "unsupported_factor_channels": [],
+      "causal_evidence_status": "HYPOTHESIS",
+      "missing_exposures": [
+        "revenue",
+        "cost",
+        "debt",
+        "demand"
+      ],
+      "status": "NO_ACTION",
+      "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+      "run_id": "dry_run_4c4"
+    }
+  ],
+  "valuation_enabled": false,
+  "buy_enabled": false,
+  "orders_enabled": false
+}

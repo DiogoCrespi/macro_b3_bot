@@ -1,5 +1,7 @@
 """Sprint 4C.1 point-in-time exposure and company-impact tests."""
 from datetime import date, datetime, timedelta, timezone
+import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -7,6 +9,12 @@ import pytest
 from macro_b3_bot.application.build_company_exposures import CompanyExposureBuilder
 from macro_b3_bot.application.audit_company_exposures import CompanyExposureAuditor
 from macro_b3_bot.application.evaluate_company_impacts import CompanyImpactEngine
+from macro_b3_bot.application.extract_company_macro_exposures import (
+    CompanyMacroExposureExtractor,
+)
+from macro_b3_bot.application.review_company_macro_exposures import (
+    CompanyMacroExposureReviewer,
+)
 from macro_b3_bot.application.transport_company_channels import CompanyChannelTransport
 from macro_b3_bot.domain.causal_models import SectorStateSnapshot
 from macro_b3_bot.domain.company_exposure_models import (
@@ -174,6 +182,72 @@ def test_builder_reports_missing_pilot_sources_without_fabrication(tmp_path: Pat
     store.close()
 
 
+def test_builder_consumes_only_explicitly_human_approved_facts(tmp_path: Path) -> None:
+    store = DatabaseStore(tmp_path / "reviewed-exposure.duckdb")
+    store.connection.execute(
+        """
+        INSERT INTO company_ticker_map (
+            ticker,cvm_code,cnpj,mapping_source,confidence,validated,created_at,
+            legal_name,valid_from,valid_to,review_status,evidence_id,mapping_version
+        ) VALUES ('TEST3','1','00','test',1,TRUE,?,'Test SA',DATE '2025-01-01',
+                  NULL,'VALIDATED','registry-test','v1')
+        """,
+        [(AS_OF - timedelta(days=300)).replace(tzinfo=None)],
+    )
+    insert_document(store, "ITR-v1", AS_OF - timedelta(days=30), 1, 1000)
+    CompanyMacroExposureExtractor(store)
+    item = evidence("export_revenue_pct", .4).model_copy(update={
+        "normalized_value": .4,
+        "scope_entity": "TEST3",
+        "scope_type": "COMPANY_CONSOLIDATED",
+        "scope_period": "3Q25",
+        "denominator_basis": "TOTAL_REVENUE",
+        "extraction_match_confidence": .95,
+        "semantic_scope_confidence": .95,
+        "denominator_confidence": .95,
+        "review_confidence": 0,
+        "evidence_excerpt": "Foreign revenue represented 40% of total revenue.",
+    })
+    payload = item.model_dump(mode="json")
+    excerpt_hash = hashlib.sha256(item.evidence_excerpt.encode()).hexdigest()
+    store.connection.execute(
+        """
+        INSERT INTO company_macro_exposure_facts (
+            fact_id,selection_run_id,ticker,field_name,normalized_value,
+            evidence_payload,methodology_version,review_status,source_excerpt_hash,
+            created_at
+        ) VALUES ('FACT-1','SOURCE-1','TEST3','export_revenue_pct','0.4',?,
+                  'test-v1','HUMAN_REVIEW_PENDING',?,?)
+        """,
+        [json.dumps(payload), excerpt_hash, AS_OF.replace(tzinfo=None)],
+    )
+    pending, _ = CompanyExposureBuilder(
+        store, "pending", source_selection_run_id="SOURCE-1"
+    ).build_snapshot("TEST3", "VAREJO", AS_OF)
+    assert pending is not None
+    assert pending.export_revenue_pct is None
+
+    manifest = CompanyMacroExposureReviewer(store).pending_manifest("SOURCE-1")
+    nonhuman = tmp_path / "nonhuman.json"
+    nonhuman.write_text(json.dumps({
+        **manifest, "reviewed_by": "automated extractor", "reviewer_type": "AGENT",
+    }), encoding="utf-8")
+    with pytest.raises(ValueError, match="HUMAN reviewer"):
+        CompanyMacroExposureReviewer(store).apply_manifest(nonhuman)
+    manifest["reviewed_by"] = "Independent human reviewer"
+    manifest["decisions"][0]["decision"] = "APPROVE"
+    manifest["decisions"][0]["notes"] = "Scope and denominator checked against source."
+    path = tmp_path / "review.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    CompanyMacroExposureReviewer(store).apply_manifest(path)
+    approved, _ = CompanyExposureBuilder(
+        store, "approved", source_selection_run_id="SOURCE-1"
+    ).build_snapshot("TEST3", "VAREJO", AS_OF)
+    assert approved is not None
+    assert approved.export_revenue_pct == .4
+    store.close()
+
+
 def test_company_impact_requires_explicit_factor_context_and_never_buys() -> None:
     sector = SectorStateSnapshot(
         snapshot_id="SEC-1", sector="VAREJO", as_of_timestamp=AS_OF,
@@ -197,6 +271,23 @@ def test_company_impact_requires_explicit_factor_context_and_never_buys() -> Non
     )
     assert incomplete.status == "NO_ACTION"
     assert set(incomplete.missing_exposures) == {"cost", "debt", "demand"}
+
+
+def test_no_active_sector_signal_forces_no_action_without_contributions() -> None:
+    sector = SectorStateSnapshot(
+        snapshot_id="SEC-NULL", sector="VAREJO", as_of_timestamp=AS_OF,
+        net_impact=0, bullish_impact=0, bearish_impact=0, conflict_ratio=0,
+        supporting_event_ids=[], opposing_event_ids=[], confidence=0,
+        status="SECTOR_STATE_NO_ACTIVE_SIGNAL", run_id="sector-run",
+        graph_version="1.1.0",
+    )
+    candidate = CompanyImpactEngine("impact-run").evaluate(
+        sector, exposure(), {("FX", "revenue"): .8}, AS_OF
+    )
+    assert candidate.status == "NO_ACTION"
+    assert candidate.reason == "SECTOR_STATE_NO_ACTIVE_SIGNAL"
+    assert candidate.factor_contributions == []
+    assert candidate.net_company_impact is None
 
 
 def test_channel_transport_preserves_fx_channels_and_opposite_direction() -> None:

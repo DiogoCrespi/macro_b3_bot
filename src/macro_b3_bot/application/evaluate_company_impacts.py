@@ -45,7 +45,14 @@ class CompanyImpactEngine:
     ) -> CompanyImpactCandidate:
         if sector.sector != exposure.sector:
             raise ValueError("sector snapshot and company exposure do not match")
-        inputs = self._inputs(factor_impacts, factor_channels)
+        null_sector_state = sector.status in {
+            "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+            "SECTOR_STATE_NO_GRAPH_COVERAGE",
+            "SECTOR_STATE_MISSING_DATA",
+        }
+        inputs = [] if null_sector_state else self._inputs(
+            factor_impacts, factor_channels
+        )
         contributions: list[FactorContribution] = []
         missing: list[MissingFactorExposure] = []
         unsupported: list[MissingFactorExposure] = []
@@ -114,7 +121,9 @@ class CompanyImpactEngine:
             unsupported_factor_channels=unsupported,
             causal_evidence_status=evidence_status,
             missing_exposures=missing_components,
-            status=status, run_id=self.run_id,
+            status=status,
+            reason=sector.status if null_sector_state else None,
+            run_id=self.run_id,
         )
 
     @staticmethod

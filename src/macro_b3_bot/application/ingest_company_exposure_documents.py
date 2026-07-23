@@ -16,9 +16,11 @@ from macro_b3_bot.infrastructure.store import DatabaseStore
 class ExposureDocumentClass(StrEnum):
     EARNINGS_RELEASE = "EARNINGS_RELEASE"
     RESULTS_PRESENTATION = "RESULTS_PRESENTATION"
-    ANNUAL_REPORT = "ANNUAL_REPORT"
-    REFERENCE_FORM = "REFERENCE_FORM"
-    DEBT_DISCLOSURE = "DEBT_DISCLOSURE"
+    ISSUER_ANNUAL_REPORT = "ISSUER_ANNUAL_REPORT"
+    FIDUCIARY_REPORT = "FIDUCIARY_REPORT"
+    REFERENCE_FORM_DOCUMENT = "REFERENCE_FORM_DOCUMENT"
+    REFERENCE_FORM_NOTICE = "REFERENCE_FORM_NOTICE"
+    DEBT_INSTRUMENT_DISCLOSURE = "DEBT_INSTRUMENT_DISCLOSURE"
     CORPORATE_ACTION = "CORPORATE_ACTION"
     ESG = "ESG"
     OTHER = "OTHER"
@@ -56,12 +58,25 @@ def classify_exposure_document(
         return ExposureDocumentClass.CORPORATE_ACTION
     if "esg" in combined or "sustentabilidade" in combined:
         return ExposureDocumentClass.ESG
-    if "formulário de referência" in combined or "formulario de referencia" in combined:
-        return ExposureDocumentClass.REFERENCE_FORM
+    is_reference_form = (
+        "formulário de referência" in combined
+        or "formulario de referencia" in combined
+    )
+    if is_reference_form and any(
+        term in subject_text for term in ("adiamento", "arquiva", "arquivamento", "anuncia")
+    ):
+        return ExposureDocumentClass.REFERENCE_FORM_NOTICE
+    if is_reference_form and (
+        type_text in {"fre", "formulário de referência", "formulario de referencia"}
+        or "documento" in type_text
+    ):
+        return ExposureDocumentClass.REFERENCE_FORM_DOCUMENT
+    if "agente fiduciário" in combined or "agente fiduciario" in combined:
+        return ExposureDocumentClass.FIDUCIARY_REPORT
     if "relatório anual" in combined or "relatorio anual" in combined or "20-f" in combined:
-        return ExposureDocumentClass.ANNUAL_REPORT
+        return ExposureDocumentClass.ISSUER_ANNUAL_REPORT
     if any(term in combined for term in _DEBT_TERMS):
-        return ExposureDocumentClass.DEBT_DISCLOSURE
+        return ExposureDocumentClass.DEBT_INSTRUMENT_DISCLOSURE
     has_financial_result = any(term in subject_text for term in _RESULT_TERMS) or bool(
         re.search(r"(?:resultado|resultados|desempenho).{0,24}[1-4]t\d{2}", subject_text)
     )
@@ -77,9 +92,10 @@ def classify_exposure_document(
 _SELECTABLE_CLASSES = {
     ExposureDocumentClass.EARNINGS_RELEASE,
     ExposureDocumentClass.RESULTS_PRESENTATION,
-    ExposureDocumentClass.ANNUAL_REPORT,
-    ExposureDocumentClass.REFERENCE_FORM,
-    ExposureDocumentClass.DEBT_DISCLOSURE,
+    ExposureDocumentClass.ISSUER_ANNUAL_REPORT,
+    ExposureDocumentClass.FIDUCIARY_REPORT,
+    ExposureDocumentClass.REFERENCE_FORM_DOCUMENT,
+    ExposureDocumentClass.DEBT_INSTRUMENT_DISCLOSURE,
 }
 
 
@@ -231,6 +247,57 @@ class CompanyExposureDocumentPipeline:
             }
             for row in rows
         ]
+
+    def reclassify(self, run_id: str) -> dict[str, object]:
+        store = DatabaseStore(self.db_path)
+        rows = store.connection.execute(
+            """
+            SELECT ticker,document_id,version,subject,document_type
+            FROM company_exposure_document_selections
+            WHERE selection_run_id=?
+            """,
+            [run_id],
+        ).fetchall()
+        changed = 0
+        classes: dict[str, int] = defaultdict(int)
+        for ticker, document_id, version, subject, document_type in rows:
+            category_row = store.connection.execute(
+                """
+                SELECT category FROM ipe_document_index
+                WHERE document_id=? AND version=?
+                ORDER BY delivery_date DESC LIMIT 1
+                """,
+                [document_id, version],
+            ).fetchone()
+            classification = classify_exposure_document(
+                category_row[0] if category_row else None, document_type, subject
+            ).value
+            previous = store.connection.execute(
+                """
+                SELECT classification
+                FROM company_exposure_document_selections
+                WHERE selection_run_id=? AND ticker=? AND document_id=? AND version=?
+                """,
+                [run_id, ticker, document_id, version],
+            ).fetchone()[0]
+            if previous != classification:
+                changed += 1
+                store.connection.execute(
+                    """
+                    UPDATE company_exposure_document_selections
+                    SET classification=?
+                    WHERE selection_run_id=? AND ticker=? AND document_id=? AND version=?
+                    """,
+                    [classification, run_id, ticker, document_id, version],
+                )
+            classes[classification] += 1
+        store.close()
+        return {
+            "selection_run_id": run_id,
+            "documents": len(rows),
+            "changed": changed,
+            "class_counts": dict(sorted(classes.items())),
+        }
 
     @staticmethod
     def _ensure_selection_table(store: DatabaseStore) -> None:

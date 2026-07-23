@@ -759,6 +759,62 @@ def extract_company_macro_exposures(
     console.print_json(json.dumps(result, default=str, ensure_ascii=False))
 
 
+@app.command("reclassify-company-exposure-documents")
+def reclassify_company_exposure_documents(
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+) -> None:
+    """Apply the corrected issuer/fiduciary/FRE document taxonomy."""
+    from macro_b3_bot.application.ingest_company_exposure_documents import (
+        CompanyExposureDocumentPipeline,
+    )
+
+    result = CompanyExposureDocumentPipeline(Settings()).reclassify(selection_run_id)
+    console.print_json(json.dumps(result, ensure_ascii=False))
+
+
+@app.command("export-company-exposure-review")
+def export_company_exposure_review(
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+    output: str = typer.Option(..., "--output"),
+) -> None:
+    """Export pending facts for an identified human reviewer."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.review_company_macro_exposures import (
+        CompanyMacroExposureReviewer,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    manifest = CompanyMacroExposureReviewer(store).pending_manifest(selection_run_id)
+    store.close()
+    Path(output).write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, default=str),
+        encoding="utf-8",
+    )
+    console.print(f"Pending review manifest: {output}")
+
+
+@app.command("apply-company-exposure-review")
+def apply_company_exposure_review(
+    manifest: str = typer.Option(..., "--manifest"),
+) -> None:
+    """Apply explicit HUMAN approval/rejection decisions bound to excerpt hashes."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.review_company_macro_exposures import (
+        CompanyMacroExposureReviewer,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = CompanyMacroExposureReviewer(store).apply_manifest(Path(manifest))
+    store.close()
+    console.print_json(json.dumps(result, ensure_ascii=False, default=str))
+
+
 @app.command("audit-company-exposures")
 def audit_company_exposures(
     run_id: str = typer.Option(..., "--run-id", help="Exposure build run ID"),
@@ -815,6 +871,33 @@ def audit_company_macro_exposures(
     )
     store.close()
     rendered = json.dumps(report, ensure_ascii=False, indent=2, default=str)
+    if output:
+        Path(output).write_text(rendered, encoding="utf-8")
+    console.print_json(rendered)
+
+
+@app.command("dry-run-company-impact-pilot")
+def dry_run_company_impact_pilot(
+    exposure_run_id: str = typer.Option(..., "--exposure-run-id"),
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+    sector_run_id: str = typer.Option(..., "--sector-run-id"),
+    output: Optional[str] = typer.Option(None, "--output"),
+) -> None:
+    """Run only KLBN11 and SLCE3; block unreviewed facts and all trading actions."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.dry_run_company_impact_pilot import (
+        CompanyImpactPilotDryRun,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = CompanyImpactPilotDryRun(store).run(
+        exposure_run_id, selection_run_id, sector_run_id
+    )
+    store.close()
+    rendered = json.dumps(result, ensure_ascii=False, indent=2, default=str)
     if output:
         Path(output).write_text(rendered, encoding="utf-8")
     console.print_json(rendered)

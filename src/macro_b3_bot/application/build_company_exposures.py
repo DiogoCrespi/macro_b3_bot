@@ -23,7 +23,7 @@ _EXPOSURE_FIELDS = (
     "floating_rate_debt", "inflation_linked_debt", "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct", "export_revenue_pct", "floating_rate_debt_pct",
     "inflation_linked_debt_pct", "foreign_currency_debt_pct", "commodity_exposures",
-    "fixed_rate_debt_pct", "currency_hedge_pct", "commodity_roles",
+    "fixed_rate_debt_pct", "currency_hedge_pct", "currency_hedges", "commodity_roles",
     "commodity_production", "commodity_hedges", "geographic_exposures",
     "demand_cyclicality", "pricing_power", "operating_leverage",
 )
@@ -179,6 +179,8 @@ class CompanyExposureBuilder:
                 SELECT field_name,evidence_payload
                 FROM company_macro_exposure_facts
                 WHERE selection_run_id=? AND ticker=?
+                  AND review_status='HUMAN_APPROVED'
+                  AND is_active=TRUE
                 QUALIFY ROW_NUMBER() OVER (
                     PARTITION BY field_name
                     ORDER BY created_at DESC,fact_id DESC
