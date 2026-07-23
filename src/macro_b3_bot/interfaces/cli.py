@@ -524,19 +524,28 @@ def audit_macro_events() -> None:
     from collections import Counter
     store_conn = DatabaseStore(db_path)
     sb_rows = store_conn.connection.execute(
-        "SELECT score_breakdown FROM macro_event_candidates WHERE status = 'MACRO_EVENT_REJECTED'"
+        "SELECT surprise_score, novelty_score, regime_shift_score, data_quality_score, score_breakdown FROM macro_event_candidates WHERE status = 'MACRO_EVENT_REJECTED'"
     ).fetchall()
     store_conn.close()
 
     reason_counter: Counter[str] = Counter()
-    for (sb_str,) in sb_rows:
+    for s_sc, n_sc, r_sc, q_sc, sb_str in sb_rows:
+        conditions = []
         if sb_str:
             try:
                 sb = json.loads(sb_str) if isinstance(sb_str, str) else sb_str
-                for cond in sb.get("failed_conditions", []):
-                    reason_counter[cond] += 1
+                conditions = sb.get("failed_conditions", [])
             except Exception:
                 pass
+        if not conditions:
+            if (s_sc or 0.0) < 0.60 and (r_sc or 0.0) < 0.65:
+                conditions.append("SURPRISE_AND_REGIME_BELOW_THRESHOLD")
+            if (n_sc or 0.0) < 0.50:
+                conditions.append("NOVELTY_BELOW_THRESHOLD")
+            if (q_sc or 0.0) < 0.80:
+                conditions.append("QUALITY_BELOW_THRESHOLD")
+        for cond in conditions:
+            reason_counter[cond] += 1
 
     r_table = Table(title="Rejection Reason Breakdown (failed_conditions)")
     r_table.add_column("Failed Condition")
