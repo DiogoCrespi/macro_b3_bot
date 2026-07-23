@@ -434,11 +434,11 @@ def audit_global_macro() -> None:
     # 3. Vintages check: multiple versions for same reference_date
     vintages_rows = store.connection.execute(
         """
-        SELECT source, indicator, reference_date, COUNT(*) AS versions
+        SELECT source, series_code, reference_date, COUNT(*) AS versions
         FROM macro_data_vintages
-        GROUP BY source, indicator, reference_date
+        GROUP BY source, series_code, reference_date
         HAVING COUNT(*) > 1
-        ORDER BY source, indicator, reference_date
+        ORDER BY source, series_code, reference_date
         """
     ).fetchall()
 
@@ -487,6 +487,64 @@ def audit_macro_events() -> None:
     watch = sum(1 for r in rows if r[4] == "MACRO_EVENT_WATCH")
     rejected = sum(1 for r in rows if r[4] == "MACRO_EVENT_REJECTED")
     console.print(f"\nApproved={approved} | Watch={watch} | Rejected={rejected}")
+
+    # Percentiles table
+    scores = {
+        "Surprise": [float(r[5]) for r in rows if r[5] is not None],
+        "Novelty": [float(r[6]) for r in rows if r[6] is not None],
+        "RegimeShift": [float(r[7]) for r in rows if r[7] is not None],
+        "DataQuality": [float(r[8]) for r in rows if r[8] is not None],
+    }
+
+    def calc_percentiles(vals: list[float]) -> list[float]:
+        if not vals:
+            return [0.0] * 6
+        s = sorted(vals)
+        n = len(s)
+        def p(pct: float) -> float:
+            idx = int(pct * (n - 1))
+            return round(s[idx], 4)
+        return [p(0.10), p(0.25), p(0.50), p(0.75), p(0.90), round(max(s), 4)]
+
+    p_table = Table(title="Score Percentiles (P10, P25, Median, P75, P90, Max)")
+    p_table.add_column("Score Component")
+    p_table.add_column("P10")
+    p_table.add_column("P25")
+    p_table.add_column("Median")
+    p_table.add_column("P75")
+    p_table.add_column("P90")
+    p_table.add_column("Max")
+
+    for name, vals in scores.items():
+        p_table.add_row(name, *[str(x) for x in calc_percentiles(vals)])
+    console.print(p_table)
+
+    # Rejection Reasons Breakdown
+    import json
+    from collections import Counter
+    store_conn = DatabaseStore(db_path)
+    sb_rows = store_conn.connection.execute(
+        "SELECT score_breakdown FROM macro_event_candidates WHERE status = 'MACRO_EVENT_REJECTED'"
+    ).fetchall()
+    store_conn.close()
+
+    reason_counter: Counter[str] = Counter()
+    for (sb_str,) in sb_rows:
+        if sb_str:
+            try:
+                sb = json.loads(sb_str) if isinstance(sb_str, str) else sb_str
+                for cond in sb.get("failed_conditions", []):
+                    reason_counter[cond] += 1
+            except Exception:
+                pass
+
+    r_table = Table(title="Rejection Reason Breakdown (failed_conditions)")
+    r_table.add_column("Failed Condition")
+    r_table.add_column("Count")
+    for cond, count in reason_counter.most_common():
+        r_table.add_row(cond, str(count))
+    console.print(r_table)
+
     console.print("[bold]BUY habilitado: NÃO[/bold]")
 
 

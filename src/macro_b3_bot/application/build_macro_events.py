@@ -288,7 +288,7 @@ class MacroEventBuilder:
 
         # ── Gate ───────────────────────────────────────────────────────────
         gate_rules = self.rules.get("gate", {})
-        status = self._apply_gate(
+        status, failed_conditions = self._apply_gate(
             surprise_score, novelty_score, persistence_score,
             regime_shift_score, data_quality_score, gate_rules,
             availability_precision=precision,
@@ -304,6 +304,7 @@ class MacroEventBuilder:
             "surprise": surprise_breakdown,
             "novelty": novelty_breakdown,
             "persistence": persistence_breakdown,
+            "failed_conditions": failed_conditions,
         }
 
         horizon_months = self.rules.get("horizons", {}).get(event_family, 3)
@@ -351,7 +352,7 @@ class MacroEventBuilder:
         quality: float,
         gate_rules: dict,
         availability_precision: str = "EXACT",
-    ) -> str:
+    ) -> tuple[str, list[str]]:
         min_surprise = gate_rules.get("min_surprise_score", 0.60)
         min_regime = gate_rules.get("min_regime_shift_score", 0.65)
         min_novelty = gate_rules.get("min_novelty_score", 0.50)
@@ -362,6 +363,14 @@ class MacroEventBuilder:
         passes_novelty = novelty >= min_novelty
         passes_quality = quality >= min_quality
 
+        failed_conditions = []
+        if not passes_primary:
+            failed_conditions.append("SURPRISE_AND_REGIME_BELOW_THRESHOLD")
+        if not passes_novelty:
+            failed_conditions.append("NOVELTY_BELOW_THRESHOLD")
+        if not passes_quality:
+            failed_conditions.append("QUALITY_BELOW_THRESHOLD")
+
         status = "MACRO_EVENT_REJECTED"
         if passes_primary and passes_novelty and passes_quality:
             status = "MACRO_EVENT_APPROVED"
@@ -369,10 +378,12 @@ class MacroEventBuilder:
             status = "MACRO_EVENT_WATCH"
 
         # Explicit lockout: UNKNOWN availability precision can NEVER be MACRO_EVENT_APPROVED
-        if availability_precision == "UNKNOWN" and status == "MACRO_EVENT_APPROVED":
-            status = "MACRO_EVENT_WATCH"
+        if availability_precision == "UNKNOWN":
+            failed_conditions.append("AVAILABILITY_PRECISION_UNKNOWN")
+            if status == "MACRO_EVENT_APPROVED":
+                status = "MACRO_EVENT_WATCH"
 
-        return status
+        return status, failed_conditions
 
     def _days_since_last_event(self, source: str, series_code: str, event_family: str, ref_date: date) -> Optional[int]:
         row = self.store.connection.execute(

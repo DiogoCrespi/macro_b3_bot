@@ -250,12 +250,12 @@ def test_unknown_precision_gate_lockout() -> None:
         "min_data_quality_score": 0.40,
         "watch_min_surprise_score": 0.30,
     }
-    # High scores that would qualify for MACRO_EVENT_APPROVED
-    status_exact = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="EXACT")
-    status_unknown = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="UNKNOWN")
+    status_exact, fc_exact = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="EXACT")
+    status_unknown, fc_unknown = builder._apply_gate(0.9, 0.9, 0.9, 0.9, 0.9, gate_rules, availability_precision="UNKNOWN")
 
     assert status_exact == "MACRO_EVENT_APPROVED"
     assert status_unknown == "MACRO_EVENT_WATCH"  # Lockout forces WATCH for UNKNOWN
+    assert "AVAILABILITY_PRECISION_UNKNOWN" in fc_unknown
 
 
 def test_unknown_precision_penalty() -> None:
