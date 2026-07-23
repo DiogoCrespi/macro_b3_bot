@@ -135,22 +135,31 @@ def test_calibration_mode_runs_positive_and_negative_shocks(tmp_path) -> None:
         observations=observations,
         parameters={
             "observed_slope": -1000,
-            "average_gross_floating_debt": 1200,
-            "average_cash_sensitive_to_rate": 200,
+            "average_gross_debt_proxy": 1200,
+            "average_standardized_cash_proxy": 200,
             "quarter_horizon": .25,
-            "repricing_factor": 1,
         },
         parameter_ranges={"observed_slope": [-750, -1000, -1250]},
+        heuristic_sensitivity_band={"observed_slope": [-750, -1000, -1250]},
+        sensitivity_band_type="HEURISTIC_SENSITIVITY_BAND",
         mean_absolute_error=1,
+        in_sample_mae=1,
+        validation_method="STRUCTURAL_FORMULA_ONLY",
+        observation_count=5,
+        calibration_type="STRUCTURAL_SENSITIVITY",
+        validation_gate_passed=False,
+        validation_failures=["NO_EMPIRICAL_PARAMETER_ESTIMATION"],
         confidence=.5,
-        calibration_status="COMPANY_CALIBRATED",
+        calibration_status="STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE",
         methodology_version="test",
         run_id="run",
     )
     rows = FinancialBridgeCalibrator(store, "run").controlled_shocks(
         calibration
     )
-    assert {row["shock"] > 0 for row in rows} == {True, False}
+    assert {row["shock"] for row in rows} == {-200, -100, -50, 0, 50, 100, 200}
+    neutral = next(row for row in rows if row["shock"] == 0)
+    assert neutral["estimated_financial_change"] == 0
     assert all(row["mode"] == "CALIBRATION_MODE" for row in rows)
     store.close()
 
@@ -178,22 +187,100 @@ def test_normalized_fcf_stays_separate_and_evidenced(tmp_path) -> None:
     result = calibrator.normalize_cash_flow(baseline)
     assert result.levered_fcf_proxy == 80
     assert result.normalized_levered_fcf == 26
+    assert result.statistical_normalized_fcf_proxy == 26
+    assert result.normalization_status == "NOT_VALUATION_READY"
+    assert result.dcf_eligible is False
     assert all(item.source_ids for item in result.adjustments)
     assert result.confidence < 0.6
     store.close()
 
 
-def test_two_factor_replay_recovers_fx_and_pulp_coefficients() -> None:
+def test_two_factor_replay_recovers_intercept_fx_and_pulp_coefficients() -> None:
     first = [-.2, -.1, 0, .1, .2]
     second = [.1, -.2, .2, -.1, 0]
     target = [
-        2 * fx + 3 * pulp
+        1 + 2 * fx + 3 * pulp
         for fx, pulp in zip(first, second, strict=True)
     ]
-    coefficients = FinancialBridgeCalibrator._multiple_slopes(
+    intercept, coefficients = FinancialBridgeCalibrator._multiple_regression(
         first, second, target
     )
+    assert intercept == pytest.approx(1.0)
     assert coefficients == pytest.approx((2.0, 3.0))
+
+
+def test_leave_one_out_persists_error_and_sign_stability() -> None:
+    first = [-.3, -.2, -.1, .1, .2, .3]
+    second = [.2, -.1, .3, -.2, .1, -.3]
+    target = [1 + 2 * fx + 3 * pulp for fx, pulp in zip(first, second, strict=True)]
+    _, full = FinancialBridgeCalibrator._multiple_regression(first, second, target)
+
+    predictions, stability = FinancialBridgeCalibrator._leave_one_out_predictions(
+        first, second, target, full
+    )
+
+    assert predictions == pytest.approx(target)
+    assert stability == pytest.approx((1.0, 1.0))
+
+
+def test_structural_sensitivity_cannot_pass_validation_gate(tmp_path) -> None:
+    store = DatabaseStore(tmp_path / "calibration.duckdb")
+    frame = pd.DataFrame({
+        "period_end": pd.date_range("2024-03-31", periods=5, freq="QE"),
+        "factor_change": [.01] * 5,
+        "financial_change": [-10.0] * 5,
+        "predicted_change": [-9.0] * 5,
+        "document_id": [f"DOC-{index}" for index in range(5)],
+    })
+    result = FinancialBridgeCalibrator(
+        store, "run"
+    )._calibration_from_predictions(
+        "MGLU3",
+        "NET_INTEREST_CASH_EFFECT",
+        frame,
+        parameters={"observed_slope": -1000.0},
+        missing_drivers=["EFFECTIVE_FLOATING_DEBT_SHARE"],
+        calibration_type="STRUCTURAL_SENSITIVITY",
+    )
+
+    assert result.calibration_type == "STRUCTURAL_SENSITIVITY"
+    assert result.validation_gate_passed is False
+    assert "NO_EMPIRICAL_PARAMETER_ESTIMATION" in result.validation_failures
+    assert result.calibration_status == "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE"
+    store.close()
+
+
+def test_empirical_in_sample_gate_preserves_oos_failures(tmp_path) -> None:
+    store = DatabaseStore(tmp_path / "calibration.duckdb")
+    frame = pd.DataFrame({
+        "period_end": pd.date_range("2024-03-31", periods=5, freq="QE"),
+        "factor_change": [.01, .02, .03, .04, .05],
+        "secondary_factor_change": [.02, .01, -.01, -.02, .03],
+        "financial_change": [.2, -.2, .3, -.3, .4],
+        "predicted_change": [0.0] * 5,
+        "out_of_sample_predicted_change": [1.0] * 5,
+        "out_of_sample_error": [-.8, -1.2, -.7, -1.3, -.6],
+        "document_id": [f"DOC-{index}" for index in range(5)],
+    })
+    result = FinancialBridgeCalibrator(
+        store, "run"
+    )._calibration_from_predictions(
+        "SUZB3",
+        "FX_OPERATING_REVENUE",
+        frame,
+        parameters={"intercept": 0.0, "fx_observed_slope": 1.0},
+        missing_drivers=["DISCLOSED_VOLUME_HISTORY"],
+        calibration_type="EMPIRICAL_IN_SAMPLE",
+        validation_method="LEAVE_ONE_OUT",
+        coefficient_sign_stability={"fx_observed_slope": 0.6},
+    )
+
+    assert result.calibration_type == "EMPIRICAL_IN_SAMPLE"
+    assert result.out_of_sample_mae is not None
+    assert result.validation_gate_passed is False
+    assert "OUT_OF_SAMPLE_ERROR_TOO_HIGH" in result.validation_failures
+    assert "COEFFICIENT_SIGN_UNSTABLE" in result.validation_failures
+    store.close()
 
 
 def test_financial_outcome_labels_follow_calculated_result() -> None:
@@ -207,8 +294,8 @@ def test_financial_outcome_labels_follow_calculated_result() -> None:
         {
             "ticker": "TEST3",
             "bridge": "FX_OPERATING_REVENUE",
-            "shock": -5.0,
-            "estimated_financial_change": 5.0,
+            "shock": 0.0,
+            "estimated_financial_change": 0.0,
         },
         {
             "ticker": "TEST3",
@@ -221,5 +308,5 @@ def test_financial_outcome_labels_follow_calculated_result() -> None:
     result = FinancialCalibrationPilot._outcome_intervals(rows)
 
     assert result[0]["pessimistic"]["shock"] == 20.0
-    assert result[0]["base"]["shock"] == -5.0
+    assert result[0]["base"]["shock"] == 0.0
     assert result[0]["optimistic"]["shock"] == 10.0

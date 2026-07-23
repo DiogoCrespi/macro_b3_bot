@@ -124,3 +124,13 @@ Sprint 4D.3 calibration artifact:
   lower-confidence normalized FCF uses the annualized median of eight
   standalone reported CFO quarters and reported capex as a conservative
   maintenance-capex proxy, with every source document retained.
+
+Sprint 4D.3A validity-gate artifact:
+
+- `financial_4d3a_validity.json`: separates structural sensitivity from
+  empirical in-sample estimates, persists leave-one-out errors and coefficient
+  sign stability, and labels ±25% parameter ranges as heuristic bands.
+- Every controlled bridge includes a zero-shock neutral base. Pessimistic and
+  optimistic labels are assigned only after the BRL result is calculated.
+- The statistical normalized-FCF proxy is explicitly `NOT_VALUATION_READY`
+  and cannot be consumed by DCF.

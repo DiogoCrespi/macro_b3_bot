@@ -246,6 +246,10 @@ class NormalizedCashFlowSnapshot(BaseModel):
     normalized_operating_cash_flow: float
     maintenance_capex: float
     normalized_levered_fcf: float
+    statistical_normalized_fcf_proxy: float
+    normalization_type: Literal["STATISTICAL_NORMALIZATION_PROXY"]
+    normalization_status: Literal["NOT_VALUATION_READY"]
+    dcf_eligible: Literal[False] = False
     adjustments: list[CashFlowNormalizationAdjustment] = Field(min_length=1)
     methodology_version: str
     confidence: float = Field(ge=0, le=1)
@@ -261,6 +265,8 @@ class BridgeReplayObservation(BaseModel):
     financial_change: float
     predicted_change: float
     error: float
+    out_of_sample_predicted_change: float | None = None
+    out_of_sample_error: float | None = None
     source_ids: list[str] = Field(min_length=1)
 
 
@@ -271,11 +277,30 @@ class BridgeCalibrationResult(BaseModel):
     mode: Literal["CALIBRATION_MODE"]
     observations: list[BridgeReplayObservation] = Field(min_length=5)
     parameters: dict[str, float]
+    # Retained for serialized compatibility. These are not confidence intervals.
     parameter_ranges: dict[str, list[float]]
+    heuristic_sensitivity_band: dict[str, list[float]]
+    sensitivity_band_type: Literal["HEURISTIC_SENSITIVITY_BAND"]
     mean_absolute_error: float
+    in_sample_mae: float
+    out_of_sample_mae: float | None = None
+    validation_method: Literal[
+        "STRUCTURAL_FORMULA_ONLY", "LEAVE_ONE_OUT"
+    ]
+    coefficient_sign_stability: dict[str, float] = Field(default_factory=dict)
+    observation_count: int = Field(ge=5)
+    calibration_type: Literal[
+        "STRUCTURAL_SENSITIVITY",
+        "EMPIRICAL_IN_SAMPLE",
+        "EMPIRICAL_OUT_OF_SAMPLE_VALIDATED",
+    ]
+    validation_gate_passed: bool
+    validation_failures: list[str] = Field(default_factory=list)
     confidence: float = Field(ge=0, le=1)
     calibration_status: Literal[
-        "COMPANY_CALIBRATED", "PARTIAL_MISSING_DRIVER"
+        "COMPANY_CALIBRATED",
+        "PARTIAL_MISSING_DRIVER",
+        "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE",
     ]
     missing_drivers: list[str] = Field(default_factory=list)
     methodology_version: str

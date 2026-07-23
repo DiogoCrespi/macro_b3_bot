@@ -1,0 +1,2688 @@
+{
+  "run_id": "financial_4d3a_validity",
+  "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+  "execution_modes": {
+    "CALIBRATION_MODE": "controlled positive/negative shocks; no decision output",
+    "DECISION_MODE": "real graph direction only; unresolved conflict is BLOCKED"
+  },
+  "conflict_diagnostics": [
+    {
+      "diagnostic_id": "5d6a564ccd8a0f0fdd55a106",
+      "ticker": "SUZB3",
+      "sector": "PAPEL_CELULOSE",
+      "factor": "FX",
+      "as_of_timestamp": "2026-07-22T23:59:59Z",
+      "paths": [
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "0bb655e7ff44276931fbfb90",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-04T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122474,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "1686a5e15f14a811bbaeb5b3",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-19T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.104434,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "1f57afa16480a74080b1aa97",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-15T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.13576,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "1f868a896127e3428b8758ee",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-18T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.10807,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "35a08a49785311301abc3cab",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-11T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122889,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "35df06988a75a6edbb108790",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-08T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.094691,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "3bc58960d693695fd2c44f4d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-17T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.109689,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "4036cbb3b28152eba5c46f61",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-19T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.139901,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "43f2a44fe37d6ac788efb244",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-23T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.143108,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "47a2148d54b139fa8f007c43",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-03T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.097264,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "4955054cd2edb6b5ad79805d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-29T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.09308,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "56dc8604580e75112fcb8e83",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-29T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.148325,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "736fa4e13a32a03426d04478",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-25T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.142266,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "769d02c641172ff633de4662",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-30T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.145922,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "7fb32fe161ea14257f8db05b",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-17T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.130466,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "82c067e905e3c651c26f0d94",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-16T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.127005,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "83fc8908b03941d3ef3b6493",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-04T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.099544,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "8988b917dfd33f5a83364b5a",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-25T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.093512,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9446a5189fa3b77935163c55",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-18T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.137614,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "95295c2efe1e180e23f57511",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-08T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.123044,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "9669f96f4ad0ef729b5548dc",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-05T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.09862,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9a52fdea3f0341b9e74e3991",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-01T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.097953,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "9bd9d01044aa95ddeca910bd",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-26T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.091714,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9dec4651209fe07ec2c71371",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-02T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122981,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "a41b3dbba46af7c74231091d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-09T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.096996,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "a7c97984462c606ccd0af7bb",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-05T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.125888,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "d7b4625f828c390b8777cf34",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-01T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.113421,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "d8b20be4e07b18a71550293e",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-02T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.095302,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "de1b106b8f3aadb790ba0ca8",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-28T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.087207,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "e2ee04c67fc112a6975af356",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-26T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.144283,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "e6c5f2d62196d7f4fa3a9bc0",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-24T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.140695,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "e764bc91d5e3c9359f73a324",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-22T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.141545,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "ebb3e062d89a0b62b9fc542d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-12T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.103528,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "ef99bc0c1f04cb0c39899247",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-12T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.131063,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "f5efe20a281d55a4b6ac20cf",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-03T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.116374,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        }
+      ],
+      "classification": "LEGITIMATE_COMPETING_HYPOTHESES",
+      "decision_mode_status": "BLOCKED",
+      "resolution_method": "NONE",
+      "run_id": "financial_4d3a_validity"
+    },
+    {
+      "diagnostic_id": "10b6003f732c873e79716798",
+      "ticker": "KLBN11",
+      "sector": "PAPEL_CELULOSE",
+      "factor": "FX",
+      "as_of_timestamp": "2026-07-22T23:59:59Z",
+      "paths": [
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "0bb655e7ff44276931fbfb90",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-04T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122474,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "1686a5e15f14a811bbaeb5b3",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-19T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.104434,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "1f57afa16480a74080b1aa97",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-15T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.13576,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "1f868a896127e3428b8758ee",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-18T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.10807,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "35a08a49785311301abc3cab",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-11T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122889,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "35df06988a75a6edbb108790",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-08T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.094691,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "3bc58960d693695fd2c44f4d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-17T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.109689,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "4036cbb3b28152eba5c46f61",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-19T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.139901,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "43f2a44fe37d6ac788efb244",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-23T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.143108,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "47a2148d54b139fa8f007c43",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-03T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.097264,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "4955054cd2edb6b5ad79805d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-29T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.09308,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "56dc8604580e75112fcb8e83",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-29T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.148325,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "736fa4e13a32a03426d04478",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-25T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.142266,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "769d02c641172ff633de4662",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-30T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.145922,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "7fb32fe161ea14257f8db05b",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-17T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.130466,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "82c067e905e3c651c26f0d94",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-16T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.127005,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "83fc8908b03941d3ef3b6493",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-04T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.099544,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "8988b917dfd33f5a83364b5a",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-25T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.093512,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9446a5189fa3b77935163c55",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-18T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.137614,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "95295c2efe1e180e23f57511",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-08T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.123044,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "9669f96f4ad0ef729b5548dc",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-05T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.09862,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9a52fdea3f0341b9e74e3991",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-01T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.097953,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "9bd9d01044aa95ddeca910bd",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-26T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.091714,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "9dec4651209fe07ec2c71371",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-02T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.122981,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "a41b3dbba46af7c74231091d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-09T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.096996,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "a7c97984462c606ccd0af7bb",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-05T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.125888,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "d7b4625f828c390b8777cf34",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-01T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.113421,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "d8b20be4e07b18a71550293e",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-02T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.095302,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "de1b106b8f3aadb790ba0ca8",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-01-28T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.087207,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "e2ee04c67fc112a6975af356",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-26T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.144283,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "e6c5f2d62196d7f4fa3a9bc0",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-24T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.140695,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "e764bc91d5e3c9359f73a324",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-22T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.141545,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "ebb3e062d89a0b62b9fc542d",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-02-12T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.103528,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": 1,
+          "macro_event_id": "ef99bc0c1f04cb0c39899247",
+          "source_path_id": "7c6c722d59a006d13c8bea5a",
+          "causal_edge_ids": [
+            "edge_usd_up_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-12T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.131063,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        },
+        {
+          "factor": "FX",
+          "factor_direction": -1,
+          "macro_event_id": "f5efe20a281d55a4b6ac20cf",
+          "source_path_id": "f5a111eb3d4fc241261b5146",
+          "causal_edge_ids": [
+            "edge_usd_down_to_fx",
+            "edge_fx_to_pulp_paper"
+          ],
+          "event_available_at": "2026-03-03T18:00:00",
+          "horizon_days": 180,
+          "lag_days": 15,
+          "strength": 0.116374,
+          "confidence": 0.855,
+          "evidence_status": "HYPOTHESIS"
+        }
+      ],
+      "classification": "LEGITIMATE_COMPETING_HYPOTHESES",
+      "decision_mode_status": "BLOCKED",
+      "resolution_method": "NONE",
+      "run_id": "financial_4d3a_validity"
+    }
+  ],
+  "calibrations": [
+    {
+      "calibration_id": "aa0742bca86de39fed50a2fd",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "mode": "CALIBRATION_MODE",
+      "observations": [
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2023-06-30",
+          "factor_change": 0.0,
+          "secondary_factor_change": null,
+          "financial_change": 100263000.0,
+          "predicted_change": -0.0,
+          "error": 100263000.0,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2023-06-30_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2023-09-30",
+          "factor_change": -0.00375,
+          "secondary_factor_change": null,
+          "financial_change": 231492000.0,
+          "predicted_change": 4311837.1875,
+          "error": 227180162.8125,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2023-09-30_v3",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2023-12-31",
+          "factor_change": -0.010348360655737708,
+          "secondary_factor_change": null,
+          "financial_change": 73444000.0,
+          "predicted_change": 12318453.09938525,
+          "error": 61125546.90061475,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "DFP_22470_2023-12-31_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2024-03-31",
+          "factor_change": -0.009590163934426226,
+          "secondary_factor_change": null,
+          "financial_change": -156265000.0,
+          "predicted_change": 11248207.377049176,
+          "error": -167513207.37704918,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2024-03-31_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2024-06-30",
+          "factor_change": -0.0077400468384074906,
+          "secondary_factor_change": null,
+          "financial_change": -17654000.0,
+          "predicted_change": 6289436.285128803,
+          "error": -23943436.285128802,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2024-06-30_v2",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2024-09-30",
+          "factor_change": -0.0007683982683982827,
+          "secondary_factor_change": null,
+          "financial_change": 100526000.0,
+          "predicted_change": 634693.7040043408,
+          "error": 99891306.29599565,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2024-09-30_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2025-03-31",
+          "factor_change": 0.025229756582215598,
+          "secondary_factor_change": null,
+          "financial_change": -187516000.0,
+          "predicted_change": -19289315.78334575,
+          "error": -168226684.21665424,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2025-03-31_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2025-06-30",
+          "factor_change": 0.01528688524590164,
+          "secondary_factor_change": null,
+          "financial_change": -7496000.0,
+          "predicted_change": -16194803.93442623,
+          "error": 8698803.93442623,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2025-06-30_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2025-09-30",
+          "factor_change": 0.004180327868852469,
+          "secondary_factor_change": null,
+          "financial_change": 7490000.0,
+          "predicted_change": -4727325.860655749,
+          "error": 12217325.86065575,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2025-09-30_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2025-12-31",
+          "factor_change": 0.0,
+          "secondary_factor_change": null,
+          "financial_change": -84395000.0,
+          "predicted_change": -0.0,
+          "error": -84395000.0,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "DFP_22470_2025-12-31_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2026-03-31",
+          "factor_change": -0.00036885245901640217,
+          "secondary_factor_change": null,
+          "financial_change": 3765000.0,
+          "predicted_change": 347859.86680328695,
+          "error": 3417140.133196713,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "ITR_22470_2026-03-31_v1",
+            "BCB_SGS:1178"
+          ]
+        }
+      ],
+      "parameters": {
+        "observed_slope": -4237568000.0,
+        "average_gross_debt_proxy": 5947933000.0,
+        "average_standardized_cash_proxy": 1575837000.0,
+        "quarter_horizon": 0.25
+      },
+      "parameter_ranges": {
+        "observed_slope": [
+          -3178176000.0,
+          -4237568000.0,
+          -5296960000.0
+        ],
+        "average_gross_debt_proxy": [
+          4460949750.0,
+          5947933000.0,
+          7434916250.0
+        ],
+        "average_standardized_cash_proxy": [
+          1181877750.0,
+          1575837000.0,
+          1969796250.0
+        ],
+        "quarter_horizon": [
+          0.1875,
+          0.25,
+          0.3125
+        ]
+      },
+      "heuristic_sensitivity_band": {
+        "observed_slope": [
+          -3178176000.0,
+          -4237568000.0,
+          -5296960000.0
+        ],
+        "average_gross_debt_proxy": [
+          4460949750.0,
+          5947933000.0,
+          7434916250.0
+        ],
+        "average_standardized_cash_proxy": [
+          1181877750.0,
+          1575837000.0,
+          1969796250.0
+        ],
+        "quarter_horizon": [
+          0.1875,
+          0.25,
+          0.3125
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 86988328.5287474,
+      "in_sample_mae": 86988328.5287474,
+      "out_of_sample_mae": null,
+      "validation_method": "STRUCTURAL_FORMULA_ONLY",
+      "coefficient_sign_stability": {},
+      "observation_count": 11,
+      "calibration_type": "STRUCTURAL_SENSITIVITY",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "DERIVATIVE_RATE_EFFECT",
+        "EFFECTIVE_FLOATING_DEBT_SHARE",
+        "NO_EMPIRICAL_PARAMETER_ESTIMATION",
+        "RATE_SENSITIVE_CASH_SHARE",
+        "REPRICING_LAG",
+        "USABLE_TAX_SHIELD"
+      ],
+      "confidence": 0.05,
+      "calibration_status": "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE",
+      "missing_drivers": [
+        "EFFECTIVE_FLOATING_DEBT_SHARE",
+        "RATE_SENSITIVE_CASH_SHARE",
+        "REPRICING_LAG",
+        "DERIVATIVE_RATE_EFFECT",
+        "USABLE_TAX_SHIELD"
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "run_id": "financial_4d3a_validity"
+    },
+    {
+      "calibration_id": "25f5b3ebadadbcb6259de821",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "mode": "CALIBRATION_MODE",
+      "observations": [
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-06-30",
+          "factor_change": -0.04768757709566118,
+          "secondary_factor_change": -0.14644227437795942,
+          "financial_change": -0.18771524521648475,
+          "predicted_change": -0.13387403317119928,
+          "error": -0.05384121204528547,
+          "out_of_sample_predicted_change": -0.08960886113994943,
+          "out_of_sample_error": -0.09810638407653532,
+          "source_ids": [
+            "ITR_13986_2023-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-09-30",
+          "factor_change": -0.013789751391785288,
+          "secondary_factor_change": -0.10700889548370407,
+          "financial_change": -0.023103652394844576,
+          "predicted_change": -0.054869064787276635,
+          "error": 0.03176541239243206,
+          "out_of_sample_predicted_change": -0.0694358892651945,
+          "out_of_sample_error": 0.04633223687034993,
+          "source_ids": [
+            "ITR_13986_2023-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-12-31",
+          "factor_change": 0.015369543963263066,
+          "secondary_factor_change": 0.012463172780686538,
+          "financial_change": 0.15908917432283576,
+          "predicted_change": 0.05959434014880106,
+          "error": 0.09949483417403471,
+          "out_of_sample_predicted_change": 0.04486732546745854,
+          "out_of_sample_error": 0.11422184885537723,
+          "source_ids": [
+            "DFP_13986_2023-12-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-03-31",
+          "factor_change": -0.000762885520194656,
+          "secondary_factor_change": 0.057090787554893385,
+          "financial_change": -0.08802381901635681,
+          "predicted_change": 0.05645375915568681,
+          "error": -0.14447757817204362,
+          "out_of_sample_predicted_change": 0.10641444906148331,
+          "out_of_sample_error": -0.19443826807784012,
+          "source_ids": [
+            "ITR_13986_2024-03-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-06-30",
+          "factor_change": 0.05279043707902131,
+          "secondary_factor_change": 0.08976337327186035,
+          "financial_change": 0.21520453022550257,
+          "predicted_change": 0.1651657439382208,
+          "error": 0.050038786287281756,
+          "out_of_sample_predicted_change": 0.13258882254800058,
+          "out_of_sample_error": 0.08261570767750198,
+          "source_ids": [
+            "ITR_13986_2024-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-09-30",
+          "factor_change": 0.0637843560680802,
+          "secondary_factor_change": 0.0269258305523159,
+          "financial_change": 0.06780935948556732,
+          "predicted_change": 0.14968107342411271,
+          "error": -0.08187171393854539,
+          "out_of_sample_predicted_change": 0.23392522696914494,
+          "out_of_sample_error": -0.16611586748357762,
+          "source_ids": [
+            "ITR_13986_2024-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-06-30",
+          "factor_change": -0.03179886453436076,
+          "secondary_factor_change": 0.011247355238716006,
+          "financial_change": 0.15086868507107432,
+          "predicted_change": -0.0211750605805,
+          "error": 0.17204374565157432,
+          "out_of_sample_predicted_change": -0.08937939820403407,
+          "out_of_sample_error": 0.24024808327510838,
+          "source_ids": [
+            "ITR_13986_2025-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-09-30",
+          "factor_change": -0.03945565128012507,
+          "secondary_factor_change": 0.011467717661336474,
+          "financial_change": -0.08594758006136483,
+          "predicted_change": -0.03405919305881345,
+          "error": -0.05188838700255138,
+          "out_of_sample_predicted_change": -0.004451007848318181,
+          "out_of_sample_error": -0.08149657221304664,
+          "source_ids": [
+            "ITR_13986_2025-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-12-31",
+          "factor_change": -0.008638209997488322,
+          "secondary_factor_change": -0.06441476826394321,
+          "financial_change": 0.07903904709439402,
+          "predicted_change": -0.02296731682343608,
+          "error": 0.1020063639178301,
+          "out_of_sample_predicted_change": -0.04275497744713358,
+          "out_of_sample_error": 0.1217940245415276,
+          "source_ids": [
+            "DFP_13986_2025-12-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2026-03-31",
+          "factor_change": -0.02528017330506338,
+          "secondary_factor_change": -0.044344873888759184,
+          "financial_change": -0.16359220169291422,
+          "predicted_change": -0.040321950428187314,
+          "error": -0.1232702512647269,
+          "out_of_sample_predicted_change": -0.020687125295156795,
+          "out_of_sample_error": -0.14290507639775743,
+          "source_ids": [
+            "ITR_13986_2026-03-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        }
+      ],
+      "parameters": {
+        "intercept": 0.026716927421331246,
+        "fx_observed_slope": 1.6983512695805794,
+        "pulp_price_observed_slope": 0.5435636931139678
+      },
+      "parameter_ranges": {
+        "intercept": [
+          0.020037695565998433,
+          0.026716927421331246,
+          0.033396159276664054
+        ],
+        "fx_observed_slope": [
+          1.2737634521854346,
+          1.6983512695805794,
+          2.122939086975724
+        ],
+        "pulp_price_observed_slope": [
+          0.40767276983547585,
+          0.5435636931139678,
+          0.6794546163924597
+        ]
+      },
+      "heuristic_sensitivity_band": {
+        "intercept": [
+          0.020037695565998433,
+          0.026716927421331246,
+          0.033396159276664054
+        ],
+        "fx_observed_slope": [
+          1.2737634521854346,
+          1.6983512695805794,
+          2.122939086975724
+        ],
+        "pulp_price_observed_slope": [
+          0.40767276983547585,
+          0.5435636931139678,
+          0.6794546163924597
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 0.09106982848463058,
+      "in_sample_mae": 0.09106982848463058,
+      "out_of_sample_mae": 0.12882740694686223,
+      "validation_method": "LEAVE_ONE_OUT",
+      "coefficient_sign_stability": {
+        "fx_observed_slope": 1.0,
+        "pulp_price_observed_slope": 1.0
+      },
+      "observation_count": 10,
+      "calibration_type": "EMPIRICAL_IN_SAMPLE",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "DISCLOSED_VOLUME_HISTORY",
+        "OUT_OF_SAMPLE_ERROR_TOO_HIGH"
+      ],
+      "confidence": 0.05,
+      "calibration_status": "PARTIAL_MISSING_DRIVER",
+      "missing_drivers": [
+        "DISCLOSED_VOLUME_HISTORY"
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "run_id": "financial_4d3a_validity"
+    },
+    {
+      "calibration_id": "029e0ad6447e11bba83d14e4",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "mode": "CALIBRATION_MODE",
+      "observations": [
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-06-30",
+          "factor_change": -0.04768757709566118,
+          "secondary_factor_change": -0.14644227437795942,
+          "financial_change": -0.11140729172898434,
+          "predicted_change": -0.07616158000275129,
+          "error": -0.035245711726233045,
+          "out_of_sample_predicted_change": -0.050190513819786516,
+          "out_of_sample_error": -0.06121677790919782,
+          "source_ids": [
+            "ITR_12653_2023-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-09-30",
+          "factor_change": -0.013789751391785288,
+          "secondary_factor_change": -0.10700889548370407,
+          "financial_change": 0.025119630879245403,
+          "predicted_change": -0.050466362505204865,
+          "error": 0.07558599338445027,
+          "out_of_sample_predicted_change": -0.07366781460792551,
+          "out_of_sample_error": 0.09878744548717092,
+          "source_ids": [
+            "ITR_12653_2023-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2023-12-31",
+          "factor_change": 0.015369543963263066,
+          "secondary_factor_change": 0.012463172780686538,
+          "financial_change": 0.022633133707859354,
+          "predicted_change": 0.025113116991655415,
+          "error": -0.002479983283796061,
+          "out_of_sample_predicted_change": 0.025433956682249015,
+          "out_of_sample_error": -0.0028008229743896607,
+          "source_ids": [
+            "DFP_12653_2023-12-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-03-31",
+          "factor_change": -0.000762885520194656,
+          "secondary_factor_change": 0.057090787554893385,
+          "financial_change": -0.015648659711706814,
+          "predicted_change": 0.05251098980954742,
+          "error": -0.06815964952125424,
+          "out_of_sample_predicted_change": 0.07399710474714039,
+          "out_of_sample_error": -0.0896457644588472,
+          "source_ids": [
+            "ITR_12653_2024-03-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-06-30",
+          "factor_change": 0.05279043707902131,
+          "secondary_factor_change": 0.08976337327186035,
+          "financial_change": 0.11720064845833122,
+          "predicted_change": 0.07458683146840377,
+          "error": 0.04261381698992746,
+          "out_of_sample_predicted_change": 0.049236797341996937,
+          "out_of_sample_error": 0.0679638511163343,
+          "source_ids": [
+            "ITR_12653_2024-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-09-30",
+          "factor_change": 0.0637843560680802,
+          "secondary_factor_change": 0.0269258305523159,
+          "financial_change": 0.010102787925717616,
+          "predicted_change": 0.035647715874785185,
+          "error": -0.02554492794906757,
+          "out_of_sample_predicted_change": 0.04840674867657282,
+          "out_of_sample_error": -0.0383039607508552,
+          "source_ids": [
+            "ITR_12653_2024-09-30_v2",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-03-31",
+          "factor_change": 0.055313389558895754,
+          "secondary_factor_change": -0.0745931525372272,
+          "financial_change": -0.028046129326074642,
+          "predicted_change": -0.02807113230915843,
+          "error": 2.500298308378765e-05,
+          "out_of_sample_predicted_change": -0.028094413361989447,
+          "out_of_sample_error": 4.8284035914804985e-05,
+          "source_ids": [
+            "ITR_12653_2025-03-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-06-30",
+          "factor_change": -0.03179886453436076,
+          "secondary_factor_change": 0.011247355238716006,
+          "financial_change": 0.07999697027951225,
+          "predicted_change": 0.022897310875070784,
+          "error": 0.057099659404441463,
+          "out_of_sample_predicted_change": 0.00485895893010174,
+          "out_of_sample_error": 0.0751380113494105,
+          "source_ids": [
+            "ITR_12653_2025-06-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-09-30",
+          "factor_change": -0.03945565128012507,
+          "secondary_factor_change": 0.011467717661336474,
+          "financial_change": 0.03416392202930241,
+          "predicted_change": 0.022798732805804772,
+          "error": 0.011365189223497635,
+          "out_of_sample_predicted_change": 0.01807566528610888,
+          "out_of_sample_error": 0.016088256743193526,
+          "source_ids": [
+            "ITR_12653_2025-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-12-31",
+          "factor_change": -0.008638209997488322,
+          "secondary_factor_change": -0.06441476826394321,
+          "financial_change": -0.04812763074022197,
+          "predicted_change": -0.0236826636198906,
+          "error": -0.02444496712033137,
+          "out_of_sample_predicted_change": -0.020112986140542927,
+          "out_of_sample_error": -0.028014644599679044,
+          "source_ids": [
+            "DFP_12653_2025-12-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "KLBN11",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2026-03-31",
+          "factor_change": -0.02528017330506338,
+          "secondary_factor_change": -0.044344873888759184,
+          "financial_change": -0.04246545798659673,
+          "predicted_change": -0.01165103560187846,
+          "error": -0.030814422384718272,
+          "out_of_sample_predicted_change": -0.006745416017826904,
+          "out_of_sample_error": -0.03572004196876983,
+          "source_ids": [
+            "ITR_12653_2026-03-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        }
+      ],
+      "parameters": {
+        "intercept": 0.016848276336299442,
+        "fx_observed_slope": 0.030864385698540442,
+        "pulp_price_observed_slope": 0.625079123875711
+      },
+      "parameter_ranges": {
+        "intercept": [
+          0.012636207252224581,
+          0.016848276336299442,
+          0.021060345420374302
+        ],
+        "fx_observed_slope": [
+          0.02314828927390533,
+          0.030864385698540442,
+          0.03858048212317555
+        ],
+        "pulp_price_observed_slope": [
+          0.4688093429067832,
+          0.625079123875711,
+          0.7813489048446387
+        ]
+      },
+      "heuristic_sensitivity_band": {
+        "intercept": [
+          0.012636207252224581,
+          0.016848276336299442,
+          0.021060345420374302
+        ],
+        "fx_observed_slope": [
+          0.02314828927390533,
+          0.030864385698540442,
+          0.03858048212317555
+        ],
+        "pulp_price_observed_slope": [
+          0.4688093429067832,
+          0.625079123875711,
+          0.7813489048446387
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 0.03394357490643647,
+      "in_sample_mae": 0.03394357490643647,
+      "out_of_sample_mae": 0.046702532853978435,
+      "validation_method": "LEAVE_ONE_OUT",
+      "coefficient_sign_stability": {
+        "fx_observed_slope": 0.5454545454545454,
+        "pulp_price_observed_slope": 1.0
+      },
+      "observation_count": 11,
+      "calibration_type": "EMPIRICAL_IN_SAMPLE",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "COEFFICIENT_SIGN_UNSTABLE",
+        "DISCLOSED_VOLUME_HISTORY",
+        "OUT_OF_SAMPLE_ERROR_TOO_HIGH"
+      ],
+      "confidence": 0.05,
+      "calibration_status": "PARTIAL_MISSING_DRIVER",
+      "missing_drivers": [
+        "DISCLOSED_VOLUME_HISTORY"
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "run_id": "financial_4d3a_validity"
+    }
+  ],
+  "controlled_shocks": [
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": -200,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": 21860480.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": 29739665.0,
+      "standardized_cash_structural_proxy_offset": -7879185.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 21860480.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": -100,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": 10930240.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": 14869832.5,
+      "standardized_cash_structural_proxy_offset": -3939592.5,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 10930240.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": -50,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": 5465120.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": 7434916.25,
+      "standardized_cash_structural_proxy_offset": -1969796.25,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 5465120.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": -0.0,
+      "standardized_cash_structural_proxy_offset": 0.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 0.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": 50,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": -5465120.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": -7434916.25,
+      "standardized_cash_structural_proxy_offset": 1969796.25,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -5465120.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": 100,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": -10930240.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": -14869832.5,
+      "standardized_cash_structural_proxy_offset": 3939592.5,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -10930240.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": 200,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": -21860480.0,
+      "financial_change_unit": "BRL",
+      "gross_debt_structural_proxy_effect": -29739665.0,
+      "standardized_cash_structural_proxy_offset": 7879185.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4237568000.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -21860480.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -20,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -16824266449.343315,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -10,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -8412133224.671658,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -5,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -4206066612.335829,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 0,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 5,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 4206066612.335829,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 10,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 8412133224.671658,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 20,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 16824266449.343315,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -20,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -128302819.24743283,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -10,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -64151409.623716414,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": -5,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": -32075704.811858207,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 0,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 5,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 32075704.811858207,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 10,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 64151409.623716414,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 20,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 128302819.24743283,
+      "financial_change_unit": "BRL"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": -200,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": 472188863.8
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": -100,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": 236094431.9
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": -50,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": 118047215.95
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": -0.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": 50,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": -118047215.95
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": 100,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": -236094431.9
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": 200,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": -472188863.8
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": -200,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": 21795495.5
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": -100,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": 10897747.75
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": -50,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": 5448873.875
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": -0.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": 50,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": -5448873.875
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": 100,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": -10897747.75
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "shock": 200,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": -21795495.5
+    }
+  ],
+  "financial_outcome_intervals": [
+    {
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "label_method": "ORDERED_BY_CALCULATED_FINANCIAL_CHANGE",
+      "pessimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "CDI_SOFR_DEBT",
+        "shock": 200,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 23609443190.0,
+        "estimated_financial_change": -472188863.8
+      },
+      "base": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "CDI_SOFR_DEBT",
+        "shock": 0,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 23609443190.0,
+        "estimated_financial_change": -0.0
+      },
+      "optimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "CDI_SOFR_DEBT",
+        "shock": -200,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 23609443190.0,
+        "estimated_financial_change": 472188863.8
+      }
+    },
+    {
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "label_method": "ORDERED_BY_CALCULATED_FINANCIAL_CHANGE",
+      "pessimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": -20,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": -128302819.24743283,
+        "financial_change_unit": "BRL"
+      },
+      "base": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": 0,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": 0.0,
+        "financial_change_unit": "BRL"
+      },
+      "optimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": 20,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": 128302819.24743283,
+        "financial_change_unit": "BRL"
+      }
+    },
+    {
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "label_method": "ORDERED_BY_CALCULATED_FINANCIAL_CHANGE",
+      "pessimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "IPCA_DEBT",
+        "shock": 200,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 1089774775.0,
+        "estimated_financial_change": -21795495.5
+      },
+      "base": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "IPCA_DEBT",
+        "shock": 0,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 1089774775.0,
+        "estimated_financial_change": -0.0
+      },
+      "optimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "KLBN11",
+        "bridge": "IPCA_DEBT",
+        "shock": -200,
+        "unit": "BASIS_POINTS",
+        "monetary_base": 1089774775.0,
+        "estimated_financial_change": 21795495.5
+      }
+    },
+    {
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "label_method": "ORDERED_BY_CALCULATED_FINANCIAL_CHANGE",
+      "pessimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "MGLU3",
+        "bridge": "NET_INTEREST_CASH_EFFECT",
+        "shock": 200,
+        "unit": "BASIS_POINTS",
+        "estimated_financial_change": -21860480.0,
+        "financial_change_unit": "BRL",
+        "gross_debt_structural_proxy_effect": -29739665.0,
+        "standardized_cash_structural_proxy_offset": 7879185.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4237568000.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": -21860480.0
+      },
+      "base": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "MGLU3",
+        "bridge": "NET_INTEREST_CASH_EFFECT",
+        "shock": 0,
+        "unit": "BASIS_POINTS",
+        "estimated_financial_change": 0.0,
+        "financial_change_unit": "BRL",
+        "gross_debt_structural_proxy_effect": -0.0,
+        "standardized_cash_structural_proxy_offset": 0.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4237568000.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": 0.0
+      },
+      "optimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "MGLU3",
+        "bridge": "NET_INTEREST_CASH_EFFECT",
+        "shock": -200,
+        "unit": "BASIS_POINTS",
+        "estimated_financial_change": 21860480.0,
+        "financial_change_unit": "BRL",
+        "gross_debt_structural_proxy_effect": 29739665.0,
+        "standardized_cash_structural_proxy_offset": -7879185.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4237568000.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": 21860480.0
+      }
+    },
+    {
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "label_method": "ORDERED_BY_CALCULATED_FINANCIAL_CHANGE",
+      "pessimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "SUZB3",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": -20,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": -16824266449.343315,
+        "financial_change_unit": "BRL"
+      },
+      "base": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "SUZB3",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": 0,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": 0.0,
+        "financial_change_unit": "BRL"
+      },
+      "optimistic": {
+        "mode": "CALIBRATION_MODE",
+        "ticker": "SUZB3",
+        "bridge": "FX_OPERATING_REVENUE",
+        "shock": 20,
+        "unit": "PERCENT_CHANGE",
+        "estimated_financial_change": 16824266449.343315,
+        "financial_change_unit": "BRL"
+      }
+    }
+  ],
+  "normalized_cash_flows": [
+    {
+      "snapshot_id": "e8b9e0ec0e4069f2206e4ee6",
+      "ticker": "MGLU3",
+      "as_of_timestamp": "2026-07-22T23:59:59",
+      "reported_operating_cash_flow": 15508441000.0,
+      "reported_capex": -912885000.0,
+      "levered_fcf_proxy": 14595556000.0,
+      "normalized_operating_cash_flow": 12135342000.0,
+      "maintenance_capex": 912885000.0,
+      "normalized_levered_fcf": 11222457000.0,
+      "statistical_normalized_fcf_proxy": 11222457000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
+      "adjustments": [
+        {
+          "adjustment_id": "758d95847f57600928228764",
+          "field_name": "normalized_operating_cash_flow",
+          "value": 3373099000.0,
+          "sign": -1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_22470_2025-12-31_v1",
+            "ITR_22470_2024-03-31_v1",
+            "ITR_22470_2024-06-30_v2",
+            "ITR_22470_2024-09-30_v1",
+            "ITR_22470_2025-03-31_v1",
+            "ITR_22470_2025-06-30_v1",
+            "ITR_22470_2025-09-30_v1",
+            "ITR_22470_2026-03-31_v1"
+          ],
+          "rationale": "Replace reported TTM CFO with the annualized median of the latest eight standalone quarters to damp exceptional working-capital and financial-arm volatility.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.55,
+          "formula": "median(last_8_quarter_reported_cfo) * 4 - reported_ttm_cfo"
+        },
+        {
+          "adjustment_id": "016a5ab7c12b89aab95f80bc",
+          "field_name": "maintenance_capex",
+          "value": 912885000.0,
+          "sign": -1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_22470_2025-12-31_v1",
+            "ITR_22470_2024-03-31_v1",
+            "ITR_22470_2024-06-30_v2",
+            "ITR_22470_2024-09-30_v1",
+            "ITR_22470_2025-03-31_v1",
+            "ITR_22470_2025-06-30_v1",
+            "ITR_22470_2025-09-30_v1",
+            "ITR_22470_2026-03-31_v1"
+          ],
+          "rationale": "Use reported TTM capex as a conservative maintenance-capex proxy until issuer growth/maintenance disclosure is available.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.5,
+          "formula": "abs(reported_ttm_capex)"
+        }
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3a_validity"
+    },
+    {
+      "snapshot_id": "a72f8f61eaa1f0ae202adbdf",
+      "ticker": "SUZB3",
+      "as_of_timestamp": "2026-07-22T23:59:59",
+      "reported_operating_cash_flow": 16635252000.0,
+      "reported_capex": -4583848000.0,
+      "levered_fcf_proxy": 12051404000.0,
+      "normalized_operating_cash_flow": 17516530000.0,
+      "maintenance_capex": 4583848000.0,
+      "normalized_levered_fcf": 12932682000.0,
+      "statistical_normalized_fcf_proxy": 12932682000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
+      "adjustments": [
+        {
+          "adjustment_id": "62907b663213c95eaee37255",
+          "field_name": "normalized_operating_cash_flow",
+          "value": 881278000.0,
+          "sign": 1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_13986_2025-12-31_v1",
+            "ITR_13986_2024-03-31_v1",
+            "ITR_13986_2024-06-30_v1",
+            "ITR_13986_2024-09-30_v1",
+            "ITR_13986_2025-03-31_v1",
+            "ITR_13986_2025-06-30_v1",
+            "ITR_13986_2025-09-30_v1",
+            "ITR_13986_2026-03-31_v1"
+          ],
+          "rationale": "Replace reported TTM CFO with the annualized median of the latest eight standalone quarters to damp exceptional working-capital and financial-arm volatility.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.55,
+          "formula": "median(last_8_quarter_reported_cfo) * 4 - reported_ttm_cfo"
+        },
+        {
+          "adjustment_id": "14b9b78f9e43dadff612c12e",
+          "field_name": "maintenance_capex",
+          "value": 4583848000.0,
+          "sign": -1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_13986_2025-12-31_v1",
+            "ITR_13986_2024-03-31_v1",
+            "ITR_13986_2024-06-30_v1",
+            "ITR_13986_2024-09-30_v1",
+            "ITR_13986_2025-03-31_v1",
+            "ITR_13986_2025-06-30_v1",
+            "ITR_13986_2025-09-30_v1",
+            "ITR_13986_2026-03-31_v1"
+          ],
+          "rationale": "Use reported TTM capex as a conservative maintenance-capex proxy until issuer growth/maintenance disclosure is available.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.5,
+          "formula": "abs(reported_ttm_capex)"
+        }
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3a_validity"
+    },
+    {
+      "snapshot_id": "0d956a1b65463a14deae9cf7",
+      "ticker": "KLBN11",
+      "as_of_timestamp": "2026-07-22T23:59:59",
+      "reported_operating_cash_flow": 5793062000.0,
+      "reported_capex": -1755544000.0,
+      "levered_fcf_proxy": 4037518000.0,
+      "normalized_operating_cash_flow": 7602828000.0,
+      "maintenance_capex": 1755544000.0,
+      "normalized_levered_fcf": 5847284000.0,
+      "statistical_normalized_fcf_proxy": 5847284000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
+      "adjustments": [
+        {
+          "adjustment_id": "bddf0ad39a8785059252a896",
+          "field_name": "normalized_operating_cash_flow",
+          "value": 1809766000.0,
+          "sign": 1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_12653_2025-12-31_v1",
+            "ITR_12653_2024-03-31_v1",
+            "ITR_12653_2024-06-30_v1",
+            "ITR_12653_2024-09-30_v2",
+            "ITR_12653_2025-03-31_v1",
+            "ITR_12653_2025-06-30_v1",
+            "ITR_12653_2025-09-30_v1",
+            "ITR_12653_2026-03-31_v1"
+          ],
+          "rationale": "Replace reported TTM CFO with the annualized median of the latest eight standalone quarters to damp exceptional working-capital and financial-arm volatility.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.55,
+          "formula": "median(last_8_quarter_reported_cfo) * 4 - reported_ttm_cfo"
+        },
+        {
+          "adjustment_id": "59c69872db6b051477b2ec53",
+          "field_name": "maintenance_capex",
+          "value": 1755544000.0,
+          "sign": -1,
+          "period_end": "2026-03-31",
+          "source_ids": [
+            "DFP_12653_2025-12-31_v1",
+            "ITR_12653_2024-03-31_v1",
+            "ITR_12653_2024-06-30_v1",
+            "ITR_12653_2024-09-30_v2",
+            "ITR_12653_2025-03-31_v1",
+            "ITR_12653_2025-06-30_v1",
+            "ITR_12653_2025-09-30_v1",
+            "ITR_12653_2026-03-31_v1"
+          ],
+          "rationale": "Use reported TTM capex as a conservative maintenance-capex proxy until issuer growth/maintenance disclosure is available.",
+          "recurrence": "NORMALIZATION_PROXY",
+          "confidence": 0.5,
+          "formula": "abs(reported_ttm_capex)"
+        }
+      ],
+      "methodology_version": "4D.3A-calibration-validity-gate-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3a_validity"
+    }
+  ],
+  "acceptance_checks": {
+    "conflicts_identified": true,
+    "conflicts_never_summed": true,
+    "decision_mode_blocks_conflicts": true,
+    "positive_and_negative_shocks": true,
+    "outcomes_ordered_after_financial_calculation": true,
+    "neutral_base_is_zero": true,
+    "mglu_structural_not_calibrated": true,
+    "fx_out_of_sample_error_persisted": true,
+    "unvalidated_bridges_fail_gate": true,
+    "heuristic_bands_not_confidence_intervals": true,
+    "minimum_five_replays_per_bridge": true,
+    "normalized_fcf_three_companies": true,
+    "normalized_fcf_values_finite": true,
+    "normalization_adjustments_evidenced": true,
+    "reported_proxy_and_normalized_fcf_separate": true,
+    "uncalibrated_fx_confidence_capped": true,
+    "normalized_fcf_blocked_for_dcf": true
+  },
+  "readiness": {
+    "MGLU3": "PARTIAL_CALIBRATION",
+    "SUZB3": "PARTIAL_MISSING_DISCLOSED_VOLUME_HISTORY",
+    "KLBN11": "PARTIAL_MISSING_DISCLOSED_VOLUME_HISTORY",
+    "valuation": "BLOCKED",
+    "buy": "BLOCKED",
+    "orders": "BLOCKED",
+    "mirofish": "BLOCKED",
+    "valuation_blockers": [
+      "LOW_CALIBRATION_CONFIDENCE",
+      "MISSING_VALUATION_READY_NORMALIZED_FCF",
+      "CONFLICTING_MACRO_DIRECTION"
+    ]
+  }
+}

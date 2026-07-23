@@ -21,7 +21,7 @@ class FinancialCalibrationPilot:
         *,
         sector_run_id: str,
         as_of_timestamp: datetime,
-        run_id: str = "financial_4d3_pilot",
+        run_id: str = "financial_4d3a_validity",
     ) -> dict[str, object]:
         calibrator = FinancialBridgeCalibrator(self.store, run_id)
         diagnostics = calibrator.conflict_diagnostics(
@@ -118,6 +118,30 @@ class FinancialCalibrationPilot:
                     <= item["optimistic"]["estimated_financial_change"]
                     for item in outcome_intervals
                 ),
+                "neutral_base_is_zero": all(
+                    item["base"]["shock"] == 0
+                    and item["base"]["estimated_financial_change"] == 0
+                    for item in outcome_intervals
+                ),
+                "mglu_structural_not_calibrated": all(
+                    item.calibration_type == "STRUCTURAL_SENSITIVITY"
+                    and item.calibration_status
+                    == "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE"
+                    for item in calibrations if item.ticker == "MGLU3"
+                ),
+                "fx_out_of_sample_error_persisted": all(
+                    item.validation_method == "LEAVE_ONE_OUT"
+                    and item.out_of_sample_mae is not None
+                    for item in calibrations
+                    if item.bridge == "FX_OPERATING_REVENUE"
+                ),
+                "unvalidated_bridges_fail_gate": all(
+                    not item.validation_gate_passed for item in calibrations
+                ),
+                "heuristic_bands_not_confidence_intervals": all(
+                    item.sensitivity_band_type == "HEURISTIC_SENSITIVITY_BAND"
+                    for item in calibrations
+                ),
                 "minimum_five_replays_per_bridge": all(
                     len(item.observations) >= 5 for item in calibrations
                 ),
@@ -139,6 +163,11 @@ class FinancialCalibrationPilot:
                     for item in calibrations
                     if item.bridge == "FX_OPERATING_REVENUE"
                 ),
+                "normalized_fcf_blocked_for_dcf": all(
+                    item.normalization_status == "NOT_VALUATION_READY"
+                    and not item.dcf_eligible
+                    for item in normalized
+                ),
             },
             "readiness": {
                 "MGLU3": "PARTIAL_CALIBRATION",
@@ -148,6 +177,11 @@ class FinancialCalibrationPilot:
                 "buy": "BLOCKED",
                 "orders": "BLOCKED",
                 "mirofish": "BLOCKED",
+                "valuation_blockers": [
+                    "LOW_CALIBRATION_CONFIDENCE",
+                    "MISSING_VALUATION_READY_NORMALIZED_FCF",
+                    "CONFLICTING_MACRO_DIRECTION",
+                ],
             },
         }
 
@@ -192,7 +226,7 @@ class FinancialCalibrationPilot:
             ("CDI_SOFR_DEBT", baseline.average_floating_debt),
             ("IPCA_DEBT", baseline.inflation_linked_debt),
         ):
-            for shock in (-200, -100, -50, 50, 100, 200):
+            for shock in (-200, -100, -50, 0, 50, 100, 200):
                 output.append({
                     "mode": "CALIBRATION_MODE",
                     "ticker": "KLBN11",
@@ -223,10 +257,7 @@ class FinancialCalibrationPilot:
             ranked = sorted(
                 rows, key=lambda item: float(item["estimated_financial_change"])
             )
-            base_row = min(
-                ranked,
-                key=lambda item: abs(float(item["estimated_financial_change"])),
-            )
+            base_row = next(item for item in ranked if item["shock"] == 0)
             output.append({
                 "ticker": ticker,
                 "bridge": bridge,

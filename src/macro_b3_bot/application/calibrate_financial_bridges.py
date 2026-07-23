@@ -26,7 +26,7 @@ from macro_b3_bot.infrastructure.store import DatabaseStore
 class FinancialBridgeCalibrator:
     """Calibrate only from observed financial/macro histories; never make decisions."""
 
-    methodology_version = "4D.3-calibration-normalized-fcf-v1"
+    methodology_version = "4D.3A-calibration-validity-gate-v1"
 
     def __init__(self, store: DatabaseStore, run_id: str) -> None:
         self.store = store
@@ -248,19 +248,22 @@ class FinancialBridgeCalibrator:
                 "observed_slope": float(
                     -frame["effective_exposure"].median()
                 ),
-                "average_gross_floating_debt": float(
+                "average_gross_debt_proxy": float(
                     frame["gross_debt"].median()
                 ),
-                "average_cash_sensitive_to_rate": float(
+                "average_standardized_cash_proxy": float(
                     frame["cash"].median()
                 ),
-                "cash_yield_offset_pct": 1.0,
-                "derivative_effect_incremental": 0.0,
-                "repricing_factor": 1.0,
                 "quarter_horizon": 0.25,
-                "tax_shield_rate": 0.0,
             },
-            missing_drivers=[],
+            missing_drivers=[
+                "EFFECTIVE_FLOATING_DEBT_SHARE",
+                "RATE_SENSITIVE_CASH_SHARE",
+                "REPRICING_LAG",
+                "DERIVATIVE_RATE_EFFECT",
+                "USABLE_TAX_SHIELD",
+            ],
+            calibration_type="STRUCTURAL_SENSITIVITY",
         )
 
     def calibrate_fx(self, ticker: str) -> BridgeCalibrationResult:
@@ -273,24 +276,42 @@ class FinancialBridgeCalibrator:
         )
         frame["financial_change"] = frame["revenue"].pct_change(fill_method=None)
         frame = frame.dropna().tail(12)
-        coefficients = self._multiple_slopes(
+        intercept, coefficients = self._multiple_regression(
             frame["factor_change"].tolist(),
             frame["secondary_factor_change"].tolist(),
             frame["financial_change"].tolist(),
         )
         frame["predicted_change"] = (
-            frame["factor_change"] * coefficients[0]
+            intercept
+            + frame["factor_change"] * coefficients[0]
             + frame["secondary_factor_change"] * coefficients[1]
+        )
+        oos_predictions, sign_stability = self._leave_one_out_predictions(
+            frame["factor_change"].tolist(),
+            frame["secondary_factor_change"].tolist(),
+            frame["financial_change"].tolist(),
+            coefficients,
+        )
+        frame["out_of_sample_predicted_change"] = oos_predictions
+        frame["out_of_sample_error"] = (
+            frame["financial_change"] - frame["out_of_sample_predicted_change"]
         )
         return self._calibration_from_predictions(
             ticker,
             "FX_OPERATING_REVENUE",
             frame,
             parameters={
+                "intercept": intercept,
                 "fx_observed_slope": coefficients[0],
                 "pulp_price_observed_slope": coefficients[1],
             },
             missing_drivers=["DISCLOSED_VOLUME_HISTORY"],
+            calibration_type="EMPIRICAL_IN_SAMPLE",
+            validation_method="LEAVE_ONE_OUT",
+            coefficient_sign_stability={
+                "fx_observed_slope": sign_stability[0],
+                "pulp_price_observed_slope": sign_stability[1],
+            },
         )
 
     def normalize_cash_flow(
@@ -363,9 +384,13 @@ class FinancialBridgeCalibrator:
             normalized_operating_cash_flow=annualized_median_cfo,
             maintenance_capex=maintenance_capex,
             normalized_levered_fcf=normalized_fcf,
+            statistical_normalized_fcf_proxy=normalized_fcf,
+            normalization_type="STATISTICAL_NORMALIZATION_PROXY",
+            normalization_status="NOT_VALUATION_READY",
+            dcf_eligible=False,
             adjustments=adjustments,
             methodology_version=self.methodology_version,
-            confidence=0.50,
+            confidence=0.30,
             run_id=self.run_id,
         )
 
@@ -375,9 +400,9 @@ class FinancialBridgeCalibrator:
         monetary_base: float | None = None,
     ) -> list[dict[str, float | str]]:
         values = (
-            [-200, -100, -50, 50, 100, 200]
+            [-200, -100, -50, 0, 50, 100, 200]
             if calibration.bridge == "NET_INTEREST_CASH_EFFECT"
-            else [-20, -10, -5, 5, 10, 20]
+            else [-20, -10, -5, 0, 5, 10, 20]
         )
         divisor = 10_000 if calibration.bridge == "NET_INTEREST_CASH_EFFECT" else 100
         coefficient = next(
@@ -408,22 +433,20 @@ class FinancialBridgeCalibrator:
                 rate = value / divisor
                 horizon = calibration.parameters["quarter_horizon"]
                 gross = (
-                    -calibration.parameters["average_gross_floating_debt"]
+                    -calibration.parameters["average_gross_debt_proxy"]
                     * rate * horizon
                 )
                 cash = (
-                    calibration.parameters["average_cash_sensitive_to_rate"]
+                    calibration.parameters["average_standardized_cash_proxy"]
                     * rate * horizon
                 )
                 row.update({
-                    "gross_floating_debt_effect": gross,
-                    "cash_and_investment_yield_offset": cash,
-                    "derivative_effect": 0.0,
-                    "repricing_lag_factor": calibration.parameters[
-                        "repricing_factor"
-                    ],
+                    "gross_debt_structural_proxy_effect": gross,
+                    "standardized_cash_structural_proxy_offset": cash,
+                    "derivative_effect": None,
+                    "repricing_lag_factor": None,
                     "average_effective_exposure": -coefficient,
-                    "tax_shield": 0.0,
+                    "tax_shield": None,
                     "net_interest_cash_effect": gross + cash,
                 })
                 row["estimated_financial_change"] = gross + cash
@@ -438,6 +461,9 @@ class FinancialBridgeCalibrator:
         parameters: dict[str, float],
         *,
         missing_drivers: list[str],
+        calibration_type: str,
+        validation_method: str = "STRUCTURAL_FORMULA_ONLY",
+        coefficient_sign_stability: dict[str, float] | None = None,
     ) -> BridgeCalibrationResult:
         observations = [
             BridgeReplayObservation(
@@ -452,6 +478,14 @@ class FinancialBridgeCalibrator:
                 ),
                 predicted_change=float(row.predicted_change),
                 error=float(row.financial_change - row.predicted_change),
+                out_of_sample_predicted_change=(
+                    float(row.out_of_sample_predicted_change)
+                    if hasattr(row, "out_of_sample_predicted_change") else None
+                ),
+                out_of_sample_error=(
+                    float(row.out_of_sample_error)
+                    if hasattr(row, "out_of_sample_error") else None
+                ),
                 source_ids=[
                     str(row.document_id),
                     (
@@ -468,8 +502,35 @@ class FinancialBridgeCalibrator:
             for row in frame.itertuples()
         ]
         mae = mean(abs(item.error) for item in observations)
+        oos_errors = [
+            abs(item.out_of_sample_error)
+            for item in observations
+            if item.out_of_sample_error is not None
+        ]
+        oos_mae = mean(oos_errors) if oos_errors else None
         scale = mean(abs(item.financial_change) for item in observations) or 1
-        confidence = min(0.4, max(0.05, (1 - min(1, mae / scale)) * 0.4))
+        validation_mae = oos_mae if oos_mae is not None else mae
+        confidence = min(
+            0.4,
+            max(0.05, (1 - min(1, validation_mae / scale)) * 0.4),
+        )
+        stability = coefficient_sign_stability or {}
+        validation_failures = list(missing_drivers)
+        if calibration_type == "STRUCTURAL_SENSITIVITY":
+            validation_failures.append("NO_EMPIRICAL_PARAMETER_ESTIMATION")
+        if validation_method == "LEAVE_ONE_OUT":
+            if oos_mae is None:
+                validation_failures.append("MISSING_OUT_OF_SAMPLE_ERROR")
+            elif oos_mae / scale > 0.5:
+                validation_failures.append("OUT_OF_SAMPLE_ERROR_TOO_HIGH")
+            if stability and min(stability.values()) < 0.8:
+                validation_failures.append("COEFFICIENT_SIGN_UNSTABLE")
+        validation_gate_passed = not validation_failures
+        effective_calibration_type = (
+            "EMPIRICAL_OUT_OF_SAMPLE_VALIDATED"
+            if validation_gate_passed and validation_method == "LEAVE_ONE_OUT"
+            else calibration_type
+        )
         identity = f"{self.run_id}|{ticker}|{bridge}"
         return BridgeCalibrationResult(
             calibration_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
@@ -482,11 +543,28 @@ class FinancialBridgeCalibrator:
                 key: [value * 0.75, value, value * 1.25]
                 for key, value in parameters.items()
             },
+            heuristic_sensitivity_band={
+                key: [value * 0.75, value, value * 1.25]
+                for key, value in parameters.items()
+            },
+            sensitivity_band_type="HEURISTIC_SENSITIVITY_BAND",
             mean_absolute_error=mae,
+            in_sample_mae=mae,
+            out_of_sample_mae=oos_mae,
+            validation_method=validation_method,
+            coefficient_sign_stability=stability,
+            observation_count=len(observations),
+            calibration_type=effective_calibration_type,
+            validation_gate_passed=validation_gate_passed,
+            validation_failures=sorted(set(validation_failures)),
             confidence=confidence,
             calibration_status=(
-                "PARTIAL_MISSING_DRIVER"
-                if missing_drivers else "COMPANY_CALIBRATED"
+                "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE"
+                if calibration_type == "STRUCTURAL_SENSITIVITY"
+                else (
+                    "PARTIAL_MISSING_DRIVER"
+                    if missing_drivers else "COMPANY_CALIBRATED"
+                )
             ),
             missing_drivers=missing_drivers,
             methodology_version=self.methodology_version,
@@ -505,11 +583,47 @@ class FinancialBridgeCalibrator:
         ) / denominator
 
     @staticmethod
-    def _multiple_slopes(
+    def _multiple_regression(
         first: list[float],
         second: list[float],
         target: list[float],
-    ) -> tuple[float, float]:
-        matrix = np.column_stack([first, second])
+    ) -> tuple[float, tuple[float, float]]:
+        matrix = np.column_stack([np.ones(len(first)), first, second])
         coefficients, *_ = np.linalg.lstsq(matrix, np.array(target), rcond=None)
-        return float(coefficients[0]), float(coefficients[1])
+        return (
+            float(coefficients[0]),
+            (float(coefficients[1]), float(coefficients[2])),
+        )
+
+    @classmethod
+    def _leave_one_out_predictions(
+        cls,
+        first: list[float],
+        second: list[float],
+        target: list[float],
+        full_coefficients: tuple[float, float],
+    ) -> tuple[list[float], tuple[float, float]]:
+        predictions: list[float] = []
+        signs: list[list[bool]] = [[], []]
+        for holdout in range(len(target)):
+            train = [index for index in range(len(target)) if index != holdout]
+            intercept, coefficients = cls._multiple_regression(
+                [first[index] for index in train],
+                [second[index] for index in train],
+                [target[index] for index in train],
+            )
+            predictions.append(
+                intercept
+                + coefficients[0] * first[holdout]
+                + coefficients[1] * second[holdout]
+            )
+            for index, coefficient in enumerate(coefficients):
+                reference = full_coefficients[index]
+                signs[index].append(
+                    coefficient == 0 == reference
+                    or coefficient * reference > 0
+                )
+        stability = tuple(
+            sum(values) / len(values) for values in signs
+        )
+        return predictions, (float(stability[0]), float(stability[1]))
