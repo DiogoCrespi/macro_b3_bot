@@ -76,7 +76,7 @@ class CompanyMacroExposureAuditor:
                          "misclassified as consolidated debt."
                 ),
             })
-        future_documents = self.store.connection.execute(
+        future_ipe_documents = self.store.connection.execute(
             """
             SELECT COUNT(*) FROM company_exposure_document_selections s
             JOIN company_exposure_snapshots e ON e.run_id=? AND e.ticker=s.ticker
@@ -84,11 +84,22 @@ class CompanyMacroExposureAuditor:
             """,
             [exposure_run_id, selection_run_id],
         ).fetchone()[0]
+        future_fre_documents = self.store.connection.execute(
+            """
+            SELECT COUNT(DISTINCT f.document_id)
+              FROM company_fre_sections f
+              JOIN company_exposure_snapshots e
+                ON e.run_id=? AND e.ticker=f.ticker
+             WHERE f.available_at > e.as_of_timestamp
+            """,
+            [exposure_run_id],
+        ).fetchone()[0]
         snapshots = self.store.connection.execute(
             "SELECT COUNT(*) FROM company_exposure_snapshots WHERE run_id=?",
             [exposure_run_id],
         ).fetchone()[0]
         fact_documents = {item["document_id"] for item in facts}
+        known_documents = {item["document_id"] for item in documents}
         facts_without_scope = sum(
             not item["scope_entity"] or not item["scope_type"] for item in facts
         )
@@ -130,8 +141,12 @@ class CompanyMacroExposureAuditor:
                 "companies_with_three_or_more": sum(
                     item["meets_three"] for item in matrix
                 ),
-                "future_documents_used": future_documents,
-                "facts_without_document": sum(not item["document_id"] for item in facts),
+                "future_documents_used": (
+                    future_ipe_documents + future_fre_documents
+                ),
+                "facts_without_document": sum(
+                    item["document_id"] not in known_documents for item in facts
+                ),
                 "facts_without_excerpt": sum(
                     not item["evidence_excerpt"] for item in facts
                 ),
@@ -164,7 +179,16 @@ class CompanyMacroExposureAuditor:
               ON e.document_id=s.document_id
              AND e.document_checksum=s.document_checksum
             WHERE s.selection_run_id=?
-            ORDER BY s.ticker,s.classification,s.delivery_date DESC
+            UNION ALL
+            SELECT f.ticker,'FRE:' || f.document_id,f.version,
+                   'Formulário de Referência ' || CAST(f.reference_date AS VARCHAR),
+                   'FRE',f.available_at,f.source_url,'REFERENCE_FORM_DOCUMENT',
+                   'latest_official_fre_point_in_time',
+                   f.raw_document_checksum,'EXTRACTED'
+              FROM company_fre_sections f
+             GROUP BY f.ticker,f.document_id,f.version,f.reference_date,
+                      f.available_at,f.source_url,f.raw_document_checksum
+            ORDER BY ticker,classification,delivery_date DESC
             """,
             [selection_run_id],
         ).fetchall()

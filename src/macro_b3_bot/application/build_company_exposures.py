@@ -23,8 +23,14 @@ _EXPOSURE_FIELDS = (
     "floating_rate_debt", "inflation_linked_debt", "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct", "export_revenue_pct", "floating_rate_debt_pct",
     "inflation_linked_debt_pct", "foreign_currency_debt_pct", "commodity_exposures",
-    "fixed_rate_debt_pct", "currency_hedge_pct", "currency_hedges", "commodity_roles",
-    "commodity_production", "commodity_hedges", "geographic_exposures",
+    "fixed_rate_debt_pct", "debt_duration_years", "debt_instrument_durations",
+    "financial_services_funding", "financial_services_funding_floating_pct",
+    "net_cash_position", "bank_market_risk_sensitivities",
+    "bank_foreign_currency_assets_pct", "bank_loan_book_foreign_currency_pct",
+    "bank_retail_credit_portfolio_pct", "bank_credit_market_share",
+    "bank_agribusiness_funding_market_share", "currency_hedge_pct",
+    "currency_hedges", "commodity_roles", "commodity_production",
+    "commodity_exports", "commodity_hedges", "geographic_exposures",
     "demand_cyclicality", "pricing_power", "operating_leverage",
 )
 

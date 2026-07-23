@@ -1,10 +1,15 @@
 from datetime import datetime, timezone
+import io
+from zipfile import ZipFile
 
 from macro_b3_bot.adapters.bcb.normalizer import compute_raw_checksum
 from macro_b3_bot.application.extract_ipe_documents import IpeExtractionPipeline
 from macro_b3_bot.application.ingest_company_exposure_documents import (
     ExposureDocumentClass,
     classify_exposure_document,
+)
+from macro_b3_bot.application.ingest_company_fre_documents import (
+    CompanyFreDocumentPipeline,
 )
 from macro_b3_bot.application.extract_company_macro_exposures import _RULES
 from macro_b3_bot.config import Settings
@@ -69,7 +74,11 @@ def test_kabin_consolidated_debt_mix_rules_are_factor_specific() -> None:
     )
     values = {}
     for rule in _RULES:
-        if rule.ticker != "KLBN11":
+        if rule.ticker != "KLBN11" or rule.field_name not in {
+            "foreign_currency_debt_pct",
+            "floating_rate_debt_pct",
+            "inflation_linked_debt_pct",
+        }:
             continue
         match = rule.pattern.search(text)
         assert match is not None
@@ -79,6 +88,45 @@ def test_kabin_consolidated_debt_mix_rules_are_factor_specific() -> None:
         "floating_rate_debt_pct": 0.6716,
         "inflation_linked_debt_pct": 0.031,
     }
+
+
+def test_fre_rules_preserve_denominator_and_sector_specific_semantics() -> None:
+    samples = {
+        ("EQTL3", "floating_rate_debt_pct"): (
+            "Em 31 de dezembro de 2025 a Companhia possuía "
+            "69,1% de seu endividamento atrelado ao CDI.",
+            0.691,
+        ),
+        ("ITUB4", "bank_retail_credit_portfolio_pct"): (
+            "Negócios de Varejo, representando 61% da nossa carteira "
+            "de crédito em 2025.",
+            0.61,
+        ),
+        ("SUZB3", "export_revenue_pct"): (
+            "cerca de 80% da receita líquida da Companhia é proveniente "
+            "de exportações com preços em Dólares Norte-Americano",
+            0.8,
+        ),
+        ("VALE3", "floating_rate_debt_pct"): (
+            "cerca de 61% do saldo de empréstimos e financiamentos estava "
+            "atrelado à taxas de juros flutuantes",
+            0.61,
+        ),
+        ("RECV3", "debt_instrument_durations"): (
+            'custo médio dolarizado de 5,66% ao ano e "duration" '
+            "aproximada de 5,2 anos",
+            {"DISCLOSED_HEDGED_DEBENTURE": 5.2},
+        ),
+    }
+    for (ticker, field_name), (text, expected) in samples.items():
+        rule = next(
+            item for item in _RULES
+            if item.ticker == ticker and item.field_name == field_name
+        )
+        match = rule.pattern.search(text)
+        assert match is not None
+        assert rule.value(match) == expected
+        assert rule.denominator_basis
 
 
 def test_slc_currency_debt_share_uses_disclosed_subtotals() -> None:
@@ -133,3 +181,37 @@ def test_extraction_batch_is_restricted_to_selected_document_ids(tmp_path) -> No
     store.close()
     assert result == {"total_processed": 1, "extracted_count": 1}
     assert statuses == {"selected": "EXTRACTED", "unrelated": "DOWNLOADED"}
+
+
+def test_fre_selection_uses_latest_version_available_at_cutoff(tmp_path) -> None:
+    settings = Settings(data_dir=tmp_path)
+    statement_dir = tmp_path / "raw" / "cvm" / "statements"
+    statement_dir.mkdir(parents=True)
+    csv_text = (
+        "CNPJ_CIA;DT_REFER;VERSAO;DENOM_CIA;CD_CVM;CATEG_DOC;ID_DOC;DT_RECEB;LINK_DOC\n"
+        "00;2026-12-31;1;Test;1;FRE;10;2026-05-01;http://www.rad.cvm.gov.br/10\n"
+        "00;2026-12-31;2;Test;1;FRE;11;2026-06-01;http://www.rad.cvm.gov.br/11\n"
+        "00;2026-12-31;3;Test;1;FRE;12;2026-08-01;http://www.rad.cvm.gov.br/12\n"
+    )
+    buffer = io.BytesIO()
+    with ZipFile(buffer, "w") as archive:
+        archive.writestr("fre_cia_aberta_2026.csv", csv_text.encode("latin1"))
+    (statement_dir / "fre_cia_aberta_2026.zip").write_bytes(buffer.getvalue())
+    store = DatabaseStore(tmp_path / "audit.duckdb")
+    store.connection.execute(
+        """
+        INSERT INTO company_ticker_map (
+            ticker,cvm_code,cnpj,mapping_source,confidence,validated,created_at,
+            legal_name,valid_from,valid_to,review_status,evidence_id,mapping_version
+        ) VALUES ('TEST3','1','00','test',1,TRUE,TIMESTAMP '2026-01-01',
+                  'Test',DATE '2026-01-01',NULL,'VALIDATED','test','v1')
+        """
+    )
+    selected = CompanyFreDocumentPipeline(settings)._select_latest(
+        store, datetime(2026, 7, 1)
+    )
+    store.close()
+    assert len(selected) == 1
+    assert selected[0]["document_id"] == "11"
+    assert selected[0]["version"] == 2
+    assert str(selected[0]["source_url"]).startswith("https://")

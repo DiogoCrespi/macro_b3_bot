@@ -1,0 +1,144 @@
+{
+  "as_of_timestamp": "2026-07-23T02:59:59+00:00",
+  "companies_selected": 15,
+  "documents_ingested": 15,
+  "failures": 0,
+  "sections_extracted": 75,
+  "results": [
+    {
+      "ticker": "AZUL4",
+      "document_id": "159541",
+      "version": 4,
+      "available_at": "2026-07-16 00:00:00",
+      "raw_checksum": "1c5fbdb0ea790615a35fe9a9a73e5b9a375e1cdb2a3c9e53b5f576a87e66b1c5",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "BBAS3",
+      "document_id": "159463",
+      "version": 3,
+      "available_at": "2026-07-10 00:00:00",
+      "raw_checksum": "b15e0e1ea21da0e3433ad3ed22b9a7f437e360ad12875e0ba44e0fdbb4b3f6ca",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "ELET3",
+      "document_id": "159494",
+      "version": 6,
+      "available_at": "2026-07-13 00:00:00",
+      "raw_checksum": "f4b8ddf73f6a448cc75963591bb4f8beaa765dfc6f56492348fcf961b589f46e",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "EQTL3",
+      "document_id": "159312",
+      "version": 5,
+      "available_at": "2026-07-02 00:00:00",
+      "raw_checksum": "98f0aac9e3613d0d8714cf569488bdac6bb86aa619361117d7eef64d840e65fc",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "ITUB4",
+      "document_id": "159024",
+      "version": 2,
+      "available_at": "2026-06-10 00:00:00",
+      "raw_checksum": "9b62fb1000e4002054385b1b5afc3535e2e255f8c7293ffa3ed3a34b99f3a21d",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "KLBN11",
+      "document_id": "159417",
+      "version": 11,
+      "available_at": "2026-07-08 00:00:00",
+      "raw_checksum": "9ff91fd36b7ff2272c84f389616092c2dc1f068d1b7cc7fc90133d31f95589d7",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "LREN3",
+      "document_id": "158494",
+      "version": 1,
+      "available_at": "2026-05-29 00:00:00",
+      "raw_checksum": "36f43da03ae3435dec62eb5782264006a45eb8fc22b0b23c13cd5d5c9a88f352",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "MGLU3",
+      "document_id": "159326",
+      "version": 2,
+      "available_at": "2026-07-02 00:00:00",
+      "raw_checksum": "d587fa1bcbf42d3b4a7ab2fe350f8684100d5004f866c4394d17ec774b908fbc",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "PETR4",
+      "document_id": "159462",
+      "version": 5,
+      "available_at": "2026-07-10 00:00:00",
+      "raw_checksum": "30d3906cff7553a7d5462be33a388b8bbe01cd69c663cde1a3b5a439d12b58fa",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "PRIO3",
+      "document_id": "159379",
+      "version": 5,
+      "available_at": "2026-07-06 00:00:00",
+      "raw_checksum": "865d2308b8bfe880d9d6d281377a5581ab87ccd88d19678f7ffaaf360848ecfe",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "RAIL3",
+      "document_id": "159296",
+      "version": 2,
+      "available_at": "2026-07-01 00:00:00",
+      "raw_checksum": "63b7150867bbed67614342f64532c618afcc11801905dd394c5600af01d1ccfd",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "RECV3",
+      "document_id": "159375",
+      "version": 3,
+      "available_at": "2026-07-06 00:00:00",
+      "raw_checksum": "0b676e3218500a1d406e9b456556b3f40d7855f9480ddc37dfd7229ba11f5305",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "SLCE3",
+      "document_id": "159147",
+      "version": 2,
+      "available_at": "2026-06-19 00:00:00",
+      "raw_checksum": "06e765a7aac980276a5cd9922b75d1356f31fd2f43e9a51069f6bb044a39bd67",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "SUZB3",
+      "document_id": "159025",
+      "version": 2,
+      "available_at": "2026-06-10 00:00:00",
+      "raw_checksum": "f6a11c694b53e842695785084f595c45b83a10585d9c89a669dc1aca2f7edf7a",
+      "sections": 5,
+      "status": "INGESTED"
+    },
+    {
+      "ticker": "VALE3",
+      "document_id": "159523",
+      "version": 7,
+      "available_at": "2026-07-15 00:00:00",
+      "raw_checksum": "7d97ad35b9376873b526f34ee25f949e7b2b519ddcf21dd7afaabfc606609ff4",
+      "sections": 5,
+      "status": "INGESTED"
+    }
+  ]
+}

@@ -772,6 +772,19 @@ def reclassify_company_exposure_documents(
     console.print_json(json.dumps(result, ensure_ascii=False))
 
 
+@app.command("ingest-company-fre-documents")
+def ingest_company_fre_documents(
+    as_of: str = typer.Option(..., "--as-of"),
+) -> None:
+    """Download latest official FRE XML and extract exposure-relevant PDF sections."""
+    from macro_b3_bot.application.ingest_company_fre_documents import (
+        CompanyFreDocumentPipeline,
+    )
+
+    result = CompanyFreDocumentPipeline(Settings()).ingest(datetime.fromisoformat(as_of))
+    console.print_json(json.dumps(result, ensure_ascii=False, default=str))
+
+
 @app.command("export-company-exposure-review")
 def export_company_exposure_review(
     selection_run_id: str = typer.Option(..., "--selection-run-id"),

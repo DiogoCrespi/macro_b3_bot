@@ -70,11 +70,29 @@ class CompanyExposureSnapshot(BaseModel):
     inflation_linked_debt_pct: float | None = Field(default=None, ge=0, le=1)
     foreign_currency_debt_pct: float | None = Field(default=None, ge=0, le=1)
     fixed_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
+    debt_duration_years: float | None = Field(default=None, ge=0)
+    debt_instrument_durations: dict[str, float] | None = None
+    financial_services_funding: float | None = Field(default=None, ge=0)
+    financial_services_funding_floating_pct: float | None = Field(
+        default=None, ge=0, le=1
+    )
+    net_cash_position: float | None = None
+    bank_market_risk_sensitivities: dict[str, float] | None = None
+    bank_foreign_currency_assets_pct: float | None = Field(default=None, ge=0, le=1)
+    bank_loan_book_foreign_currency_pct: float | None = Field(
+        default=None, ge=0, le=1
+    )
+    bank_retail_credit_portfolio_pct: float | None = Field(default=None, ge=0, le=1)
+    bank_credit_market_share: float | None = Field(default=None, ge=0, le=1)
+    bank_agribusiness_funding_market_share: float | None = Field(
+        default=None, ge=0, le=1
+    )
     currency_hedge_pct: float | None = Field(default=None, ge=0, le=1)
     currency_hedges: dict[str, float] | None = None
     commodity_exposures: dict[str, float] | None = None
     commodity_roles: dict[str, str] | None = None
     commodity_production: dict[str, float] | None = None
+    commodity_exports: dict[str, float] | None = None
     commodity_hedges: dict[str, float] | None = None
     geographic_exposures: dict[str, float] | None = None
     demand_cyclicality: float | None = Field(default=None, ge=0, le=1)
