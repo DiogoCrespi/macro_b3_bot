@@ -9,8 +9,10 @@ from statistics import mean
 from macro_b3_bot.domain.causal_models import SectorStateSnapshot
 from macro_b3_bot.domain.company_exposure_models import (
     CompanyExposureSnapshot,
+    CompanyFactorChannel,
     CompanyImpactCandidate,
 )
+from macro_b3_bot.application.transport_company_channels import CompanyChannelTransport
 
 
 class CompanyImpactEngine:
@@ -28,30 +30,34 @@ class CompanyImpactEngine:
         self,
         sector: SectorStateSnapshot,
         exposure: CompanyExposureSnapshot,
-        factor_impacts: dict[str, float],
+        factor_impacts: dict[str, float] | None,
         as_of_timestamp: datetime,
+        factor_channels: list[CompanyFactorChannel] | None = None,
     ) -> CompanyImpactCandidate:
         if sector.sector != exposure.sector:
             raise ValueError("sector snapshot and company exposure do not match")
+        impacts = factor_impacts or CompanyChannelTransport.aggregate(
+            factor_channels or []
+        )
         components = {
             "revenue": self._component(
-                factor_impacts.get("revenue"),
+                impacts.get("revenue"),
                 [exposure.revenue_foreign_currency_pct, exposure.export_revenue_pct, exposure.pricing_power],
                 exposure.confidence,
             ),
             "cost": self._component(
-                factor_impacts.get("cost"),
+                impacts.get("cost"),
                 [exposure.cost_foreign_currency_pct, exposure.operating_leverage],
                 exposure.confidence,
             ),
             "debt": self._component(
-                factor_impacts.get("debt"),
+                impacts.get("debt"),
                 [exposure.foreign_currency_debt_pct, exposure.floating_rate_debt_pct,
                  exposure.inflation_linked_debt_pct],
                 exposure.confidence,
             ),
             "demand": self._component(
-                factor_impacts.get("demand"), [exposure.demand_cyclicality], exposure.confidence
+                impacts.get("demand"), [exposure.demand_cyclicality], exposure.confidence
             ),
         }
         missing = [name for name, value in components.items() if value is None]

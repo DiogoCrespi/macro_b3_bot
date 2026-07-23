@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -22,6 +22,7 @@ class ExposureFieldEvidence(BaseModel):
     value: float | dict[str, float] | None = None
     source_type: str
     evidence_id: str
+    evidence_excerpt: str | None = None
     available_at: datetime
     extraction_method: ExtractionMethod
     methodology_version: str
@@ -42,6 +43,7 @@ class CompanyExposureSnapshot(BaseModel):
     total_revenue: float | None = None
     foreign_revenue: float | None = None
     total_debt: float | None = None
+    gross_financial_debt: float | None = None
     foreign_currency_debt: float | None = None
     floating_rate_debt: float | None = None
     inflation_linked_debt: float | None = None
@@ -61,6 +63,8 @@ class CompanyExposureSnapshot(BaseModel):
     field_evidence: list[ExposureFieldEvidence] = Field(default_factory=list)
     missing_fields: list[str] = Field(default_factory=list)
     confidence: float = Field(ge=0, le=1)
+    evidence_quality_score: float = Field(default=0, ge=0, le=1)
+    completeness_score: float = Field(default=0, ge=0, le=1)
     run_id: str
     created_at: datetime
 
@@ -80,11 +84,28 @@ class CompanyExposureSnapshot(BaseModel):
             if field_name in {
                 "exposure_id", "ticker", "cvm_code", "sector", "as_of_timestamp",
                 "reference_date", "exposure_version", "field_evidence", "missing_fields",
-                "confidence", "run_id", "created_at",
+                "confidence", "evidence_quality_score", "completeness_score",
+                "run_id", "created_at",
             }:
                 continue
             if getattr(self, field_name) is not None and field_name not in evidenced:
                 raise ValueError(f"{field_name} has a value without field-level evidence")
+        return self
+
+
+class CompanyFactorChannel(BaseModel):
+    factor: str
+    channel: Literal["revenue", "cost", "debt", "demand"]
+    direction: int = Field(ge=-1, le=1)
+    strength: float = Field(ge=0, le=1)
+    confidence: float = Field(ge=0, le=1)
+    evidence_ids: list[str] = Field(min_length=1)
+    source_paths: list[list[str]] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def direction_is_signed(self) -> "CompanyFactorChannel":
+        if self.direction not in {-1, 1}:
+            raise ValueError("channel direction must be -1 or +1")
         return self
 
 

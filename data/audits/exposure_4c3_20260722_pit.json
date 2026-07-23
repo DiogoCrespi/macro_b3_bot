@@ -1,0 +1,886 @@
+[
+  {
+    "ticker": "AZUL4",
+    "sector": "AVIACAO",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 5471368000.0,
+    "published_normalized_value": 5471368000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_24112_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 5471368.0,
+        "scale": 1000,
+        "normalized_value": 5471368000.0
+      }
+    ],
+    "evidence_id": "ITR_24112_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "AZUL4",
+    "sector": "AVIACAO",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 20642468000.0,
+    "published_normalized_value": 20642468000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_24112_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 3565625.0,
+        "scale": 1000,
+        "normalized_value": 3565625000.0
+      },
+      {
+        "document_id": "ITR_24112_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 17076843.0,
+        "scale": 1000,
+        "normalized_value": 17076843000.0
+      }
+    ],
+    "evidence_id": "ITR_24112_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "BBAS3",
+    "sector": "BANCOS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 78452578000.0,
+    "published_normalized_value": 78452578000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_1023_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 78452578.0,
+        "scale": 1000,
+        "normalized_value": 78452578000.0
+      }
+    ],
+    "evidence_id": "ITR_1023_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "ELET3",
+    "sector": "ENERGIA_ELETRICA",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 12711586000.0,
+    "published_normalized_value": 12711586000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_2437_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 12711586.0,
+        "scale": 1000,
+        "normalized_value": 12711586000.0
+      }
+    ],
+    "evidence_id": "ITR_2437_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "ELET3",
+    "sector": "ENERGIA_ELETRICA",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 73523616000.0,
+    "published_normalized_value": 73523616000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_2437_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 11141095.0,
+        "scale": 1000,
+        "normalized_value": 11141095000.0
+      },
+      {
+        "document_id": "ITR_2437_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 62382521.0,
+        "scale": 1000,
+        "normalized_value": 62382521000.0
+      }
+    ],
+    "evidence_id": "ITR_2437_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "EQTL3",
+    "sector": "ENERGIA_ELETRICA",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 12749940000.0,
+    "published_normalized_value": 12749940000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_20010_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 12749940.0,
+        "scale": 1000,
+        "normalized_value": 12749940000.0
+      }
+    ],
+    "evidence_id": "ITR_20010_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "EQTL3",
+    "sector": "ENERGIA_ELETRICA",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 56841413000.0,
+    "published_normalized_value": 56841413000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_20010_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 4683131.0,
+        "scale": 1000,
+        "normalized_value": 4683131000.0
+      },
+      {
+        "document_id": "ITR_20010_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 52158282.0,
+        "scale": 1000,
+        "normalized_value": 52158282000.0
+      }
+    ],
+    "evidence_id": "ITR_20010_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "ITUB4",
+    "sector": "BANCOS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 99045000000.0,
+    "published_normalized_value": 99045000000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_19348_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 99045000.0,
+        "scale": 1000,
+        "normalized_value": 99045000000.0
+      }
+    ],
+    "evidence_id": "ITR_19348_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "KLBN11",
+    "sector": "PAPEL_CELULOSE",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 4945957000.0,
+    "published_normalized_value": 4945957000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_12653_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 4945957.0,
+        "scale": 1000,
+        "normalized_value": 4945957000.0
+      }
+    ],
+    "evidence_id": "ITR_12653_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "KLBN11",
+    "sector": "PAPEL_CELULOSE",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 33587008000.0,
+    "published_normalized_value": 33587008000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_12653_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 2271644.0,
+        "scale": 1000,
+        "normalized_value": 2271644000.0
+      },
+      {
+        "document_id": "ITR_12653_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 31315364.0,
+        "scale": 1000,
+        "normalized_value": 31315364000.0
+      }
+    ],
+    "evidence_id": "ITR_12653_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "LREN3",
+    "sector": "VAREJO",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 3365695000.0,
+    "published_normalized_value": 3365695000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_8133_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 3365695.0,
+        "scale": 1000,
+        "normalized_value": 3365695000.0
+      }
+    ],
+    "evidence_id": "ITR_8133_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "LREN3",
+    "sector": "VAREJO",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 399040000.0,
+    "published_normalized_value": 399040000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_8133_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 21612.0,
+        "scale": 1000,
+        "normalized_value": 21612000.0
+      },
+      {
+        "document_id": "ITR_8133_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 377428.0,
+        "scale": 1000,
+        "normalized_value": 377428000.0
+      }
+    ],
+    "evidence_id": "ITR_8133_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "MGLU3",
+    "sector": "VAREJO",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 9205731000.0,
+    "published_normalized_value": 9205731000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_22470_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 9205731.0,
+        "scale": 1000,
+        "normalized_value": 9205731000.0
+      }
+    ],
+    "evidence_id": "ITR_22470_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "MGLU3",
+    "sector": "VAREJO",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 5060160000.0,
+    "published_normalized_value": 5060160000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_22470_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 1358607.0,
+        "scale": 1000,
+        "normalized_value": 1358607000.0
+      },
+      {
+        "document_id": "ITR_22470_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 3701553.0,
+        "scale": 1000,
+        "normalized_value": 3701553000.0
+      }
+    ],
+    "evidence_id": "ITR_22470_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "PETR4",
+    "sector": "PETROLEO_GAS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 123686000000.0,
+    "published_normalized_value": 123686000000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_9512_2026-03-31_v2",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 2,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 123686000.0,
+        "scale": 1000,
+        "normalized_value": 123686000000.0
+      }
+    ],
+    "evidence_id": "ITR_9512_2026-03-31_v2",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "PETR4",
+    "sector": "PETROLEO_GAS",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 371691000000.0,
+    "published_normalized_value": 371691000000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_9512_2026-03-31_v2",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 2,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 66447000.0,
+        "scale": 1000,
+        "normalized_value": 66447000000.0
+      },
+      {
+        "document_id": "ITR_9512_2026-03-31_v2",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 2,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 305244000.0,
+        "scale": 1000,
+        "normalized_value": 305244000000.0
+      }
+    ],
+    "evidence_id": "ITR_9512_2026-03-31_v2",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "PRIO3",
+    "sector": "PETROLEO_GAS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 6529947000.0,
+    "published_normalized_value": 6529947000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_22187_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 6529947.0,
+        "scale": 1000,
+        "normalized_value": 6529947000.0
+      }
+    ],
+    "evidence_id": "ITR_22187_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "PRIO3",
+    "sector": "PETROLEO_GAS",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 26901637000.0,
+    "published_normalized_value": 26901637000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_22187_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 1947540.0,
+        "scale": 1000,
+        "normalized_value": 1947540000.0
+      },
+      {
+        "document_id": "ITR_22187_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 24954097.0,
+        "scale": 1000,
+        "normalized_value": 24954097000.0
+      }
+    ],
+    "evidence_id": "ITR_22187_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "RAIL3",
+    "sector": "LOGISTICA",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 3282303000.0,
+    "published_normalized_value": 3282303000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_17450_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 3282303.0,
+        "scale": 1000,
+        "normalized_value": 3282303000.0
+      }
+    ],
+    "evidence_id": "ITR_17450_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "RAIL3",
+    "sector": "LOGISTICA",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 22890822000.0,
+    "published_normalized_value": 22890822000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_17450_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 1013109.0,
+        "scale": 1000,
+        "normalized_value": 1013109000.0
+      },
+      {
+        "document_id": "ITR_17450_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 21877713.0,
+        "scale": 1000,
+        "normalized_value": 21877713000.0
+      }
+    ],
+    "evidence_id": "ITR_17450_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "RECV3",
+    "sector": "PETROLEO_GAS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 684456000.0,
+    "published_normalized_value": 684456000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_25780_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 684456.0,
+        "scale": 1000,
+        "normalized_value": 684456000.0
+      }
+    ],
+    "evidence_id": "ITR_25780_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "RECV3",
+    "sector": "PETROLEO_GAS",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 3173877000.0,
+    "published_normalized_value": 3173877000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_25780_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 107719.0,
+        "scale": 1000,
+        "normalized_value": 107719000.0
+      },
+      {
+        "document_id": "ITR_25780_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 3066158.0,
+        "scale": 1000,
+        "normalized_value": 3066158000.0
+      }
+    ],
+    "evidence_id": "ITR_25780_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "SLCE3",
+    "sector": "AGRO_ALIMENTOS",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 2665069000.0,
+    "published_normalized_value": 2665069000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_20745_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 2665069.0,
+        "scale": 1000,
+        "normalized_value": 2665069000.0
+      }
+    ],
+    "evidence_id": "ITR_20745_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "SLCE3",
+    "sector": "AGRO_ALIMENTOS",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 7268620000.0,
+    "published_normalized_value": 7268620000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_20745_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 1347791.0,
+        "scale": 1000,
+        "normalized_value": 1347791000.0
+      },
+      {
+        "document_id": "ITR_20745_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 5920829.0,
+        "scale": 1000,
+        "normalized_value": 5920829000.0
+      }
+    ],
+    "evidence_id": "ITR_20745_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "SUZB3",
+    "sector": "PAPEL_CELULOSE",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 10968416000.0,
+    "published_normalized_value": 10968416000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_13986_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 10968416.0,
+        "scale": 1000,
+        "normalized_value": 10968416000.0
+      }
+    ],
+    "evidence_id": "ITR_13986_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "SUZB3",
+    "sector": "PAPEL_CELULOSE",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 90735617000.0,
+    "published_normalized_value": 90735617000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_13986_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 3434387.0,
+        "scale": 1000,
+        "normalized_value": 3434387000.0
+      },
+      {
+        "document_id": "ITR_13986_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 87301230.0,
+        "scale": 1000,
+        "normalized_value": 87301230000.0
+      }
+    ],
+    "evidence_id": "ITR_13986_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "VALE3",
+    "sector": "MINERACAO_SIDERURGIA",
+    "metric": "total_revenue",
+    "formula": "3.01",
+    "extracted_value": 48680000000.0,
+    "published_normalized_value": 48680000000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_4170_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "3.01",
+        "raw_value": 48680000.0,
+        "scale": 1000,
+        "normalized_value": 48680000000.0
+      }
+    ],
+    "evidence_id": "ITR_4170_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  },
+  {
+    "ticker": "VALE3",
+    "sector": "MINERACAO_SIDERURGIA",
+    "metric": "gross_financial_debt",
+    "formula": "2.01.04 + 2.02.01",
+    "extracted_value": 98320000000.0,
+    "published_normalized_value": 98320000000.0,
+    "absolute_difference": 0.0,
+    "percentage_difference": 0.0,
+    "components": [
+      {
+        "document_id": "ITR_4170_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.01.04",
+        "raw_value": 3954000.0,
+        "scale": 1000,
+        "normalized_value": 3954000000.0
+      },
+      {
+        "document_id": "ITR_4170_2026-03-31_v1",
+        "document_type": "ITR",
+        "reference_date": "2026-03-31",
+        "available_at": "2026-07-19 10:39:30",
+        "version": 1,
+        "availability_precision": "CONSERVATIVE_RESOURCE_DATE",
+        "account": "2.02.01",
+        "raw_value": 94366000.0,
+        "scale": 1000,
+        "normalized_value": 94366000000.0
+      }
+    ],
+    "evidence_id": "ITR_4170_2026-03-31_v1",
+    "validation_status": "VALIDATED"
+  }
+]

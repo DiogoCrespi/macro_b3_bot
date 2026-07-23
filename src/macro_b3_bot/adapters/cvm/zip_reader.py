@@ -37,10 +37,11 @@ class CvmZipReader:
             resp.raise_for_status()
             raw_bytes = resp.content
         last_modified = resp.headers.get("Last-Modified")
+        collected_at = datetime.now(timezone.utc)
         resource_available_at = (
             parsedate_to_datetime(last_modified).astimezone(timezone.utc)
             if last_modified
-            else datetime.now(timezone.utc)
+            else collected_at
         )
 
         zip_checksum = compute_raw_checksum(raw_bytes)
@@ -91,6 +92,15 @@ class CvmZipReader:
                             cnpj=cnpj,
                             reference_date=ref_date,
                             received_at=resource_available_at,
+                            filing_available_at=None,
+                            resource_last_modified_at=(
+                                resource_available_at if last_modified else None
+                            ),
+                            collected_at=collected_at,
+                            availability_precision=(
+                                "CONSERVATIVE_RESOURCE_DATE"
+                                if last_modified else "UNKNOWN"
+                            ),
                             version=version,
                             raw_zip_checksum=zip_checksum,
                             ingestion_run_id=ingestion_run_id,

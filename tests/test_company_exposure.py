@@ -5,11 +5,14 @@ from pathlib import Path
 import pytest
 
 from macro_b3_bot.application.build_company_exposures import CompanyExposureBuilder
+from macro_b3_bot.application.audit_company_exposures import CompanyExposureAuditor
 from macro_b3_bot.application.evaluate_company_impacts import CompanyImpactEngine
+from macro_b3_bot.application.transport_company_channels import CompanyChannelTransport
 from macro_b3_bot.domain.causal_models import SectorStateSnapshot
 from macro_b3_bot.domain.company_exposure_models import (
     CompanyExposureOverride,
     CompanyExposureSnapshot,
+    CompanyFactorChannel,
     ExposureFieldEvidence,
     ExtractionMethod,
 )
@@ -128,6 +131,11 @@ def test_builder_selects_document_point_in_time_and_excludes_future_override(tmp
     assert snapshot.total_debt == 300
     assert snapshot.export_revenue_pct is None
     assert {item.evidence_id for item in snapshot.field_evidence} == {"ITR-v1"}
+    store.save_company_exposure_snapshot(snapshot.model_dump(mode="json"))
+    audit = CompanyExposureAuditor(store).audit_run("build-run")
+    assert len(audit) == 2
+    assert {row["validation_status"] for row in audit} == {"VALIDATED"}
+    assert {row["absolute_difference"] for row in audit} == {0}
     store.close()
 
 
@@ -185,3 +193,58 @@ def test_company_impact_requires_explicit_factor_context_and_never_buys() -> Non
     )
     assert incomplete.status == "NO_ACTION"
     assert set(incomplete.missing_exposures) == {"cost", "debt", "demand"}
+
+
+def test_channel_transport_preserves_fx_channels_and_opposite_direction() -> None:
+    from macro_b3_bot.domain.causal_models import SectorImpactCandidate
+
+    base = {
+        "candidate_id": "C1", "event_id": "E1", "event_type": "USD_BRL_SHOCK",
+        "causal_root": "USD_BRL_SHOCK_UP", "sector": "PAPEL_CELULOSE",
+        "direction": "BULLISH", "impact_score": .6, "event_strength": .8,
+        "confidence": .7, "causal_paths": [
+            ["USD_BRL_SHOCK_UP", "USD_BRL_UP", "B3_SECTOR_PAPEL_CELULOSE"]
+        ],
+        "evidence_status": "HYPOTHESIS", "detected_at": AS_OF,
+        "event_available_at": AS_OF, "as_of_timestamp": AS_OF, "run_id": "sector",
+        "source_event_run_id": "macro", "graph_version": "1.1.0",
+    }
+    channels = CompanyChannelTransport().from_sector_candidates([
+        SectorImpactCandidate(**base)
+    ])
+    directions = {item.channel: item.direction for item in channels}
+    assert directions == {"cost": -1, "debt": -1, "revenue": 1}
+
+    candidate = CompanyImpactEngine("impact-run").evaluate(
+        SectorStateSnapshot(
+            snapshot_id="SEC-FX", sector="PAPEL_CELULOSE", as_of_timestamp=AS_OF,
+            net_impact=.4, bullish_impact=.4, bearish_impact=0, conflict_ratio=0,
+            supporting_event_ids=["E1"], confidence=.7, status="ACTIVE",
+            run_id="sector", graph_version="1.1.0",
+        ),
+        exposure(
+            sector="PAPEL_CELULOSE",
+            revenue_foreign_currency_pct=.7,
+            foreign_currency_debt_pct=.2,
+            field_evidence=exposure().field_evidence + [
+                evidence("revenue_foreign_currency_pct", .7),
+                evidence("foreign_currency_debt_pct", .2),
+            ],
+        ),
+        None,
+        AS_OF,
+        factor_channels=channels,
+    )
+    assert candidate.revenue_impact_score is not None
+    assert candidate.debt_impact_score is not None
+    assert candidate.cost_impact_score is not None
+    assert candidate.revenue_impact_score > 0
+    assert candidate.debt_impact_score < 0
+
+
+def test_factor_channel_requires_traceable_evidence() -> None:
+    with pytest.raises(ValueError):
+        CompanyFactorChannel(
+            factor="FX", channel="revenue", direction=1, strength=.5,
+            confidence=.5, evidence_ids=[],
+        )

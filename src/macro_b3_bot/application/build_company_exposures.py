@@ -17,7 +17,8 @@ from macro_b3_bot.infrastructure.store import DatabaseStore
 
 _PILOT_PATH = Path(__file__).resolve().parents[3] / "config" / "company_exposure_pilot.yaml"
 _EXPOSURE_FIELDS = (
-    "total_revenue", "foreign_revenue", "total_debt", "foreign_currency_debt",
+    "total_revenue", "foreign_revenue", "total_debt", "gross_financial_debt",
+    "foreign_currency_debt",
     "floating_rate_debt", "inflation_linked_debt", "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct", "export_revenue_pct", "floating_rate_debt_pct",
     "inflation_linked_debt_pct", "foreign_currency_debt_pct", "commodity_exposures",
@@ -32,7 +33,7 @@ class CompanyExposureBuilder:
         self,
         store: DatabaseStore,
         run_id: str,
-        methodology_version: str = "4C.1-v1",
+        methodology_version: str = "4C.3-v1",
     ) -> None:
         self.store = store
         self.run_id = run_id
@@ -100,10 +101,15 @@ class CompanyExposureBuilder:
                            ORDER BY version DESC,received_at DESC,document_id DESC
                        ) AS rn
                 FROM cvm_documents
-                WHERE cvm_code = ? AND received_at <= ?
+                WHERE cvm_code = ?
+                  AND COALESCE(filing_available_at,resource_last_modified_at,
+                               received_at,collected_at) <= ?
                   AND document_type IN ('DFP','ITR')
             )
-            SELECT document_id,document_type,reference_date,received_at,version
+            SELECT document_id,document_type,reference_date,
+                   COALESCE(filing_available_at,resource_last_modified_at,
+                            received_at,collected_at) AS available_at,
+                   version,availability_precision
             FROM available_documents
             WHERE rn = 1
             QUALIFY ROW_NUMBER() OVER (
@@ -118,7 +124,7 @@ class CompanyExposureBuilder:
             return None, "MISSING_DOCUMENT"
 
         primary = documents[0]
-        document_id, document_type, reference_date, received_at, version = primary
+        document_id, document_type, reference_date, received_at, version, _ = primary
         values: dict[str, object] = {field: None for field in _EXPOSURE_FIELDS}
         evidence: list[ExposureFieldEvidence] = []
         revenue, revenue_doc = self._best_statement_value(documents, "3.01")
@@ -145,6 +151,7 @@ class CompanyExposureBuilder:
             ))
         if total_debt is not None:
             values["total_debt"] = total_debt
+            values["gross_financial_debt"] = total_debt
             debt_docs = [item for item in (current_doc, long_doc) if item is not None]
             debt_evidence_id = "+".join(sorted({str(item[0]) for item in debt_docs}))
             debt_available_at = max(item[3] for item in debt_docs)
@@ -152,7 +159,13 @@ class CompanyExposureBuilder:
             evidence.append(self._evidence(
                 "total_debt", total_debt, debt_source_types, debt_evidence_id,
                 debt_available_at,
-                "Sum of standardized balance-sheet debt accounts 2.01.04 and 2.02.01.",
+                "Compatibility alias for gross_financial_debt.",
+            ))
+            evidence.append(self._evidence(
+                "gross_financial_debt", total_debt, debt_source_types, debt_evidence_id,
+                debt_available_at,
+                "Gross financial debt v1: standardized accounts 2.01.04 and "
+                "2.02.01; excludes cash/netting and is not applied to banks.",
             ))
 
         for override in self.store.get_company_exposure_overrides_as_of(ticker, as_of):
@@ -170,10 +183,13 @@ class CompanyExposureBuilder:
             ))
 
         missing = [field for field in _EXPOSURE_FIELDS if values[field] is None]
-        confidence = (
-            sum(item.confidence for item in evidence) / len(_EXPOSURE_FIELDS)
-            if evidence else 0.0
+        evidence_quality = (
+            sum(item.confidence for item in evidence) / len(evidence) if evidence else 0.0
         )
+        completeness = sum(values[field] is not None for field in _EXPOSURE_FIELDS) / len(
+            _EXPOSURE_FIELDS
+        )
+        confidence = (evidence_quality * completeness) ** 0.5
         identity = (
             f"{ticker}|{cvm_code}|{as_of.isoformat()}|{document_id}|{version}|"
             f"{','.join(str(item[0]) for item in documents)}|"
@@ -185,6 +201,8 @@ class CompanyExposureBuilder:
             as_of_timestamp=as_of, reference_date=reference_date,
             exposure_version=self.methodology_version, **values,
             field_evidence=evidence, missing_fields=missing,
+            evidence_quality_score=round(evidence_quality, 4),
+            completeness_score=round(completeness, 4),
             confidence=round(confidence, 4), run_id=self.run_id,
             created_at=datetime.now(timezone.utc),
         )

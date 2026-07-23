@@ -172,6 +172,10 @@ class DatabaseStore:
                 cnpj VARCHAR NOT NULL,
                 reference_date DATE NOT NULL,
                 received_at TIMESTAMP NOT NULL,
+                filing_available_at TIMESTAMP,
+                resource_last_modified_at TIMESTAMP,
+                collected_at TIMESTAMP,
+                availability_precision VARCHAR DEFAULT 'UNKNOWN',
                 version INTEGER NOT NULL,
                 raw_zip_checksum VARCHAR NOT NULL,
                 ingestion_run_id VARCHAR NOT NULL,
@@ -179,11 +183,29 @@ class DatabaseStore:
                 source_url VARCHAR
             );
         """)
-        for col in ("availability_basis", "source_url"):
+        for col, kind in {
+            "availability_basis": "VARCHAR",
+            "source_url": "VARCHAR",
+            "filing_available_at": "TIMESTAMP",
+            "resource_last_modified_at": "TIMESTAMP",
+            "collected_at": "TIMESTAMP",
+            "availability_precision": "VARCHAR DEFAULT 'UNKNOWN'",
+        }.items():
             try:
-                self.connection.execute(f"ALTER TABLE cvm_documents ADD COLUMN {col} VARCHAR;")
+                self.connection.execute(f"ALTER TABLE cvm_documents ADD COLUMN {col} {kind};")
             except Exception:
                 pass
+        self.connection.execute(
+            """
+            UPDATE cvm_documents
+            SET resource_last_modified_at = COALESCE(resource_last_modified_at,received_at),
+                availability_precision = 'CONSERVATIVE_RESOURCE_DATE'
+            WHERE availability_basis = 'RESOURCE_LAST_MODIFIED'
+              AND (resource_last_modified_at IS NULL
+                   OR availability_precision IS NULL
+                   OR availability_precision = 'UNKNOWN')
+            """
+        )
         # Financial Statement Lines
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS financial_statement_lines (
@@ -666,10 +688,19 @@ class DatabaseStore:
                 field_evidence VARCHAR NOT NULL,
                 missing_fields VARCHAR NOT NULL,
                 confidence DOUBLE NOT NULL,
+                evidence_quality_score DOUBLE,
+                completeness_score DOUBLE,
                 run_id VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL
             );
         """)
+        for col in ("evidence_quality_score", "completeness_score"):
+            try:
+                self.connection.execute(
+                    f"ALTER TABLE company_exposure_snapshots ADD COLUMN {col} DOUBLE;"
+                )
+            except Exception:
+                pass
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS company_exposure_overrides (
                 override_id VARCHAR PRIMARY KEY,
@@ -1125,11 +1156,16 @@ class DatabaseStore:
                     UPDATE cvm_documents
                     SET received_at = ?, raw_zip_checksum = ?, ingestion_run_id = ?,
                         availability_basis = ?, source_url = ?
+                        , filing_available_at = ?, resource_last_modified_at = ?,
+                        collected_at = ?, availability_precision = ?
                     WHERE document_id = ?
                     """,
                     [
                         doc["received_at"], doc["raw_zip_checksum"], doc["ingestion_run_id"],
-                        doc.get("availability_basis"), doc.get("source_url"), doc["document_id"],
+                        doc.get("availability_basis"), doc.get("source_url"),
+                        doc.get("filing_available_at"), doc.get("resource_last_modified_at"),
+                        doc.get("collected_at"), doc.get("availability_precision", "UNKNOWN"),
+                        doc["document_id"],
                     ],
                 )
             return (False, False) # Duplicado idêntico (mesma versão e ID)
@@ -1145,14 +1181,17 @@ class DatabaseStore:
             INSERT INTO cvm_documents (
                 document_id, document_type, cvm_code, cnpj, reference_date,
                 received_at, version, raw_zip_checksum, ingestion_run_id,
-                availability_basis, source_url
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                availability_basis, source_url, filing_available_at,
+                resource_last_modified_at, collected_at, availability_precision
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 doc["document_id"], doc["document_type"], doc["cvm_code"], doc["cnpj"],
                 doc["reference_date"], doc["received_at"], doc["version"],
                 doc["raw_zip_checksum"], doc["ingestion_run_id"],
                 doc.get("availability_basis"), doc.get("source_url"),
+                doc.get("filing_available_at"), doc.get("resource_last_modified_at"),
+                doc.get("collected_at"), doc.get("availability_precision", "UNKNOWN"),
             ]
         )
         return (True, has_other_version > 0)
@@ -1728,7 +1767,8 @@ class DatabaseStore:
         identity = {
             "exposure_id", "ticker", "cvm_code", "sector", "as_of_timestamp",
             "reference_date", "exposure_version", "field_evidence", "missing_fields",
-            "confidence", "run_id", "created_at",
+            "confidence", "evidence_quality_score", "completeness_score",
+            "run_id", "created_at",
         }
         payload = {key: value for key, value in exposure.items() if key not in identity}
         self.connection.execute(
@@ -1736,8 +1776,8 @@ class DatabaseStore:
             INSERT INTO company_exposure_snapshots (
                 exposure_id,ticker,cvm_code,sector,as_of_timestamp,reference_date,
                 exposure_version,exposure_payload,field_evidence,missing_fields,
-                confidence,run_id,created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                confidence,evidence_quality_score,completeness_score,run_id,created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 exposure["exposure_id"], exposure["ticker"], exposure["cvm_code"],
@@ -1745,6 +1785,8 @@ class DatabaseStore:
                 exposure["exposure_version"], _json.dumps(payload),
                 _json.dumps(exposure["field_evidence"], default=str),
                 _json.dumps(exposure["missing_fields"]), exposure["confidence"],
+                exposure.get("evidence_quality_score", 0),
+                exposure.get("completeness_score", 0),
                 exposure["run_id"], exposure["created_at"],
             ],
         )

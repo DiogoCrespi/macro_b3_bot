@@ -707,7 +707,7 @@ def build_company_exposures(
     )
     store.close()
 
-    table = Table(title="Sprint 4C.1 — Company Exposure PIT Pilot")
+    table = Table(title="Sprint 4C.3 — Company Exposure PIT Pilot")
     table.add_column("Métrica")
     table.add_column("Valor")
     for key in (
@@ -717,6 +717,41 @@ def build_company_exposures(
         table.add_row(key, str(summary[key]))
     console.print(table)
     console.print("[bold]Ausências permanecem NULL/UNKNOWN; valuation e BUY desabilitados.[/bold]")
+
+
+@app.command("audit-company-exposures")
+def audit_company_exposures(
+    run_id: str = typer.Option(..., "--run-id", help="Exposure build run ID"),
+    output: Optional[str] = typer.Option(None, "--output", help="Optional JSON output"),
+) -> None:
+    """Reconcile extracted values with the selected official CVM statement lines."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.audit_company_exposures import CompanyExposureAuditor
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    rows = CompanyExposureAuditor(store).audit_run(run_id)
+    store.close()
+    if output:
+        Path(output).write_text(
+            json.dumps(rows, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8",
+        )
+
+    table = Table(title=f"Accounting audit — {run_id}")
+    for column in ("Ticker", "Metric", "Extracted", "Published", "Difference", "Status"):
+        table.add_column(column)
+    for row in rows:
+        table.add_row(
+            row["ticker"], row["metric"], str(row["extracted_value"]),
+            str(row["published_normalized_value"]), str(row["absolute_difference"]),
+            row["validation_status"],
+        )
+    console.print(table)
+    validated = sum(row["validation_status"] == "VALIDATED" for row in rows)
+    console.print(f"Validated={validated}/{len(rows)} | Mismatches={len(rows) - validated}")
 
 
 @app.command("reconcile-company-mappings")

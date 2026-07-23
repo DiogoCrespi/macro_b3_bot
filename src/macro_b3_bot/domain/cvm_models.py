@@ -24,6 +24,10 @@ class CvmDocument(BaseModel):
     cnpj: str
     reference_date: date
     received_at: datetime
+    filing_available_at: datetime | None = None
+    resource_last_modified_at: datetime | None = None
+    collected_at: datetime | None = None
+    availability_precision: str = "UNKNOWN"
     version: int
     raw_zip_checksum: str
     ingestion_run_id: str
