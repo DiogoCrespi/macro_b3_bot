@@ -40,6 +40,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 120
+exclude = ["REFERENCES"]
 
 [tool.ruff.lint]
 # Only enforce hard errors: pyflakes (F) + critical pycodestyle (E4/E7/E9)
