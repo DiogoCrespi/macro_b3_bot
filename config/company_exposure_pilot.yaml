@@ -1,0 +1,17 @@
+pilot_version: "1.0.0"
+companies:
+  - {ticker: "SUZB3", sector: "PAPEL_CELULOSE"}
+  - {ticker: "KLBN11", sector: "PAPEL_CELULOSE"}
+  - {ticker: "PETR4", sector: "PETROLEO_GAS"}
+  - {ticker: "PRIO3", sector: "PETROLEO_GAS"}
+  - {ticker: "RECV3", sector: "PETROLEO_GAS"}
+  - {ticker: "VALE3", sector: "MINERACAO_SIDERURGIA"}
+  - {ticker: "ITUB4", sector: "BANCOS"}
+  - {ticker: "BBAS3", sector: "BANCOS"}
+  - {ticker: "MGLU3", sector: "VAREJO"}
+  - {ticker: "LREN3", sector: "VAREJO"}
+  - {ticker: "ELET3", sector: "ENERGIA_ELETRICA"}
+  - {ticker: "EQTL3", sector: "ENERGIA_ELETRICA"}
+  - {ticker: "AZUL4", sector: "AVIACAO"}
+  - {ticker: "RAIL3", sector: "LOGISTICA"}
+  - {ticker: "SLCE3", sector: "AGRO_ALIMENTOS"}

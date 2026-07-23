@@ -688,6 +688,37 @@ def audit_sector_impacts(
     console.print("[bold]BUY / Ordens: PERMANENTEMENTE BLOQUEADOS[/bold]")
 
 
+@app.command("build-company-exposures")
+def build_company_exposures(
+    as_of: str = typer.Option(..., "--as-of", help="Point-in-time cutoff (ISO-8601)"),
+    run_id: Optional[str] = typer.Option(None, "--run-id", help="Exposure build run ID"),
+) -> None:
+    """Build evidenced CVM exposure snapshots for the 15-company pilot."""
+    from uuid import uuid4
+
+    from macro_b3_bot.application.build_company_exposures import CompanyExposureBuilder
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    target_run_id = run_id or f"exposure_{uuid4()}"
+    summary = CompanyExposureBuilder(store, target_run_id).build_pilot(
+        datetime.fromisoformat(as_of)
+    )
+    store.close()
+
+    table = Table(title="Sprint 4C.1 — Company Exposure PIT Pilot")
+    table.add_column("Métrica")
+    table.add_column("Valor")
+    for key in (
+        "run_id", "as_of_timestamp", "pilot_requested", "snapshots_built",
+        "missing_mapping", "missing_point_in_time_document",
+    ):
+        table.add_row(key, str(summary[key]))
+    console.print(table)
+    console.print("[bold]Ausências permanecem NULL/UNKNOWN; valuation e BUY desabilitados.[/bold]")
+
+
 @app.command("run-macro-engine")
 def run_macro_engine(
     sources: str = typer.Option("fred,eia,noaa", "--sources"),

@@ -631,6 +631,56 @@ class DatabaseStore:
             );
         """)
 
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS company_exposure_snapshots (
+                exposure_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                sector VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                reference_date DATE NOT NULL,
+                exposure_version VARCHAR NOT NULL,
+                exposure_payload VARCHAR NOT NULL,
+                field_evidence VARCHAR NOT NULL,
+                missing_fields VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS company_exposure_overrides (
+                override_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                field_name VARCHAR NOT NULL,
+                previous_value VARCHAR,
+                new_value VARCHAR NOT NULL,
+                rationale VARCHAR NOT NULL,
+                evidence_ids VARCHAR NOT NULL,
+                approved_by VARCHAR NOT NULL,
+                approved_at TIMESTAMP NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS company_impact_candidates (
+                candidate_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                sector_snapshot_id VARCHAR NOT NULL,
+                company_exposure_id VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                impact_payload VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                conflict_ratio DOUBLE NOT NULL,
+                missing_exposures VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+
 
     def _init_views(self) -> None:
         # Visão da versão mais recente dos documentos da CVM
@@ -1560,6 +1610,123 @@ class DatabaseStore:
              snapshot["conflict_ratio"], _json.dumps(snapshot.get("supporting_event_ids", [])),
              _json.dumps(snapshot.get("opposing_event_ids", [])), snapshot["confidence"],
              snapshot["status"], snapshot["run_id"], snapshot["graph_version"], datetime.now(timezone.utc)]
+        )
+        return True
+
+    def save_company_exposure_override(self, override: dict) -> bool:
+        """Persist an immutable override; replay selection filters approved_at."""
+        import json as _json
+        if self.connection.execute(
+            "SELECT COUNT(*) FROM company_exposure_overrides WHERE override_id = ?",
+            [override["override_id"]],
+        ).fetchone()[0]:
+            return False
+        self.connection.execute(
+            """
+            INSERT INTO company_exposure_overrides (
+                override_id,ticker,field_name,previous_value,new_value,rationale,
+                evidence_ids,approved_by,approved_at,methodology_version,run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                override["override_id"], override["ticker"], override["field_name"],
+                _json.dumps(override.get("previous_value")), _json.dumps(override["new_value"]),
+                override["rationale"], _json.dumps(override["evidence_ids"]),
+                override["approved_by"], override["approved_at"],
+                override["methodology_version"], override["run_id"],
+            ],
+        )
+        return True
+
+    def get_company_exposure_overrides_as_of(
+        self, ticker: str, as_of_timestamp: datetime
+    ) -> list[dict]:
+        """Return only overrides already approved at the replay cutoff."""
+        import json as _json
+        cutoff = as_of_timestamp.astimezone(timezone.utc).replace(tzinfo=None)
+        rows = self.connection.execute(
+            """
+            SELECT override_id,field_name,new_value,rationale,evidence_ids,
+                   approved_by,approved_at,methodology_version,run_id
+            FROM company_exposure_overrides
+            WHERE ticker = ? AND approved_at <= ?
+            QUALIFY ROW_NUMBER() OVER (
+                PARTITION BY ticker,field_name ORDER BY approved_at DESC,override_id DESC
+            ) = 1
+            """,
+            [ticker, cutoff],
+        ).fetchall()
+        return [
+            {
+                "override_id": row[0], "field_name": row[1], "new_value": _json.loads(row[2]),
+                "rationale": row[3], "evidence_ids": _json.loads(row[4]),
+                "approved_by": row[5], "approved_at": row[6],
+                "methodology_version": row[7], "run_id": row[8],
+            }
+            for row in rows
+        ]
+
+    def save_company_exposure_snapshot(self, exposure: dict) -> bool:
+        import json as _json
+        if self.connection.execute(
+            "SELECT COUNT(*) FROM company_exposure_snapshots WHERE exposure_id = ?",
+            [exposure["exposure_id"]],
+        ).fetchone()[0]:
+            return False
+        identity = {
+            "exposure_id", "ticker", "cvm_code", "sector", "as_of_timestamp",
+            "reference_date", "exposure_version", "field_evidence", "missing_fields",
+            "confidence", "run_id", "created_at",
+        }
+        payload = {key: value for key, value in exposure.items() if key not in identity}
+        self.connection.execute(
+            """
+            INSERT INTO company_exposure_snapshots (
+                exposure_id,ticker,cvm_code,sector,as_of_timestamp,reference_date,
+                exposure_version,exposure_payload,field_evidence,missing_fields,
+                confidence,run_id,created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                exposure["exposure_id"], exposure["ticker"], exposure["cvm_code"],
+                exposure["sector"], exposure["as_of_timestamp"], exposure["reference_date"],
+                exposure["exposure_version"], _json.dumps(payload),
+                _json.dumps(exposure["field_evidence"], default=str),
+                _json.dumps(exposure["missing_fields"]), exposure["confidence"],
+                exposure["run_id"], exposure["created_at"],
+            ],
+        )
+        return True
+
+    def save_company_impact_candidate(self, candidate: dict) -> bool:
+        import json as _json
+        if self.connection.execute(
+            "SELECT COUNT(*) FROM company_impact_candidates WHERE candidate_id = ?",
+            [candidate["candidate_id"]],
+        ).fetchone()[0]:
+            return False
+        payload_keys = {
+            "revenue_impact_score", "cost_impact_score", "debt_impact_score",
+            "demand_impact_score", "net_company_impact", "supporting_paths",
+            "opposing_paths",
+        }
+        self.connection.execute(
+            """
+            INSERT INTO company_impact_candidates (
+                candidate_id,ticker,sector_snapshot_id,company_exposure_id,
+                as_of_timestamp,impact_payload,confidence,conflict_ratio,
+                missing_exposures,status,run_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                candidate["candidate_id"], candidate["ticker"],
+                candidate["sector_snapshot_id"], candidate["company_exposure_id"],
+                candidate["as_of_timestamp"],
+                _json.dumps({key: candidate.get(key) for key in payload_keys}),
+                candidate["confidence"], candidate["conflict_ratio"],
+                _json.dumps(candidate["missing_exposures"]), candidate["status"],
+                candidate["run_id"],
+            ],
         )
         return True
 
