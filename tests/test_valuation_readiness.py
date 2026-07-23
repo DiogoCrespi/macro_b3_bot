@@ -49,7 +49,7 @@ def _calibration() -> BridgeCalibrationResult:
         observations=rows, parameters={}, parameter_ranges={}, heuristic_sensitivity_band={},
         sensitivity_band_type="HEURISTIC_SENSITIVITY_BAND", mean_absolute_error=0,
         in_sample_mae=0, validation_method="EXPANDING_WINDOW_WALK_FORWARD",
-        observation_count=5, calibration_type="COMPANY_CALIBRATED", validation_gate_passed=True,
+        observation_count=5, calibration_type="EMPIRICAL_IN_SAMPLE", validation_gate_passed=True,
         confidence=.9, calibration_status="COMPANY_CALIBRATED", methodology_version="test", run_id="test",
     )
 
@@ -88,4 +88,3 @@ def test_gate_flags_missing_market_data_and_persists_identity() -> None:
     )
     assert "MISSING_MARKET_DATA" in result.blockers
     assert result.assessment_id.startswith("4e1-")
-
