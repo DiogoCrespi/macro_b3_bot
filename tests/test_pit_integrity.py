@@ -279,3 +279,96 @@ def test_regime_detector_as_of_filtering() -> None:
         assert snap["captured_at"] == t1
         assert snap["snapshot_date"] == t1.date()
         store.close()
+
+
+def test_multi_vintage_reference_date_deduplication() -> None:
+    """3 vintages of January (3.0 initial, 3.1 rev1, 3.2 rev2) must collapse into 1 value (3.2)."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = Path(tmpdir) / "audit.duckdb"
+        store = DatabaseStore(db_path)
+
+        t1 = datetime(2024, 2, 15, tzinfo=timezone.utc)
+        t2 = datetime(2024, 3, 15, tzinfo=timezone.utc)
+        t3 = datetime(2024, 4, 15, tzinfo=timezone.utc)
+
+        # Initial release
+        rel_v1 = {
+            "release_id": "r_jan_v1", "source": "FRED", "series_code": "CPI",
+            "indicator": "CPI", "geography": ["US"], "frequency": "MONTHLY", "unit": "%",
+            "reference_date": date(2024, 1, 1), "published_at": t1, "available_at": t1,
+            "actual_value": Decimal("3.0"), "previous_value": None, "consensus_value": None,
+            "raw_checksum": "chk_v1", "record_checksum": "rck_v1", "ingestion_run_id": "run1",
+            "availability_precision": "EXACT_DATE",
+        }
+        # Revision 1
+        rel_v2 = {
+            "release_id": "r_jan_v2", "source": "FRED", "series_code": "CPI",
+            "indicator": "CPI", "geography": ["US"], "frequency": "MONTHLY", "unit": "%",
+            "reference_date": date(2024, 1, 1), "published_at": t2, "available_at": t2,
+            "actual_value": Decimal("3.1"), "previous_value": None, "consensus_value": None,
+            "raw_checksum": "chk_v2", "record_checksum": "rck_v2", "ingestion_run_id": "run2",
+            "availability_precision": "EXACT_DATE",
+        }
+        # Revision 2
+        rel_v3 = {
+            "release_id": "r_jan_v3", "source": "FRED", "series_code": "CPI",
+            "indicator": "CPI", "geography": ["US"], "frequency": "MONTHLY", "unit": "%",
+            "reference_date": date(2024, 1, 1), "published_at": t3, "available_at": t3,
+            "actual_value": Decimal("3.2"), "previous_value": None, "consensus_value": None,
+            "raw_checksum": "chk_v3", "record_checksum": "rck_v3", "ingestion_run_id": "run3",
+            "availability_precision": "EXACT_DATE",
+        }
+        store.save_macro_release(rel_v1)
+        store.save_macro_release(rel_v2)
+        store.save_macro_release(rel_v3)
+
+        # As of t3: history query MUST return exactly 1 observation for Jan 2024 with actual_value 3.2
+        history = store.get_macro_releases_for_series("FRED", "CPI", limit=10, as_of_timestamp=t3)
+        assert len(history) == 1
+        assert Decimal(str(history[0]["actual_value"])) == Decimal("3.2")
+        store.close()
+
+
+def test_out_of_order_vintage_insertion() -> None:
+    """Inserting rev2 first, then initial, then rev1 must keep rev2 as is_latest=True."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = Path(tmpdir) / "audit.duckdb"
+        store = DatabaseStore(db_path)
+
+        # Rev 2 (March) inserted FIRST
+        v_rev2 = {
+            "vintage_id": "v_rev2", "series_code": "CPI", "source": "FRED",
+            "reference_date": date(2024, 1, 1), "vintage_date": date(2024, 3, 15),
+            "available_at": datetime(2024, 3, 15, tzinfo=timezone.utc),
+            "value": Decimal("3.2"), "revision_number": 2, "is_initial_release": False,
+            "is_latest": True, "record_checksum": "c3", "ingestion_run_id": "run3",
+        }
+        store.save_macro_vintage(v_rev2)
+
+        # Initial (Jan) inserted SECOND (out of order backfill)
+        v_initial = {
+            "vintage_id": "v_init", "series_code": "CPI", "source": "FRED",
+            "reference_date": date(2024, 1, 1), "vintage_date": date(2024, 1, 15),
+            "available_at": datetime(2024, 1, 15, tzinfo=timezone.utc),
+            "value": Decimal("3.0"), "revision_number": 0, "is_initial_release": True,
+            "is_latest": True, "record_checksum": "c1", "ingestion_run_id": "run1",
+        }
+        store.save_macro_vintage(v_initial)
+
+        # Rev 1 (Feb) inserted THIRD
+        v_rev1 = {
+            "vintage_id": "v_rev1", "series_code": "CPI", "source": "FRED",
+            "reference_date": date(2024, 1, 1), "vintage_date": date(2024, 2, 15),
+            "available_at": datetime(2024, 2, 15, tzinfo=timezone.utc),
+            "value": Decimal("3.1"), "revision_number": 1, "is_initial_release": False,
+            "is_latest": True, "record_checksum": "c2", "ingestion_run_id": "run2",
+        }
+        store.save_macro_vintage(v_rev1)
+
+        # Check DB state: v_rev2 MUST be the only is_latest = True
+        latest_rows = store.connection.execute(
+            "SELECT vintage_id FROM macro_data_vintages WHERE source = 'FRED' AND series_code = 'CPI' AND is_latest = True"
+        ).fetchall()
+        assert len(latest_rows) == 1
+        assert latest_rows[0][0] == "v_rev2"
+        store.close()

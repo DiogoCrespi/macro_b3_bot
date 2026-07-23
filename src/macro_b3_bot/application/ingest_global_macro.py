@@ -161,14 +161,19 @@ class GlobalMacroIngester:
             output_type=4,
         )
 
-        # 2. Fetch vintage dates for revisions (output_type=3)
+        # 2. Fetch vintage dates for revisions (output_type=3) incrementally
+        last_vintage = self.store.get_latest_vintage_date("FRED", cfg["series_code"])
         revision_obs = []
         try:
             vint_dates = client.fetch_vintage_dates(cfg["series_code"])
-            recent_vintages = [v for v in vint_dates if start_date <= date.fromisoformat(v) <= end_date]
-            if recent_vintages:
-                for i in range(0, len(recent_vintages), 50):
-                    chunk = recent_vintages[i:i + 50]
+            # Only fetch vintage dates strictly > last_vintage
+            new_vintages = [
+                v for v in vint_dates
+                if last_vintage is None or date.fromisoformat(v) > last_vintage
+            ]
+            if new_vintages:
+                for i in range(0, len(new_vintages), 50):
+                    chunk = new_vintages[i:i + 50]
                     revs = client.fetch_series_observations(
                         series_id=cfg["series_code"],
                         observation_start=start_date,
@@ -200,7 +205,6 @@ class GlobalMacroIngester:
         new = 0
         skipped = 0
         for obs in dedup_obs:
-            is_initial = obs.get("_is_initial", True)
             payload = normalize_fred_observation(
                 obs=obs,
                 series_code=cfg["series_code"],
@@ -215,9 +219,10 @@ class GlobalMacroIngester:
                 skipped += 1
                 continue
 
+            existing_count = self.store.count_vintages_for_ref_date("FRED", cfg["series_code"], payload["reference_date"])
+            is_initial = (existing_count == 0)
             payload["is_initial_release"] = is_initial
-            if not is_initial:
-                payload["revision_number"] = 1
+            payload["revision_number"] = existing_count
 
             # Attach previous_value from stored history
             payload["previous_value"] = _get_previous_value(
@@ -242,7 +247,7 @@ class GlobalMacroIngester:
                 "realtime_end": payload.get("realtime_end"),
                 "available_at": payload.get("available_at", self.available_at),
                 "value": payload["actual_value"],
-                "revision_number": payload.get("revision_number", 0),
+                "revision_number": existing_count,
                 "is_initial_release": is_initial,
                 "is_latest": True,
                 "record_checksum": payload.get("record_checksum", ""),

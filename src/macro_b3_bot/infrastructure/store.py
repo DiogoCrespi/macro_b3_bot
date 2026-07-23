@@ -663,16 +663,6 @@ class DatabaseStore:
         if existing > 0:
             return False
 
-        if vint.get("is_latest", True):
-            self.connection.execute(
-                """
-                UPDATE macro_data_vintages
-                SET is_latest = FALSE
-                WHERE source = ? AND series_code = ? AND reference_date = ?
-                """,
-                [vint["source"], vint["series_code"], vint["reference_date"]]
-            )
-
         self.connection.execute(
             """
             INSERT INTO macro_data_vintages (
@@ -693,7 +683,100 @@ class DatabaseStore:
                 datetime.now(timezone.utc),
             ]
         )
+
+        # Deterministically set is_latest = True ONLY for the record with MAX(vintage_date)
+        self.connection.execute(
+            """
+            UPDATE macro_data_vintages
+            SET is_latest = (
+                vintage_date = (
+                    SELECT MAX(v2.vintage_date)
+                    FROM macro_data_vintages v2
+                    WHERE v2.source = macro_data_vintages.source
+                      AND v2.series_code = macro_data_vintages.series_code
+                      AND v2.reference_date = macro_data_vintages.reference_date
+                )
+            )
+            WHERE source = ? AND series_code = ? AND reference_date = ?
+            """,
+            [vint["source"], vint["series_code"], vint["reference_date"]]
+        )
         return True
+
+    def get_latest_vintage_date(self, source: str, series_code: str) -> Optional[date]:
+        """Return the maximum vintage_date stored for a given series."""
+        row = self.connection.execute(
+            "SELECT MAX(vintage_date) FROM macro_data_vintages WHERE source = ? AND series_code = ?",
+            [source, series_code]
+        ).fetchone()
+        if row and row[0]:
+            val = row[0]
+            if isinstance(val, str):
+                return date.fromisoformat(val)
+            if isinstance(val, date):
+                return val
+        return None
+
+    def count_vintages_for_ref_date(self, source: str, series_code: str, ref_date: date) -> int:
+        """Return count of existing vintages for a given series and reference_date."""
+        row = self.connection.execute(
+            "SELECT COUNT(*) FROM macro_data_vintages WHERE source = ? AND series_code = ? AND reference_date = ?",
+            [source, series_code, ref_date]
+        ).fetchone()
+        return row[0] if row else 0
+
+    def get_macro_releases_for_series(
+        self, source: str, series_code: str, limit: int = 500, as_of_timestamp: Optional[datetime] = None
+    ) -> list[dict]:
+        """
+        Return recent releases ordered by reference_date DESC.
+        Uses ROW_NUMBER() partition to select at most 1 active release version per reference_date.
+        """
+        if as_of_timestamp:
+            rows = self.connection.execute(
+                """
+                WITH available_versions AS (
+                    SELECT *,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY source, series_code, reference_date
+                               ORDER BY available_at DESC, vintage_date DESC, revision_number DESC
+                           ) AS rn
+                    FROM macro_releases
+                    WHERE source = ? AND series_code = ? AND available_at <= ?
+                )
+                SELECT release_id, reference_date, published_at, available_at,
+                       actual_value, previous_value, consensus_value
+                FROM available_versions
+                WHERE rn = 1
+                ORDER BY reference_date DESC
+                LIMIT ?
+                """,
+                [source, series_code, as_of_timestamp, limit]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                WITH available_versions AS (
+                    SELECT *,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY source, series_code, reference_date
+                               ORDER BY available_at DESC, vintage_date DESC, revision_number DESC
+                           ) AS rn
+                    FROM macro_releases
+                    WHERE source = ? AND series_code = ?
+                )
+                SELECT release_id, reference_date, published_at, available_at,
+                       actual_value, previous_value, consensus_value
+                FROM available_versions
+                WHERE rn = 1
+                ORDER BY reference_date DESC
+                LIMIT ?
+                """,
+                [source, series_code, limit]
+            ).fetchall()
+        cols = ["release_id", "reference_date", "published_at", "available_at",
+                "actual_value", "previous_value", "consensus_value"]
+        return [dict(zip(cols, r)) for r in rows]
 
     def save_macro_event_candidate(self, evt: dict) -> bool:
         """Idempotent upsert of a MacroEventCandidate."""
@@ -776,38 +859,6 @@ class DatabaseStore:
             ]
         )
         return True
-
-    def get_macro_releases_for_series(
-        self, source: str, series_code: str, limit: int = 500, as_of_timestamp: Optional[datetime] = None
-    ) -> list[dict]:
-        """Return recent releases ordered by reference_date DESC, optionally filtered as of as_of_timestamp."""
-        if as_of_timestamp:
-            rows = self.connection.execute(
-                """
-                SELECT release_id, reference_date, published_at, available_at,
-                       actual_value, previous_value, consensus_value
-                FROM macro_releases
-                WHERE source = ? AND series_code = ? AND available_at <= ?
-                ORDER BY reference_date DESC
-                LIMIT ?
-                """,
-                [source, series_code, as_of_timestamp, limit]
-            ).fetchall()
-        else:
-            rows = self.connection.execute(
-                """
-                SELECT release_id, reference_date, published_at, available_at,
-                       actual_value, previous_value, consensus_value
-                FROM macro_releases
-                WHERE source = ? AND series_code = ?
-                ORDER BY reference_date DESC
-                LIMIT ?
-                """,
-                [source, series_code, limit]
-            ).fetchall()
-        cols = ["release_id", "reference_date", "published_at", "available_at",
-                "actual_value", "previous_value", "consensus_value"]
-        return [dict(zip(cols, r)) for r in rows]
 
     def get_macro_event_candidates(self, status: Optional[str] = None) -> list[dict]:
         """Return macro event candidates, optionally filtered by status."""

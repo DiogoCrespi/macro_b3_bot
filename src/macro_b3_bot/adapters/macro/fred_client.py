@@ -234,7 +234,7 @@ def normalize_fred_observation(
         "vintage_date": vint_date,
         "realtime_start": date.fromisoformat(rt_start) if rt_start and rt_start != "9999-12-31" else None,
         "realtime_end": date.fromisoformat(rt_end) if rt_end and rt_end != "9999-12-31" else None,
-        "availability_precision": "EXACT",
+        "availability_precision": "EXACT_DATE",
         "revision_number": 0,
         "is_initial_release": True,
         "actual_value": value,

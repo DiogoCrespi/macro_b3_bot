@@ -271,7 +271,7 @@ class MacroEventBuilder:
             "SELECT COUNT(*) FROM macro_data_vintages WHERE source = ? AND series_code = ? AND reference_date = ?",
             [source, series_code, ref_date]
         ).fetchone()[0]
-        has_vintage = (vint_count > 0) or (source == "FRED")
+        has_vintage = vint_count > 0
         precision = rel.get("availability_precision", "EXACT")
 
         data_quality_score = compute_data_quality_score(
