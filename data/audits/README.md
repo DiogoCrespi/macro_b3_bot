@@ -25,3 +25,18 @@ The subsequent official-FRE coverage packet is:
 
 The 15/15 threshold describes extraction coverage, not approval. All 50 facts
 remain `HUMAN_REVIEW_PENDING`; no agent-generated approval is accepted.
+
+Sprint 4C.5A hardening artifacts:
+
+- `exposure_4c5a_coverage.json` separates extraction coverage, direct impact
+  compatibility, component readiness, and approved coverage;
+- `exposure_4c5a_review_pending.json` replaces excerpt-only hashes with
+  canonical fact-review hashes covering values, scope, denominator, formula,
+  methodology, document checksum, FRE section, and evidence text.
+
+The local CLI now requires an interactive reviewer-identity confirmation and
+writes an append-only decision log transactionally. This is a locally
+confirmed identity assertion, not cryptographic authentication. The current
+packet has 15/15 extraction coverage, only 8/15 issuers with at least one
+direct impact input, 0/15 with three calculable impact components, and 0
+approved facts.

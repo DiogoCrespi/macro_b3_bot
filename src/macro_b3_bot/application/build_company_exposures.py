@@ -23,6 +23,8 @@ _EXPOSURE_FIELDS = (
     "floating_rate_debt", "inflation_linked_debt", "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct", "export_revenue_pct", "floating_rate_debt_pct",
     "inflation_linked_debt_pct", "foreign_currency_debt_pct", "commodity_exposures",
+    "contractual_foreign_currency_debt_pct", "net_foreign_currency_debt_pct",
+    "post_hedge_floating_rate_debt_pct",
     "fixed_rate_debt_pct", "debt_duration_years", "debt_instrument_durations",
     "financial_services_funding", "financial_services_funding_floating_pct",
     "net_cash_position", "bank_market_risk_sensitivities",
@@ -218,6 +220,78 @@ class CompanyExposureBuilder:
                 methodology_version=override["methodology_version"], confidence=1.0,
                 is_estimated=False, rationale=override["rationale"],
             ))
+
+        contractual_fx = values["contractual_foreign_currency_debt_pct"]
+        hedge_coverage = values["currency_hedge_pct"]
+        if contractual_fx is not None and hedge_coverage is not None:
+            contractual_fx = float(contractual_fx)
+            hedge_coverage = float(hedge_coverage)
+            net_fx = round(contractual_fx * (1 - hedge_coverage), 6)
+            values["net_foreign_currency_debt_pct"] = net_fx
+            # Compatibility field now means economic, post-hedge FX debt only.
+            values["foreign_currency_debt_pct"] = net_fx
+            current_float = float(values["floating_rate_debt_pct"] or 0)
+            post_hedge_float = round(
+                min(1.0, max(current_float, contractual_fx * hedge_coverage)), 6
+            )
+            values["post_hedge_floating_rate_debt_pct"] = post_hedge_float
+            values["floating_rate_debt_pct"] = post_hedge_float
+            source_evidence = [
+                item for item in evidence
+                if item.field_name in {
+                    "contractual_foreign_currency_debt_pct", "currency_hedge_pct",
+                    "floating_rate_debt_pct",
+                }
+            ]
+            confidence = min(
+                (item.confidence for item in source_evidence), default=0.0
+            )
+            evidence_ids = sorted({item.evidence_id for item in source_evidence})
+            available_at = max(item.available_at for item in source_evidence)
+            common = {
+                "source_type": "RULE_DERIVED_POST_HEDGE",
+                "evidence_id": "+".join(evidence_ids),
+                "available_at": available_at,
+                "extraction_method": ExtractionMethod.RULE_DERIVED,
+                "methodology_version": "post-hedge-debt-v1",
+                "confidence": confidence,
+                "is_estimated": False,
+                "scope_entity": ticker,
+                "scope_type": "ECONOMIC_EXPOSURE_AFTER_HEDGE",
+                "denominator_basis": "CONSOLIDATED_GROSS_DEBT",
+            }
+            for field_name, value, formula in (
+                (
+                    "net_foreign_currency_debt_pct", net_fx,
+                    "contractual_fx_debt*(1-hedge_coverage)",
+                ),
+                (
+                    "foreign_currency_debt_pct", net_fx,
+                    "compatibility_alias(net_foreign_currency_debt_pct)",
+                ),
+                (
+                    "post_hedge_floating_rate_debt_pct", post_hedge_float,
+                    "max(disclosed_floating_debt,contractual_fx_debt*hedge_coverage)",
+                ),
+                (
+                    "floating_rate_debt_pct", post_hedge_float,
+                    "compatibility_alias(post_hedge_floating_rate_debt_pct)",
+                ),
+            ):
+                evidence.append(ExposureFieldEvidence(
+                    field_name=field_name, value=value, normalized_value=value,
+                    formula=formula,
+                    derivation_components={
+                        "contractual_fx_debt": contractual_fx,
+                        "hedge_coverage": hedge_coverage,
+                        "disclosed_floating_debt": current_float,
+                    },
+                    rationale=(
+                        "FX debt converted by swap is removed from FX exposure and "
+                        "migrated to post-hedge floating-rate exposure."
+                    ),
+                    **common,
+                ))
 
         missing = [field for field in _EXPOSURE_FIELDS if values[field] is None]
         evidence_quality = (

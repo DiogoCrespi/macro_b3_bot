@@ -745,6 +745,7 @@ def ingest_company_exposure_documents(
 @app.command("extract-company-macro-exposures")
 def extract_company_macro_exposures(
     selection_run_id: str = typer.Option(..., "--selection-run-id"),
+    as_of: str = typer.Option(..., "--as-of"),
 ) -> None:
     """Extract only whitelisted quantitative/role disclosures with evidence."""
     from macro_b3_bot.application.extract_company_macro_exposures import (
@@ -754,7 +755,9 @@ def extract_company_macro_exposures(
 
     settings = Settings()
     store = DatabaseStore(settings.data_dir / "audit.duckdb")
-    result = CompanyMacroExposureExtractor(store).extract(selection_run_id)
+    result = CompanyMacroExposureExtractor(store).extract(
+        selection_run_id, datetime.fromisoformat(as_of)
+    )
     store.close()
     console.print_json(json.dumps(result, default=str, ensure_ascii=False))
 
@@ -823,7 +826,18 @@ def apply_company_exposure_review(
 
     settings = Settings()
     store = DatabaseStore(settings.data_dir / "audit.duckdb")
-    result = CompanyMacroExposureReviewer(store).apply_manifest(Path(manifest))
+    import getpass
+
+    reviewer_identity = getpass.getuser()
+    confirmed = typer.confirm(
+        f"Confirm that you are the reviewer '{reviewer_identity}' and personally "
+        "made every decision in this manifest?"
+    )
+    result = CompanyMacroExposureReviewer(store).apply_manifest(
+        Path(manifest),
+        confirmed_identity=reviewer_identity,
+        confirmed=confirmed,
+    )
     store.close()
     console.print_json(json.dumps(result, ensure_ascii=False, default=str))
 

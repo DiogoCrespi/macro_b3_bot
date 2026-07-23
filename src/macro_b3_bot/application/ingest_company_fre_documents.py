@@ -5,6 +5,7 @@ import base64
 from datetime import datetime, timezone
 import hashlib
 import io
+import json
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile
 
@@ -110,14 +111,18 @@ class CompanyFreDocumentPipeline:
     def _ingest_one(
         self, store: DatabaseStore, client: httpx.Client, item: dict[str, object]
     ) -> dict[str, object]:
-        response = client.get(str(item["source_url"]))
-        response.raise_for_status()
-        payload = response.content
-        checksum = hashlib.sha256(payload).hexdigest()
         document_dir = (
             self.raw_dir / str(item["cvm_code"]) / str(item["document_id"])
         )
         document_dir.mkdir(parents=True, exist_ok=True)
+        cached = sorted(document_dir.glob("*.zip"))
+        if cached:
+            payload = cached[-1].read_bytes()
+        else:
+            response = client.get(str(item["source_url"]))
+            response.raise_for_status()
+            payload = response.content
+        checksum = hashlib.sha256(payload).hexdigest()
         raw_path = document_dir / f"{checksum[:16]}.zip"
         if not raw_path.exists():
             raw_path.write_bytes(payload)
@@ -140,7 +145,10 @@ class CompanyFreDocumentPipeline:
             if not encoded:
                 continue
             pdf_bytes = base64.b64decode(encoded)
-            text, pages, quality = self.pdf_extractor.extract_text(pdf_bytes)
+            page_texts = self.pdf_extractor.extract_pages(pdf_bytes)
+            text = " ".join(page_texts)
+            pages = len(page_texts)
+            quality = 0.85 if len(text) >= 100 else 0.20
             section_checksum = hashlib.sha256(pdf_bytes).hexdigest()
             store.connection.execute(
                 """
@@ -148,14 +156,15 @@ class CompanyFreDocumentPipeline:
                     ticker,cvm_code,document_id,version,reference_date,available_at,
                     source_url,raw_document_checksum,raw_path,section_name,
                     source_filename,section_checksum,extracted_text,page_count,
-                    extraction_quality,created_at
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    extracted_pages,extraction_quality,created_at
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 [
                     item["ticker"], item["cvm_code"], item["document_id"],
                     item["version"], item["reference_date"], item["available_at"],
                     item["source_url"], checksum, str(raw_path), element.tag,
-                    source_name, section_checksum, text, pages, quality,
+                    source_name, section_checksum, text, pages,
+                    json.dumps(page_texts, ensure_ascii=False), quality,
                     datetime.now(timezone.utc).replace(tzinfo=None),
                 ],
             )
@@ -185,9 +194,19 @@ class CompanyFreDocumentPipeline:
                 section_checksum VARCHAR NOT NULL,
                 extracted_text VARCHAR NOT NULL,
                 page_count INTEGER,
+                extracted_pages VARCHAR,
                 extraction_quality DOUBLE NOT NULL,
                 created_at TIMESTAMP NOT NULL,
                 PRIMARY KEY(document_id,version,section_name,section_checksum)
             )
             """
         )
+        columns = {
+            row[1] for row in store.connection.execute(
+                "PRAGMA table_info('company_fre_sections')"
+            ).fetchall()
+        }
+        if "extracted_pages" not in columns:
+            store.connection.execute(
+                "ALTER TABLE company_fre_sections ADD COLUMN extracted_pages VARCHAR"
+            )

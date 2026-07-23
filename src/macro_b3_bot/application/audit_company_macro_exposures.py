@@ -20,6 +20,27 @@ _TARGET_FIELDS = (
     "commodity_hedges",
 )
 
+_DIRECT_IMPACT_FIELDS = {
+    "revenue_foreign_currency_pct": "revenue",
+    "export_revenue_pct": "revenue",
+    "cost_foreign_currency_pct": "cost",
+    "net_foreign_currency_debt_pct": "debt",
+    "foreign_currency_debt_pct": "debt",
+    "post_hedge_floating_rate_debt_pct": "debt",
+    "floating_rate_debt_pct": "debt",
+    "inflation_linked_debt_pct": "debt",
+    "demand_cyclicality": "demand",
+    "commodity_exposures": "commodity",
+}
+_MODIFIER_FIELDS = {"pricing_power", "operating_leverage"}
+_CONTEXT_FIELDS = {
+    "contractual_foreign_currency_debt_pct", "currency_hedge_pct",
+    "currency_hedges", "commodity_roles", "commodity_production",
+    "commodity_exports", "commodity_hedges", "debt_duration_years",
+    "debt_instrument_durations", "net_cash_position",
+    "bank_credit_market_share", "bank_agribusiness_funding_market_share",
+}
+
 
 class CompanyMacroExposureAuditor:
     def __init__(self, store: DatabaseStore) -> None:
@@ -46,6 +67,18 @@ class CompanyMacroExposureAuditor:
         for ticker in tickers:
             ticker_documents = [item for item in documents if item["ticker"] == ticker]
             known = sorted(fact_fields.get(ticker, set()))
+            ticker_facts = [item for item in facts if item["ticker"] == ticker]
+            direct_fields = sorted({
+                item["field_name"] for item in ticker_facts
+                if item["input_usage"] == "DIRECT_IMPACT_INPUT"
+            })
+            impact_components = sorted({
+                _DIRECT_IMPACT_FIELDS[field] for field in direct_fields
+            })
+            approved_fields = sorted({
+                item["field_name"] for item in ticker_facts
+                if item["review_status"] == "HUMAN_APPROVED"
+            })
             missing = [field for field in _TARGET_FIELDS if field not in known]
             document_summary.append({
                 "ticker": ticker,
@@ -68,6 +101,12 @@ class CompanyMacroExposureAuditor:
                 "known_exposure_fields": known,
                 "known_count": len(known),
                 "meets_three": len(known) >= 3,
+                "direct_impact_fields": direct_fields,
+                "impact_compatible_count": len(direct_fields),
+                "impact_components": impact_components,
+                "watch_component_ready": len(impact_components) >= 3,
+                "approved_fields": approved_fields,
+                "approved_count": len(approved_fields),
                 "unknown_fields": missing,
                 "blocker": (
                     None if len(known) >= 3
@@ -140,6 +179,15 @@ class CompanyMacroExposureAuditor:
                 "documents_used_in_facts": len(fact_documents),
                 "companies_with_three_or_more": sum(
                     item["meets_three"] for item in matrix
+                ),
+                "companies_with_impact_compatible_fields": sum(
+                    item["impact_compatible_count"] > 0 for item in matrix
+                ),
+                "companies_with_three_impact_components": sum(
+                    item["watch_component_ready"] for item in matrix
+                ),
+                "companies_with_approved_facts": sum(
+                    item["approved_count"] > 0 for item in matrix
                 ),
                 "future_documents_used": (
                     future_ipe_documents + future_fre_documents
@@ -222,6 +270,11 @@ class CompanyMacroExposureAuditor:
                 "normalized_value": item["normalized_value"],
                 "document_id": item["evidence_id"],
                 "document_version": item["document_version"],
+                "document_checksum": item.get("document_checksum"),
+                "section_name": item.get("section_name"),
+                "section_checksum": item.get("section_checksum"),
+                "source_filename": item.get("source_filename"),
+                "page_number": item.get("page_number"),
                 "available_at": item["available_at"],
                 "evidence_excerpt": item["evidence_excerpt"],
                 "raw_value": item["raw_value"], "unit": item["unit"],
@@ -245,5 +298,16 @@ class CompanyMacroExposureAuditor:
                 "review_notes": review_notes,
                 "source_excerpt_hash": excerpt_hash,
                 "evidence_id": item["evidence_id"],
+                "input_usage": self._input_usage(field_name),
             })
         return facts
+
+    @staticmethod
+    def _input_usage(field_name: str) -> str:
+        if field_name in _DIRECT_IMPACT_FIELDS:
+            return "DIRECT_IMPACT_INPUT"
+        if field_name in _MODIFIER_FIELDS:
+            return "MODIFIER"
+        if field_name in _CONTEXT_FIELDS:
+            return "CONTEXT_ONLY"
+        return "UNSUPPORTED"

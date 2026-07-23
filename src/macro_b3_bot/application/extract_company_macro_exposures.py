@@ -23,6 +23,11 @@ class SourceDocument:
     available_at: datetime
     classification: str
     text: str
+    document_checksum: str | None = None
+    section_name: str | None = None
+    section_checksum: str | None = None
+    source_filename: str | None = None
+    extracted_pages: str | None = None
 
 
 @dataclass(frozen=True)
@@ -54,7 +59,7 @@ def _number(value: str) -> float:
 
 _RULES = (
     ExtractionRule(
-        "AZUL4", "foreign_currency_debt_pct",
+        "AZUL4", "contractual_foreign_currency_debt_pct",
         re.compile(
             r"Empréstimos e financiamentos\s+23[.]059[.]604.*?"
             r"Exposição ao US[$].{0,500}Empréstimos e financiamentos "
@@ -153,7 +158,7 @@ _RULES = (
         "Issuer discloses contracted sales and uncontracted electricity volumes.",
     ),
     ExtractionRule(
-        "ELET3", "foreign_currency_debt_pct",
+        "ELET3", "contractual_foreign_currency_debt_pct",
         re.compile(
             r"Total Moeda Nacional\s+61[.]034[.]561.*?"
             r"Total Moeda Estrangeira\s+13[.]261[.]203.*?"
@@ -217,7 +222,7 @@ _RULES = (
         denominator_confidence=0.96,
     ),
     ExtractionRule(
-        "EQTL3", "foreign_currency_debt_pct",
+        "EQTL3", "contractual_foreign_currency_debt_pct",
         re.compile(
             r"31 de dezembro de 2025.{0,120}Dívida Bruta.{0,80}"
             r"54,8 bilhões.{0,100}12,2%\s*\(R\$\s*6,7 bilhões\).*?"
@@ -420,7 +425,7 @@ _RULES = (
         denominator_confidence=0.98,
     ),
     ExtractionRule(
-        "MGLU3", "foreign_currency_debt_pct",
+        "MGLU3", "contractual_foreign_currency_debt_pct",
         re.compile(
             r"Financiamento Inovação de SOFR\s*[+]\s*3%\s*A[.]A[.].{0,80}"
             r"1[.]000[.]737.*?Total\s+4[.]944[.]536",
@@ -730,7 +735,7 @@ _RULES = (
         denominator_basis="COMPANY_REPORTED_VOLUME",
     ),
     ExtractionRule(
-        "VALE3", "foreign_currency_debt_pct",
+        "VALE3", "contractual_foreign_currency_debt_pct",
         re.compile(
             r"14%\s+do saldo de empréstimos e financiamentos estava "
             r"denominado em reais, e os\s*(?P<pct>86)%\s+restantes "
@@ -773,7 +778,30 @@ class CompanyMacroExposureExtractor:
         self.store = store
         self._ensure_table()
 
-    def extract(self, selection_run_id: str) -> dict[str, object]:
+    def extract(
+        self, selection_run_id: str, as_of_timestamp: datetime
+    ) -> dict[str, object]:
+        as_of = (
+            as_of_timestamp.astimezone(timezone.utc)
+            if as_of_timestamp.tzinfo
+            else as_of_timestamp.replace(tzinfo=timezone.utc)
+        )
+        extraction_run_id = hashlib.sha256(
+            f"{selection_run_id}|{as_of.isoformat()}|{self.methodology_version}".encode()
+        ).hexdigest()[:24]
+        self.store.connection.execute(
+            """
+            INSERT OR REPLACE INTO company_macro_exposure_extraction_runs (
+                extraction_run_id,selection_run_id,as_of_timestamp,
+                methodology_version,status,started_at,completed_at,facts_extracted
+            ) VALUES (?,?,?,?,?,?,NULL,NULL)
+            """,
+            [
+                extraction_run_id, selection_run_id, as_of.replace(tzinfo=None),
+                self.methodology_version, "RUNNING",
+                datetime.now(timezone.utc).replace(tzinfo=None),
+            ],
+        )
         self.store.connection.execute(
             """
             UPDATE company_macro_exposure_facts SET is_active=FALSE
@@ -781,7 +809,7 @@ class CompanyMacroExposureExtractor:
             """,
             [selection_run_id],
         )
-        documents = self._documents(selection_run_id)
+        documents = self._documents(selection_run_id, as_of)
         facts: list[dict[str, object]] = []
         for document in documents:
             normalized_text = re.sub(r"\s+", " ", document.text)
@@ -792,8 +820,23 @@ class CompanyMacroExposureExtractor:
                 if not match:
                     continue
                 value = rule.value(match)
-                excerpt = normalized_text[
-                    max(0, match.start() - 100):min(len(normalized_text), match.end() + 100)
+                page_number = None
+                excerpt_source = normalized_text
+                excerpt_match = match
+                if document.extracted_pages:
+                    for index, page_text in enumerate(
+                        json.loads(document.extracted_pages), start=1
+                    ):
+                        normalized_page = re.sub(r"\s+", " ", page_text)
+                        page_match = rule.pattern.search(normalized_page)
+                        if page_match:
+                            page_number = index
+                            excerpt_source = normalized_page
+                            excerpt_match = page_match
+                            break
+                excerpt = excerpt_source[
+                    max(0, excerpt_match.start() - 100):
+                    min(len(excerpt_source), excerpt_match.end() + 100)
                 ]
                 confidence = round(
                     0.35 * rule.extraction_match_confidence
@@ -804,11 +847,15 @@ class CompanyMacroExposureExtractor:
                 evidence = ExposureFieldEvidence(
                     field_name=rule.field_name,
                     value=value,
-                    source_type=f"CVM_IPE_{document.classification}",
+                    source_type=f"CVM_{document.classification}",
                     evidence_id=document.document_id,
                     document_version=document.version,
+                    document_checksum=document.document_checksum,
+                    section_name=document.section_name,
+                    section_checksum=document.section_checksum,
+                    source_filename=document.source_filename,
                     evidence_excerpt=excerpt,
-                    page_number=None,
+                    page_number=page_number,
                     raw_value=match.group(0),
                     unit=rule.unit,
                     normalized_value=value,
@@ -833,11 +880,27 @@ class CompanyMacroExposureExtractor:
                     is_estimated=False,
                     rationale=rule.rationale,
                 )
-                fact = self._save(document.ticker, selection_run_id, evidence)
+                fact = self._save(
+                    document.ticker, selection_run_id, extraction_run_id,
+                    as_of, evidence
+                )
                 facts.append(fact)
         coverage = self.coverage(selection_run_id)
+        self.store.connection.execute(
+            """
+            UPDATE company_macro_exposure_extraction_runs
+               SET status='COMPLETED',completed_at=?,facts_extracted=?
+             WHERE extraction_run_id=?
+            """,
+            [
+                datetime.now(timezone.utc).replace(tzinfo=None),
+                len(facts), extraction_run_id,
+            ],
+        )
         return {
             "selection_run_id": selection_run_id,
+            "extraction_run_id": extraction_run_id,
+            "as_of_timestamp": as_of.isoformat(),
             "facts_extracted": len(facts),
             "coverage": coverage,
             "facts": facts,
@@ -871,33 +934,39 @@ class CompanyMacroExposureExtractor:
             for ticker, count in rows
         ]
 
-    def _documents(self, selection_run_id: str) -> list[SourceDocument]:
+    def _documents(
+        self, selection_run_id: str, as_of_timestamp: datetime
+    ) -> list[SourceDocument]:
+        cutoff = as_of_timestamp.replace(tzinfo=None)
         rows = self.store.connection.execute(
             """
-            WITH cutoff AS (
-                SELECT MAX(delivery_date) AS as_of
-                FROM company_exposure_document_selections
-                WHERE selection_run_id=?
-            )
             SELECT s.ticker,s.document_id,s.version,s.delivery_date,s.classification,
-                   e.extracted_text
+                   e.extracted_text,s.document_checksum,NULL,NULL,NULL,NULL
               FROM company_exposure_document_selections s
               JOIN extracted_documents e
                 ON e.document_id=s.document_id
                AND e.document_checksum=s.document_checksum
              WHERE s.selection_run_id=?
-               AND s.delivery_date <= (SELECT as_of FROM cutoff)
+               AND s.delivery_date <= ?
             UNION ALL
             SELECT f.ticker,
                    'FRE:' || f.document_id,
-                   f.version,MAX(f.available_at),
-                   'FRE_EXPOSURE_SECTIONS',
-                   STRING_AGG(f.extracted_text,' ')
+                   f.version,f.available_at,
+                   'FRE_' || f.section_name,
+                   f.extracted_text,f.raw_document_checksum,f.section_name,
+                   f.section_checksum,f.source_filename,f.extracted_pages
               FROM company_fre_sections f
-             WHERE f.available_at <= (SELECT as_of FROM cutoff)
+             WHERE f.available_at <= ?
+            UNION ALL
+            SELECT f.ticker,'FRE:' || f.document_id,f.version,MAX(f.available_at),
+                   'FRE_EXPOSURE_SECTIONS',STRING_AGG(f.extracted_text,' '),
+                   MAX(f.raw_document_checksum),'MULTIPLE',
+                   SHA256(STRING_AGG(f.section_checksum,'')),'MULTIPLE',NULL
+              FROM company_fre_sections f
+             WHERE f.available_at <= ? AND f.ticker='AZUL4'
              GROUP BY f.ticker,f.document_id,f.version
             """,
-            [selection_run_id, selection_run_id],
+            [selection_run_id, cutoff, cutoff, cutoff],
         ).fetchall()
         return [SourceDocument(*row) for row in rows]
 
@@ -918,6 +987,9 @@ class CompanyMacroExposureExtractor:
                 review_decision VARCHAR,
                 review_notes VARCHAR,
                 source_excerpt_hash VARCHAR,
+                fact_review_hash VARCHAR,
+                extraction_run_id VARCHAR,
+                as_of_timestamp TIMESTAMP,
                 is_active BOOLEAN NOT NULL DEFAULT TRUE,
                 created_at TIMESTAMP NOT NULL
             )
@@ -930,6 +1002,9 @@ class CompanyMacroExposureExtractor:
             "review_decision": "VARCHAR",
             "review_notes": "VARCHAR",
             "source_excerpt_hash": "VARCHAR",
+            "fact_review_hash": "VARCHAR",
+            "extraction_run_id": "VARCHAR",
+            "as_of_timestamp": "TIMESTAMP",
             "is_active": "BOOLEAN DEFAULT TRUE",
         }
         existing_columns = {
@@ -951,12 +1026,32 @@ class CompanyMacroExposureExtractor:
             WHERE review_status='HUMAN_REVIEWED'
             """
         )
+        self.store.connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS company_macro_exposure_extraction_runs (
+                extraction_run_id VARCHAR PRIMARY KEY,
+                selection_run_id VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                started_at TIMESTAMP NOT NULL,
+                completed_at TIMESTAMP,
+                facts_extracted INTEGER
+            )
+            """
+        )
 
     def _save(
-        self, ticker: str, selection_run_id: str, evidence: ExposureFieldEvidence
+        self,
+        ticker: str,
+        selection_run_id: str,
+        extraction_run_id: str,
+        as_of_timestamp: datetime,
+        evidence: ExposureFieldEvidence,
     ) -> dict[str, object]:
         identity = (
-            f"{selection_run_id}|{ticker}|{evidence.field_name}|"
+            f"{selection_run_id}|{as_of_timestamp.isoformat()}|"
+            f"{ticker}|{evidence.field_name}|"
             f"{evidence.evidence_id}|{evidence.document_version}|{evidence.normalized_value}"
         )
         fact_id = hashlib.sha256(identity.encode()).hexdigest()[:24]
@@ -964,50 +1059,64 @@ class CompanyMacroExposureExtractor:
         excerpt_hash = hashlib.sha256(
             (evidence.evidence_excerpt or "").encode()
         ).hexdigest()
+        from macro_b3_bot.application.review_company_macro_exposures import (
+            CompanyMacroExposureReviewer,
+        )
+
+        review_hash = CompanyMacroExposureReviewer.fact_review_hash(
+            fact_id, ticker, evidence.field_name,
+            json.dumps(evidence.normalized_value, ensure_ascii=False),
+            payload, self.methodology_version,
+        )
         self.store.connection.execute(
             """
             INSERT INTO company_macro_exposure_facts (
                 fact_id,selection_run_id,ticker,field_name,normalized_value,
                 evidence_payload,methodology_version,review_status,reviewed_by,
                 reviewed_at,review_decision,review_notes,source_excerpt_hash,
-                is_active,created_at
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                fact_review_hash,extraction_run_id,as_of_timestamp,is_active,created_at
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(fact_id) DO UPDATE SET
                 normalized_value=excluded.normalized_value,
                 evidence_payload=excluded.evidence_payload,
                 methodology_version=excluded.methodology_version,
                 source_excerpt_hash=excluded.source_excerpt_hash,
+                fact_review_hash=excluded.fact_review_hash,
+                extraction_run_id=excluded.extraction_run_id,
+                as_of_timestamp=excluded.as_of_timestamp,
                 is_active=TRUE,
                 review_status=CASE
-                    WHEN company_macro_exposure_facts.source_excerpt_hash=
-                         excluded.source_excerpt_hash
+                    WHEN company_macro_exposure_facts.fact_review_hash=
+                         excluded.fact_review_hash
                      AND company_macro_exposure_facts.review_status IN
                          ('HUMAN_APPROVED','HUMAN_REJECTED')
                     THEN company_macro_exposure_facts.review_status
                     ELSE 'HUMAN_REVIEW_PENDING'
                 END,
                 reviewed_by=CASE
-                    WHEN company_macro_exposure_facts.source_excerpt_hash=
-                         excluded.source_excerpt_hash
+                    WHEN company_macro_exposure_facts.fact_review_hash=
+                         excluded.fact_review_hash
                     THEN company_macro_exposure_facts.reviewed_by ELSE NULL END,
                 reviewed_at=CASE
-                    WHEN company_macro_exposure_facts.source_excerpt_hash=
-                         excluded.source_excerpt_hash
+                    WHEN company_macro_exposure_facts.fact_review_hash=
+                         excluded.fact_review_hash
                     THEN company_macro_exposure_facts.reviewed_at ELSE NULL END,
                 review_decision=CASE
-                    WHEN company_macro_exposure_facts.source_excerpt_hash=
-                         excluded.source_excerpt_hash
+                    WHEN company_macro_exposure_facts.fact_review_hash=
+                         excluded.fact_review_hash
                     THEN company_macro_exposure_facts.review_decision ELSE NULL END,
                 review_notes=CASE
-                    WHEN company_macro_exposure_facts.source_excerpt_hash=
-                         excluded.source_excerpt_hash
+                    WHEN company_macro_exposure_facts.fact_review_hash=
+                         excluded.fact_review_hash
                     THEN company_macro_exposure_facts.review_notes ELSE NULL END
             """,
             [
                 fact_id, selection_run_id, ticker, evidence.field_name,
                 json.dumps(evidence.normalized_value, ensure_ascii=False),
                 json.dumps(payload, ensure_ascii=False), self.methodology_version,
-                "HUMAN_REVIEW_PENDING", None, None, None, None, excerpt_hash, True,
+                "HUMAN_REVIEW_PENDING", None, None, None, None, excerpt_hash,
+                review_hash, extraction_run_id,
+                as_of_timestamp.replace(tzinfo=None), True,
                 datetime.now(timezone.utc).replace(tzinfo=None),
             ],
         )

@@ -22,8 +22,12 @@ HYPOTHESIS_WEIGHT = 0.4
 _FACTOR_EXPOSURE_MATRIX: dict[tuple[str, str], tuple[str, ...]] = {
     ("FX", "revenue"): ("revenue_foreign_currency_pct", "export_revenue_pct"),
     ("FX", "cost"): ("cost_foreign_currency_pct",),
-    ("FX", "debt"): ("foreign_currency_debt_pct",),
-    ("INTEREST_RATES", "debt"): ("floating_rate_debt_pct",),
+    ("FX", "debt"): (
+        "net_foreign_currency_debt_pct", "foreign_currency_debt_pct",
+    ),
+    ("INTEREST_RATES", "debt"): (
+        "post_hedge_floating_rate_debt_pct", "floating_rate_debt_pct",
+    ),
     ("INFLATION", "debt"): ("inflation_linked_debt_pct",),
     ("ECONOMIC_ACTIVITY", "demand"): ("demand_cyclicality",),
 }

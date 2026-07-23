@@ -232,19 +232,84 @@ def test_builder_consumes_only_explicitly_human_approved_facts(tmp_path: Path) -
     nonhuman.write_text(json.dumps({
         **manifest, "reviewed_by": "automated extractor", "reviewer_type": "AGENT",
     }), encoding="utf-8")
-    with pytest.raises(ValueError, match="HUMAN reviewer"):
+    with pytest.raises(ValueError, match="confirmed reviewer identity"):
         CompanyMacroExposureReviewer(store).apply_manifest(nonhuman)
-    manifest["reviewed_by"] = "Independent human reviewer"
+    manifest["reviewed_by"] = "local-reviewer"
     manifest["decisions"][0]["decision"] = "APPROVE"
     manifest["decisions"][0]["notes"] = "Scope and denominator checked against source."
     path = tmp_path / "review.json"
     path.write_text(json.dumps(manifest), encoding="utf-8")
-    CompanyMacroExposureReviewer(store).apply_manifest(path)
+    CompanyMacroExposureReviewer(store).apply_manifest(
+        path, confirmed_identity="local-reviewer", confirmed=True
+    )
     approved, _ = CompanyExposureBuilder(
         store, "approved", source_selection_run_id="SOURCE-1"
     ).build_snapshot("TEST3", "VAREJO", AS_OF)
     assert approved is not None
     assert approved.export_revenue_pct == .4
+    store.close()
+
+
+def test_review_hash_covers_semantics_and_manifest_application_is_atomic(
+    tmp_path: Path,
+) -> None:
+    store = DatabaseStore(tmp_path / "atomic-review.duckdb")
+    CompanyMacroExposureExtractor(store)
+    base = evidence("export_revenue_pct", .4).model_copy(update={
+        "normalized_value": .4,
+        "scope_entity": "TEST3",
+        "scope_type": "COMPANY_CONSOLIDATED",
+        "scope_period": "FY2025",
+        "denominator_basis": "TOTAL_REVENUE",
+        "evidence_excerpt": "Exports represented 40% of total revenue.",
+    }).model_dump(mode="json")
+    for fact_id, field_name in (
+        ("FACT-A", "export_revenue_pct"),
+        ("FACT-B", "revenue_foreign_currency_pct"),
+    ):
+        payload = {**base, "field_name": field_name}
+        store.connection.execute(
+            """
+            INSERT INTO company_macro_exposure_facts (
+                fact_id,selection_run_id,ticker,field_name,normalized_value,
+                evidence_payload,methodology_version,review_status,is_active,
+                created_at
+            ) VALUES (?, 'SOURCE-ATOMIC','TEST3',?,'0.4',?,'test-v1',
+                      'HUMAN_REVIEW_PENDING',TRUE,?)
+            """,
+            [fact_id, field_name, json.dumps(payload), AS_OF.replace(tzinfo=None)],
+        )
+    reviewer = CompanyMacroExposureReviewer(store)
+    manifest = reviewer.pending_manifest("SOURCE-ATOMIC")
+    for decision in manifest["decisions"]:
+        decision["decision"] = "APPROVE"
+        decision["notes"] = "Source, scope and denominator independently checked."
+    manifest["reviewed_by"] = "local-reviewer"
+    manifest["decisions"][-1]["fact_review_hash"] = "invalid"
+    path = tmp_path / "atomic.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="content changed"):
+        reviewer.apply_manifest(
+            path, confirmed_identity="local-reviewer", confirmed=True
+        )
+    assert store.connection.execute(
+        """
+        SELECT COUNT(*) FROM company_macro_exposure_facts
+        WHERE review_status='HUMAN_APPROVED'
+        """
+    ).fetchone()[0] == 0
+    assert store.connection.execute(
+        "SELECT COUNT(*) FROM company_exposure_review_log"
+    ).fetchone()[0] == 0
+
+    original = reviewer.fact_review_hash(
+        "FACT-A", "TEST3", "export_revenue_pct", "0.4", base, "test-v1"
+    )
+    changed = reviewer.fact_review_hash(
+        "FACT-A", "TEST3", "export_revenue_pct", "0.4",
+        {**base, "scope_type": "ASSET_ONLY"}, "test-v1",
+    )
+    assert original != changed
     store.close()
 
 
@@ -271,6 +336,106 @@ def test_company_impact_requires_explicit_factor_context_and_never_buys() -> Non
     )
     assert incomplete.status == "NO_ACTION"
     assert set(incomplete.missing_exposures) == {"cost", "debt", "demand"}
+
+
+def test_fx_swap_uses_net_debt_and_migrates_to_post_hedge_rates() -> None:
+    sector = SectorStateSnapshot(
+        snapshot_id="SEC-HEDGE", sector="VAREJO", as_of_timestamp=AS_OF,
+        net_impact=-.4, bullish_impact=0, bearish_impact=.4, conflict_ratio=0,
+        supporting_event_ids=[], opposing_event_ids=["fx", "rates"],
+        confidence=.9, status="SECTOR_STATE_ACTIVE", run_id="sector-run",
+        graph_version="1.1.0",
+    )
+    fx_evidence = evidence("net_foreign_currency_debt_pct", 0.0)
+    rate_evidence = evidence("post_hedge_floating_rate_debt_pct", .2)
+    hedged = exposure().model_copy(update={
+        "contractual_foreign_currency_debt_pct": .2,
+        "currency_hedge_pct": 1.0,
+        "net_foreign_currency_debt_pct": 0.0,
+        "foreign_currency_debt_pct": 0.0,
+        "post_hedge_floating_rate_debt_pct": .2,
+        "floating_rate_debt_pct": .2,
+        "field_evidence": [
+            *exposure().field_evidence,
+            fx_evidence,
+            rate_evidence,
+        ],
+    })
+    candidate = CompanyImpactEngine("hedge-run").evaluate(
+        sector, hedged,
+        {("FX", "debt"): -.8, ("INTEREST_RATES", "debt"): -.8},
+        AS_OF,
+    )
+    contributions = {
+        item.factor: item for item in candidate.factor_contributions
+    }
+    assert contributions["FX"].exposure_field == "net_foreign_currency_debt_pct"
+    assert contributions["FX"].final_contribution == 0
+    assert (
+        contributions["INTEREST_RATES"].exposure_field
+        == "post_hedge_floating_rate_debt_pct"
+    )
+    assert contributions["INTEREST_RATES"].final_contribution < 0
+
+
+def test_builder_derives_post_hedge_economic_debt_exposure(tmp_path: Path) -> None:
+    store = DatabaseStore(tmp_path / "post-hedge-builder.duckdb")
+    store.connection.execute(
+        """
+        INSERT INTO company_ticker_map (
+            ticker,cvm_code,cnpj,mapping_source,confidence,validated,created_at,
+            legal_name,valid_from,valid_to,review_status,evidence_id,mapping_version
+        ) VALUES ('HEDGE3','1','00','test',1,TRUE,?,'Hedge SA',
+                  DATE '2025-01-01',NULL,'VALIDATED','registry','v1')
+        """,
+        [(AS_OF - timedelta(days=300)).replace(tzinfo=None)],
+    )
+    insert_document(store, "ITR-HEDGE", AS_OF - timedelta(days=30), 1, 1000)
+    CompanyMacroExposureExtractor(store)
+    facts = (
+        ("contractual_foreign_currency_debt_pct", .2),
+        ("currency_hedge_pct", 1.0),
+    )
+    for index, (field_name, value) in enumerate(facts):
+        item = evidence(field_name, value).model_copy(update={
+            "normalized_value": value,
+            "scope_entity": "HEDGE3",
+            "scope_type": "CONTRACTUAL_CURRENCY_BEFORE_HEDGE",
+            "denominator_basis": "CONSOLIDATED_GROSS_DEBT",
+            "evidence_excerpt": f"Explicit {field_name} disclosure.",
+        })
+        store.connection.execute(
+            """
+            INSERT INTO company_macro_exposure_facts (
+                fact_id,selection_run_id,ticker,field_name,normalized_value,
+                evidence_payload,methodology_version,review_status,is_active,
+                created_at
+            ) VALUES (?, 'SOURCE-HEDGE','HEDGE3',?,?,?,'test-v1',
+                      'HUMAN_APPROVED',TRUE,?)
+            """,
+            [
+                f"HEDGE-{index}", field_name, json.dumps(value),
+                json.dumps(item.model_dump(mode="json")),
+                AS_OF.replace(tzinfo=None),
+            ],
+        )
+    snapshot, reason = CompanyExposureBuilder(
+        store, "hedge-build", source_selection_run_id="SOURCE-HEDGE"
+    ).build_snapshot("HEDGE3", "VAREJO", AS_OF)
+    assert reason is None
+    assert snapshot is not None
+    assert snapshot.contractual_foreign_currency_debt_pct == .2
+    assert snapshot.net_foreign_currency_debt_pct == 0
+    assert snapshot.foreign_currency_debt_pct == 0
+    assert snapshot.post_hedge_floating_rate_debt_pct == .2
+    assert snapshot.floating_rate_debt_pct == .2
+    assert {
+        item.field_name for item in snapshot.field_evidence
+    }.issuperset({
+        "net_foreign_currency_debt_pct",
+        "post_hedge_floating_rate_debt_pct",
+    })
+    store.close()
 
 
 def test_no_active_sector_signal_forces_no_action_without_contributions() -> None:

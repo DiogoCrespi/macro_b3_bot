@@ -23,6 +23,10 @@ class ExposureFieldEvidence(BaseModel):
     source_type: str
     evidence_id: str
     document_version: int | None = None
+    document_checksum: str | None = None
+    section_name: str | None = None
+    section_checksum: str | None = None
+    source_filename: str | None = None
     evidence_excerpt: str | None = None
     page_number: int | None = None
     raw_value: str | None = None
@@ -69,6 +73,13 @@ class CompanyExposureSnapshot(BaseModel):
     floating_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
     inflation_linked_debt_pct: float | None = Field(default=None, ge=0, le=1)
     foreign_currency_debt_pct: float | None = Field(default=None, ge=0, le=1)
+    contractual_foreign_currency_debt_pct: float | None = Field(
+        default=None, ge=0, le=1
+    )
+    net_foreign_currency_debt_pct: float | None = Field(default=None, ge=0, le=1)
+    post_hedge_floating_rate_debt_pct: float | None = Field(
+        default=None, ge=0, le=1
+    )
     fixed_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
     debt_duration_years: float | None = Field(default=None, ge=0)
     debt_instrument_durations: dict[str, float] | None = None
