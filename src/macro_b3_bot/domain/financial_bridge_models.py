@@ -191,3 +191,92 @@ class FinancialScenarioOutcome(BaseModel):
     status: Literal["CALCULATED", "NO_ACTION", "PARTIAL", "BLOCKED"]
     reason: str
     run_id: str
+
+
+class CausalConflictPath(BaseModel):
+    factor: str
+    factor_direction: Literal[-1, 1]
+    macro_event_id: str
+    source_path_id: str
+    causal_edge_ids: list[str]
+    event_available_at: datetime
+    horizon_days: int
+    lag_days: int
+    strength: float
+    confidence: float
+    evidence_status: str
+
+
+class FactorConflictDiagnostic(BaseModel):
+    diagnostic_id: str
+    ticker: str
+    sector: str
+    factor: str
+    as_of_timestamp: datetime
+    paths: list[CausalConflictPath] = Field(min_length=2)
+    classification: Literal[
+        "PROBABLE_GRAPH_OR_PROPAGATION_DEFECT",
+        "LEGITIMATE_COMPETING_HYPOTHESES",
+    ]
+    decision_mode_status: Literal["BLOCKED"]
+    resolution_method: Literal["NONE"]
+    run_id: str
+
+
+class CashFlowNormalizationAdjustment(BaseModel):
+    adjustment_id: str
+    field_name: str
+    value: float
+    sign: Literal[-1, 1]
+    period_end: date
+    source_ids: list[str] = Field(min_length=1)
+    rationale: str
+    recurrence: Literal["RECURRING", "NON_RECURRING", "NORMALIZATION_PROXY"]
+    confidence: float = Field(ge=0, le=1)
+    formula: str
+
+
+class NormalizedCashFlowSnapshot(BaseModel):
+    snapshot_id: str
+    ticker: str
+    as_of_timestamp: datetime
+    reported_operating_cash_flow: float
+    reported_capex: float
+    levered_fcf_proxy: float
+    normalized_operating_cash_flow: float
+    maintenance_capex: float
+    normalized_levered_fcf: float
+    adjustments: list[CashFlowNormalizationAdjustment] = Field(min_length=1)
+    methodology_version: str
+    confidence: float = Field(ge=0, le=1)
+    run_id: str
+
+
+class BridgeReplayObservation(BaseModel):
+    ticker: str
+    bridge: str
+    period_end: date
+    factor_change: float
+    secondary_factor_change: float | None = None
+    financial_change: float
+    predicted_change: float
+    error: float
+    source_ids: list[str] = Field(min_length=1)
+
+
+class BridgeCalibrationResult(BaseModel):
+    calibration_id: str
+    ticker: str
+    bridge: str
+    mode: Literal["CALIBRATION_MODE"]
+    observations: list[BridgeReplayObservation] = Field(min_length=5)
+    parameters: dict[str, float]
+    parameter_ranges: dict[str, list[float]]
+    mean_absolute_error: float
+    confidence: float = Field(ge=0, le=1)
+    calibration_status: Literal[
+        "COMPANY_CALIBRATED", "PARTIAL_MISSING_DRIVER"
+    ]
+    missing_drivers: list[str] = Field(default_factory=list)
+    methodology_version: str
+    run_id: str

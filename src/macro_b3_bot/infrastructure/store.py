@@ -780,6 +780,41 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS financial_bridge_calibrations (
+                calibration_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                bridge VARCHAR NOT NULL,
+                calibration_payload VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                status VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS normalized_cash_flow_snapshots (
+                snapshot_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                snapshot_payload VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS causal_conflict_diagnostics (
+                diagnostic_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                factor VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                diagnostic_payload VARCHAR NOT NULL,
+                classification VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
 
 
     def _init_views(self) -> None:
@@ -1950,6 +1985,48 @@ class DatabaseStore:
             ],
         )
         return not exists
+
+    def save_financial_bridge_calibration(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO financial_bridge_calibrations
+            (calibration_id,ticker,bridge,calibration_payload,confidence,status,run_id)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            [
+                item["calibration_id"], item["ticker"], item["bridge"],
+                json.dumps(item, default=str), item["confidence"],
+                item["calibration_status"], item["run_id"],
+            ],
+        )
+
+    def save_normalized_cash_flow_snapshot(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO normalized_cash_flow_snapshots
+            (snapshot_id,ticker,as_of_timestamp,snapshot_payload,confidence,run_id)
+            VALUES (?,?,?,?,?,?)
+            """,
+            [
+                item["snapshot_id"], item["ticker"], item["as_of_timestamp"],
+                json.dumps(item, default=str), item["confidence"], item["run_id"],
+            ],
+        )
+
+    def save_causal_conflict_diagnostic(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO causal_conflict_diagnostics
+            (diagnostic_id,ticker,factor,as_of_timestamp,diagnostic_payload,
+             classification,run_id)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            [
+                item["diagnostic_id"], item["ticker"], item["factor"],
+                item["as_of_timestamp"], json.dumps(item, default=str),
+                item["classification"], item["run_id"],
+            ],
+        )
 
     def get_sector_impact_candidates(self, status: Optional[str] = None) -> list[dict]:
         if status:

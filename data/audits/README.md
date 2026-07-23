@@ -107,3 +107,20 @@ Sprint 4D.2A factor-direction hotfix artifact:
 - Conflicting macro directions for one factor block the scenario as
   `SCENARIO_BLOCKED_CONFLICTING_FACTOR_DIRECTION`; a zero company-effect sum
   never implies a positive macro direction.
+
+Sprint 4D.3 calibration artifact:
+
+- `financial_4d3_pilot.json`: diagnoses every conflicting FX path for SUZB3
+  and KLBN11, preserving event, path, edges, direction, availability, lag,
+  horizon, strength, confidence and evidence status.
+- `CALIBRATION_MODE` runs controlled positive and negative FX/CDI/IPCA
+  shocks without producing a decision. `DECISION_MODE` keeps unresolved
+  real-signal conflicts blocked.
+- The retrospective calibration pack uses 10–11 quarterly observations per
+  bridge (2023Q1–2026Q1), official CVM statements, BCB USD/BRL and Selic, and
+  FRED/BLS wood-pulp PPI (`WPU0911`). SUZB3 and KLBN11 remain partial because
+  disclosed historical volume is unavailable; their confidence is capped.
+- Reported CFO/capex and levered FCF proxy remain untouched. A separate,
+  lower-confidence normalized FCF uses the annualized median of eight
+  standalone reported CFO quarters and reported capex as a conservative
+  maintenance-capex proxy, with every source document retained.

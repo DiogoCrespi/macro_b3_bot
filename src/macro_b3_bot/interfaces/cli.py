@@ -997,6 +997,33 @@ def run_financial_bridge_pilot(
     console.print_json(rendered)
 
 
+@app.command("run-financial-calibration-pilot")
+def run_financial_calibration_pilot(
+    sector_run_id: str = typer.Option(..., "--sector-run-id"),
+    as_of: str = typer.Option(..., "--as-of"),
+    output: Optional[str] = typer.Option(None, "--output"),
+) -> None:
+    """Run Sprint 4D.3 calibration, conflict diagnosis and normalized FCF."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.run_financial_calibration_pilot import (
+        FinancialCalibrationPilot,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = FinancialCalibrationPilot(store).run(
+        sector_run_id=sector_run_id,
+        as_of_timestamp=datetime.fromisoformat(as_of),
+    )
+    store.close()
+    rendered = json.dumps(result, ensure_ascii=False, indent=2, default=str)
+    if output:
+        Path(output).write_text(rendered, encoding="utf-8")
+    console.print_json(rendered)
+
+
 @app.command("reconcile-company-mappings")
 def reconcile_company_mappings() -> None:
     """Validate and persist the 15-company pilot mapping against the CVM registry."""
