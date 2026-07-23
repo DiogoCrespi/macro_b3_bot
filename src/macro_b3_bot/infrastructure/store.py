@@ -1919,8 +1919,9 @@ class DatabaseStore:
             ) VALUES (?,?,?,?,?,?,?,?,?,?)
             """,
             [
-                scenario["scenario_id"], scenario["factor"], scenario["case"],
-                scenario["magnitude"], scenario["unit"], scenario["horizon_years"],
+                scenario["scenario_id"], scenario["factor"], scenario["shock_case"],
+                scenario["absolute_magnitude"], scenario["unit"],
+                scenario["horizon_years"],
                 scenario["as_of_timestamp"], json.dumps(scenario, default=str),
                 scenario["methodology_version"], run_id,
             ],

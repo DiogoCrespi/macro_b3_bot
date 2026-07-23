@@ -1,4 +1,4 @@
-"""Sprint 4D.1 five-company PIT baseline and shock-to-earnings pilot."""
+"""Sprint 4D.2 directional, cash-aware financial bridge pilot."""
 from __future__ import annotations
 
 from datetime import datetime
@@ -38,7 +38,7 @@ class FinancialBridgePilot:
         selection_run_id: str,
         sector_run_id: str,
         as_of_timestamp: datetime,
-        run_id: str = "financial_4d1_pilot",
+        run_id: str = "financial_4d2_pilot",
     ) -> dict[str, object]:
         exposure_run_id = f"{run_id}_exposures"
         CompanyExposureBuilder(
@@ -102,6 +102,16 @@ class FinancialBridgePilot:
                 for available in item.available_at
             )
             outcomes = scenario_engine.evaluate(baseline, exposure, candidate)
+            actual_scenarios = scenario_engine.scenarios(
+                as_of_timestamp,
+                scenario_engine._factor_directions(
+                    candidate.factor_contributions
+                ),
+            )
+            for scenario in actual_scenarios:
+                self.store.save_economic_shock_scenario(
+                    scenario.model_dump(mode="json"), run_id
+                )
             for outcome in outcomes:
                 self.store.save_financial_scenario_outcome(
                     outcome.model_dump(mode="json")
@@ -177,6 +187,41 @@ class FinancialBridgePilot:
                 ),
                 "normalized_score_used_as_percentage_zero": (
                     score_as_percentage == 0
+                ),
+                "outcomes_ordered_by_company_result": all(
+                    [
+                        item["metrics"]["fcf"],
+                        item["metrics"]["net_income"],
+                    ]
+                    <= [
+                        next_item["metrics"]["fcf"],
+                        next_item["metrics"]["net_income"],
+                    ]
+                    for company in companies
+                    for item, next_item in zip(
+                        company.get("outcomes", []),
+                        company.get("outcomes", [])[1:],
+                    )
+                ),
+                "unrealized_fx_revaluation_in_fcf_zero": all(
+                    contribution["delta_fcf"] == 0
+                    and contribution["delta_operating_cash_flow"] == 0
+                    and contribution["delta_net_debt"] == 0
+                    for company in companies
+                    for outcome in company.get("outcomes", [])
+                    for contribution in outcome["contributions"]
+                    if contribution["bridge_type"]
+                    == "NET_FX_DEBT_REVALUATION"
+                ),
+                "fcf_proxy_disclosed": all(
+                    company.get("baseline", {}).get("fcf_definition")
+                    == "CFO_PLUS_REPORTED_CAPEX"
+                    and company.get("baseline", {}).get(
+                        "fcf_normalization_status"
+                    )
+                    == "NOT_NORMALIZED"
+                    for company in companies
+                    if "baseline" in company
                 ),
                 "mglu_financial_impact_calculated": bool(
                     mglu and mglu["contributions"]

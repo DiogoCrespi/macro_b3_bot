@@ -975,7 +975,7 @@ def run_financial_bridge_pilot(
     as_of: str = typer.Option(..., "--as-of"),
     output: Optional[str] = typer.Option(None, "--output"),
 ) -> None:
-    """Run the five-company Sprint 4D.1 financial bridge pilot."""
+    """Run the five-company Sprint 4D.2 financial bridge pilot."""
     from pathlib import Path
 
     from macro_b3_bot.application.run_financial_bridge_pilot import (

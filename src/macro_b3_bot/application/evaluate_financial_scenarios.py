@@ -19,26 +19,29 @@ from macro_b3_bot.domain.financial_bridge_models import (
 )
 
 
-_CASE_ASSUMPTIONS = {
-    "PESSIMISTIC": {
-        "INTEREST_RATES": 200.0,
-        "INFLATION": 200.0,
+_SHOCK_ASSUMPTIONS = {
+    "LOW_SHOCK": {
+        "INTEREST_RATES": 50.0,
+        "INFLATION": 50.0,
         "FX": 5.0,
         "fx_pass_through": 0.25,
+        "incremental_ebitda_margin": 0.20,
         "cash_conversion": 0.75,
     },
-    "BASE": {
+    "BASE_SHOCK": {
         "INTEREST_RATES": 100.0,
         "INFLATION": 100.0,
         "FX": 10.0,
         "fx_pass_through": 0.50,
+        "incremental_ebitda_margin": 0.35,
         "cash_conversion": 0.85,
     },
-    "OPTIMISTIC": {
-        "INTEREST_RATES": 50.0,
-        "INFLATION": 50.0,
+    "HIGH_SHOCK": {
+        "INTEREST_RATES": 200.0,
+        "INFLATION": 200.0,
         "FX": 20.0,
         "fx_pass_through": 0.75,
+        "incremental_ebitda_margin": 0.50,
         "cash_conversion": 0.95,
     },
 }
@@ -50,35 +53,44 @@ class FinancialScenarioEngine:
     def __init__(
         self,
         run_id: str,
-        methodology_version: str = "4D.1-shock-bridge-v1",
+        methodology_version: str = "4D.2-directional-cash-semantics-v1",
     ) -> None:
         self.run_id = run_id
         self.methodology_version = methodology_version
 
-    def scenarios(self, as_of_timestamp: datetime) -> list[EconomicShockScenario]:
+    def scenarios(
+        self,
+        as_of_timestamp: datetime,
+        directions: dict[str, int] | None = None,
+    ) -> list[EconomicShockScenario]:
+        directions = directions or {}
         items: list[EconomicShockScenario] = []
-        for case, assumptions in _CASE_ASSUMPTIONS.items():
+        for shock_case, assumptions in _SHOCK_ASSUMPTIONS.items():
             for factor, unit in (
                 ("FX", "PERCENT_CHANGE"),
                 ("INTEREST_RATES", "BASIS_POINTS"),
                 ("INFLATION", "BASIS_POINTS"),
             ):
+                direction = 1 if directions.get(factor, 1) >= 0 else -1
                 identity = (
-                    f"{self.methodology_version}|{factor}|{case}|"
-                    f"{assumptions[factor]}|{as_of_timestamp.isoformat()}"
+                    f"{self.methodology_version}|{factor}|{shock_case}|"
+                    f"{assumptions[factor]}|{direction}|"
+                    f"{as_of_timestamp.isoformat()}"
                 )
                 items.append(EconomicShockScenario(
                     scenario_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
                     factor=factor,
-                    case=case,
-                    magnitude=assumptions[factor],
+                    shock_case=shock_case,
+                    direction=direction,
+                    absolute_magnitude=assumptions[factor],
+                    signed_magnitude=direction * assumptions[factor],
                     unit=unit,
                     horizon_years=1.0,
                     as_of_timestamp=as_of_timestamp,
                     premise_source="CONFIGURED_PILOT_ASSUMPTION",
                     assumption_ids=[
-                        f"4D1_{factor}_{case}",
-                        "4D1_HORIZON_ONE_YEAR",
+                        f"4D2_{factor}_{shock_case}",
+                        "4D2_HORIZON_ONE_YEAR",
                     ],
                     methodology_version=self.methodology_version,
                 ))
@@ -90,14 +102,33 @@ class FinancialScenarioEngine:
         exposure: CompanyExposureSnapshot,
         candidate: CompanyImpactCandidate,
     ) -> list[FinancialScenarioOutcome]:
-        scenarios = self.scenarios(candidate.as_of_timestamp)
-        by_case = {
-            case: [item for item in scenarios if item.case == case]
-            for case in ("PESSIMISTIC", "BASE", "OPTIMISTIC")
+        directions = self._factor_directions(candidate.factor_contributions)
+        scenarios = self.scenarios(candidate.as_of_timestamp, directions)
+        by_shock_case = {
+            shock_case: [
+                item for item in scenarios if item.shock_case == shock_case
+            ]
+            for shock_case in ("LOW_SHOCK", "BASE_SHOCK", "HIGH_SHOCK")
         }
+        raw = [
+            self._case(
+                baseline, exposure, candidate, shock_case, items, "BASE"
+            )
+            for shock_case, items in by_shock_case.items()
+        ]
+        ordered = sorted(
+            raw,
+            key=lambda item: (item.metrics.fcf, item.metrics.net_income),
+        )
+        labels = ("PESSIMISTIC", "BASE", "OPTIMISTIC")
         return [
-            self._case(baseline, exposure, candidate, case, items)
-            for case, items in by_case.items()
+            item.model_copy(update={
+                "case": label,
+                "outcome_id": self._outcome_id(
+                    baseline, candidate, item.shock_case, label
+                ),
+            })
+            for item, label in zip(ordered, labels, strict=True)
         ]
 
     def _case(
@@ -105,13 +136,14 @@ class FinancialScenarioEngine:
         baseline: FinancialBaselineSnapshot,
         exposure: CompanyExposureSnapshot,
         candidate: CompanyImpactCandidate,
-        case: str,
+        shock_case: str,
         scenarios: list[EconomicShockScenario],
+        result_case: str,
     ) -> FinancialScenarioOutcome:
         baseline_metrics = self._baseline_metrics(baseline)
         if candidate.reason == "SECTOR_STATE_NO_ACTIVE_SIGNAL":
             return self._no_action(
-                baseline, candidate, case, baseline_metrics,
+                baseline, candidate, shock_case, result_case, baseline_metrics,
                 "SECTOR_STATE_NO_ACTIVE_SIGNAL",
                 [BlockedFinancialChannel(
                     factor="ALL", channel="all",
@@ -139,7 +171,7 @@ class FinancialScenarioEngine:
                 ))
                 continue
             item, gap = self._bridge(
-                baseline, exposure, candidate, factor_item, scenario, case
+                baseline, exposure, candidate, factor_item, scenario, shock_case
             )
             if item:
                 contributions.append(item)
@@ -230,12 +262,14 @@ class FinancialScenarioEngine:
             else "NO_SUPPORTED_FINANCIAL_BRIDGE"
         )
         identity = (
-            f"{self.run_id}|{baseline.baseline_id}|{candidate.candidate_id}|{case}"
+            f"{self.run_id}|{baseline.baseline_id}|{candidate.candidate_id}|"
+            f"{shock_case}|{result_case}"
         )
         return FinancialScenarioOutcome(
             outcome_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
             ticker=baseline.ticker,
-            case=case,
+            case=result_case,
+            shock_case=shock_case,
             as_of_timestamp=candidate.as_of_timestamp,
             baseline_id=baseline.baseline_id,
             company_impact_candidate_id=candidate.candidate_id,
@@ -258,15 +292,15 @@ class FinancialScenarioEngine:
         candidate: CompanyImpactCandidate,
         factor: FactorContribution,
         scenario: EconomicShockScenario,
-        case: str,
+        shock_case: str,
     ) -> tuple[
         FinancialBridgeContribution | None,
         BlockedFinancialChannel | None,
     ]:
-        shock = scenario.magnitude / (
+        shock = scenario.signed_magnitude / (
             100 if scenario.unit == "PERCENT_CHANGE" else 10_000
         )
-        assumptions = _CASE_ASSUMPTIONS[case]
+        assumptions = _SHOCK_ASSUMPTIONS[shock_case]
         tax_rate = baseline.effective_tax_rate
         tax_multiplier = 1 - tax_rate if tax_rate is not None else 1
         confidence = (
@@ -279,7 +313,9 @@ class FinancialScenarioEngine:
             "channel": factor.channel,
             "scenario_id": scenario.scenario_id,
             "source_candidate_id": candidate.candidate_id,
-            "shock_magnitude": scenario.magnitude,
+            "causal_direction": scenario.direction,
+            "absolute_shock_magnitude": scenario.absolute_magnitude,
+            "signed_shock_magnitude": scenario.signed_magnitude,
             "shock_unit": scenario.unit,
             "horizon_years": scenario.horizon_years,
             "confidence": round(confidence, 4),
@@ -301,12 +337,8 @@ class FinancialScenarioEngine:
             delta_revenue = (
                 baseline.ttm_revenue * exposure_value * shock * pass_through
             )
-            ebitda_margin = (
-                baseline.ttm_ebitda / baseline.ttm_revenue
-                if baseline.ttm_ebitda is not None else
-                baseline.ttm_ebit / baseline.ttm_revenue
-            )
-            delta_ebitda = delta_revenue * ebitda_margin
+            incremental_margin = assumptions["incremental_ebitda_margin"]
+            delta_ebitda = delta_revenue * incremental_margin
             delta_ebit = delta_ebitda
             delta_net = delta_ebit * tax_multiplier
             cash_conversion = assumptions["cash_conversion"]
@@ -328,7 +360,7 @@ class FinancialScenarioEngine:
                 ),
                 assumptions={
                     "fx_pass_through": pass_through,
-                    "ebitda_conversion_margin": ebitda_margin,
+                    "incremental_ebitda_margin": incremental_margin,
                     "cash_conversion": cash_conversion,
                     "tax_rate": tax_rate or 0,
                 },
@@ -363,11 +395,12 @@ class FinancialScenarioEngine:
                 formula="average_net_fx_debt * -fx_change",
                 assumptions={"tax_rate": tax_rate or 0},
                 delta_financial_result=delta_financial,
+                accounting_fx_revaluation=delta_financial,
                 delta_pre_tax_income=delta_financial,
                 delta_net_income=delta_net,
-                delta_operating_cash_flow=delta_net,
-                delta_fcf=delta_net,
-                delta_net_debt=-delta_net,
+                delta_operating_cash_flow=0,
+                delta_fcf=0,
+                delta_net_debt=0,
                 baseline_evidence_ids=self._baseline_sources(
                     baseline, "average_net_fx_debt"
                 ),
@@ -399,6 +432,7 @@ class FinancialScenarioEngine:
                 ),
                 assumptions={"tax_rate": tax_rate or 0},
                 delta_financial_result=delta_financial,
+                cash_interest_effect=delta_financial,
                 delta_pre_tax_income=delta_financial,
                 delta_net_income=delta_net,
                 delta_operating_cash_flow=delta_net,
@@ -432,6 +466,7 @@ class FinancialScenarioEngine:
                 ),
                 assumptions={"tax_rate": tax_rate or 0},
                 delta_financial_result=delta_financial,
+                cash_interest_effect=delta_financial,
                 delta_pre_tax_income=delta_financial,
                 delta_net_income=delta_net,
                 delta_operating_cash_flow=delta_net,
@@ -456,7 +491,8 @@ class FinancialScenarioEngine:
         self,
         baseline: FinancialBaselineSnapshot,
         candidate: CompanyImpactCandidate,
-        case: str,
+        shock_case: str,
+        result_case: str,
         metrics: FinancialScenarioMetrics,
         reason: str,
         blocked: list[BlockedFinancialChannel],
@@ -467,11 +503,12 @@ class FinancialScenarioEngine:
             operating_cash_flow=0, fcf=0, net_debt=0,
         )
         identity = (
-            f"{self.run_id}|{baseline.baseline_id}|{candidate.candidate_id}|{case}"
+            f"{self.run_id}|{baseline.baseline_id}|{candidate.candidate_id}|"
+            f"{shock_case}|{result_case}"
         )
         return FinancialScenarioOutcome(
             outcome_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
-            ticker=baseline.ticker, case=case,
+            ticker=baseline.ticker, case=result_case, shock_case=shock_case,
             as_of_timestamp=candidate.as_of_timestamp,
             baseline_id=baseline.baseline_id,
             company_impact_candidate_id=candidate.candidate_id,
@@ -488,6 +525,33 @@ class FinancialScenarioEngine:
             contributions=[], blocked_channels=blocked, confidence=0,
             status="NO_ACTION", reason=reason, run_id=self.run_id,
         )
+
+    def _outcome_id(
+        self,
+        baseline: FinancialBaselineSnapshot,
+        candidate: CompanyImpactCandidate,
+        shock_case: str,
+        result_case: str,
+    ) -> str:
+        identity = (
+            f"{self.run_id}|{baseline.baseline_id}|{candidate.candidate_id}|"
+            f"{shock_case}|{result_case}"
+        )
+        return hashlib.sha256(identity.encode()).hexdigest()[:24]
+
+    @staticmethod
+    def _factor_directions(
+        factors: list[FactorContribution],
+    ) -> dict[str, int]:
+        totals: dict[str, float] = {}
+        for item in factors:
+            totals[item.factor] = (
+                totals.get(item.factor, 0) + item.adjusted_factor_impact
+            )
+        return {
+            factor: 1 if total >= 0 else -1
+            for factor, total in totals.items()
+        }
 
     @staticmethod
     def _baseline_metrics(

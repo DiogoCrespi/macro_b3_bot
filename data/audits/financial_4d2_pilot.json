@@ -1,0 +1,4452 @@
+{
+  "run_id": "financial_4d2_pilot",
+  "selection_run_id": "RUN_COMPANY_EXPOSURE_DOCS_6c3ecebd",
+  "sector_run_id": "sector_4c3c_20260722",
+  "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+  "companies_requested": 5,
+  "financial_baselines_built": 5,
+  "economic_shock_scenarios": 9,
+  "financial_scenario_outcomes": 15,
+  "calculated_or_partial_outcomes": 9,
+  "no_active_signal_no_action_outcomes": 6,
+  "future_evidence_used": 0,
+  "normalized_scores_used_as_percentages": 0,
+  "policy_comparison_retained": [
+    "THREE_COMPONENTS",
+    "MATERIALITY_COVERAGE"
+  ],
+  "policy_selected_as_final": false,
+  "companies": [
+    {
+      "ticker": "MGLU3",
+      "sector_state": "SECTOR_STATE_ACTIVE",
+      "baseline": {
+        "baseline_id": "261d7b8b828cd5572cd1afcf",
+        "ticker": "MGLU3",
+        "cvm_code": "22470",
+        "as_of_timestamp": "2026-07-22T23:59:59Z",
+        "latest_quarter": "2026-03-31",
+        "currency": "BRL",
+        "unit": "BRL",
+        "methodology_version": "4D.2-baseline-proxy-v1",
+        "fcf_definition": "CFO_PLUS_REPORTED_CAPEX",
+        "fcf_normalization_status": "NOT_NORMALIZED",
+        "average_debt_method": "TWO_POINT_AVERAGE_PROXY",
+        "net_debt_method": "STANDARDIZED_CASH_ONLY",
+        "ttm_revenue": 38520133000.0,
+        "ttm_costs": -27009609000.0,
+        "ttm_ebit": 1833570000.0,
+        "ttm_ebitda": 2699831000.0,
+        "ttm_financial_result": -2124815000.0,
+        "ttm_pre_tax_income": -291245000.0,
+        "ttm_net_income": 136615000.0,
+        "ttm_operating_cash_flow": 15508441000.0,
+        "ttm_capex": -912885000.0,
+        "ttm_fcf": 14595556000.0,
+        "gross_debt": 5060160000.0,
+        "cash": 1287813000.0,
+        "net_debt": 3772347000.0,
+        "average_gross_debt": 5002348000.0,
+        "average_floating_debt": 5002348000.0,
+        "average_net_fx_debt": 0.0,
+        "inflation_linked_debt": null,
+        "effective_tax_rate": null,
+        "working_capital": 2120760000.0,
+        "field_evidence": [
+          {
+            "field_name": "ttm_revenue",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 38703387000.0,
+              "Q_current": 9205731000.0,
+              "Q_prior_comparative": 9388985000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 38520133000.00 BRL."
+          },
+          {
+            "field_name": "ttm_costs",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -27148836000.0,
+              "Q_current": -6372770000.0,
+              "Q_prior_comparative": -6511997000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -27009609000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebit",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 1918683000.0,
+              "Q_current": 352936000.0,
+              "Q_prior_comparative": 438049000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1833570000.00 BRL."
+          },
+          {
+            "field_name": "ttm_financial_result",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.06:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -2044179000.0,
+              "Q_current": -568705000.0,
+              "Q_prior_comparative": -488069000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -2124815000.00 BRL."
+          },
+          {
+            "field_name": "ttm_pre_tax_income",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -125496000.0,
+              "Q_current": -215769000.0,
+              "Q_prior_comparative": -50020000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -291245000.00 BRL."
+          },
+          {
+            "field_name": "ttm_net_income",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.11:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 204603000.0,
+              "Q_current": -55220000.0,
+              "Q_prior_comparative": 12768000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 136615000.00 BRL."
+          },
+          {
+            "field_name": "ttm_operating_cash_flow",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 15719373000.0,
+              "Q_current": 4511889000.0,
+              "Q_prior_comparative": 4722821000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 15508441000.00 BRL."
+          },
+          {
+            "field_name": "ttm_capex",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -891615000.0,
+              "Q_current": -189599000.0,
+              "Q_prior_comparative": -168329000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -912885000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebitda",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01.01.02:PENÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01.01.03:PENÚLTIMO",
+              "DFP_22470_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_ebit + ttm_depreciation_and_amortization",
+            "components": {
+              "ttm_ebit": 1833570000.0,
+              "ttm_depreciation_and_amortization": 866261000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 2699831000.00 BRL."
+          },
+          {
+            "field_name": "cash",
+            "source_ids": [
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_22470_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 1287813000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "gross_debt",
+            "source_ids": [
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_22470_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 5060160000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "working_capital",
+            "source_ids": [
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_22470_2026-03-31_v1:BPA:1.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "current_assets - current_liabilities",
+            "components": {
+              "current_assets": 18395290000.0,
+              "current_liabilities": 16274530000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 2120760000.00 BRL."
+          },
+          {
+            "field_name": "average_gross_debt",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "(gross_debt_fy_end + gross_debt_latest_quarter) / 2",
+            "components": {
+              "gross_debt_fy_end": 4944536000.0,
+              "gross_debt_latest_quarter": 5060160000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 5002348000.00 BRL."
+          },
+          {
+            "field_name": "ttm_fcf",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO",
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO",
+              "ITR_22470_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_operating_cash_flow + ttm_capex",
+            "components": {
+              "ttm_operating_cash_flow": 15508441000.0,
+              "ttm_capex": -912885000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 14595556000.00 BRL."
+          },
+          {
+            "field_name": "net_debt",
+            "source_ids": [
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_22470_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "gross_debt - cash",
+            "components": {
+              "gross_debt": 5060160000.0,
+              "cash": 1287813000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 3772347000.00 BRL."
+          },
+          {
+            "field_name": "average_floating_debt",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "FRE:159326"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "CompanyExposureSnapshot:fb93a19771950cea923e77d3:post_hedge_floating_rate_debt_pct"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-02T00:00:00Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "average_gross_debt * post_hedge_floating_rate_debt_pct",
+            "components": {
+              "average_gross_debt": 5002348000.0,
+              "post_hedge_floating_rate_debt_pct": 1.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.4606,
+            "notes": "Economic post-hedge exposure; contractual debt is not substituted."
+          },
+          {
+            "field_name": "average_net_fx_debt",
+            "source_ids": [
+              "DFP_22470_2025-12-31_v1",
+              "DFP_22470_2025-12-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "ITR_22470_2026-03-31_v1",
+              "FRE:159326"
+            ],
+            "source_locations": [
+              "DFP_22470_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_22470_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_22470_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "CompanyExposureSnapshot:fb93a19771950cea923e77d3:net_foreign_currency_debt_pct"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-02T00:00:00Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "average_gross_debt * net_foreign_currency_debt_pct",
+            "components": {
+              "average_gross_debt": 5002348000.0,
+              "net_foreign_currency_debt_pct": 0.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.4606,
+            "notes": "Economic post-hedge exposure; contractual debt is not substituted."
+          }
+        ],
+        "missing_fields": [
+          "inflation_linked_debt",
+          "effective_tax_rate"
+        ],
+        "confidence": 0.9036,
+        "run_id": "financial_4d2_pilot_baselines",
+        "created_at": "2026-07-23T20:43:29.716958Z"
+      },
+      "source_candidate": {
+        "candidate_id": "d55ba2192adfec6ddbd2e48a",
+        "decision_policy": "MATERIALITY_COVERAGE",
+        "normalized_score_is_not_financial_percentage": true
+      },
+      "policy_comparison": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "f3bf520f77c2f95d488e0793",
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "known_component_count": 1,
+          "confidence": 0.1893
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "d55ba2192adfec6ddbd2e48a",
+          "status": "WATCH",
+          "reason": "MATERIAL_APPROVED_CONTRIBUTION",
+          "known_component_count": 1,
+          "confidence": 0.1893
+        }
+      },
+      "outcomes": [
+        {
+          "outcome_id": "4f8eb5027e6c654fe45712a7",
+          "ticker": "MGLU3",
+          "case": "PESSIMISTIC",
+          "shock_case": "HIGH_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "261d7b8b828cd5572cd1afcf",
+          "company_impact_candidate_id": "d55ba2192adfec6ddbd2e48a",
+          "metrics": {
+            "revenue": 38520133000.0,
+            "ebitda": 2699831000.0,
+            "ebit": 1833570000.0,
+            "financial_result": -2224861960.0,
+            "pre_tax_income": -391291960.0,
+            "net_income": 36568040.0,
+            "operating_cash_flow": 15408394040.0,
+            "fcf": 14495509040.0,
+            "net_debt": 3872393960.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -100046960.0,
+            "pre_tax_income": -100046960.0,
+            "net_income": -100046960.0,
+            "operating_cash_flow": -100046960.0,
+            "fcf": -100046960.0,
+            "net_debt": 100046960.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -0.04708502151952052,
+            "pre_tax_income": -0.3435147727857989,
+            "net_income": -0.7323277824543425,
+            "operating_cash_flow": -0.006451129420423368,
+            "fcf": -0.006854617939871561,
+            "net_debt": 0.02652114452885697
+          },
+          "margins": {
+            "ebitda_margin": 0.07008882861333839,
+            "ebit_margin": 0.047600302937687154,
+            "net_income_margin": 0.0009493227866061625,
+            "fcf_margin": 0.3763099426473943
+          },
+          "contributions": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "bridge_type": "FLOATING_RATE_DEBT",
+              "scenario_id": "ccba0a84729b9331baf02604",
+              "source_candidate_id": "d55ba2192adfec6ddbd2e48a",
+              "exposure_field": "post_hedge_floating_rate_debt_pct",
+              "exposure_value": 1.0,
+              "monetary_base_field": "average_floating_debt",
+              "monetary_base_value": 5002348000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 200.0,
+              "signed_shock_magnitude": 200.0,
+              "shock_unit": "BASIS_POINTS",
+              "horizon_years": 1.0,
+              "formula": "average_floating_debt * -(rate_bps / 10000) * horizon_years",
+              "assumptions": {
+                "tax_rate": 0.0
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": -100046960.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 0.0,
+              "delta_ebitda": 0.0,
+              "delta_ebit": 0.0,
+              "delta_financial_result": -100046960.0,
+              "delta_pre_tax_income": -100046960.0,
+              "delta_net_income": -100046960.0,
+              "delta_operating_cash_flow": -100046960.0,
+              "delta_fcf": -100046960.0,
+              "delta_net_debt": 100046960.0,
+              "confidence": 0.0484,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159326"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_22470_2025-12-31_v1",
+                "FRE:159326",
+                "ITR_22470_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "demand",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0484,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "96213d2c270e6066f066e85e",
+          "ticker": "MGLU3",
+          "case": "BASE",
+          "shock_case": "BASE_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "261d7b8b828cd5572cd1afcf",
+          "company_impact_candidate_id": "d55ba2192adfec6ddbd2e48a",
+          "metrics": {
+            "revenue": 38520133000.0,
+            "ebitda": 2699831000.0,
+            "ebit": 1833570000.0,
+            "financial_result": -2174838480.0,
+            "pre_tax_income": -341268480.0,
+            "net_income": 86591520.0,
+            "operating_cash_flow": 15458417520.0,
+            "fcf": 14545532520.0,
+            "net_debt": 3822370480.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -50023480.0,
+            "pre_tax_income": -50023480.0,
+            "net_income": -50023480.0,
+            "operating_cash_flow": -50023480.0,
+            "fcf": -50023480.0,
+            "net_debt": 50023480.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -0.02354251075976026,
+            "pre_tax_income": -0.17175738639289945,
+            "net_income": -0.36616389122717125,
+            "operating_cash_flow": -0.003225564710211684,
+            "fcf": -0.0034273089699357806,
+            "net_debt": 0.013260572264428484
+          },
+          "margins": {
+            "ebitda_margin": 0.07008882861333839,
+            "ebit_margin": 0.047600302937687154,
+            "net_income_margin": 0.0022479548551922186,
+            "fcf_margin": 0.37760857471598036
+          },
+          "contributions": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "bridge_type": "FLOATING_RATE_DEBT",
+              "scenario_id": "97c2a5352cc8fdda6ce7d621",
+              "source_candidate_id": "d55ba2192adfec6ddbd2e48a",
+              "exposure_field": "post_hedge_floating_rate_debt_pct",
+              "exposure_value": 1.0,
+              "monetary_base_field": "average_floating_debt",
+              "monetary_base_value": 5002348000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 100.0,
+              "signed_shock_magnitude": 100.0,
+              "shock_unit": "BASIS_POINTS",
+              "horizon_years": 1.0,
+              "formula": "average_floating_debt * -(rate_bps / 10000) * horizon_years",
+              "assumptions": {
+                "tax_rate": 0.0
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": -50023480.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 0.0,
+              "delta_ebitda": 0.0,
+              "delta_ebit": 0.0,
+              "delta_financial_result": -50023480.0,
+              "delta_pre_tax_income": -50023480.0,
+              "delta_net_income": -50023480.0,
+              "delta_operating_cash_flow": -50023480.0,
+              "delta_fcf": -50023480.0,
+              "delta_net_debt": 50023480.0,
+              "confidence": 0.0484,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159326"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_22470_2025-12-31_v1",
+                "FRE:159326",
+                "ITR_22470_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "demand",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0484,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "6499b247c4d2798929d8c0db",
+          "ticker": "MGLU3",
+          "case": "OPTIMISTIC",
+          "shock_case": "LOW_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "261d7b8b828cd5572cd1afcf",
+          "company_impact_candidate_id": "d55ba2192adfec6ddbd2e48a",
+          "metrics": {
+            "revenue": 38520133000.0,
+            "ebitda": 2699831000.0,
+            "ebit": 1833570000.0,
+            "financial_result": -2149826740.0,
+            "pre_tax_income": -316256740.0,
+            "net_income": 111603260.0,
+            "operating_cash_flow": 15483429260.0,
+            "fcf": 14570544260.0,
+            "net_debt": 3797358740.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -25011740.0,
+            "pre_tax_income": -25011740.0,
+            "net_income": -25011740.0,
+            "operating_cash_flow": -25011740.0,
+            "fcf": -25011740.0,
+            "net_debt": 25011740.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": -0.01177125537988013,
+            "pre_tax_income": -0.08587869319644972,
+            "net_income": -0.18308194561358562,
+            "operating_cash_flow": -0.001612782355105842,
+            "fcf": -0.0017136544849678903,
+            "net_debt": 0.006630286132214242
+          },
+          "margins": {
+            "ebitda_margin": 0.07008882861333839,
+            "ebit_margin": 0.047600302937687154,
+            "net_income_margin": 0.0028972708894852467,
+            "fcf_margin": 0.3782578907502734
+          },
+          "contributions": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "bridge_type": "FLOATING_RATE_DEBT",
+              "scenario_id": "2ecbb14d5f9d8523ae9822a9",
+              "source_candidate_id": "d55ba2192adfec6ddbd2e48a",
+              "exposure_field": "post_hedge_floating_rate_debt_pct",
+              "exposure_value": 1.0,
+              "monetary_base_field": "average_floating_debt",
+              "monetary_base_value": 5002348000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 50.0,
+              "signed_shock_magnitude": 50.0,
+              "shock_unit": "BASIS_POINTS",
+              "horizon_years": 1.0,
+              "formula": "average_floating_debt * -(rate_bps / 10000) * horizon_years",
+              "assumptions": {
+                "tax_rate": 0.0
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": -25011740.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 0.0,
+              "delta_ebitda": 0.0,
+              "delta_ebit": 0.0,
+              "delta_financial_result": -25011740.0,
+              "delta_pre_tax_income": -25011740.0,
+              "delta_net_income": -25011740.0,
+              "delta_operating_cash_flow": -25011740.0,
+              "delta_fcf": -25011740.0,
+              "delta_net_debt": 25011740.0,
+              "confidence": 0.0484,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159326"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_22470_2025-12-31_v1",
+                "FRE:159326",
+                "ITR_22470_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "demand",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0484,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        }
+      ]
+    },
+    {
+      "ticker": "SUZB3",
+      "sector_state": "SECTOR_STATE_WATCH",
+      "baseline": {
+        "baseline_id": "c80b9a8a4e992768f24577f9",
+        "ticker": "SUZB3",
+        "cvm_code": "13986",
+        "as_of_timestamp": "2026-07-22T23:59:59Z",
+        "latest_quarter": "2026-03-31",
+        "currency": "BRL",
+        "unit": "BRL",
+        "methodology_version": "4D.2-baseline-proxy-v1",
+        "fcf_definition": "CFO_PLUS_REPORTED_CAPEX",
+        "fcf_normalization_status": "NOT_NORMALIZED",
+        "average_debt_method": "TWO_POINT_AVERAGE_PROXY",
+        "net_debt_method": "STANDARDIZED_CASH_ONLY",
+        "ttm_revenue": 49531174000.0,
+        "ttm_costs": -33967913000.0,
+        "ttm_ebit": 10165110000.0,
+        "ttm_ebitda": 22236430000.0,
+        "ttm_financial_result": 6682388000.0,
+        "ttm_pre_tax_income": 16847498000.0,
+        "ttm_net_income": 11401500000.0,
+        "ttm_operating_cash_flow": 16635252000.0,
+        "ttm_capex": -4583848000.0,
+        "ttm_fcf": 12051404000.0,
+        "gross_debt": 90735617000.0,
+        "cash": 12176019000.0,
+        "net_debt": 78559598000.0,
+        "average_gross_debt": 92768437000.0,
+        "average_floating_debt": null,
+        "average_net_fx_debt": null,
+        "inflation_linked_debt": null,
+        "effective_tax_rate": 0.323253,
+        "working_capital": 30216500000.0,
+        "field_evidence": [
+          {
+            "field_name": "ttm_revenue",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 50115679000.0,
+              "Q_current": 10968416000.0,
+              "Q_prior_comparative": 11552921000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 49531174000.00 BRL."
+          },
+          {
+            "field_name": "ttm_costs",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -33889504000.0,
+              "Q_current": -7807576000.0,
+              "Q_prior_comparative": -7729167000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -33967913000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebit",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 10649009000.0,
+              "Q_current": 1775136000.0,
+              "Q_prior_comparative": 2259035000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 10165110000.00 BRL."
+          },
+          {
+            "field_name": "ttm_financial_result",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.06:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 9762165000.0,
+              "Q_current": 4616436000.0,
+              "Q_prior_comparative": 7696213000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 6682388000.00 BRL."
+          },
+          {
+            "field_name": "ttm_pre_tax_income",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 20411174000.0,
+              "Q_current": 6391572000.0,
+              "Q_prior_comparative": 9955248000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 16847498000.00 BRL."
+          },
+          {
+            "field_name": "ttm_net_income",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.11:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 13437687000.0,
+              "Q_current": 4311991000.0,
+              "Q_prior_comparative": 6348178000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 11401500000.00 BRL."
+          },
+          {
+            "field_name": "ttm_operating_cash_flow",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 18152175000.0,
+              "Q_current": 2900767000.0,
+              "Q_prior_comparative": 4417690000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 16635252000.00 BRL."
+          },
+          {
+            "field_name": "ttm_capex",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.03:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.03:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -4661318000.0,
+              "Q_current": -3002446000.0,
+              "Q_prior_comparative": -3079916000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -4583848000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebitda",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01.01.02:PENÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01.01.03:PENÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_ebit + ttm_depreciation_and_amortization",
+            "components": {
+              "ttm_ebit": 10165110000.0,
+              "ttm_depreciation_and_amortization": 12071320000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 22236430000.00 BRL."
+          },
+          {
+            "field_name": "cash",
+            "source_ids": [
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_13986_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 12176019000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "gross_debt",
+            "source_ids": [
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_13986_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 90735617000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "working_capital",
+            "source_ids": [
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_13986_2026-03-31_v1:BPA:1.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPP:2.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "current_assets - current_liabilities",
+            "components": {
+              "current_assets": 42231546000.0,
+              "current_liabilities": 12015046000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 30216500000.00 BRL."
+          },
+          {
+            "field_name": "average_gross_debt",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_13986_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "(gross_debt_fy_end + gross_debt_latest_quarter) / 2",
+            "components": {
+              "gross_debt_fy_end": 94801257000.0,
+              "gross_debt_latest_quarter": 90735617000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 92768437000.00 BRL."
+          },
+          {
+            "field_name": "ttm_fcf",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.03:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DFC-MI:6.02.03:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_operating_cash_flow + ttm_capex",
+            "components": {
+              "ttm_operating_cash_flow": 16635252000.0,
+              "ttm_capex": -4583848000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 12051404000.00 BRL."
+          },
+          {
+            "field_name": "net_debt",
+            "source_ids": [
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_13986_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "gross_debt - cash",
+            "components": {
+              "gross_debt": 90735617000.0,
+              "cash": 12176019000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 78559598000.00 BRL."
+          },
+          {
+            "field_name": "effective_tax_rate",
+            "source_ids": [
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "DFP_13986_2025-12-31_v1",
+              "ITR_13986_2026-03-31_v1",
+              "ITR_13986_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_13986_2025-12-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.08:PENÚLTIMO",
+              "DFP_13986_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_13986_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "RATIO",
+            "formula": "min(max(-ttm_tax_expense / ttm_pre_tax_income, 0), 1)",
+            "components": {
+              "ttm_tax_expense": -5445998000.0,
+              "ttm_pre_tax_income": 16847498000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 0.32 BRL."
+          }
+        ],
+        "missing_fields": [
+          "average_floating_debt",
+          "average_net_fx_debt",
+          "inflation_linked_debt"
+        ],
+        "confidence": 0.9625,
+        "run_id": "financial_4d2_pilot_baselines",
+        "created_at": "2026-07-23T20:43:29.895014Z"
+      },
+      "source_candidate": {
+        "candidate_id": "56003763c6d7c8923467409d",
+        "decision_policy": "MATERIALITY_COVERAGE",
+        "normalized_score_is_not_financial_percentage": true
+      },
+      "policy_comparison": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "bfde09ee35ae99ce77addabe",
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "known_component_count": 1,
+          "confidence": 0.2017
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "56003763c6d7c8923467409d",
+          "status": "NO_ACTION",
+          "reason": "BELOW_MATERIALITY_OR_CONFIDENCE",
+          "known_component_count": 1,
+          "confidence": 0.2017
+        }
+      },
+      "outcomes": [
+        {
+          "outcome_id": "5e2410cd7a1e8e391f865e16",
+          "ticker": "SUZB3",
+          "case": "PESSIMISTIC",
+          "shock_case": "LOW_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "c80b9a8a4e992768f24577f9",
+          "company_impact_candidate_id": "56003763c6d7c8923467409d",
+          "metrics": {
+            "revenue": 50026485740.0,
+            "ebitda": 22335492348.0,
+            "ebit": 10264172348.0,
+            "financial_result": 6682388000.0,
+            "pre_tax_income": 16946560348.0,
+            "net_income": 11468540146.821957,
+            "operating_cash_flow": 16685532110.116467,
+            "fcf": 12101684110.116467,
+            "net_debt": 78509317889.88353
+          },
+          "absolute_changes": {
+            "revenue": 495311740.0,
+            "ebitda": 99062348.0,
+            "ebit": 99062348.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 99062348.0,
+            "net_income": 67040146.821956,
+            "operating_cash_flow": 50280110.116467,
+            "fcf": 50280110.116467,
+            "net_debt": -50280110.116467
+          },
+          "percentage_changes": {
+            "revenue": 0.01,
+            "ebitda": 0.004454957382997181,
+            "ebit": 0.009745329661951518,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.005879944191119655,
+            "net_income": 0.005879940957063194,
+            "operating_cash_flow": 0.0030225036636936427,
+            "fcf": 0.004172137131612798,
+            "net_debt": -0.0006400250433622
+          },
+          "margins": {
+            "ebitda_margin": 0.4464733434221838,
+            "ebit_margin": 0.20517476285153105,
+            "net_income_margin": 0.22924936615429659,
+            "fcf_margin": 0.24190554125692354
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "b08895bd8dd928c801368b7e",
+              "source_candidate_id": "56003763c6d7c8923467409d",
+              "exposure_field": "revenue_foreign_currency_pct",
+              "exposure_value": 0.8,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 49531174000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 5.0,
+              "signed_shock_magnitude": 5.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.25,
+                "incremental_ebitda_margin": 0.2,
+                "cash_conversion": 0.75,
+                "tax_rate": 0.323253
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 495311740.0,
+              "delta_ebitda": 99062348.0,
+              "delta_ebit": 99062348.0,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 99062348.0,
+              "delta_net_income": 67040146.821956,
+              "delta_operating_cash_flow": 50280110.116467,
+              "delta_fcf": 50280110.116467,
+              "delta_net_debt": -50280110.116467,
+              "confidence": 0.0361,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_13986_2025-12-31_v1",
+                "ITR_13986_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            }
+          ],
+          "confidence": 0.0361,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "d4219d9f4fe63da85becb258",
+          "ticker": "SUZB3",
+          "case": "BASE",
+          "shock_case": "BASE_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "c80b9a8a4e992768f24577f9",
+          "company_impact_candidate_id": "56003763c6d7c8923467409d",
+          "metrics": {
+            "revenue": 51512420960.0,
+            "ebitda": 22929866436.0,
+            "ebit": 10858546436.0,
+            "financial_result": 6682388000.0,
+            "pre_tax_income": 17540934436.0,
+            "net_income": 11870781027.753693,
+            "operating_cash_flow": 17034140873.590637,
+            "fcf": 12450292873.590637,
+            "net_debt": 78160709126.40936
+          },
+          "absolute_changes": {
+            "revenue": 1981246960.0,
+            "ebitda": 693436436.0,
+            "ebit": 693436436.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 693436436.0,
+            "net_income": 469281027.753692,
+            "operating_cash_flow": 398888873.59063816,
+            "fcf": 398888873.59063816,
+            "net_debt": -398888873.59063816
+          },
+          "percentage_changes": {
+            "revenue": 0.04,
+            "ebitda": 0.031184701680980264,
+            "ebit": 0.06821730763366063,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.041159609337837584,
+            "net_income": 0.04115958669944235,
+            "operating_cash_flow": 0.023978529065302897,
+            "fcf": 0.03309895457746153,
+            "net_debt": -0.005077532010673453
+          },
+          "margins": {
+            "ebitda_margin": 0.44513276620808234,
+            "ebit_margin": 0.2107947216154292,
+            "net_income_margin": 0.23044502289984573,
+            "fcf_margin": 0.24169496679758917
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "e2435137a125825887f479c9",
+              "source_candidate_id": "56003763c6d7c8923467409d",
+              "exposure_field": "revenue_foreign_currency_pct",
+              "exposure_value": 0.8,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 49531174000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 10.0,
+              "signed_shock_magnitude": 10.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.5,
+                "incremental_ebitda_margin": 0.35,
+                "cash_conversion": 0.85,
+                "tax_rate": 0.323253
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 1981246960.0,
+              "delta_ebitda": 693436436.0,
+              "delta_ebit": 693436436.0,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 693436436.0,
+              "delta_net_income": 469281027.753692,
+              "delta_operating_cash_flow": 398888873.59063816,
+              "delta_fcf": 398888873.59063816,
+              "delta_net_debt": -398888873.59063816,
+              "confidence": 0.0361,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_13986_2025-12-31_v1",
+                "ITR_13986_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            }
+          ],
+          "confidence": 0.0361,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "181de0aeaa449314a0874ecf",
+          "ticker": "SUZB3",
+          "case": "OPTIMISTIC",
+          "shock_case": "HIGH_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "c80b9a8a4e992768f24577f9",
+          "company_impact_candidate_id": "56003763c6d7c8923467409d",
+          "metrics": {
+            "revenue": 55474914880.0,
+            "ebitda": 25208300440.0,
+            "ebit": 13136980440.0,
+            "financial_result": 6682388000.0,
+            "pre_tax_income": 19819368440.0,
+            "net_income": 13412704404.65868,
+            "operating_cash_flow": 18545896184.425747,
+            "fcf": 13962048184.425747,
+            "net_debt": 76648953815.57425
+          },
+          "absolute_changes": {
+            "revenue": 5943740880.0,
+            "ebitda": 2971870440.0,
+            "ebit": 2971870440.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 2971870440.0,
+            "net_income": 2011204404.65868,
+            "operating_cash_flow": 1910644184.425746,
+            "fcf": 1910644184.425746,
+            "net_debt": -1910644184.425746
+          },
+          "percentage_changes": {
+            "revenue": 0.12,
+            "ebitda": 0.1336487214899154,
+            "ebit": 0.29235988985854555,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.17639832573358963,
+            "net_income": 0.1763982287118958,
+            "operating_cash_flow": 0.11485513922035842,
+            "fcf": 0.15854121100128632,
+            "net_debt": -0.0243209516477636
+          },
+          "margins": {
+            "ebitda_margin": 0.4544089971932193,
+            "ebit_margin": 0.23680938435718427,
+            "net_income_margin": 0.24177963019271387,
+            "fcf_margin": 0.25168219211561854
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "bf38b006e8118ca8f6bb3095",
+              "source_candidate_id": "56003763c6d7c8923467409d",
+              "exposure_field": "revenue_foreign_currency_pct",
+              "exposure_value": 0.8,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 49531174000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 20.0,
+              "signed_shock_magnitude": 20.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.75,
+                "incremental_ebitda_margin": 0.5,
+                "cash_conversion": 0.95,
+                "tax_rate": 0.323253
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 5943740880.0,
+              "delta_ebitda": 2971870440.0,
+              "delta_ebit": 2971870440.0,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 2971870440.0,
+              "delta_net_income": 2011204404.65868,
+              "delta_operating_cash_flow": 1910644184.425746,
+              "delta_fcf": 1910644184.425746,
+              "delta_net_debt": -1910644184.425746,
+              "confidence": 0.0361,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159025"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_13986_2025-12-31_v1",
+                "ITR_13986_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "net_foreign_currency_debt_pct",
+                "foreign_currency_debt_pct"
+              ]
+            }
+          ],
+          "confidence": 0.0361,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        }
+      ]
+    },
+    {
+      "ticker": "KLBN11",
+      "sector_state": "SECTOR_STATE_WATCH",
+      "baseline": {
+        "baseline_id": "0c73e52a2fedab4f63e008ed",
+        "ticker": "KLBN11",
+        "cvm_code": "12653",
+        "as_of_timestamp": "2026-07-22T23:59:59Z",
+        "latest_quarter": "2026-03-31",
+        "currency": "BRL",
+        "unit": "BRL",
+        "methodology_version": "4D.2-baseline-proxy-v1",
+        "fcf_definition": "CFO_PLUS_REPORTED_CAPEX",
+        "fcf_normalization_status": "NOT_NORMALIZED",
+        "average_debt_method": "TWO_POINT_AVERAGE_PROXY",
+        "net_debt_method": "STANDARDIZED_CASH_ONLY",
+        "ttm_revenue": 20784930000.0,
+        "ttm_costs": -14590530000.0,
+        "ttm_ebit": 3363904000.0,
+        "ttm_ebitda": 6546518000.0,
+        "ttm_financial_result": -2512058000.0,
+        "ttm_pre_tax_income": 851846000.0,
+        "ttm_net_income": 734736000.0,
+        "ttm_operating_cash_flow": 5793062000.0,
+        "ttm_capex": -1755544000.0,
+        "ttm_fcf": 4037518000.0,
+        "gross_debt": 33587008000.0,
+        "cash": 8095152000.0,
+        "net_debt": 25491856000.0,
+        "average_gross_debt": 35154025000.0,
+        "average_floating_debt": 23609443190.0,
+        "average_net_fx_debt": null,
+        "inflation_linked_debt": 1089774775.0,
+        "effective_tax_rate": 0.137478,
+        "working_capital": 7044946000.0,
+        "field_evidence": [
+          {
+            "field_name": "ttm_revenue",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 20697507000.0,
+              "Q_current": 4945957000.0,
+              "Q_prior_comparative": 4858534000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 20784930000.00 BRL."
+          },
+          {
+            "field_name": "ttm_costs",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -13372597000.0,
+              "Q_current": -4441931000.0,
+              "Q_prior_comparative": -3223998000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -14590530000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebit",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 4480349000.0,
+              "Q_current": -189795000.0,
+              "Q_prior_comparative": 926650000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 3363904000.00 BRL."
+          },
+          {
+            "field_name": "ttm_financial_result",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.06:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -2100946000.0,
+              "Q_current": -569547000.0,
+              "Q_prior_comparative": -158435000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -2512058000.00 BRL."
+          },
+          {
+            "field_name": "ttm_pre_tax_income",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 2379403000.0,
+              "Q_current": -759342000.0,
+              "Q_prior_comparative": 768215000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 851846000.00 BRL."
+          },
+          {
+            "field_name": "ttm_net_income",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.11:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 1678211000.0,
+              "Q_current": -496976000.0,
+              "Q_prior_comparative": 446499000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 734736000.00 BRL."
+          },
+          {
+            "field_name": "ttm_operating_cash_flow",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 6396244000.0,
+              "Q_current": 1334181000.0,
+              "Q_prior_comparative": 1937363000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 5793062000.00 BRL."
+          },
+          {
+            "field_name": "ttm_capex",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -1761866000.0,
+              "Q_current": -551992000.0,
+              "Q_prior_comparative": -558314000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -1755544000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebitda",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.01.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01.01.02:PENÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01.01.03:PENÚLTIMO",
+              "DFP_12653_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_ebit + ttm_depreciation_and_amortization",
+            "components": {
+              "ttm_ebit": 3363904000.0,
+              "ttm_depreciation_and_amortization": 3182614000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 6546518000.00 BRL."
+          },
+          {
+            "field_name": "cash",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_12653_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 8095152000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "gross_debt",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_12653_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 33587008000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "working_capital",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_12653_2026-03-31_v1:BPA:1.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "current_assets - current_liabilities",
+            "components": {
+              "current_assets": 16094470000.0,
+              "current_liabilities": 9049524000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 7044946000.00 BRL."
+          },
+          {
+            "field_name": "average_gross_debt",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_12653_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "(gross_debt_fy_end + gross_debt_latest_quarter) / 2",
+            "components": {
+              "gross_debt_fy_end": 36721042000.0,
+              "gross_debt_latest_quarter": 33587008000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 35154025000.00 BRL."
+          },
+          {
+            "field_name": "ttm_fcf",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO",
+              "DFP_12653_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DFC-MI:6.02.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_operating_cash_flow + ttm_capex",
+            "components": {
+              "ttm_operating_cash_flow": 5793062000.0,
+              "ttm_capex": -1755544000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 4037518000.00 BRL."
+          },
+          {
+            "field_name": "net_debt",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_12653_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "gross_debt - cash",
+            "components": {
+              "gross_debt": 33587008000.0,
+              "cash": 8095152000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 25491856000.00 BRL."
+          },
+          {
+            "field_name": "effective_tax_rate",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.08:PENÚLTIMO",
+              "DFP_12653_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "RATIO",
+            "formula": "min(max(-ttm_tax_expense / ttm_pre_tax_income, 0), 1)",
+            "components": {
+              "ttm_tax_expense": -117110000.0,
+              "ttm_pre_tax_income": 851846000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 0.14 BRL."
+          },
+          {
+            "field_name": "average_floating_debt",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_12653_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "CompanyExposureSnapshot:0b48916953156091c54c101d:floating_rate_debt_pct"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-05-06T00:00:00Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "average_gross_debt * floating_rate_debt_pct",
+            "components": {
+              "average_gross_debt": 35154025000.0,
+              "floating_rate_debt_pct": 0.6716
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.4112,
+            "notes": "Economic post-hedge exposure; contractual debt is not substituted."
+          },
+          {
+            "field_name": "inflation_linked_debt",
+            "source_ids": [
+              "DFP_12653_2025-12-31_v1",
+              "DFP_12653_2025-12-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "ITR_12653_2026-03-31_v1",
+              "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+            ],
+            "source_locations": [
+              "DFP_12653_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_12653_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_12653_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "CompanyExposureSnapshot:0b48916953156091c54c101d:inflation_linked_debt_pct"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-05-06T00:00:00Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "average_gross_debt * inflation_linked_debt_pct",
+            "components": {
+              "average_gross_debt": 35154025000.0,
+              "inflation_linked_debt_pct": 0.031
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.4112,
+            "notes": "Economic post-hedge exposure; contractual debt is not substituted."
+          }
+        ],
+        "missing_fields": [
+          "average_net_fx_debt"
+        ],
+        "confidence": 0.9012,
+        "run_id": "financial_4d2_pilot_baselines",
+        "created_at": "2026-07-23T20:43:30.056390Z"
+      },
+      "source_candidate": {
+        "candidate_id": "b9473c14853163d91994b62b",
+        "decision_policy": "MATERIALITY_COVERAGE",
+        "normalized_score_is_not_financial_percentage": true
+      },
+      "policy_comparison": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "a847ded84056ac8c7c6b62be",
+          "status": "NO_ACTION",
+          "reason": "THREE_COMPONENT_RULE_NOT_MET",
+          "known_component_count": 2,
+          "confidence": 0.406
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "b9473c14853163d91994b62b",
+          "status": "NO_ACTION",
+          "reason": "BELOW_MATERIALITY_OR_CONFIDENCE",
+          "known_component_count": 2,
+          "confidence": 0.406
+        }
+      },
+      "outcomes": [
+        {
+          "outcome_id": "b0ad27be05bf1095fb142f0c",
+          "ticker": "KLBN11",
+          "case": "PESSIMISTIC",
+          "shock_case": "LOW_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "0c73e52a2fedab4f63e008ed",
+          "company_impact_candidate_id": "b9473c14853163d91994b62b",
+          "metrics": {
+            "revenue": 20881060301.25,
+            "ebitda": 6565744060.25,
+            "ebit": 3383130060.25,
+            "financial_result": -2512058000.0,
+            "pre_tax_income": 871072060.25,
+            "net_income": 751318899.9389505,
+            "operating_cash_flow": 5805499174.954213,
+            "fcf": 4049955174.9542127,
+            "net_debt": 25479418825.045788
+          },
+          "absolute_changes": {
+            "revenue": 96130301.25,
+            "ebitda": 19226060.25,
+            "ebit": 19226060.25,
+            "financial_result": 0.0,
+            "pre_tax_income": 19226060.25,
+            "net_income": 16582899.9389505,
+            "operating_cash_flow": 12437174.954212874,
+            "fcf": 12437174.954212874,
+            "net_debt": -12437174.954212874
+          },
+          "percentage_changes": {
+            "revenue": 0.004625,
+            "ebitda": 0.002936837605884533,
+            "ebit": 0.0057154009894455965,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.02256987794742242,
+            "net_income": 0.02256987535516226,
+            "operating_cash_flow": 0.0021469086562879657,
+            "fcf": 0.0030804011162830418,
+            "net_debt": -0.00048788816923384765
+          },
+          "margins": {
+            "ebitda_margin": 0.3144353766296511,
+            "ebit_margin": 0.16201907429228946,
+            "net_income_margin": 0.03598087880115812,
+            "fcf_margin": 0.19395352135024344
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "b08895bd8dd928c801368b7e",
+              "source_candidate_id": "b9473c14853163d91994b62b",
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 20784930000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 5.0,
+              "signed_shock_magnitude": 5.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.25,
+                "incremental_ebitda_margin": 0.2,
+                "cash_conversion": 0.75,
+                "tax_rate": 0.137478
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 96130301.25,
+              "delta_ebitda": 19226060.25,
+              "delta_ebit": 19226060.25,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 19226060.25,
+              "delta_net_income": 16582899.9389505,
+              "delta_operating_cash_flow": 12437174.954212874,
+              "delta_fcf": 12437174.954212874,
+              "delta_net_debt": -12437174.954212874,
+              "confidence": 0.0342,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_12653_2025-12-31_v1",
+                "ITR_12653_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "average_net_fx_debt",
+                "net_foreign_currency_debt_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "average_floating_debt"
+              ]
+            },
+            {
+              "factor": "INFLATION",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "inflation_linked_debt"
+              ]
+            }
+          ],
+          "confidence": 0.0342,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "b541af507962bc50d49471b7",
+          "ticker": "KLBN11",
+          "case": "BASE",
+          "shock_case": "BASE_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "0c73e52a2fedab4f63e008ed",
+          "company_impact_candidate_id": "b9473c14853163d91994b62b",
+          "metrics": {
+            "revenue": 21169451205.0,
+            "ebitda": 6681100421.75,
+            "ebit": 3498486421.75,
+            "financial_result": -2512058000.0,
+            "pre_tax_income": 986428421.75,
+            "net_income": 850816299.5726535,
+            "operating_cash_flow": 5891730254.636756,
+            "fcf": 4136186254.6367555,
+            "net_debt": 25393187745.363243
+          },
+          "absolute_changes": {
+            "revenue": 384521205.0,
+            "ebitda": 134582421.75,
+            "ebit": 134582421.75,
+            "financial_result": 0.0,
+            "pre_tax_income": 134582421.75,
+            "net_income": 116080299.5726535,
+            "operating_cash_flow": 98668254.63675548,
+            "fcf": 98668254.63675548,
+            "net_debt": -98668254.63675548
+          },
+          "percentage_changes": {
+            "revenue": 0.0185,
+            "ebitda": 0.02055786324119173,
+            "ebit": 0.040007806926119174,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.15798914563195696,
+            "net_income": 0.15798912748613583,
+            "operating_cash_flow": 0.017032142006551194,
+            "fcf": 0.02443784885584547,
+            "net_debt": -0.003870579475921858
+          },
+          "margins": {
+            "ebitda_margin": 0.31560102135155943,
+            "ebit_margin": 0.16526108248492027,
+            "net_income_margin": 0.04019075843457386,
+            "fcf_margin": 0.19538467079674848
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "e2435137a125825887f479c9",
+              "source_candidate_id": "b9473c14853163d91994b62b",
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 20784930000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 10.0,
+              "signed_shock_magnitude": 10.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.5,
+                "incremental_ebitda_margin": 0.35,
+                "cash_conversion": 0.85,
+                "tax_rate": 0.137478
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 384521205.0,
+              "delta_ebitda": 134582421.75,
+              "delta_ebit": 134582421.75,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 134582421.75,
+              "delta_net_income": 116080299.5726535,
+              "delta_operating_cash_flow": 98668254.63675548,
+              "delta_fcf": 98668254.63675548,
+              "delta_net_debt": -98668254.63675548,
+              "confidence": 0.0342,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_12653_2025-12-31_v1",
+                "ITR_12653_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "average_net_fx_debt",
+                "net_foreign_currency_debt_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "average_floating_debt"
+              ]
+            },
+            {
+              "factor": "INFLATION",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "inflation_linked_debt"
+              ]
+            }
+          ],
+          "confidence": 0.0342,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "7e081d145493680480f89291",
+          "ticker": "KLBN11",
+          "case": "OPTIMISTIC",
+          "shock_case": "HIGH_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "0c73e52a2fedab4f63e008ed",
+          "company_impact_candidate_id": "b9473c14853163d91994b62b",
+          "metrics": {
+            "revenue": 21938493615.0,
+            "ebitda": 7123299807.5,
+            "ebit": 3940685807.5,
+            "financial_result": -2512058000.0,
+            "pre_tax_income": 1428627807.5,
+            "net_income": 1232222998.168515,
+            "operating_cash_flow": 6265674648.260089,
+            "fcf": 4510130648.260089,
+            "net_debt": 25019243351.73991
+          },
+          "absolute_changes": {
+            "revenue": 1153563615.0,
+            "ebitda": 576781807.5,
+            "ebit": 576781807.5,
+            "financial_result": 0.0,
+            "pre_tax_income": 576781807.5,
+            "net_income": 497486998.168515,
+            "operating_cash_flow": 472612648.2600893,
+            "fcf": 472612648.2600893,
+            "net_debt": -472612648.2600893
+          },
+          "percentage_changes": {
+            "revenue": 0.0555,
+            "ebitda": 0.08810512817653599,
+            "ebit": 0.1714620296833679,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.6770963384226727,
+            "net_income": 0.6770962606548679,
+            "operating_cash_flow": 0.0815825289389427,
+            "fcf": 0.1170552424187556,
+            "net_debt": -0.018539750430886213
+          },
+          "margins": {
+            "ebitda_margin": 0.3246941167660476,
+            "ebit_margin": 0.17962426576114762,
+            "net_income_margin": 0.05616716533928325,
+            "fcf_margin": 0.20558068969586765
+          },
+          "contributions": [
+            {
+              "factor": "FX",
+              "channel": "revenue",
+              "bridge_type": "FX_REVENUE_TRANSLATION",
+              "scenario_id": "bf38b006e8118ca8f6bb3095",
+              "source_candidate_id": "b9473c14853163d91994b62b",
+              "exposure_field": "export_revenue_pct",
+              "exposure_value": 0.37,
+              "monetary_base_field": "ttm_revenue",
+              "monetary_base_value": 20784930000.0,
+              "causal_direction": 1,
+              "absolute_shock_magnitude": 20.0,
+              "signed_shock_magnitude": 20.0,
+              "shock_unit": "PERCENT_CHANGE",
+              "horizon_years": 1.0,
+              "formula": "ttm_revenue * exposed_revenue_pct * fx_change * fx_pass_through",
+              "assumptions": {
+                "fx_pass_through": 0.75,
+                "incremental_ebitda_margin": 0.5,
+                "cash_conversion": 0.95,
+                "tax_rate": 0.137478
+              },
+              "assumption_calibration_status": "ASSUMPTION_NOT_COMPANY_CALIBRATED",
+              "accounting_fx_revaluation": 0.0,
+              "cash_interest_effect": 0.0,
+              "cash_principal_effect": 0.0,
+              "hedge_settlement_effect": 0.0,
+              "delta_revenue": 1153563615.0,
+              "delta_ebitda": 576781807.5,
+              "delta_ebit": 576781807.5,
+              "delta_financial_result": 0.0,
+              "delta_pre_tax_income": 576781807.5,
+              "delta_net_income": 497486998.168515,
+              "delta_operating_cash_flow": 472612648.2600893,
+              "delta_fcf": 472612648.2600893,
+              "delta_net_debt": -472612648.2600893,
+              "confidence": 0.0342,
+              "causal_evidence_status": "HYPOTHESIS",
+              "exposure_evidence_ids": [
+                "FRE:159417"
+              ],
+              "baseline_evidence_ids": [
+                "DFP_12653_2025-12-31_v1",
+                "ITR_12653_2026-03-31_v1"
+              ]
+            }
+          ],
+          "blocked_channels": [
+            {
+              "factor": "FX",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_MISSING_NET_EXPOSURE",
+              "required_fields": [
+                "average_net_fx_debt",
+                "net_foreign_currency_debt_pct"
+              ]
+            },
+            {
+              "factor": "FX",
+              "channel": "cost",
+              "reason": "BRIDGE_BLOCKED_MISSING_ELASTICITY",
+              "required_fields": [
+                "cost_foreign_currency_pct"
+              ]
+            },
+            {
+              "factor": "INTEREST_RATES",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "average_floating_debt"
+              ]
+            },
+            {
+              "factor": "INFLATION",
+              "channel": "debt",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_CAUSAL_FACTOR",
+              "required_fields": [
+                "inflation_linked_debt"
+              ]
+            }
+          ],
+          "confidence": 0.0342,
+          "status": "PARTIAL",
+          "reason": "FINANCIAL_BRIDGE_PARTIAL",
+          "run_id": "financial_4d2_pilot"
+        }
+      ]
+    },
+    {
+      "ticker": "RAIL3",
+      "sector_state": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+      "baseline": {
+        "baseline_id": "6dda2f257f7d02bbb4681e47",
+        "ticker": "RAIL3",
+        "cvm_code": "17450",
+        "as_of_timestamp": "2026-07-22T23:59:59Z",
+        "latest_quarter": "2026-03-31",
+        "currency": "BRL",
+        "unit": "BRL",
+        "methodology_version": "4D.2-baseline-proxy-v1",
+        "fcf_definition": "CFO_PLUS_REPORTED_CAPEX",
+        "fcf_normalization_status": "NOT_NORMALIZED",
+        "average_debt_method": "TWO_POINT_AVERAGE_PROXY",
+        "net_debt_method": "STANDARDIZED_CASH_ONLY",
+        "ttm_revenue": 14163329000.0,
+        "ttm_costs": -7711051000.0,
+        "ttm_ebit": 4847382000.0,
+        "ttm_ebitda": 6902992000.0,
+        "ttm_financial_result": -3103362000.0,
+        "ttm_pre_tax_income": 1744020000.0,
+        "ttm_net_income": 1060025000.0,
+        "ttm_operating_cash_flow": 7190129000.0,
+        "ttm_capex": -6105494000.0,
+        "ttm_fcf": 1084635000.0,
+        "gross_debt": 22890822000.0,
+        "cash": 5424355000.0,
+        "net_debt": 17466467000.0,
+        "average_gross_debt": 23007329500.0,
+        "average_floating_debt": null,
+        "average_net_fx_debt": null,
+        "inflation_linked_debt": 16160325233.470499,
+        "effective_tax_rate": 0.392194,
+        "working_capital": 2264922000.0,
+        "field_evidence": [
+          {
+            "field_name": "ttm_revenue",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 13847776000.0,
+              "Q_current": 3282303000.0,
+              "Q_prior_comparative": 2966750000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 14163329000.00 BRL."
+          },
+          {
+            "field_name": "ttm_costs",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -7562149000.0,
+              "Q_current": -1832464000.0,
+              "Q_prior_comparative": -1683562000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -7711051000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebit",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 4579664000.0,
+              "Q_current": 1060522000.0,
+              "Q_prior_comparative": 792804000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 4847382000.00 BRL."
+          },
+          {
+            "field_name": "ttm_financial_result",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.06:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -3025182000.0,
+              "Q_current": -845839000.0,
+              "Q_prior_comparative": -767659000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -3103362000.00 BRL."
+          },
+          {
+            "field_name": "ttm_pre_tax_income",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 1554482000.0,
+              "Q_current": 214683000.0,
+              "Q_prior_comparative": 25145000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1744020000.00 BRL."
+          },
+          {
+            "field_name": "ttm_net_income",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.11:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 865125000.0,
+              "Q_current": 97724000.0,
+              "Q_prior_comparative": -97176000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1060025000.00 BRL."
+          },
+          {
+            "field_name": "ttm_operating_cash_flow",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 7141811000.0,
+              "Q_current": 1269324000.0,
+              "Q_prior_comparative": 1221006000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 7190129000.00 BRL."
+          },
+          {
+            "field_name": "ttm_capex",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.02.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.02.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.02.08:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -6096341000.0,
+              "Q_current": -1773722000.0,
+              "Q_prior_comparative": -1764569000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -6105494000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebitda",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01.01.02:PENÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01.01.03:PENÚLTIMO",
+              "DFP_17450_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_ebit + ttm_depreciation_and_amortization",
+            "components": {
+              "ttm_ebit": 4847382000.0,
+              "ttm_depreciation_and_amortization": 2055610000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 6902992000.00 BRL."
+          },
+          {
+            "field_name": "cash",
+            "source_ids": [
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_17450_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 5424355000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "gross_debt",
+            "source_ids": [
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_17450_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 22890822000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "working_capital",
+            "source_ids": [
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_17450_2026-03-31_v1:BPA:1.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "current_assets - current_liabilities",
+            "components": {
+              "current_assets": 8319401000.0,
+              "current_liabilities": 6054479000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 2264922000.00 BRL."
+          },
+          {
+            "field_name": "average_gross_debt",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_17450_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "(gross_debt_fy_end + gross_debt_latest_quarter) / 2",
+            "components": {
+              "gross_debt_fy_end": 23123837000.0,
+              "gross_debt_latest_quarter": 22890822000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 23007329500.00 BRL."
+          },
+          {
+            "field_name": "ttm_fcf",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO",
+              "DFP_17450_2025-12-31_v1:DFC-MI:6.02.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.02.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DFC-MI:6.02.08:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_operating_cash_flow + ttm_capex",
+            "components": {
+              "ttm_operating_cash_flow": 7190129000.0,
+              "ttm_capex": -6105494000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1084635000.00 BRL."
+          },
+          {
+            "field_name": "net_debt",
+            "source_ids": [
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_17450_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "gross_debt - cash",
+            "components": {
+              "gross_debt": 22890822000.0,
+              "cash": 5424355000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 17466467000.00 BRL."
+          },
+          {
+            "field_name": "effective_tax_rate",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.08:PENÚLTIMO",
+              "DFP_17450_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "RATIO",
+            "formula": "min(max(-ttm_tax_expense / ttm_pre_tax_income, 0), 1)",
+            "components": {
+              "ttm_tax_expense": -683995000.0,
+              "ttm_pre_tax_income": 1744020000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 0.39 BRL."
+          },
+          {
+            "field_name": "inflation_linked_debt",
+            "source_ids": [
+              "DFP_17450_2025-12-31_v1",
+              "DFP_17450_2025-12-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "ITR_17450_2026-03-31_v1",
+              "FRE:159296"
+            ],
+            "source_locations": [
+              "DFP_17450_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_17450_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_17450_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "CompanyExposureSnapshot:3ee6e4437da709eab41d9311:inflation_linked_debt_pct"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-01T00:00:00Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "average_gross_debt * inflation_linked_debt_pct",
+            "components": {
+              "average_gross_debt": 23007329500.0,
+              "inflation_linked_debt_pct": 0.702399
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.3147,
+            "notes": "Economic post-hedge exposure; contractual debt is not substituted."
+          }
+        ],
+        "missing_fields": [
+          "average_floating_debt",
+          "average_net_fx_debt"
+        ],
+        "confidence": 0.9244,
+        "run_id": "financial_4d2_pilot_baselines",
+        "created_at": "2026-07-23T20:43:30.218076Z"
+      },
+      "source_candidate": {
+        "candidate_id": "458c0d558a791b95a11ed622",
+        "decision_policy": "MATERIALITY_COVERAGE",
+        "normalized_score_is_not_financial_percentage": true
+      },
+      "policy_comparison": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "4b35cecb6793ff2ce6e3622c",
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "known_component_count": 0,
+          "confidence": 0.0
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "458c0d558a791b95a11ed622",
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "known_component_count": 0,
+          "confidence": 0.0
+        }
+      },
+      "outcomes": [
+        {
+          "outcome_id": "cdf43bbcdda961fbd5f5c323",
+          "ticker": "RAIL3",
+          "case": "PESSIMISTIC",
+          "shock_case": "LOW_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "6dda2f257f7d02bbb4681e47",
+          "company_impact_candidate_id": "458c0d558a791b95a11ed622",
+          "metrics": {
+            "revenue": 14163329000.0,
+            "ebitda": 6902992000.0,
+            "ebit": 4847382000.0,
+            "financial_result": -3103362000.0,
+            "pre_tax_income": 1744020000.0,
+            "net_income": 1060025000.0,
+            "operating_cash_flow": 7190129000.0,
+            "fcf": 1084635000.0,
+            "net_debt": 17466467000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.4873848514004017,
+            "ebit_margin": 0.3422487749878577,
+            "net_income_margin": 0.07484292711127448,
+            "fcf_margin": 0.07658051295708798
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "41f7d1e57afd1b86b92037fa",
+          "ticker": "RAIL3",
+          "case": "BASE",
+          "shock_case": "BASE_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "6dda2f257f7d02bbb4681e47",
+          "company_impact_candidate_id": "458c0d558a791b95a11ed622",
+          "metrics": {
+            "revenue": 14163329000.0,
+            "ebitda": 6902992000.0,
+            "ebit": 4847382000.0,
+            "financial_result": -3103362000.0,
+            "pre_tax_income": 1744020000.0,
+            "net_income": 1060025000.0,
+            "operating_cash_flow": 7190129000.0,
+            "fcf": 1084635000.0,
+            "net_debt": 17466467000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.4873848514004017,
+            "ebit_margin": 0.3422487749878577,
+            "net_income_margin": 0.07484292711127448,
+            "fcf_margin": 0.07658051295708798
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "3396a9f1a82529d34f8faff0",
+          "ticker": "RAIL3",
+          "case": "OPTIMISTIC",
+          "shock_case": "HIGH_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "6dda2f257f7d02bbb4681e47",
+          "company_impact_candidate_id": "458c0d558a791b95a11ed622",
+          "metrics": {
+            "revenue": 14163329000.0,
+            "ebitda": 6902992000.0,
+            "ebit": 4847382000.0,
+            "financial_result": -3103362000.0,
+            "pre_tax_income": 1744020000.0,
+            "net_income": 1060025000.0,
+            "operating_cash_flow": 7190129000.0,
+            "fcf": 1084635000.0,
+            "net_debt": 17466467000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.4873848514004017,
+            "ebit_margin": 0.3422487749878577,
+            "net_income_margin": 0.07484292711127448,
+            "fcf_margin": 0.07658051295708798
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        }
+      ]
+    },
+    {
+      "ticker": "SLCE3",
+      "sector_state": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+      "baseline": {
+        "baseline_id": "d7977a4aba5f29a9acf174b6",
+        "ticker": "SLCE3",
+        "cvm_code": "20745",
+        "as_of_timestamp": "2026-07-22T23:59:59Z",
+        "latest_quarter": "2026-03-31",
+        "currency": "BRL",
+        "unit": "BRL",
+        "methodology_version": "4D.2-baseline-proxy-v1",
+        "fcf_definition": "CFO_PLUS_REPORTED_CAPEX",
+        "fcf_normalization_status": "NOT_NORMALIZED",
+        "average_debt_method": "TWO_POINT_AVERAGE_PROXY",
+        "net_debt_method": "STANDARDIZED_CASH_ONLY",
+        "ttm_revenue": 9589611000.0,
+        "ttm_costs": -6793573000.0,
+        "ttm_ebit": 1570900000.0,
+        "ttm_ebitda": 2290566000.0,
+        "ttm_financial_result": -1262264000.0,
+        "ttm_pre_tax_income": 308636000.0,
+        "ttm_net_income": 290595000.0,
+        "ttm_operating_cash_flow": 1476258000.0,
+        "ttm_capex": -1023807000.0,
+        "ttm_fcf": 452451000.0,
+        "gross_debt": 7268620000.0,
+        "cash": 921862000.0,
+        "net_debt": 6346758000.0,
+        "average_gross_debt": 7498452000.0,
+        "average_floating_debt": null,
+        "average_net_fx_debt": null,
+        "inflation_linked_debt": null,
+        "effective_tax_rate": 0.058454,
+        "working_capital": 4630269000.0,
+        "field_evidence": [
+          {
+            "field_name": "ttm_revenue",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 9759214000.0,
+              "Q_current": 2665069000.0,
+              "Q_prior_comparative": 2834672000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 9589611000.00 BRL."
+          },
+          {
+            "field_name": "ttm_costs",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.02:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -6830285000.0,
+              "Q_current": -1721905000.0,
+              "Q_prior_comparative": -1758617000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -6793573000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebit",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 1812542000.0,
+              "Q_current": 624406000.0,
+              "Q_prior_comparative": 866048000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1570900000.00 BRL."
+          },
+          {
+            "field_name": "ttm_financial_result",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.06:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.06:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -1098861000.0,
+              "Q_current": -295611000.0,
+              "Q_prior_comparative": -132208000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -1262264000.00 BRL."
+          },
+          {
+            "field_name": "ttm_pre_tax_income",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 713681000.0,
+              "Q_current": 328795000.0,
+              "Q_prior_comparative": 733840000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 308636000.00 BRL."
+          },
+          {
+            "field_name": "ttm_net_income",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.11:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.11:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 565213000.0,
+              "Q_current": 236082000.0,
+              "Q_prior_comparative": 510700000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 290595000.00 BRL."
+          },
+          {
+            "field_name": "ttm_operating_cash_flow",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": 1808281000.0,
+              "Q_current": -485217000.0,
+              "Q_prior_comparative": -153194000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 1476258000.00 BRL."
+          },
+          {
+            "field_name": "ttm_capex",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.03:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.03:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "FY_latest + Q_current - Q_prior_comparative",
+            "components": {
+              "FY_latest": -886636000.0,
+              "Q_current": -368777000.0,
+              "Q_prior_comparative": -231606000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: -1023807000.00 BRL."
+          },
+          {
+            "field_name": "ttm_ebitda",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.01.01.11:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.03:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.11:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.02:PENÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.03:PENÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01.01.11:PENÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.05:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.05:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_ebit + ttm_depreciation_and_amortization",
+            "components": {
+              "ttm_ebit": 1570900000.0,
+              "ttm_depreciation_and_amortization": 719666000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 2290566000.00 BRL."
+          },
+          {
+            "field_name": "cash",
+            "source_ids": [
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_20745_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 921862000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "gross_debt",
+            "source_ids": [
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_20745_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "sum(reported_standardized_accounts)",
+            "components": {
+              "reported_value": 7268620000.0
+            },
+            "evidence_label": "fact_source_reported",
+            "confidence": 0.98,
+            "notes": null
+          },
+          {
+            "field_name": "working_capital",
+            "source_ids": [
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_20745_2026-03-31_v1:BPA:1.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPP:2.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "current_assets - current_liabilities",
+            "components": {
+              "current_assets": 8501226000.0,
+              "current_liabilities": 3870957000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 4630269000.00 BRL."
+          },
+          {
+            "field_name": "average_gross_debt",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:BPP:2.01.04:ÚLTIMO",
+              "DFP_20745_2025-12-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPP:2.02.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "(gross_debt_fy_end + gross_debt_latest_quarter) / 2",
+            "components": {
+              "gross_debt_fy_end": 7728284000.0,
+              "gross_debt_latest_quarter": 7268620000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 7498452000.00 BRL."
+          },
+          {
+            "field_name": "ttm_fcf",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.01:PENÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.02.01:ÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.02:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.03:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.02:PENÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DFC-MI:6.02.03:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "ttm_operating_cash_flow + ttm_capex",
+            "components": {
+              "ttm_operating_cash_flow": 1476258000.0,
+              "ttm_capex": -1023807000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 452451000.00 BRL."
+          },
+          {
+            "field_name": "net_debt",
+            "source_ids": [
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "ITR_20745_2026-03-31_v1:BPP:2.01.04:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPP:2.02.01:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:BPA:1.01.01:ÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "BRL",
+            "formula": "gross_debt - cash",
+            "components": {
+              "gross_debt": 7268620000.0,
+              "cash": 921862000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 6346758000.00 BRL."
+          },
+          {
+            "field_name": "effective_tax_rate",
+            "source_ids": [
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "DFP_20745_2025-12-31_v1",
+              "ITR_20745_2026-03-31_v1",
+              "ITR_20745_2026-03-31_v1"
+            ],
+            "source_locations": [
+              "DFP_20745_2025-12-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.08:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.08:PENÚLTIMO",
+              "DFP_20745_2025-12-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.07:ÚLTIMO",
+              "ITR_20745_2026-03-31_v1:DRE:3.07:PENÚLTIMO"
+            ],
+            "available_at": [
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:19:31Z",
+              "2026-07-19T10:39:30Z",
+              "2026-07-19T10:39:30Z"
+            ],
+            "period_end": "2026-03-31",
+            "currency": "BRL",
+            "unit": "RATIO",
+            "formula": "min(max(-ttm_tax_expense / ttm_pre_tax_income, 0), 1)",
+            "components": {
+              "ttm_tax_expense": -18041000.0,
+              "ttm_pre_tax_income": 308636000.0
+            },
+            "evidence_label": "derived_calculation",
+            "confidence": 0.96,
+            "notes": "Normalized value: 0.06 BRL."
+          }
+        ],
+        "missing_fields": [
+          "average_floating_debt",
+          "average_net_fx_debt",
+          "inflation_linked_debt"
+        ],
+        "confidence": 0.9625,
+        "run_id": "financial_4d2_pilot_baselines",
+        "created_at": "2026-07-23T20:43:30.372741Z"
+      },
+      "source_candidate": {
+        "candidate_id": "d7791b3b8a4c52697c72c3dd",
+        "decision_policy": "MATERIALITY_COVERAGE",
+        "normalized_score_is_not_financial_percentage": true
+      },
+      "policy_comparison": {
+        "THREE_COMPONENTS": {
+          "candidate_id": "4379acde952ea59b0c02967a",
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "known_component_count": 0,
+          "confidence": 0.0
+        },
+        "MATERIALITY_COVERAGE": {
+          "candidate_id": "d7791b3b8a4c52697c72c3dd",
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "known_component_count": 0,
+          "confidence": 0.0
+        }
+      },
+      "outcomes": [
+        {
+          "outcome_id": "4a290d393815cad81c89aea6",
+          "ticker": "SLCE3",
+          "case": "PESSIMISTIC",
+          "shock_case": "LOW_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "d7977a4aba5f29a9acf174b6",
+          "company_impact_candidate_id": "d7791b3b8a4c52697c72c3dd",
+          "metrics": {
+            "revenue": 9589611000.0,
+            "ebitda": 2290566000.0,
+            "ebit": 1570900000.0,
+            "financial_result": -1262264000.0,
+            "pre_tax_income": 308636000.0,
+            "net_income": 290595000.0,
+            "operating_cash_flow": 1476258000.0,
+            "fcf": 452451000.0,
+            "net_debt": 6346758000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.23885911534889162,
+            "ebit_margin": 0.16381269271506424,
+            "net_income_margin": 0.030303106142678782,
+            "fcf_margin": 0.04718137159056817
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "2681afd11927a08b239f91f3",
+          "ticker": "SLCE3",
+          "case": "BASE",
+          "shock_case": "BASE_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "d7977a4aba5f29a9acf174b6",
+          "company_impact_candidate_id": "d7791b3b8a4c52697c72c3dd",
+          "metrics": {
+            "revenue": 9589611000.0,
+            "ebitda": 2290566000.0,
+            "ebit": 1570900000.0,
+            "financial_result": -1262264000.0,
+            "pre_tax_income": 308636000.0,
+            "net_income": 290595000.0,
+            "operating_cash_flow": 1476258000.0,
+            "fcf": 452451000.0,
+            "net_debt": 6346758000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.23885911534889162,
+            "ebit_margin": 0.16381269271506424,
+            "net_income_margin": 0.030303106142678782,
+            "fcf_margin": 0.04718137159056817
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        },
+        {
+          "outcome_id": "2175c5e13cb27cf3a548afc8",
+          "ticker": "SLCE3",
+          "case": "OPTIMISTIC",
+          "shock_case": "HIGH_SHOCK",
+          "as_of_timestamp": "2026-07-22T23:59:59Z",
+          "baseline_id": "d7977a4aba5f29a9acf174b6",
+          "company_impact_candidate_id": "d7791b3b8a4c52697c72c3dd",
+          "metrics": {
+            "revenue": 9589611000.0,
+            "ebitda": 2290566000.0,
+            "ebit": 1570900000.0,
+            "financial_result": -1262264000.0,
+            "pre_tax_income": 308636000.0,
+            "net_income": 290595000.0,
+            "operating_cash_flow": 1476258000.0,
+            "fcf": 452451000.0,
+            "net_debt": 6346758000.0
+          },
+          "absolute_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "percentage_changes": {
+            "revenue": 0.0,
+            "ebitda": 0.0,
+            "ebit": 0.0,
+            "financial_result": 0.0,
+            "pre_tax_income": 0.0,
+            "net_income": 0.0,
+            "operating_cash_flow": 0.0,
+            "fcf": 0.0,
+            "net_debt": 0.0
+          },
+          "margins": {
+            "ebitda_margin": 0.23885911534889162,
+            "ebit_margin": 0.16381269271506424,
+            "net_income_margin": 0.030303106142678782,
+            "fcf_margin": 0.04718137159056817
+          },
+          "contributions": [],
+          "blocked_channels": [
+            {
+              "factor": "ALL",
+              "channel": "all",
+              "reason": "BRIDGE_BLOCKED_NO_ACTIVE_SIGNAL",
+              "required_fields": []
+            }
+          ],
+          "confidence": 0.0,
+          "status": "NO_ACTION",
+          "reason": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+          "run_id": "financial_4d2_pilot"
+        }
+      ]
+    }
+  ],
+  "acceptance_checks": {
+    "five_pit_baselines": true,
+    "future_documents_used_zero": true,
+    "shock_units_explicit": true,
+    "normalized_score_used_as_percentage_zero": true,
+    "outcomes_ordered_by_company_result": true,
+    "unrealized_fx_revaluation_in_fcf_zero": true,
+    "fcf_proxy_disclosed": true,
+    "mglu_financial_impact_calculated": true,
+    "suzb_revenue_and_net_fx_debt_separated": true,
+    "klbn_fx_interest_inflation_separated": true,
+    "missing_elasticities_blocked": true,
+    "no_active_signal_is_no_action": true,
+    "formulas_and_evidence_persisted": true
+  },
+  "safety": {
+    "valuation_enabled": false,
+    "buy_enabled": false,
+    "orders_enabled": false,
+    "mirofish_enabled": false
+  }
+}

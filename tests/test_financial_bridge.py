@@ -179,6 +179,10 @@ def test_ttm_baseline_is_pit_evidenced_and_uses_monetary_denominators(tmp_path) 
     assert baseline.ttm_operating_cash_flow == 160
     assert baseline.ttm_capex == -55
     assert baseline.ttm_fcf == 105
+    assert baseline.fcf_definition == "CFO_PLUS_REPORTED_CAPEX"
+    assert baseline.fcf_normalization_status == "NOT_NORMALIZED"
+    assert baseline.average_debt_method == "TWO_POINT_AVERAGE_PROXY"
+    assert baseline.net_debt_method == "STANDARDIZED_CASH_ONLY"
     assert baseline.gross_debt == 400
     assert baseline.cash == 100
     assert baseline.net_debt == 300
@@ -251,6 +255,77 @@ def test_fx_revenue_and_fx_debt_use_separate_monetary_bases(tmp_path) -> None:
     assert contributions["debt"].monetary_base_value == 38
     assert contributions["revenue"].delta_revenue == 22
     assert contributions["debt"].delta_financial_result == pytest.approx(-3.8)
+    assert contributions["debt"].accounting_fx_revaluation == pytest.approx(-3.8)
+    assert contributions["debt"].delta_operating_cash_flow == 0
+    assert contributions["debt"].delta_fcf == 0
+    assert contributions["debt"].delta_net_debt == 0
+    assert (
+        contributions["revenue"].assumption_calibration_status
+        == "ASSUMPTION_NOT_COMPANY_CALIBRATED"
+    )
+    store.close()
+
+
+@pytest.mark.parametrize(
+    ("factor", "channel", "field", "positive_attr"),
+    [
+        ("FX", "revenue", "revenue_foreign_currency_pct", "delta_revenue"),
+        ("FX", "debt", "net_foreign_currency_debt_pct", "delta_financial_result"),
+        (
+            "INTEREST_RATES",
+            "debt",
+            "post_hedge_floating_rate_debt_pct",
+            "delta_financial_result",
+        ),
+    ],
+)
+def test_causal_up_and_down_produce_opposite_financial_signs(
+    tmp_path, factor, channel, field, positive_attr
+) -> None:
+    store = _baseline_store(tmp_path)
+    exposure = _exposure()
+    baseline = FinancialBaselineBuilder(store, "baseline").build(
+        "TEST3", AS_OF, exposure
+    )
+    up = _candidate([_factor(factor, channel, field, .5, adjusted=.5)])
+    down = _candidate([_factor(factor, channel, field, .5, adjusted=-.5)])
+    engine = FinancialScenarioEngine("bridge")
+    up_base = next(
+        item for item in engine.evaluate(baseline, exposure, up)
+        if item.shock_case == "BASE_SHOCK"
+    )
+    down_base = next(
+        item for item in engine.evaluate(baseline, exposure, down)
+        if item.shock_case == "BASE_SHOCK"
+    )
+    up_value = getattr(up_base.contributions[0], positive_attr)
+    down_value = getattr(down_base.contributions[0], positive_attr)
+    assert up_value == pytest.approx(-down_value)
+    assert up_base.contributions[0].signed_shock_magnitude > 0
+    assert down_base.contributions[0].signed_shock_magnitude < 0
+    store.close()
+
+
+def test_result_labels_are_assigned_after_company_financial_effect(tmp_path) -> None:
+    store = _baseline_store(tmp_path)
+    exposure = _exposure()
+    baseline = FinancialBaselineBuilder(store, "baseline").build(
+        "TEST3", AS_OF, exposure
+    )
+    candidate = _candidate([
+        _factor("FX", "revenue", "revenue_foreign_currency_pct", .4)
+    ])
+    outcomes = FinancialScenarioEngine("bridge").evaluate(
+        baseline, exposure, candidate
+    )
+    by_result = {item.case: item for item in outcomes}
+    assert (
+        by_result["PESSIMISTIC"].metrics.fcf
+        <= by_result["BASE"].metrics.fcf
+        <= by_result["OPTIMISTIC"].metrics.fcf
+    )
+    assert by_result["PESSIMISTIC"].shock_case == "LOW_SHOCK"
+    assert by_result["OPTIMISTIC"].shock_case == "HIGH_SHOCK"
     store.close()
 
 

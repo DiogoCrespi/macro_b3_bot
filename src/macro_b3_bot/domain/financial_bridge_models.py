@@ -33,6 +33,10 @@ class FinancialBaselineSnapshot(BaseModel):
     currency: str = "BRL"
     unit: str = "BRL"
     methodology_version: str
+    fcf_definition: Literal["CFO_PLUS_REPORTED_CAPEX"] = "CFO_PLUS_REPORTED_CAPEX"
+    fcf_normalization_status: Literal["NOT_NORMALIZED"] = "NOT_NORMALIZED"
+    average_debt_method: Literal["TWO_POINT_AVERAGE_PROXY"] = "TWO_POINT_AVERAGE_PROXY"
+    net_debt_method: Literal["STANDARDIZED_CASH_ONLY"] = "STANDARDIZED_CASH_ONLY"
 
     ttm_revenue: float
     ttm_costs: float
@@ -66,6 +70,8 @@ class FinancialBaselineSnapshot(BaseModel):
         excluded = {
             "baseline_id", "ticker", "cvm_code", "as_of_timestamp",
             "latest_quarter", "currency", "unit", "methodology_version",
+            "fcf_definition", "fcf_normalization_status",
+            "average_debt_method", "net_debt_method",
             "field_evidence", "missing_fields", "confidence", "run_id",
             "created_at",
         }
@@ -80,14 +86,23 @@ class EconomicShockScenario(BaseModel):
     factor: Literal[
         "FX", "INTEREST_RATES", "INFLATION", "OIL", "ECONOMIC_ACTIVITY"
     ]
-    case: Literal["PESSIMISTIC", "BASE", "OPTIMISTIC"]
-    magnitude: float
+    shock_case: Literal["LOW_SHOCK", "BASE_SHOCK", "HIGH_SHOCK"]
+    direction: Literal[-1, 1]
+    absolute_magnitude: float = Field(ge=0)
+    signed_magnitude: float
     unit: Literal["PERCENT_CHANGE", "BASIS_POINTS", "PERCENTAGE_POINTS"]
     horizon_years: float = Field(gt=0)
     as_of_timestamp: datetime
     premise_source: Literal["USER_SPECIFIED_SCENARIO", "CONFIGURED_PILOT_ASSUMPTION"]
     assumption_ids: list[str] = Field(default_factory=list)
     methodology_version: str
+
+    @model_validator(mode="after")
+    def signed_magnitude_is_consistent(self) -> "EconomicShockScenario":
+        expected = self.direction * self.absolute_magnitude
+        if abs(self.signed_magnitude - expected) > 1e-12:
+            raise ValueError("signed_magnitude must equal direction * absolute_magnitude")
+        return self
 
 
 class FinancialBridgeContribution(BaseModel):
@@ -100,11 +115,20 @@ class FinancialBridgeContribution(BaseModel):
     exposure_value: float
     monetary_base_field: str
     monetary_base_value: float
-    shock_magnitude: float
+    causal_direction: Literal[-1, 1]
+    absolute_shock_magnitude: float
+    signed_shock_magnitude: float
     shock_unit: str
     horizon_years: float
     formula: str
     assumptions: dict[str, float] = Field(default_factory=dict)
+    assumption_calibration_status: Literal[
+        "COMPANY_CALIBRATED", "ASSUMPTION_NOT_COMPANY_CALIBRATED"
+    ] = "ASSUMPTION_NOT_COMPANY_CALIBRATED"
+    accounting_fx_revaluation: float = 0
+    cash_interest_effect: float = 0
+    cash_principal_effect: float = 0
+    hedge_settlement_effect: float = 0
     delta_revenue: float = 0
     delta_ebitda: float = 0
     delta_ebit: float = 0
@@ -150,6 +174,7 @@ class FinancialScenarioOutcome(BaseModel):
     outcome_id: str
     ticker: str
     case: Literal["PESSIMISTIC", "BASE", "OPTIMISTIC"]
+    shock_case: Literal["LOW_SHOCK", "BASE_SHOCK", "HIGH_SHOCK"]
     as_of_timestamp: datetime
     baseline_id: str
     company_impact_candidate_id: str

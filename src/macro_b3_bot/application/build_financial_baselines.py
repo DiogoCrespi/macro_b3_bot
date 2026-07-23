@@ -37,7 +37,7 @@ class FinancialBaselineBuilder:
         self,
         store: DatabaseStore,
         run_id: str,
-        methodology_version: str = "4D.1-baseline-v1",
+        methodology_version: str = "4D.2-baseline-proxy-v1",
     ) -> None:
         self.store = store
         self.run_id = run_id

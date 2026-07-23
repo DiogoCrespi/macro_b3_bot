@@ -85,3 +85,16 @@ TTM FCF is the explicit standardized formula `CFO + capex`; it is not
 normalized recurring FCF. Both decision policies remain comparative, with no
 final policy selection. Valuation, MiroFish, BUY and order execution remain
 disabled.
+
+Sprint 4D.2 directional and cash-flow semantics artifact:
+
+- `financial_4d2_pilot.json`: the same five-company PIT pilot with signed
+  causal shocks, `LOW_SHOCK`/`BASE_SHOCK`/`HIGH_SHOCK` inputs and company
+  outcomes ordered afterward as pessimistic/base/optimistic.
+- FX debt revaluation is identified as an accounting effect and contributes
+  zero to CFO, the levered FCF proxy and net debt absent supported cash
+  realization.
+- FX revenue uses explicit, non-company-calibrated incremental EBITDA margin
+  assumptions. The baseline identifies FCF as
+  `CFO_PLUS_REPORTED_CAPEX / NOT_NORMALIZED`, average debt as a
+  `TWO_POINT_AVERAGE_PROXY`, and net debt as `STANDARDIZED_CASH_ONLY`.
