@@ -183,13 +183,17 @@ def test_company_impact_requires_explicit_factor_context_and_never_buys() -> Non
         graph_version="1.1.0",
     )
     candidate = CompanyImpactEngine("impact-run").evaluate(
-        sector, exposure(), {"revenue": .5, "cost": -.4, "debt": -.6, "demand": .3}, AS_OF
+        sector, exposure(), {
+            ("FX", "revenue"): .5, ("FX", "cost"): -.4,
+            ("INTEREST_RATES", "debt"): -.6,
+            ("ECONOMIC_ACTIVITY", "demand"): .3,
+        }, AS_OF
     )
     assert candidate.net_company_impact is not None
     assert candidate.status in {"WATCH", "NO_ACTION"}
     assert "buy" not in candidate.model_dump()
     incomplete = CompanyImpactEngine("impact-run").evaluate(
-        sector, exposure(), {"revenue": .5}, AS_OF
+        sector, exposure(), {("FX", "revenue"): .5}, AS_OF
     )
     assert incomplete.status == "NO_ACTION"
     assert set(incomplete.missing_exposures) == {"cost", "debt", "demand"}
@@ -202,9 +206,17 @@ def test_channel_transport_preserves_fx_channels_and_opposite_direction() -> Non
         "candidate_id": "C1", "event_id": "E1", "event_type": "USD_BRL_SHOCK",
         "causal_root": "USD_BRL_SHOCK_UP", "sector": "PAPEL_CELULOSE",
         "direction": "BULLISH", "impact_score": .6, "event_strength": .8,
-        "confidence": .7, "causal_paths": [
-            ["USD_BRL_SHOCK_UP", "USD_BRL_UP", "B3_SECTOR_PAPEL_CELULOSE"]
-        ],
+        "confidence": .7, "causal_paths": [{
+            "path_id": "PATH-FX",
+            "nodes": ["USD_BRL_SHOCK_UP", "USD_BRL_UP",
+                      "B3_SECTOR_PAPEL_CELULOSE"],
+            "causal_edge_ids": ["edge-usd", "edge-pulp"],
+            "factor": "FX",
+            "company_channel_effects": {"revenue": 1, "cost": -1, "debt": -1},
+            "factor_direction": 1, "direction": 1, "strength": .6,
+            "confidence": .7, "evidence_ids": [],
+            "evidence_status": "HYPOTHESIS",
+        }],
         "evidence_status": "HYPOTHESIS", "detected_at": AS_OF,
         "event_available_at": AS_OF, "as_of_timestamp": AS_OF, "run_id": "sector",
         "source_event_run_id": "macro", "graph_version": "1.1.0",
@@ -246,5 +258,76 @@ def test_factor_channel_requires_traceable_evidence() -> None:
     with pytest.raises(ValueError):
         CompanyFactorChannel(
             factor="FX", channel="revenue", direction=1, strength=.5,
-            confidence=.5, evidence_ids=[],
+            confidence=.5, source_path_ids=[], causal_edge_ids=[],
+            evidence_ids=[], evidence_status="HYPOTHESIS",
         )
+    hypothesis = CompanyFactorChannel(
+        factor="FX", channel="revenue", direction=1, strength=.5,
+        confidence=.5, source_path_ids=["PATH-1"], causal_edge_ids=["EDGE-1"],
+        evidence_ids=[], evidence_status="HYPOTHESIS",
+    )
+    assert hypothesis.evidence_ids == []
+
+
+@pytest.mark.parametrize(
+    ("factor", "channel", "field_name", "value", "expected_sign"),
+    [
+        ("FX", "debt", "foreign_currency_debt_pct", .4, -1),
+        ("INTEREST_RATES", "debt", "floating_rate_debt_pct", .4, -1),
+        ("INFLATION", "debt", "inflation_linked_debt_pct", .4, -1),
+        ("ECONOMIC_ACTIVITY", "demand", "demand_cyclicality", .4, 1),
+    ],
+)
+def test_factor_specific_matrix_uses_only_relevant_field(
+    factor: str, channel: str, field_name: str, value: float, expected_sign: int
+) -> None:
+    item = exposure(
+        **{field_name: value},
+        field_evidence=exposure().field_evidence + [evidence(field_name, value)],
+    )
+    candidate = CompanyImpactEngine("factor-matrix").evaluate(
+        _sector("VAREJO"), item,
+        {(factor, channel): float(expected_sign)}, AS_OF,
+    )
+    result = getattr(candidate, f"{channel}_impact_score")
+    assert result is not None
+    assert result * expected_sign > 0
+
+
+@pytest.mark.parametrize(("sensitivity", "channel", "sign"), [
+    (.8, "revenue", 1),
+    (-.8, "cost", -1),
+])
+def test_oil_uses_signed_commodity_exposure(
+    sensitivity: float, channel: str, sign: int
+) -> None:
+    item = exposure(
+        commodity_exposures={"OIL": sensitivity},
+        field_evidence=exposure().field_evidence + [
+            evidence("commodity_exposures", {"OIL": sensitivity})
+        ],
+    )
+    candidate = CompanyImpactEngine("oil-matrix").evaluate(
+        _sector("VAREJO"), item, {("OIL", channel): 1.0}, AS_OF,
+    )
+    result = getattr(candidate, f"{channel}_impact_score")
+    assert result is not None
+    assert result * sign > 0
+
+
+def test_irrelevant_factor_does_not_use_wrong_debt_field() -> None:
+    candidate = CompanyImpactEngine("irrelevant").evaluate(
+        _sector("VAREJO"), exposure(),
+        {("FX", "debt"): -1.0}, AS_OF,
+    )
+    assert candidate.debt_impact_score is None
+    assert candidate.status == "NO_ACTION"
+
+
+def _sector(sector: str) -> SectorStateSnapshot:
+    return SectorStateSnapshot(
+        snapshot_id=f"SEC-{sector}", sector=sector, as_of_timestamp=AS_OF,
+        net_impact=.4, bullish_impact=.4, bearish_impact=0, conflict_ratio=0,
+        supporting_event_ids=["event"], confidence=.8, status="ACTIVE",
+        run_id="sector", graph_version="1.2.0",
+    )

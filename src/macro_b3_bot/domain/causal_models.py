@@ -44,13 +44,35 @@ class CausalEdge(BaseModel):
     regime_conditions: list[str] = Field(default_factory=list)
     evidence_ids: list[str] = Field(default_factory=list)
     hypothesis: bool = True
+    factor: str | None = None
+    company_channel_effects: dict[str, int] = Field(default_factory=dict)
     rationale: str
 
     @model_validator(mode="after")
     def evidence_or_hypothesis(self) -> "CausalEdge":
         if not self.evidence_ids and not self.hypothesis:
             raise ValueError("An edge without evidence_ids must be marked as a hypothesis")
+        if any(
+            channel not in {"revenue", "cost", "debt", "demand"}
+            or direction not in {-1, 1}
+            for channel, direction in self.company_channel_effects.items()
+        ):
+            raise ValueError("company channel effects must use known channels and +/-1")
         return self
+
+
+class CausalPath(BaseModel):
+    path_id: str
+    nodes: list[str] = Field(min_length=2)
+    causal_edge_ids: list[str] = Field(min_length=1)
+    factor: str
+    company_channel_effects: dict[str, int]
+    factor_direction: int
+    direction: int
+    strength: float = Field(ge=0, le=1)
+    confidence: float = Field(ge=0, le=1)
+    evidence_ids: list[str] = Field(default_factory=list)
+    evidence_status: str
 
 
 class SectorImpactCandidate(BaseModel):
@@ -72,7 +94,7 @@ class SectorImpactCandidate(BaseModel):
     horizon_months: int = 3
     horizon_days: int = 90
 
-    causal_paths: list[list[str]] = Field(default_factory=list)
+    causal_paths: list[CausalPath] = Field(default_factory=list)
     direct_effects: list[str] = Field(default_factory=list)
     second_order_effects: list[str] = Field(default_factory=list)
     positive_paths_count: int = 0

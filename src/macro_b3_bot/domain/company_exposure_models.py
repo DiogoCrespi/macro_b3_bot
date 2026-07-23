@@ -99,8 +99,10 @@ class CompanyFactorChannel(BaseModel):
     direction: int = Field(ge=-1, le=1)
     strength: float = Field(ge=0, le=1)
     confidence: float = Field(ge=0, le=1)
-    evidence_ids: list[str] = Field(min_length=1)
-    source_paths: list[list[str]] = Field(default_factory=list)
+    source_path_ids: list[str] = Field(min_length=1)
+    causal_edge_ids: list[str] = Field(min_length=1)
+    evidence_ids: list[str] = Field(default_factory=list)
+    evidence_status: Literal["VALIDATED", "HYPOTHESIS"]
 
     @model_validator(mode="after")
     def direction_is_signed(self) -> "CompanyFactorChannel":

@@ -13,6 +13,7 @@ import yaml
 
 from macro_b3_bot.domain.causal_models import (
     CausalEdge,
+    CausalPath,
     SectorImpactCandidate,
     SectorImpactStatus,
     SectorStateSnapshot,
@@ -53,6 +54,7 @@ class CausalGraphEngine:
         self.run_id = run_id
         self.graph_version, self.edges = self._load_graph(graph_path)
         self.adj_list = self._build_adj_list(self.edges)
+        self._validate_company_metadata()
 
     def _load_graph(self, path: Path) -> tuple[str, list[CausalEdge]]:
         if not path.exists():
@@ -78,6 +80,19 @@ class CausalGraphEngine:
                        and event_type == "MONETARY_POLICY_SURPRISE" for root in self.adj_list):
                 missing.append(event_type)
         return {"missing": missing, "covered": sorted(covered)}
+
+    def _validate_company_metadata(self) -> None:
+        targets = {edge.target_node for edge in self.edges}
+        roots = {edge.source_node for edge in self.edges if edge.source_node not in targets}
+        for root in roots:
+            for path in self._find_all_paths(root, set()):
+                metadata = [edge for edge in path if edge.factor]
+                if len(metadata) != 1 or not metadata[0].company_channel_effects:
+                    edge_ids = ">".join(edge.edge_id for edge in path)
+                    raise ValueError(
+                        f"causal path {edge_ids} must have exactly one factor edge "
+                        "with company_channel_effects"
+                    )
 
     def evaluate_events_window(
         self, since_date: date, as_of_timestamp: Optional[datetime] = None,
@@ -172,11 +187,14 @@ class CausalGraphEngine:
             confidence = math.prod(edge.confidence for edge in edges)
             half_life = min(edge.half_life_days for edge in edges)
             decay = 0.5 ** ((age_days - lag) / max(1, half_life))
-            impact = event_strength * direction * strength * confidence * decay
+            path_strength = abs(event_strength) * strength * decay
+            event_direction = -1 if event_strength < 0 else 1
+            impact = path_strength * event_direction * direction * confidence
             sector = edges[-1].target_node.removeprefix("B3_SECTOR_")
             sector_paths.setdefault(sector, []).append({
                 "edges": edges, "impact": impact, "direction": direction,
-                "confidence": confidence, "horizon": horizon,
+                "strength": path_strength, "confidence": confidence,
+                "horizon": horizon,
             })
         return [self._candidate(evt, root, event_strength, available_at, as_of, sector, paths)
                 for sector, paths in sector_paths.items()]
@@ -219,12 +237,43 @@ class CausalGraphEngine:
         candidate_id = hashlib.sha256(
             f"{self.run_id}|{self.graph_version}|{as_of.isoformat()}|{evt['event_id']}|{sector}".encode()
         ).hexdigest()[:24]
+        causal_paths = []
+        for path in paths:
+            edges = path["edges"]
+            metadata_edges = [edge for edge in edges if edge.factor]
+            if len(metadata_edges) != 1:
+                raise ValueError(
+                    "each causal path must declare exactly one explicit factor edge"
+                )
+            metadata = metadata_edges[0]
+            nodes = [edges[0].source_node] + [edge.target_node for edge in edges]
+            edge_ids = [edge.edge_id for edge in edges]
+            evidence_ids = [
+                evidence_id for edge in edges for evidence_id in edge.evidence_ids
+            ]
+            path_id = hashlib.sha256(
+                f"{self.graph_version}|{'>'.join(edge_ids)}".encode()
+            ).hexdigest()[:24]
+            causal_paths.append(CausalPath(
+                path_id=path_id, nodes=nodes, causal_edge_ids=edge_ids,
+                factor=metadata.factor or "UNKNOWN",
+                company_channel_effects=metadata.company_channel_effects,
+                factor_direction=metadata.direction,
+                direction=path["direction"],
+                strength=round(path["strength"], 6),
+                confidence=round(path["confidence"], 6),
+                evidence_ids=evidence_ids,
+                evidence_status=(
+                    "VALIDATED" if all(edge.evidence_ids for edge in edges)
+                    else "HYPOTHESIS"
+                ),
+            ))
         return SectorImpactCandidate(
             candidate_id=candidate_id, event_id=evt["event_id"], event_type=evt["event_type"],
             causal_root=root, sector=sector, direction="BULLISH" if net >= 0 else "BEARISH",
             impact_score=signed_score, event_strength=round(event_strength, 6), confidence=confidence,
             horizon_days=horizon, horizon_months=max(1, math.ceil(horizon / 30)),
-            causal_paths=[[p["edges"][0].source_node] + [e.target_node for e in p["edges"]] for p in paths],
+            causal_paths=causal_paths,
             direct_effects=[p["edges"][0].rationale for p in paths if len(p["edges"]) == 1],
             second_order_effects=[p["edges"][-1].rationale for p in paths if len(p["edges"]) > 1],
             positive_paths_count=positives, negative_paths_count=negatives,

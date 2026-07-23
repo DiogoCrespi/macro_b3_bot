@@ -5,10 +5,12 @@
 # Nodes: MacroEvent -> MacroVariable -> MarketFactor -> B3Sector
 # Edges: direction (+1 or -1), strength (0..1), confidence (0..1), lag_days, horizon_days, half_life_days, rationale
 
-graph_version: "1.1.0"
+graph_version: "1.2.0"
 edges:
   # ── MONETARY POLICY & DI CURVE ──────────────────────────────────────────
   - edge_id: "edge_monetary_base_to_selic"
+    factor: "INTEREST_RATES"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "MONETARY_POLICY_HAWKISH"
     target_node: "VAR_SELIC_RATE"
     direction: 1
@@ -20,6 +22,8 @@ edges:
     rationale: "Monetary policy surprise directly impacts Selic rate expectations."
 
   - edge_id: "edge_monetary_to_selic"
+    factor: "INTEREST_RATES"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "MONETARY_POLICY_DOVISH"
     target_node: "VAR_SELIC_RATE"
     direction: -1
@@ -76,6 +80,8 @@ edges:
 
   # ── INFLATION & REAL YIELDS ──────────────────────────────────────────────
   - edge_id: "edge_inflation_to_real_yields"
+    factor: "INFLATION"
+    company_channel_effects: {revenue: 1, cost: -1, debt: -1, demand: -1}
     source_node: "INFLATION_SURPRISE_UP"
     target_node: "VAR_REAL_YIELDS"
     direction: 1
@@ -109,6 +115,8 @@ edges:
     rationale: "Higher discount rates reduce valuation multiples for concession utility assets."
 
   - edge_id: "edge_inflation_to_consumer_staples"
+    factor: "INFLATION"
+    company_channel_effects: {revenue: 1, cost: -1, debt: -1, demand: -1}
     source_node: "INFLATION_SURPRISE_UP"
     target_node: "B3_SECTOR_AGRO_ALIMENTOS"
     direction: 1
@@ -120,6 +128,8 @@ edges:
     rationale: "Food inflation allows agricultural producers and food processors to pass through price hikes."
 
   - edge_id: "edge_inflation_down_to_real_yields"
+    factor: "INFLATION"
+    company_channel_effects: {revenue: 1, cost: -1, debt: -1, demand: -1}
     source_node: "INFLATION_SURPRISE_DOWN"
     target_node: "VAR_REAL_YIELDS"
     direction: -1
@@ -132,6 +142,8 @@ edges:
 
   # ── GROWTH & INDUSTRIAL ACTIVITY ────────────────────────────────────────
   - edge_id: "edge_growth_base_to_activity"
+    factor: "ECONOMIC_ACTIVITY"
+    company_channel_effects: {revenue: 1, demand: 1}
     source_node: "GROWTH_SURPRISE_DOWN"
     target_node: "VAR_GDP_GROWTH"
     direction: -1
@@ -143,6 +155,8 @@ edges:
     rationale: "Negative growth surprise lowers expected economic output."
 
   - edge_id: "edge_growth_up_to_activity"
+    factor: "ECONOMIC_ACTIVITY"
+    company_channel_effects: {revenue: 1, demand: 1}
     source_node: "GROWTH_SURPRISE_UP"
     target_node: "VAR_GDP_GROWTH"
     direction: 1
@@ -188,6 +202,8 @@ edges:
 
   # ── USD / BRL FX RATE ──────────────────────────────────────────────────
   - edge_id: "edge_usd_up_to_fx"
+    factor: "FX"
+    company_channel_effects: {revenue: 1, cost: -1, debt: -1}
     source_node: "USD_REGIME_SHIFT_UP"
     target_node: "VAR_BRL_USD_RATE"
     direction: 1
@@ -199,6 +215,8 @@ edges:
     rationale: "Dollar appreciation increases BRL/USD exchange rate."
 
   - edge_id: "edge_usd_down_to_fx"
+    factor: "FX"
+    company_channel_effects: {revenue: 1, cost: -1, debt: -1}
     source_node: "USD_REGIME_SHIFT_DOWN"
     target_node: "VAR_BRL_USD_RATE"
     direction: -1
@@ -244,6 +262,8 @@ edges:
 
   # ── OIL & COMMODITIES ──────────────────────────────────────────────────
   - edge_id: "edge_oil_base_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "OIL_PRICE_SHOCK_DOWN"
     target_node: "VAR_BRENT_OIL"
     direction: -1
@@ -255,6 +275,8 @@ edges:
     rationale: "Negative oil-price shock lowers international Brent crude prices."
 
   - edge_id: "edge_oil_up_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "OIL_PRICE_SHOCK_UP"
     target_node: "VAR_BRENT_OIL"
     direction: 1
@@ -300,6 +322,8 @@ edges:
 
   # ── ENSO / HYDROLOGY / AGRO ─────────────────────────────────────────────
   - edge_id: "edge_enso_to_hydrology"
+    factor: "ENSO"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENSO_INTENSIFICATION_EL_NINO"
     target_node: "VAR_HYDROLOGY_RESERVOIRS"
     direction: -1
@@ -322,6 +346,8 @@ edges:
     rationale: "Lower reservoir levels trigger thermal dispatch and higher spot energy prices (PLD)."
 
   - edge_id: "edge_enso_to_agro_yield"
+    factor: "ENSO"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENSO_INTENSIFICATION_EL_NINO"
     target_node: "B3_SECTOR_AGRO_ALIMENTOS"
     direction: -1
@@ -334,6 +360,8 @@ edges:
 
   # ── BRAZIL COUNTRY RISK & CDS ──────────────────────────────────────────
   - edge_id: "edge_risk_to_cds"
+    factor: "COUNTRY_RISK"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "BRAZIL_EXPECTATION_REPRICING_UP"
     target_node: "VAR_BRAZIL_CDS"
     direction: 1
@@ -345,6 +373,8 @@ edges:
     rationale: "Fiscal uncertainty or external shock spikes Brazil 5Y CDS spread."
 
   - edge_id: "edge_brazil_expectations_down_to_cds"
+    factor: "COUNTRY_RISK"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "BRAZIL_EXPECTATION_REPRICING_DOWN"
     target_node: "VAR_BRAZIL_CDS"
     direction: -1
@@ -357,6 +387,8 @@ edges:
 
   # ── ROOT COVERAGE HYPOTHESES (Sprint 4A contract) ───────────────────────
   - edge_id: "edge_yield_curve_up_to_banks"
+    factor: "INTEREST_RATES"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "YIELD_CURVE_REGIME_SHIFT_UP"
     target_node: "B3_SECTOR_BANCOS"
     direction: -1
@@ -368,6 +400,8 @@ edges:
     rationale: "Curve steepening can increase duration and funding pressure."
 
   - edge_id: "edge_yield_curve_down_to_banks"
+    factor: "INTEREST_RATES"
+    company_channel_effects: {debt: -1, demand: -1}
     source_node: "YIELD_CURVE_REGIME_SHIFT_DOWN"
     target_node: "B3_SECTOR_BANCOS"
     direction: 1
@@ -379,6 +413,8 @@ edges:
     rationale: "Curve compression can reduce duration and funding pressure."
 
   - edge_id: "edge_inventory_up_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "OIL_INVENTORY_SHOCK_UP"
     target_node: "VAR_BRENT_OIL"
     direction: -1
@@ -390,6 +426,8 @@ edges:
     rationale: "Unexpected inventory builds pressure crude prices lower."
 
   - edge_id: "edge_inventory_down_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "OIL_INVENTORY_SHOCK_DOWN"
     target_node: "VAR_BRENT_OIL"
     direction: 1
@@ -401,6 +439,8 @@ edges:
     rationale: "Unexpected inventory draws support crude prices."
 
   - edge_id: "edge_energy_supply_up_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENERGY_SUPPLY_SHOCK_UP"
     target_node: "VAR_BRENT_OIL"
     direction: -1
@@ -412,6 +452,8 @@ edges:
     rationale: "Positive supply shock pressures crude prices lower."
 
   - edge_id: "edge_energy_supply_down_to_brent"
+    factor: "OIL"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENERGY_SUPPLY_SHOCK_DOWN"
     target_node: "VAR_BRENT_OIL"
     direction: 1
@@ -423,6 +465,8 @@ edges:
     rationale: "Negative supply shock supports crude prices."
 
   - edge_id: "edge_enso_phase_el_nino_to_hydrology"
+    factor: "ENSO"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENSO_PHASE_CHANGE_EL_NINO"
     target_node: "VAR_HYDROLOGY_RESERVOIRS"
     direction: -1
@@ -434,6 +478,8 @@ edges:
     rationale: "El Nino may reduce rainfall in relevant hydro basins."
 
   - edge_id: "edge_enso_phase_la_nina_to_hydrology"
+    factor: "ENSO"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENSO_PHASE_CHANGE_LA_NINA"
     target_node: "VAR_HYDROLOGY_RESERVOIRS"
     direction: 1
@@ -445,6 +491,8 @@ edges:
     rationale: "La Nina may improve rainfall in relevant hydro basins."
 
   - edge_id: "edge_enso_intensification_la_nina_to_hydrology"
+    factor: "ENSO"
+    company_channel_effects: {revenue: 1, cost: -1}
     source_node: "ENSO_INTENSIFICATION_LA_NINA"
     target_node: "VAR_HYDROLOGY_RESERVOIRS"
     direction: 1

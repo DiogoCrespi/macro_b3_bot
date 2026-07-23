@@ -50,7 +50,7 @@ def test_causal_root_contract(event_type: str, direction: str, root: str) -> Non
 
 
 def test_graph_version_edge_count_coverage_and_hypotheses(engine: CausalGraphEngine) -> None:
-    assert engine.graph_version == "1.1.0"
+    assert engine.graph_version == "1.2.0"
     assert len(engine.edges) == 42
     assert engine.validate_event_coverage()["missing"] == []
     assert all(edge.evidence_ids or edge.hypothesis for edge in engine.edges)
@@ -104,6 +104,8 @@ edges:
     direction: 1
     strength: 1
     confidence: 1
+    factor: ECONOMIC_ACTIVITY
+    company_channel_effects: {revenue: 1, demand: 1}
     lag_days: 10
     horizon_days: 30
     half_life_days: 10
