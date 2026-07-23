@@ -388,8 +388,13 @@ def test_factor_contribution_keeps_trace_and_hypothesis_weight() -> None:
     )
     assert hyp.causal_evidence_status == "HYPOTHESIS"
     assert val.causal_evidence_status == "VALIDATED"
-    assert hyp.factor_contributions[0].raw_factor_impact == pytest.approx(
-        val.factor_contributions[0].raw_factor_impact * .4
+    assert hyp.factor_contributions[0].causal_factor_impact == pytest.approx(
+        val.factor_contributions[0].causal_factor_impact
+    )
+    assert hyp.factor_contributions[0].evidence_weight == .4
+    assert val.factor_contributions[0].evidence_weight == 1
+    assert hyp.factor_contributions[0].adjusted_factor_impact == pytest.approx(
+        val.factor_contributions[0].adjusted_factor_impact * .4
     )
     assert hyp.source_path_ids == ["PATH-1"]
     assert hyp.causal_edge_ids == ["EDGE-1"]

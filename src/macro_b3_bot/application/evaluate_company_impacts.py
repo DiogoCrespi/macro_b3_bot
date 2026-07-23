@@ -49,9 +49,9 @@ class CompanyImpactEngine:
         contributions: list[FactorContribution] = []
         missing: list[MissingFactorExposure] = []
         unsupported: list[MissingFactorExposure] = []
-        for item, raw_impact in inputs:
+        for item, causal_impact, evidence_weight, adjusted_impact in inputs:
             produced, gap = self._factor_contributions(
-                item, raw_impact, exposure
+                item, causal_impact, evidence_weight, adjusted_impact, exposure
             )
             contributions.extend(produced)
             if gap:
@@ -77,7 +77,9 @@ class CompanyImpactEngine:
         confidence = field_quality * sector.confidence * (len(known) / 4)
         evidence_status = (
             "HYPOTHESIS"
-            if not inputs or any(item.evidence_status == "HYPOTHESIS" for item, _ in inputs)
+            if not inputs or any(
+                item.evidence_status == "HYPOTHESIS" for item, *_ in inputs
+            )
             else "VALIDATED"
         )
         status = "WATCH" if len(known) >= 3 and confidence >= 0.5 else "NO_ACTION"
@@ -119,11 +121,13 @@ class CompanyImpactEngine:
     def _inputs(
         factor_impacts: dict[tuple[str, str], float] | None,
         channels: list[CompanyFactorChannel] | None,
-    ) -> list[tuple[CompanyFactorChannel, float]]:
+    ) -> list[tuple[CompanyFactorChannel, float, float, float]]:
         if channels:
             return [
                 (
                     item,
+                    item.direction * item.strength * item.confidence,
+                    1.0 if item.evidence_status == "VALIDATED" else HYPOTHESIS_WEIGHT,
                     item.direction * item.strength * item.confidence
                     * (1.0 if item.evidence_status == "VALIDATED" else HYPOTHESIS_WEIGHT),
                 )
@@ -139,6 +143,8 @@ class CompanyImpactEngine:
                     causal_edge_ids=["DIRECT_FACTOR_INPUT"],
                     evidence_ids=[], evidence_status="HYPOTHESIS",
                 ),
+                impact,
+                HYPOTHESIS_WEIGHT,
                 impact * HYPOTHESIS_WEIGHT,
             )
             for (factor, channel), impact in (factor_impacts or {}).items()
@@ -147,7 +153,9 @@ class CompanyImpactEngine:
     def _factor_contributions(
         self,
         channel: CompanyFactorChannel,
-        raw_impact: float,
+        causal_impact: float,
+        evidence_weight: float,
+        adjusted_impact: float,
         exposure: CompanyExposureSnapshot,
     ) -> tuple[list[FactorContribution], MissingFactorExposure | None]:
         factor, component = channel.factor, channel.channel
@@ -161,8 +169,9 @@ class CompanyImpactEngine:
             if component == "cost" and sensitivity >= 0:
                 return [], None
             return [self._contribution(
-                channel, raw_impact, "commodity_exposures", abs(sensitivity),
-                exposure, self._modifier(factor, component, exposure),
+                channel, causal_impact, evidence_weight, adjusted_impact,
+                "commodity_exposures", abs(sensitivity), exposure,
+                self._modifier(factor, component, exposure),
             )], None
 
         fields = _FACTOR_EXPOSURE_MATRIX.get((factor, component))
@@ -185,21 +194,24 @@ class CompanyImpactEngine:
             ),
         )
         return [self._contribution(
-            channel, raw_impact, selected, getattr(exposure, selected),
-            exposure, self._modifier(factor, component, exposure),
+            channel, causal_impact, evidence_weight, adjusted_impact,
+            selected, getattr(exposure, selected), exposure,
+            self._modifier(factor, component, exposure),
         )], None
 
     def _contribution(
         self,
         channel: CompanyFactorChannel,
-        raw_impact: float,
+        causal_impact: float,
+        evidence_weight: float,
+        adjusted_impact: float,
         field_name: str,
         field_value: float,
         exposure: CompanyExposureSnapshot,
         modifier: tuple[str, float, float] | None,
     ) -> FactorContribution:
         exposure_confidence = self._field_confidence(exposure, field_name)
-        value = raw_impact * field_value * exposure_confidence
+        value = adjusted_impact * field_value * exposure_confidence
         modifier_fields: list[str] = []
         if modifier:
             modifier_name, multiplier, _ = modifier
@@ -207,7 +219,9 @@ class CompanyImpactEngine:
             modifier_fields.append(modifier_name)
         return FactorContribution(
             factor=channel.factor, channel=channel.channel,
-            raw_factor_impact=round(raw_impact, 4),
+            causal_factor_impact=round(causal_impact, 4),
+            evidence_weight=evidence_weight,
+            adjusted_factor_impact=round(adjusted_impact, 4),
             exposure_field=field_name, exposure_value=field_value,
             exposure_confidence=exposure_confidence,
             modifier_fields=modifier_fields,

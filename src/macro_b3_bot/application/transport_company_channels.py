@@ -52,19 +52,3 @@ class CompanyChannelTransport:
                 evidence_status=evidence_status,
             ))
         return output
-
-    @staticmethod
-    def aggregate(
-        channels: list[CompanyFactorChannel],
-    ) -> dict[tuple[str, str], float]:
-        """Preserve factor identity through company-impact evaluation."""
-        grouped: dict[tuple[str, str], list[float]] = defaultdict(list)
-        for item in channels:
-            evidence_weight = 1.0 if item.evidence_status == "VALIDATED" else 0.4
-            grouped[(item.factor, item.channel)].append(
-                item.direction * item.strength * item.confidence * evidence_weight
-            )
-        return {
-            key: max(-1.0, min(1.0, sum(values) / len(values)))
-            for key, values in grouped.items()
-        }

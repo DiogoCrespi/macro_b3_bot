@@ -128,7 +128,9 @@ class CompanyExposureOverride(BaseModel):
 class FactorContribution(BaseModel):
     factor: str
     channel: Literal["revenue", "cost", "debt", "demand"]
-    raw_factor_impact: float = Field(ge=-1, le=1)
+    causal_factor_impact: float = Field(ge=-1, le=1)
+    evidence_weight: float = Field(ge=0, le=1)
+    adjusted_factor_impact: float = Field(ge=-1, le=1)
     exposure_field: str
     exposure_value: float
     exposure_confidence: float = Field(ge=0, le=1)
