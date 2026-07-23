@@ -26,7 +26,7 @@ from macro_b3_bot.infrastructure.store import DatabaseStore
 class FinancialBridgeCalibrator:
     """Calibrate only from observed financial/macro histories; never make decisions."""
 
-    methodology_version = "4D.3A-calibration-validity-gate-v1"
+    methodology_version = "4D.3B-pit-horizon-integrity-v1"
 
     def __init__(self, store: DatabaseStore, run_id: str) -> None:
         self.store = store
@@ -51,6 +51,15 @@ class FinancialBridgeCalibrator:
                 """,
                 [sector_run_id, sector, as_of_timestamp.replace(tzinfo=None)],
             ).fetchall()
+            if not rows:
+                rows = self.store.connection.execute(
+                    """
+                    SELECT event_id,event_available_at,horizon_days,causal_paths
+                    FROM sector_impact_candidates
+                    WHERE sector=? AND as_of_timestamp<=?
+                    """,
+                    [sector, as_of_timestamp.replace(tzinfo=None)],
+                ).fetchall()
             by_factor: dict[str, list[CausalConflictPath]] = defaultdict(list)
             for event_id, available_at, horizon_days, payload in rows:
                 for path in json.loads(payload):
@@ -116,7 +125,9 @@ class FinancialBridgeCalibrator:
                 ))
         return output
 
-    def quarterly_financials(self, ticker: str) -> pd.DataFrame:
+    def quarterly_financials(
+        self, ticker: str, as_of_timestamp: datetime | None = None
+    ) -> pd.DataFrame:
         cvm_code = self.store.connection.execute(
             """
             SELECT cvm_code FROM company_ticker_map
@@ -124,14 +135,28 @@ class FinancialBridgeCalibrator:
             """,
             [ticker],
         ).fetchone()[0]
+        params: list[object] = [cvm_code]
+        pit_clause = ""
+        if as_of_timestamp is not None:
+            pit_clause = "AND COALESCE(d.filing_available_at, d.received_at) <= ?"
+            params.append(as_of_timestamp.replace(tzinfo=None))
         rows = self.store.connection.execute(
-            """
+            f"""
+            WITH pit_docs AS (
+                SELECT document_id, cvm_code, document_type, reference_date,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY reference_date, document_type
+                           ORDER BY COALESCE(filing_available_at, received_at) DESC, version DESC, document_id DESC
+                       ) AS rn
+                FROM cvm_documents d
+                WHERE cvm_code=? {pit_clause}
+            )
             SELECT d.document_id,d.document_type,d.reference_date,
                    l.statement_type,l.account_code,
                    CAST(l.value AS DOUBLE)*l.scale AS value
-            FROM cvm_documents d
+            FROM pit_docs d
             JOIN financial_statement_lines l ON l.document_id=d.document_id
-            WHERE d.cvm_code=? AND l.scope='CONSOLIDATED'
+            WHERE d.rn=1 AND l.scope='CONSOLIDATED'
               AND l.fiscal_order='ÚLTIMO'
               AND (
                 (l.statement_type='DRE' AND l.account_code IN ('3.01','3.05','3.06'))
@@ -146,7 +171,7 @@ class FinancialBridgeCalibrator:
                     CASE WHEN d.document_type='DFP' THEN l.start_date END ASC
             )=1
             """,
-            [cvm_code],
+            params,
         ).fetchdf()
         if rows.empty:
             return rows
@@ -205,16 +230,28 @@ class FinancialBridgeCalibrator:
         result["period_end"] = pd.to_datetime(result["period_end"]).dt.date
         return result
 
-    def macro_quarterly(self) -> pd.DataFrame:
+    def macro_quarterly(
+        self, as_of_timestamp: datetime | None = None
+    ) -> pd.DataFrame:
+        params: list[object] = []
+        pit_clause = ""
+        if as_of_timestamp is not None:
+            naive_as_of = as_of_timestamp.replace(tzinfo=None)
+            pit_clause = (
+                "AND reference_date <= CAST(? AS DATE) "
+                "AND (available_at IS NULL OR available_at <= ? OR CAST(reference_date AS TIMESTAMP) <= ?)"
+            )
+            params.extend([naive_as_of, naive_as_of, naive_as_of])
         rows = self.store.connection.execute(
-            """
+            f"""
             SELECT reference_date,indicator,CAST(value AS DOUBLE) AS value
             FROM macro_observations
             WHERE indicator IN (
                 'usdbrl_sell','selic_annualized_252','wood_pulp_ppi'
             )
-              AND reference_date BETWEEN DATE '2022-12-01' AND DATE '2026-07-22'
-            """
+            {pit_clause}
+            """,
+            params,
         ).fetchdf()
         if rows.empty:
             return rows
@@ -229,9 +266,11 @@ class FinancialBridgeCalibrator:
             .sort_values("period_end")
         )
 
-    def calibrate_interest(self, ticker: str) -> BridgeCalibrationResult:
-        financials = self.quarterly_financials(ticker)
-        macro = self.macro_quarterly()
+    def calibrate_interest(
+        self, ticker: str, as_of_timestamp: datetime | None = None
+    ) -> BridgeCalibrationResult:
+        financials = self.quarterly_financials(ticker, as_of_timestamp)
+        macro = self.macro_quarterly(as_of_timestamp)
         frame = financials.merge(macro, on="period_end", how="inner")
         frame["factor_change"] = frame["selic_annualized_252"].diff() / 100
         frame["financial_change"] = frame["financial_result"].diff()
@@ -264,11 +303,17 @@ class FinancialBridgeCalibrator:
                 "USABLE_TAX_SHIELD",
             ],
             calibration_type="STRUCTURAL_SENSITIVITY",
+            calibration_horizon="QUARTERLY",
+            financial_target_period="QUARTERLY",
+            monetary_base_period="QUARTERLY",
+            annualization_method="NONE",
         )
 
-    def calibrate_fx(self, ticker: str) -> BridgeCalibrationResult:
-        financials = self.quarterly_financials(ticker)
-        macro = self.macro_quarterly()
+    def calibrate_fx(
+        self, ticker: str, as_of_timestamp: datetime | None = None
+    ) -> BridgeCalibrationResult:
+        financials = self.quarterly_financials(ticker, as_of_timestamp)
+        macro = self.macro_quarterly(as_of_timestamp)
         frame = financials.merge(macro, on="period_end", how="inner")
         frame["factor_change"] = frame["usdbrl_sell"].pct_change(fill_method=None)
         frame["secondary_factor_change"] = frame["wood_pulp_ppi"].pct_change(
@@ -296,6 +341,7 @@ class FinancialBridgeCalibrator:
         frame["out_of_sample_error"] = (
             frame["financial_change"] - frame["out_of_sample_predicted_change"]
         )
+        latest_q_revenue = float(frame["revenue"].iloc[-1]) if not frame.empty else 0.0
         return self._calibration_from_predictions(
             ticker,
             "FX_OPERATING_REVENUE",
@@ -304,21 +350,28 @@ class FinancialBridgeCalibrator:
                 "intercept": intercept,
                 "fx_observed_slope": coefficients[0],
                 "pulp_price_observed_slope": coefficients[1],
+                "latest_quarter_revenue": latest_q_revenue,
             },
             missing_drivers=["DISCLOSED_VOLUME_HISTORY"],
             calibration_type="EMPIRICAL_IN_SAMPLE",
-            validation_method="LEAVE_ONE_OUT",
+            validation_method="EMPIRICAL_LOO_CROSS_VALIDATED",
             coefficient_sign_stability={
                 "fx_observed_slope": sign_stability[0],
                 "pulp_price_observed_slope": sign_stability[1],
             },
+            calibration_horizon="QUARTERLY",
+            financial_target_period="QUARTERLY",
+            monetary_base_period="QUARTERLY",
+            annualization_method="NONE",
         )
 
     def normalize_cash_flow(
         self,
         baseline: FinancialBaselineSnapshot,
     ) -> NormalizedCashFlowSnapshot:
-        history = self.quarterly_financials(baseline.ticker)
+        history = self.quarterly_financials(
+            baseline.ticker, baseline.as_of_timestamp
+        )
         usable_history = history.dropna(subset=["operating_cash_flow"]).tail(8)
         cfo_values = usable_history["operating_cash_flow"].tolist()
         if len(cfo_values) < 5:
@@ -428,6 +481,10 @@ class FinancialBridgeCalibrator:
                 ),
                 "estimated_financial_change": estimated,
                 "financial_change_unit": "BRL",
+                "calibration_horizon": calibration.calibration_horizon,
+                "financial_target_period": calibration.financial_target_period,
+                "monetary_base_period": calibration.monetary_base_period,
+                "annualization_method": calibration.annualization_method,
             }
             if calibration.bridge == "NET_INTEREST_CASH_EFFECT":
                 rate = value / divisor
@@ -464,6 +521,10 @@ class FinancialBridgeCalibrator:
         calibration_type: str,
         validation_method: str = "STRUCTURAL_FORMULA_ONLY",
         coefficient_sign_stability: dict[str, float] | None = None,
+        calibration_horizon: str = "QUARTERLY",
+        financial_target_period: str = "QUARTERLY",
+        monetary_base_period: str = "QUARTERLY",
+        annualization_method: str = "NONE",
     ) -> BridgeCalibrationResult:
         observations = [
             BridgeReplayObservation(
@@ -518,7 +579,7 @@ class FinancialBridgeCalibrator:
         validation_failures = list(missing_drivers)
         if calibration_type == "STRUCTURAL_SENSITIVITY":
             validation_failures.append("NO_EMPIRICAL_PARAMETER_ESTIMATION")
-        if validation_method == "LEAVE_ONE_OUT":
+        if validation_method in ("LEAVE_ONE_OUT", "EMPIRICAL_LOO_CROSS_VALIDATED"):
             if oos_mae is None:
                 validation_failures.append("MISSING_OUT_OF_SAMPLE_ERROR")
             elif oos_mae / scale > 0.5:
@@ -528,7 +589,7 @@ class FinancialBridgeCalibrator:
         validation_gate_passed = not validation_failures
         effective_calibration_type = (
             "EMPIRICAL_OUT_OF_SAMPLE_VALIDATED"
-            if validation_gate_passed and validation_method == "LEAVE_ONE_OUT"
+            if validation_gate_passed and validation_method == "EXPANDING_WINDOW_WALK_FORWARD"
             else calibration_type
         )
         identity = f"{self.run_id}|{ticker}|{bridge}"
@@ -555,6 +616,10 @@ class FinancialBridgeCalibrator:
             coefficient_sign_stability=stability,
             observation_count=len(observations),
             calibration_type=effective_calibration_type,
+            calibration_horizon=calibration_horizon,
+            financial_target_period=financial_target_period,
+            monetary_base_period=monetary_base_period,
+            annualization_method=annualization_method,
             validation_gate_passed=validation_gate_passed,
             validation_failures=sorted(set(validation_failures)),
             confidence=confidence,
@@ -625,5 +690,39 @@ class FinancialBridgeCalibrator:
                 )
         stability = tuple(
             sum(values) / len(values) for values in signs
+        )
+        return predictions, (float(stability[0]), float(stability[1]))
+
+    @classmethod
+    def _expanding_window_predictions(
+        cls,
+        first: list[float],
+        second: list[float],
+        target: list[float],
+        full_coefficients: tuple[float, float],
+        min_train_size: int = 4,
+    ) -> tuple[list[float | None], tuple[float, float]]:
+        predictions: list[float | None] = [None] * len(target)
+        signs: list[list[bool]] = [[], []]
+        for t in range(min_train_size, len(target)):
+            train = list(range(t))
+            intercept, coefficients = cls._multiple_regression(
+                [first[i] for i in train],
+                [second[i] for i in train],
+                [target[i] for i in train],
+            )
+            predictions[t] = (
+                intercept
+                + coefficients[0] * first[t]
+                + coefficients[1] * second[t]
+            )
+            for idx, coefficient in enumerate(coefficients):
+                reference = full_coefficients[idx]
+                signs[idx].append(
+                    coefficient == 0 == reference
+                    or coefficient * reference > 0
+                )
+        stability = tuple(
+            sum(values) / len(values) if values else 0.0 for values in signs
         )
         return predictions, (float(stability[0]), float(stability[1]))

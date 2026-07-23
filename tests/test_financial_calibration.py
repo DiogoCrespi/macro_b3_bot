@@ -167,7 +167,7 @@ def test_calibration_mode_runs_positive_and_negative_shocks(tmp_path) -> None:
 def test_normalized_fcf_stays_separate_and_evidenced(tmp_path) -> None:
     store = DatabaseStore(tmp_path / "calibration.duckdb")
     calibrator = FinancialBridgeCalibrator(store, "run")
-    calibrator.quarterly_financials = lambda _ticker: pd.DataFrame({
+    calibrator.quarterly_financials = lambda _ticker, _as_of=None: pd.DataFrame({
         "operating_cash_flow": [10, 12, 11, 13, 9, 14, 12, 11],
         "document_id": [f"DOC-{item}" for item in range(8)],
     })

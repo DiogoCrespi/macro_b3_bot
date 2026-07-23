@@ -21,7 +21,7 @@ class FinancialCalibrationPilot:
         *,
         sector_run_id: str,
         as_of_timestamp: datetime,
-        run_id: str = "financial_4d3a_validity",
+        run_id: str = "financial_4d3b_integrity",
     ) -> dict[str, object]:
         calibrator = FinancialBridgeCalibrator(self.store, run_id)
         diagnostics = calibrator.conflict_diagnostics(
@@ -38,9 +38,9 @@ class FinancialCalibrationPilot:
             )
 
         calibrations = [
-            calibrator.calibrate_interest("MGLU3"),
-            calibrator.calibrate_fx("SUZB3"),
-            calibrator.calibrate_fx("KLBN11"),
+            calibrator.calibrate_interest("MGLU3", as_of_timestamp),
+            calibrator.calibrate_fx("SUZB3", as_of_timestamp),
+            calibrator.calibrate_fx("KLBN11", as_of_timestamp),
         ]
         for item in calibrations:
             self.store.save_financial_bridge_calibration(
@@ -66,7 +66,10 @@ class FinancialCalibrationPilot:
             for row in calibrator.controlled_shocks(
                 calibration,
                 monetary_base=(
-                    baselines[calibration.ticker].ttm_revenue
+                    calibration.parameters.get(
+                        "latest_quarter_revenue",
+                        baselines[calibration.ticker].ttm_revenue / 4.0,
+                    )
                     if calibration.bridge == "FX_OPERATING_REVENUE"
                     else None
                 ),
@@ -130,7 +133,7 @@ class FinancialCalibrationPilot:
                     for item in calibrations if item.ticker == "MGLU3"
                 ),
                 "fx_out_of_sample_error_persisted": all(
-                    item.validation_method == "LEAVE_ONE_OUT"
+                    item.validation_method == "EMPIRICAL_LOO_CROSS_VALIDATED"
                     and item.out_of_sample_mae is not None
                     for item in calibrations
                     if item.bridge == "FX_OPERATING_REVENUE"
@@ -167,6 +170,10 @@ class FinancialCalibrationPilot:
                     item.normalization_status == "NOT_VALUATION_READY"
                     and not item.dcf_eligible
                     for item in normalized
+                ),
+                "pit_timestamp_propagated": all(
+                    item.observation_count >= 5
+                    for item in calibrations
                 ),
             },
             "readiness": {

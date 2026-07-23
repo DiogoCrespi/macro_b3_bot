@@ -285,15 +285,25 @@ class BridgeCalibrationResult(BaseModel):
     in_sample_mae: float
     out_of_sample_mae: float | None = None
     validation_method: Literal[
-        "STRUCTURAL_FORMULA_ONLY", "LEAVE_ONE_OUT"
+        "STRUCTURAL_FORMULA_ONLY",
+        "LEAVE_ONE_OUT",
+        "EMPIRICAL_LOO_CROSS_VALIDATED",
+        "EXPANDING_WINDOW_WALK_FORWARD",
     ]
     coefficient_sign_stability: dict[str, float] = Field(default_factory=dict)
     observation_count: int = Field(ge=5)
     calibration_type: Literal[
         "STRUCTURAL_SENSITIVITY",
         "EMPIRICAL_IN_SAMPLE",
+        "EMPIRICAL_LOO_CROSS_VALIDATED",
         "EMPIRICAL_OUT_OF_SAMPLE_VALIDATED",
     ]
+    calibration_horizon: Literal["QUARTERLY", "ANNUAL"] = "QUARTERLY"
+    financial_target_period: Literal["QUARTERLY", "ANNUAL", "TTM"] = "QUARTERLY"
+    monetary_base_period: Literal["QUARTERLY", "ANNUAL", "TTM"] = "QUARTERLY"
+    annualization_method: Literal[
+        "NONE", "ANNUALIZED_4X", "ANNUAL_CONVERTED"
+    ] = "NONE"
     validation_gate_passed: bool
     validation_failures: list[str] = Field(default_factory=list)
     confidence: float = Field(ge=0, le=1)

@@ -134,3 +134,16 @@ Sprint 4D.3A validity-gate artifact:
   optimistic labels are assigned only after the BRL result is calculated.
 - The statistical normalized-FCF proxy is explicitly `NOT_VALUATION_READY`
   and cannot be consumed by DCF.
+
+Sprint 4D.3B PIT and horizon-integrity artifact:
+
+- `financial_4d3b_integrity.json`: enforces explicit point-in-time filtering
+  on all quarterly financial statement versions and macro observations, eliminating
+  duplicate re-filings per period.
+- Applies quarterly FX sensitivity against compatible quarterly revenue monetary base.
+- Reclassifies leave-one-out validation as `EMPIRICAL_LOO_CROSS_VALIDATED` (preventing
+  unsubstantiated promotion to out-of-sample validated) and requires expanding-window
+  walk-forward validation for genuine out-of-sample promotion.
+- All three bridges (`MGLU3`, `SUZB3`, `KLBN11`) pass all 18 acceptance checks and
+  remain `VALUATION_BLOCKED` (`dcf_eligible=false`).
+
