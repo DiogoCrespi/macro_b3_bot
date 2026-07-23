@@ -125,6 +125,30 @@ class CompanyExposureOverride(BaseModel):
     run_id: str
 
 
+class FactorContribution(BaseModel):
+    factor: str
+    channel: Literal["revenue", "cost", "debt", "demand"]
+    raw_factor_impact: float = Field(ge=-1, le=1)
+    exposure_field: str
+    exposure_value: float
+    exposure_confidence: float = Field(ge=0, le=1)
+    modifier_fields: list[str] = Field(default_factory=list)
+    modifier_methodology_version: str | None = None
+    modifier_beta: float | None = None
+    final_contribution: float = Field(ge=-1, le=1)
+    source_path_ids: list[str] = Field(default_factory=list)
+    causal_edge_ids: list[str] = Field(default_factory=list)
+    evidence_ids: list[str] = Field(default_factory=list)
+    evidence_status: Literal["VALIDATED", "HYPOTHESIS"]
+
+
+class MissingFactorExposure(BaseModel):
+    factor: str
+    channel: Literal["revenue", "cost", "debt", "demand"]
+    reason: Literal["NO_EXPOSURE_MAPPING", "MISSING_EXPOSURE_VALUE"]
+    expected_fields: list[str] = Field(default_factory=list)
+
+
 class CompanyImpactCandidate(BaseModel):
     candidate_id: str
     ticker: str
@@ -138,8 +162,14 @@ class CompanyImpactCandidate(BaseModel):
     net_company_impact: float | None = Field(default=None, ge=-1, le=1)
     confidence: float = Field(ge=0, le=1)
     conflict_ratio: float = Field(ge=0, le=1)
-    supporting_paths: list[str] = Field(default_factory=list)
-    opposing_paths: list[str] = Field(default_factory=list)
+    supporting_event_ids: list[str] = Field(default_factory=list)
+    opposing_event_ids: list[str] = Field(default_factory=list)
+    source_path_ids: list[str] = Field(default_factory=list)
+    causal_edge_ids: list[str] = Field(default_factory=list)
+    factor_contributions: list[FactorContribution] = Field(default_factory=list)
+    missing_factor_exposures: list[MissingFactorExposure] = Field(default_factory=list)
+    unsupported_factor_channels: list[MissingFactorExposure] = Field(default_factory=list)
+    causal_evidence_status: Literal["VALIDATED", "HYPOTHESIS"]
     missing_exposures: list[str] = Field(default_factory=list)
     status: str
     run_id: str

@@ -101,7 +101,13 @@ class CausalGraphEngine:
         eff_now = self._utc(as_of_timestamp or datetime.now(timezone.utc))
         source_run_id = event_run_id or self.run_id or self.store.get_latest_macro_event_run_id()
         if not source_run_id:
-            return self._summary(0, [])
+            snapshots = [
+                self.sector_state_or_empty(sector, eff_now, has_macro_data=False)
+                for sector in sorted(self._graph_sectors())
+            ]
+            for snapshot in snapshots:
+                self.store.save_sector_state_snapshot(snapshot.model_dump())
+            return self._summary(0, [], len(snapshots), "", eff_now)
         rows = self.store.connection.execute(
             """
             SELECT e.event_id, e.event_type, e.indicator, e.reference_date, e.detected_at,
@@ -133,10 +139,40 @@ class CausalGraphEngine:
                 self.store.save_sector_impact_candidate(candidate.model_dump())
                 candidates.append(candidate)
         snapshots = self.aggregate_sector_state(candidates, eff_now)
+        populated = {snapshot.sector for snapshot in snapshots}
+        snapshots.extend(
+            self.sector_state_or_empty(sector, eff_now, has_macro_data=bool(events))
+            for sector in sorted(self._graph_sectors() - populated)
+        )
         for snapshot in snapshots:
             self.store.save_sector_state_snapshot(snapshot.model_dump())
         return self._summary(
             len(events), candidates, len(snapshots), source_run_id, eff_now, path_metrics
+        )
+
+    def _graph_sectors(self) -> set[str]:
+        return {
+            edge.target_node.removeprefix("B3_SECTOR_")
+            for edge in self.edges if edge.target_node.startswith("B3_SECTOR_")
+        }
+
+    def sector_state_or_empty(
+        self, sector: str, as_of: datetime, has_macro_data: bool = True
+    ) -> SectorStateSnapshot:
+        if sector not in self._graph_sectors():
+            status = "SECTOR_STATE_NO_GRAPH_COVERAGE"
+        elif not has_macro_data:
+            status = "SECTOR_STATE_MISSING_DATA"
+        else:
+            status = "SECTOR_STATE_NO_ACTIVE_SIGNAL"
+        snapshot_id = hashlib.sha256(
+            f"{self.run_id}|{self.graph_version}|{as_of.isoformat()}|{sector}".encode()
+        ).hexdigest()[:24]
+        return SectorStateSnapshot(
+            snapshot_id=snapshot_id, sector=sector, as_of_timestamp=as_of,
+            net_impact=0, bullish_impact=0, bearish_impact=0, conflict_ratio=0,
+            supporting_event_ids=[], opposing_event_ids=[], confidence=0,
+            status=status, run_id=self.run_id, graph_version=self.graph_version,
         )
 
     def propagate_event(self, evt: dict, as_of_timestamp: Optional[datetime] = None) -> list[SectorImpactCandidate]:

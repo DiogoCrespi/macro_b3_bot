@@ -1,18 +1,23 @@
-"""Factor-specific company impact without valuation, BUY, or order execution."""
+"""Auditable factor-specific company impact without valuation or BUY."""
 from __future__ import annotations
 
 import hashlib
 import math
 from datetime import datetime
 
-from macro_b3_bot.application.transport_company_channels import CompanyChannelTransport
 from macro_b3_bot.domain.causal_models import SectorStateSnapshot
 from macro_b3_bot.domain.company_exposure_models import (
     CompanyExposureSnapshot,
     CompanyFactorChannel,
     CompanyImpactCandidate,
+    FactorContribution,
+    MissingFactorExposure,
 )
 
+
+MODIFIER_METHODOLOGY_VERSION = "company-modifier-neutral-beta-v1"
+MODIFIER_BETA = 0.5
+HYPOTHESIS_WEIGHT = 0.4
 
 _FACTOR_EXPOSURE_MATRIX: dict[tuple[str, str], tuple[str, ...]] = {
     ("FX", "revenue"): ("revenue_foreign_currency_pct", "export_revenue_pct"),
@@ -25,7 +30,7 @@ _FACTOR_EXPOSURE_MATRIX: dict[tuple[str, str], tuple[str, ...]] = {
 
 
 class CompanyImpactEngine:
-    """Apply each macro factor only to its explicitly related company exposure."""
+    """Apply each factor only to its mapped, field-evidenced exposure."""
 
     def __init__(self, run_id: str) -> None:
         self.run_id = run_id
@@ -40,43 +45,44 @@ class CompanyImpactEngine:
     ) -> CompanyImpactCandidate:
         if sector.sector != exposure.sector:
             raise ValueError("sector snapshot and company exposure do not match")
-        impacts = factor_impacts or CompanyChannelTransport.aggregate(
-            factor_channels or []
-        )
-        scores: dict[str, list[float]] = {
+        inputs = self._inputs(factor_impacts, factor_channels)
+        contributions: list[FactorContribution] = []
+        missing: list[MissingFactorExposure] = []
+        unsupported: list[MissingFactorExposure] = []
+        for item, raw_impact in inputs:
+            produced, gap = self._factor_contributions(
+                item, raw_impact, exposure
+            )
+            contributions.extend(produced)
+            if gap:
+                (unsupported if gap.reason == "NO_EXPOSURE_MAPPING" else missing).append(gap)
+
+        by_channel: dict[str, list[float]] = {
             "revenue": [], "cost": [], "debt": [], "demand": [],
         }
-        used_confidences: list[float] = []
-        for (factor, channel), factor_impact in impacts.items():
-            if channel not in scores:
-                continue
-            effect = self._factor_effect(
-                factor, channel, factor_impact, exposure, used_confidences
-            )
-            if effect is not None:
-                scores[channel].append(effect)
-
+        for item in contributions:
+            by_channel[item.channel].append(item.final_contribution)
         components = {
-            channel: self._combine(values) for channel, values in scores.items()
+            channel: self._combine(values) for channel, values in by_channel.items()
         }
-        components["revenue"] = self._apply_modifier(
-            components["revenue"], "pricing_power", exposure
-        )
-        components["cost"] = self._apply_modifier(
-            components["cost"], "operating_leverage", exposure
-        )
-
-        missing = [name for name, value in components.items() if value is None]
+        missing_components = [
+            channel for channel, value in components.items() if value is None
+        ]
         known = [value for value in components.values() if value is not None]
         net = math.tanh(sum(known)) if known else None
         field_quality = (
-            sum(used_confidences) / len(used_confidences)
-            if used_confidences else 0.0
+            sum(item.exposure_confidence for item in contributions) / len(contributions)
+            if contributions else 0.0
         )
-        confidence = (
-            field_quality * sector.confidence * (len(known) / 4)
+        confidence = field_quality * sector.confidence * (len(known) / 4)
+        evidence_status = (
+            "HYPOTHESIS"
+            if not inputs or any(item.evidence_status == "HYPOTHESIS" for item, _ in inputs)
+            else "VALIDATED"
         )
         status = "WATCH" if len(known) >= 3 and confidence >= 0.5 else "NO_ACTION"
+        if evidence_status == "HYPOTHESIS" and status not in {"WATCH", "NO_ACTION"}:
+            status = "WATCH"
         identity = (
             f"{self.run_id}|{sector.snapshot_id}|{exposure.exposure_id}|"
             f"{as_of_timestamp.isoformat()}"
@@ -93,78 +99,168 @@ class CompanyImpactEngine:
             net_company_impact=round(net, 4) if net is not None else None,
             confidence=round(confidence, 4),
             conflict_ratio=sector.conflict_ratio,
-            supporting_paths=sector.supporting_event_ids,
-            opposing_paths=sector.opposing_event_ids,
-            missing_exposures=missing, status=status, run_id=self.run_id,
+            supporting_event_ids=sector.supporting_event_ids,
+            opposing_event_ids=sector.opposing_event_ids,
+            source_path_ids=sorted({
+                path_id for item in contributions for path_id in item.source_path_ids
+            }),
+            causal_edge_ids=sorted({
+                edge_id for item in contributions for edge_id in item.causal_edge_ids
+            }),
+            factor_contributions=contributions,
+            missing_factor_exposures=missing,
+            unsupported_factor_channels=unsupported,
+            causal_evidence_status=evidence_status,
+            missing_exposures=missing_components,
+            status=status, run_id=self.run_id,
         )
 
-    def _factor_effect(
+    @staticmethod
+    def _inputs(
+        factor_impacts: dict[tuple[str, str], float] | None,
+        channels: list[CompanyFactorChannel] | None,
+    ) -> list[tuple[CompanyFactorChannel, float]]:
+        if channels:
+            return [
+                (
+                    item,
+                    item.direction * item.strength * item.confidence
+                    * (1.0 if item.evidence_status == "VALIDATED" else HYPOTHESIS_WEIGHT),
+                )
+                for item in channels
+            ]
+        return [
+            (
+                CompanyFactorChannel(
+                    factor=factor, channel=channel,
+                    direction=1 if impact >= 0 else -1,
+                    strength=abs(impact), confidence=1,
+                    source_path_ids=["DIRECT_FACTOR_INPUT"],
+                    causal_edge_ids=["DIRECT_FACTOR_INPUT"],
+                    evidence_ids=[], evidence_status="HYPOTHESIS",
+                ),
+                impact * HYPOTHESIS_WEIGHT,
+            )
+            for (factor, channel), impact in (factor_impacts or {}).items()
+        ]
+
+    def _factor_contributions(
+        self,
+        channel: CompanyFactorChannel,
+        raw_impact: float,
+        exposure: CompanyExposureSnapshot,
+    ) -> tuple[list[FactorContribution], MissingFactorExposure | None]:
+        factor, component = channel.factor, channel.channel
+        if factor in {"OIL", "COMMODITY"} and component in {"revenue", "cost"}:
+            sensitivity = (exposure.commodity_exposures or {}).get("OIL")
+            expected = ["commodity_exposures.OIL"]
+            if sensitivity is None:
+                return [], self._gap(factor, component, "MISSING_EXPOSURE_VALUE", expected)
+            if component == "revenue" and sensitivity <= 0:
+                return [], None
+            if component == "cost" and sensitivity >= 0:
+                return [], None
+            return [self._contribution(
+                channel, raw_impact, "commodity_exposures", abs(sensitivity),
+                exposure, self._modifier(factor, component, exposure),
+            )], None
+
+        fields = _FACTOR_EXPOSURE_MATRIX.get((factor, component))
+        if fields is None:
+            return [], self._gap(
+                factor, component, "NO_EXPOSURE_MAPPING", []
+            )
+        available = [
+            field for field in fields if getattr(exposure, field) is not None
+        ]
+        if not available:
+            return [], self._gap(
+                factor, component, "MISSING_EXPOSURE_VALUE", list(fields)
+            )
+        # Overlapping FX revenue disclosures must not be double counted.
+        selected = max(
+            available,
+            key=lambda field: abs(
+                getattr(exposure, field) * self._field_confidence(exposure, field)
+            ),
+        )
+        return [self._contribution(
+            channel, raw_impact, selected, getattr(exposure, selected),
+            exposure, self._modifier(factor, component, exposure),
+        )], None
+
+    def _contribution(
+        self,
+        channel: CompanyFactorChannel,
+        raw_impact: float,
+        field_name: str,
+        field_value: float,
+        exposure: CompanyExposureSnapshot,
+        modifier: tuple[str, float, float] | None,
+    ) -> FactorContribution:
+        exposure_confidence = self._field_confidence(exposure, field_name)
+        value = raw_impact * field_value * exposure_confidence
+        modifier_fields: list[str] = []
+        if modifier:
+            modifier_name, multiplier, _ = modifier
+            value *= multiplier
+            modifier_fields.append(modifier_name)
+        return FactorContribution(
+            factor=channel.factor, channel=channel.channel,
+            raw_factor_impact=round(raw_impact, 4),
+            exposure_field=field_name, exposure_value=field_value,
+            exposure_confidence=exposure_confidence,
+            modifier_fields=modifier_fields,
+            modifier_methodology_version=(
+                MODIFIER_METHODOLOGY_VERSION if modifier else None
+            ),
+            modifier_beta=MODIFIER_BETA if modifier else None,
+            final_contribution=round(value, 4),
+            source_path_ids=channel.source_path_ids,
+            causal_edge_ids=channel.causal_edge_ids,
+            evidence_ids=channel.evidence_ids,
+            evidence_status=channel.evidence_status,
+        )
+
+    def _modifier(
         self,
         factor: str,
         channel: str,
-        factor_impact: float,
         exposure: CompanyExposureSnapshot,
-        used_confidences: list[float],
-    ) -> float | None:
-        if not -1 <= factor_impact <= 1:
-            raise ValueError("factor impacts must be between -1 and 1")
-        if factor in {"OIL", "COMMODITY"} and channel in {"revenue", "cost"}:
-            sensitivity = (exposure.commodity_exposures or {}).get("OIL")
-            if sensitivity is None:
-                return None
-            # Positive sensitivity is a producer/revenue exposure; negative
-            # sensitivity is a consumer/cost exposure. Do not count both.
-            if channel == "revenue" and sensitivity <= 0:
-                return None
-            if channel == "cost" and sensitivity >= 0:
-                return None
-            confidence = self._field_confidence(exposure, "commodity_exposures")
-            used_confidences.append(confidence)
-            return round(abs(factor_impact) * sensitivity * confidence, 4)
-
-        fields = _FACTOR_EXPOSURE_MATRIX.get((factor, channel), ())
-        effects = []
-        for field_name in fields:
-            value = getattr(exposure, field_name)
-            if value is None:
-                continue
-            confidence = self._field_confidence(exposure, field_name)
-            used_confidences.append(confidence)
-            effects.append(factor_impact * value * confidence)
-        if not effects:
+    ) -> tuple[str, float, float] | None:
+        modifier_name = None
+        if factor == "INFLATION" and channel == "revenue":
+            modifier_name = "pricing_power"
+        elif factor in {"INFLATION", "OIL", "COMMODITY"} and channel == "cost":
+            modifier_name = "operating_leverage"
+        if modifier_name is None:
             return None
-        # FX revenue disclosures often overlap (foreign-currency and exports);
-        # use the strongest evidenced measure instead of double counting.
-        return round(max(effects, key=abs), 4)
+        value = getattr(exposure, modifier_name)
+        if value is None:
+            return None
+        confidence = self._field_confidence(exposure, modifier_name)
+        multiplier = 1.0 + MODIFIER_BETA * (value - 0.5) * confidence
+        return modifier_name, multiplier, confidence
 
     @staticmethod
     def _field_confidence(
         exposure: CompanyExposureSnapshot, field_name: str
     ) -> float:
-        confidences = [
+        values = [
             item.confidence for item in exposure.field_evidence
             if item.field_name == field_name
         ]
-        return max(confidences) if confidences else 0.0
+        return max(values) if values else 0.0
 
-    def _apply_modifier(
-        self,
-        component: float | None,
-        modifier_name: str,
-        exposure: CompanyExposureSnapshot,
-    ) -> float | None:
-        if component is None:
-            return None
-        modifier = getattr(exposure, modifier_name)
-        if modifier is None:
-            return component
-        confidence = self._field_confidence(exposure, modifier_name)
-        raw_multiplier = 0.7 + 0.3 * modifier
-        confidence_adjusted = 1 + (raw_multiplier - 1) * confidence
-        return round(component * confidence_adjusted, 4)
+    @staticmethod
+    def _gap(
+        factor: str, channel: str, reason: str, fields: list[str]
+    ) -> MissingFactorExposure:
+        return MissingFactorExposure(
+            factor=factor, channel=channel, reason=reason,
+            expected_fields=fields,
+        )
 
     @staticmethod
     def _combine(values: list[float]) -> float | None:
-        if not values:
-            return None
-        return round(math.tanh(sum(values)), 4)
+        return round(math.tanh(sum(values)), 4) if values else None

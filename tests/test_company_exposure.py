@@ -294,12 +294,14 @@ def test_factor_specific_matrix_uses_only_relevant_field(
     assert result * expected_sign > 0
 
 
-@pytest.mark.parametrize(("sensitivity", "channel", "sign"), [
-    (.8, "revenue", 1),
-    (-.8, "cost", -1),
+@pytest.mark.parametrize(("sensitivity", "channel", "factor_impact", "sign"), [
+    (.8, "revenue", 1.0, 1),
+    (.8, "revenue", -1.0, -1),
+    (-.8, "cost", -1.0, -1),
+    (-.8, "cost", 1.0, 1),
 ])
 def test_oil_uses_signed_commodity_exposure(
-    sensitivity: float, channel: str, sign: int
+    sensitivity: float, channel: str, factor_impact: float, sign: int
 ) -> None:
     item = exposure(
         commodity_exposures={"OIL": sensitivity},
@@ -308,7 +310,7 @@ def test_oil_uses_signed_commodity_exposure(
         ],
     )
     candidate = CompanyImpactEngine("oil-matrix").evaluate(
-        _sector("VAREJO"), item, {("OIL", channel): 1.0}, AS_OF,
+        _sector("VAREJO"), item, {("OIL", channel): factor_impact}, AS_OF,
     )
     result = getattr(candidate, f"{channel}_impact_score")
     assert result is not None
@@ -322,6 +324,108 @@ def test_irrelevant_factor_does_not_use_wrong_debt_field() -> None:
     )
     assert candidate.debt_impact_score is None
     assert candidate.status == "NO_ACTION"
+
+
+def test_pricing_power_does_not_modify_fx_revenue() -> None:
+    base_evidence = exposure().field_evidence
+    without = exposure()
+    with_pricing = exposure(
+        pricing_power=0,
+        field_evidence=base_evidence + [evidence("pricing_power", 0)],
+    )
+    impacts = {("FX", "revenue"): 1.0}
+    first = CompanyImpactEngine("modifier").evaluate(
+        _sector("VAREJO"), without, impacts, AS_OF
+    )
+    second = CompanyImpactEngine("modifier").evaluate(
+        _sector("VAREJO"), with_pricing, impacts, AS_OF
+    )
+    assert first.revenue_impact_score == second.revenue_impact_score
+
+
+def test_operating_leverage_has_neutral_midpoint_and_symmetric_beta() -> None:
+    def item(value: float) -> CompanyExposureSnapshot:
+        return exposure(
+            commodity_exposures={"OIL": -.8}, operating_leverage=value,
+            field_evidence=exposure().field_evidence + [
+                evidence("commodity_exposures", {"OIL": -.8}),
+                evidence("operating_leverage", value),
+            ],
+        )
+
+    scores = [
+        CompanyImpactEngine("modifier").evaluate(
+            _sector("VAREJO"), item(value), {("OIL", "cost"): -1.0}, AS_OF
+        ).factor_contributions[0].final_contribution
+        for value in (0, .5, 1)
+    ]
+    assert abs(scores[0]) < abs(scores[1]) < abs(scores[2])
+
+
+def test_factor_contribution_keeps_trace_and_hypothesis_weight() -> None:
+    common = {
+        "factor": "FX", "channel": "debt", "direction": -1,
+        "strength": 1, "confidence": 1, "source_path_ids": ["PATH-1"],
+        "causal_edge_ids": ["EDGE-1"],
+    }
+    hypothesis = CompanyFactorChannel(
+        **common, evidence_ids=[], evidence_status="HYPOTHESIS"
+    )
+    validated = CompanyFactorChannel(
+        **common, evidence_ids=["PAPER-1"], evidence_status="VALIDATED"
+    )
+    item = exposure(
+        foreign_currency_debt_pct=.5,
+        field_evidence=exposure().field_evidence + [
+            evidence("foreign_currency_debt_pct", .5)
+        ],
+    )
+    hyp = CompanyImpactEngine("hyp").evaluate(
+        _sector("VAREJO"), item, None, AS_OF, [hypothesis]
+    )
+    val = CompanyImpactEngine("val").evaluate(
+        _sector("VAREJO"), item, None, AS_OF, [validated]
+    )
+    assert hyp.causal_evidence_status == "HYPOTHESIS"
+    assert val.causal_evidence_status == "VALIDATED"
+    assert hyp.factor_contributions[0].raw_factor_impact == pytest.approx(
+        val.factor_contributions[0].raw_factor_impact * .4
+    )
+    assert hyp.source_path_ids == ["PATH-1"]
+    assert hyp.causal_edge_ids == ["EDGE-1"]
+    assert hyp.supporting_event_ids == ["event"]
+
+
+def test_unsupported_factor_channel_is_explicit() -> None:
+    candidate = CompanyImpactEngine("unsupported").evaluate(
+        _sector("VAREJO"), exposure(),
+        {("COUNTRY_RISK", "debt"): -1.0}, AS_OF,
+    )
+    assert candidate.unsupported_factor_channels[0].model_dump() == {
+        "factor": "COUNTRY_RISK", "channel": "debt",
+        "reason": "NO_EXPOSURE_MAPPING", "expected_fields": [],
+    }
+
+
+def test_factor_contributions_are_persisted(tmp_path: Path) -> None:
+    item = exposure(
+        foreign_currency_debt_pct=.5,
+        field_evidence=exposure().field_evidence + [
+            evidence("foreign_currency_debt_pct", .5)
+        ],
+    )
+    candidate = CompanyImpactEngine("persist").evaluate(
+        _sector("VAREJO"), item, {("FX", "debt"): -1.0}, AS_OF
+    )
+    store = DatabaseStore(tmp_path / "impact-audit.duckdb")
+    assert store.save_company_impact_candidate(candidate.model_dump(mode="json"))
+    payload = store.connection.execute(
+        "SELECT impact_payload FROM company_impact_candidates"
+    ).fetchone()[0]
+    assert '"factor_contributions"' in payload
+    assert '"missing_factor_exposures"' in payload
+    assert '"causal_evidence_status"' in payload
+    store.close()
 
 
 def _sector(sector: str) -> SectorStateSnapshot:

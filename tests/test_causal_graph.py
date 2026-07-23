@@ -56,6 +56,16 @@ def test_graph_version_edge_count_coverage_and_hypotheses(engine: CausalGraphEng
     assert all(edge.evidence_ids or edge.hypothesis for edge in engine.edges)
 
 
+def test_explicit_empty_sector_states(engine: CausalGraphEngine) -> None:
+    no_signal = engine.sector_state_or_empty("PETROLEO_GAS", NOW, True)
+    missing = engine.sector_state_or_empty("PETROLEO_GAS", NOW, False)
+    uncovered = engine.sector_state_or_empty("SEM_GRAFO", NOW, True)
+    assert no_signal.status == "SECTOR_STATE_NO_ACTIVE_SIGNAL"
+    assert missing.status == "SECTOR_STATE_MISSING_DATA"
+    assert uncovered.status == "SECTOR_STATE_NO_GRAPH_COVERAGE"
+    assert no_signal.net_impact == 0
+
+
 def test_hypothesis_impact_cannot_be_approved(engine: CausalGraphEngine) -> None:
     candidate = {
         item.sector: item

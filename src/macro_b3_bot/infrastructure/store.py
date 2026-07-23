@@ -1801,8 +1801,11 @@ class DatabaseStore:
             return False
         payload_keys = {
             "revenue_impact_score", "cost_impact_score", "debt_impact_score",
-            "demand_impact_score", "net_company_impact", "supporting_paths",
-            "opposing_paths",
+            "demand_impact_score", "net_company_impact",
+            "supporting_event_ids", "opposing_event_ids", "source_path_ids",
+            "causal_edge_ids", "factor_contributions",
+            "missing_factor_exposures", "unsupported_factor_channels",
+            "causal_evidence_status",
         }
         self.connection.execute(
             """
