@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -22,7 +23,9 @@ _EXPOSURE_FIELDS = (
     "floating_rate_debt", "inflation_linked_debt", "revenue_foreign_currency_pct",
     "cost_foreign_currency_pct", "export_revenue_pct", "floating_rate_debt_pct",
     "inflation_linked_debt_pct", "foreign_currency_debt_pct", "commodity_exposures",
-    "geographic_exposures", "demand_cyclicality", "pricing_power", "operating_leverage",
+    "fixed_rate_debt_pct", "currency_hedge_pct", "commodity_roles",
+    "commodity_production", "commodity_hedges", "geographic_exposures",
+    "demand_cyclicality", "pricing_power", "operating_leverage",
 )
 
 
@@ -34,10 +37,12 @@ class CompanyExposureBuilder:
         store: DatabaseStore,
         run_id: str,
         methodology_version: str = "4C.3-v1",
+        source_selection_run_id: str | None = None,
     ) -> None:
         self.store = store
         self.run_id = run_id
         self.methodology_version = methodology_version
+        self.source_selection_run_id = source_selection_run_id
 
     @staticmethod
     def load_pilot(path: Path = _PILOT_PATH) -> list[dict[str, str]]:
@@ -168,6 +173,30 @@ class CompanyExposureBuilder:
                 "2.02.01; excludes cash/netting and is not applied to banks.",
             ))
 
+        if self.source_selection_run_id:
+            fact_rows = self.store.connection.execute(
+                """
+                SELECT field_name,evidence_payload
+                FROM company_macro_exposure_facts
+                WHERE selection_run_id=? AND ticker=?
+                QUALIFY ROW_NUMBER() OVER (
+                    PARTITION BY field_name
+                    ORDER BY created_at DESC,fact_id DESC
+                )=1
+                """,
+                [self.source_selection_run_id, ticker],
+            ).fetchall()
+            for field_name, payload_json in fact_rows:
+                if field_name not in values:
+                    continue
+                field_evidence = ExposureFieldEvidence.model_validate(
+                    json.loads(payload_json)
+                )
+                if field_evidence.available_at > as_of:
+                    continue
+                values[field_name] = field_evidence.normalized_value
+                evidence.append(field_evidence)
+
         for override in self.store.get_company_exposure_overrides_as_of(ticker, as_of):
             field_name = override["field_name"]
             if field_name not in values:
@@ -193,7 +222,7 @@ class CompanyExposureBuilder:
         identity = (
             f"{ticker}|{cvm_code}|{as_of.isoformat()}|{document_id}|{version}|"
             f"{','.join(str(item[0]) for item in documents)}|"
-            f"{self.methodology_version}|{self.run_id}"
+            f"{self.methodology_version}|{self.source_selection_run_id}|{self.run_id}"
         )
         snapshot = CompanyExposureSnapshot(
             exposure_id=hashlib.sha256(identity.encode()).hexdigest()[:24],

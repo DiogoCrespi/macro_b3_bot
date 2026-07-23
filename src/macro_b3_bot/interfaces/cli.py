@@ -692,6 +692,9 @@ def audit_sector_impacts(
 def build_company_exposures(
     as_of: str = typer.Option(..., "--as-of", help="Point-in-time cutoff (ISO-8601)"),
     run_id: Optional[str] = typer.Option(None, "--run-id", help="Exposure build run ID"),
+    source_run_id: Optional[str] = typer.Option(
+        None, "--source-run-id", help="Audited exposure-document selection run"
+    ),
 ) -> None:
     """Build evidenced CVM exposure snapshots for the 15-company pilot."""
     from uuid import uuid4
@@ -702,9 +705,9 @@ def build_company_exposures(
     settings = Settings()
     store = DatabaseStore(settings.data_dir / "audit.duckdb")
     target_run_id = run_id or f"exposure_{uuid4()}"
-    summary = CompanyExposureBuilder(store, target_run_id).build_pilot(
-        datetime.fromisoformat(as_of)
-    )
+    summary = CompanyExposureBuilder(
+        store, target_run_id, source_selection_run_id=source_run_id
+    ).build_pilot(datetime.fromisoformat(as_of))
     store.close()
 
     table = Table(title="Sprint 4C.3 — Company Exposure PIT Pilot")
@@ -717,6 +720,43 @@ def build_company_exposures(
         table.add_row(key, str(summary[key]))
     console.print(table)
     console.print("[bold]Ausências permanecem NULL/UNKNOWN; valuation e BUY desabilitados.[/bold]")
+
+
+@app.command("ingest-company-exposure-documents")
+def ingest_company_exposure_documents(
+    as_of: str = typer.Option(..., "--as-of", help="Point-in-time cutoff"),
+    per_family: int = typer.Option(1, "--per-family", min=1, max=3),
+) -> None:
+    """Download the latest PIT document in each relevant information family."""
+    import asyncio
+
+    from macro_b3_bot.application.ingest_company_exposure_documents import (
+        CompanyExposureDocumentPipeline,
+    )
+
+    result = asyncio.run(
+        CompanyExposureDocumentPipeline(Settings()).ingest(
+            datetime.fromisoformat(as_of), per_family
+        )
+    )
+    console.print_json(json.dumps(result, default=str))
+
+
+@app.command("extract-company-macro-exposures")
+def extract_company_macro_exposures(
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+) -> None:
+    """Extract only whitelisted quantitative/role disclosures with evidence."""
+    from macro_b3_bot.application.extract_company_macro_exposures import (
+        CompanyMacroExposureExtractor,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = CompanyMacroExposureExtractor(store).extract(selection_run_id)
+    store.close()
+    console.print_json(json.dumps(result, default=str, ensure_ascii=False))
 
 
 @app.command("audit-company-exposures")
@@ -752,6 +792,32 @@ def audit_company_exposures(
     console.print(table)
     validated = sum(row["validation_status"] == "VALIDATED" for row in rows)
     console.print(f"Validated={validated}/{len(rows)} | Mismatches={len(rows) - validated}")
+
+
+@app.command("audit-company-macro-exposures")
+def audit_company_macro_exposures(
+    selection_run_id: str = typer.Option(..., "--selection-run-id"),
+    exposure_run_id: str = typer.Option(..., "--exposure-run-id"),
+    output: Optional[str] = typer.Option(None, "--output"),
+) -> None:
+    """Audit PIT documents, field evidence, coverage, and explicit blockers."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.audit_company_macro_exposures import (
+        CompanyMacroExposureAuditor,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    report = CompanyMacroExposureAuditor(store).audit(
+        selection_run_id, exposure_run_id
+    )
+    store.close()
+    rendered = json.dumps(report, ensure_ascii=False, indent=2, default=str)
+    if output:
+        Path(output).write_text(rendered, encoding="utf-8")
+    console.print_json(rendered)
 
 
 @app.command("reconcile-company-mappings")

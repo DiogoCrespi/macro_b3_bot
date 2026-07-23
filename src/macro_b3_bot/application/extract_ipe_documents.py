@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Dict, Any
+from typing import Dict, Any, Sequence
 
 from macro_b3_bot.config import Settings
 from macro_b3_bot.domain.document_models import ExtractedDocument
@@ -44,18 +44,34 @@ class IpeExtractionPipeline:
             return self.html_extractor, "HTML_PARSER"
         return self.text_extractor, "TEXT_PARSER"
 
-    def extract_downloaded_batch(self, limit: int = 500) -> Dict[str, Any]:
+    def extract_downloaded_batch(
+        self,
+        limit: int = 500,
+        document_ids: Sequence[str] | None = None,
+    ) -> Dict[str, Any]:
         store = DatabaseStore(self.db_path)
         conn = store.connection
 
         # Seleciona documentos baixados pendentes de extração
-        rows = conn.execute("""
+        params: list[object] = []
+        document_filter = ""
+        if document_ids is not None:
+            if not document_ids:
+                store.close()
+                return {"total_processed": 0, "extracted_count": 0}
+            placeholders = ",".join("?" for _ in document_ids)
+            document_filter = f"AND d.document_id IN ({placeholders})"
+            params.extend(document_ids)
+        params.append(limit)
+        rows = conn.execute(f"""
             SELECT d.document_id, d.document_checksum, d.mime_type, d.raw_path
             FROM downloaded_documents d
             JOIN ipe_processing_queue q USING (document_id)
             WHERE q.status = 'DOWNLOADED'
+              {document_filter}
+            ORDER BY d.document_id,d.downloaded_at DESC
             LIMIT ?
-        """, [limit]).fetchall()
+        """, params).fetchall()
 
         total_processed = len(rows)
         extracted_count = 0

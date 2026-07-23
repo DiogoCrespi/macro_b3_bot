@@ -19,10 +19,15 @@ class ExtractionMethod(str, Enum):
 
 class ExposureFieldEvidence(BaseModel):
     field_name: str
-    value: float | dict[str, float] | None = None
+    value: float | str | dict[str, float] | dict[str, str] | None = None
     source_type: str
     evidence_id: str
+    document_version: int | None = None
     evidence_excerpt: str | None = None
+    page_number: int | None = None
+    raw_value: str | None = None
+    unit: str | None = None
+    normalized_value: float | str | dict[str, float] | dict[str, str] | None = None
     available_at: datetime
     extraction_method: ExtractionMethod
     methodology_version: str
@@ -54,7 +59,12 @@ class CompanyExposureSnapshot(BaseModel):
     floating_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
     inflation_linked_debt_pct: float | None = Field(default=None, ge=0, le=1)
     foreign_currency_debt_pct: float | None = Field(default=None, ge=0, le=1)
+    fixed_rate_debt_pct: float | None = Field(default=None, ge=0, le=1)
+    currency_hedge_pct: float | None = Field(default=None, ge=0, le=1)
     commodity_exposures: dict[str, float] | None = None
+    commodity_roles: dict[str, str] | None = None
+    commodity_production: dict[str, float] | None = None
+    commodity_hedges: dict[str, float] | None = None
     geographic_exposures: dict[str, float] | None = None
     demand_cyclicality: float | None = Field(default=None, ge=0, le=1)
     pricing_power: float | None = Field(default=None, ge=0, le=1)
@@ -74,6 +84,15 @@ class CompanyExposureSnapshot(BaseModel):
             value < -1 or value > 1 for value in self.commodity_exposures.values()
         ):
             raise ValueError("commodity sensitivities must be between -1 and 1")
+        if self.commodity_roles and any(
+            value not in {"PRODUCER", "CONSUMER", "MIXED", "HEDGED", "UNKNOWN"}
+            for value in self.commodity_roles.values()
+        ):
+            raise ValueError("invalid commodity role")
+        if self.commodity_hedges and any(
+            value < 0 or value > 1 for value in self.commodity_hedges.values()
+        ):
+            raise ValueError("commodity hedge shares must be between 0 and 1")
         if self.geographic_exposures:
             if any(value < 0 or value > 1 for value in self.geographic_exposures.values()):
                 raise ValueError("geographic revenue shares must be between 0 and 1")
