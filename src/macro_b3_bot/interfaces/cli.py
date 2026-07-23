@@ -369,6 +369,75 @@ def detect_macro_events(
     console.print(table)
 
 
+@app.command("audit-global-macro")
+def audit_global_macro() -> None:
+    """Audit macro releases, available_at anomalies, and data vintages in DuckDB."""
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    db_path = settings.data_dir / "audit.duckdb"
+    store = DatabaseStore(db_path)
+
+    # 1. Summary of releases per source and indicator
+    rows_summary = store.connection.execute(
+        """
+        SELECT source, indicator, COUNT(*) AS observations,
+               MIN(reference_date) AS min_ref, MAX(reference_date) AS max_ref,
+               COUNT(DISTINCT record_checksum) AS versions
+        FROM macro_releases
+        GROUP BY source, indicator
+        ORDER BY source, indicator
+        """
+    ).fetchall()
+
+    table1 = Table(title=f"Macro Releases Summary ({len(rows_summary)} series)")
+    table1.add_column("Source")
+    table1.add_column("Indicator")
+    table1.add_column("Observations")
+    table1.add_column("Min RefDate")
+    table1.add_column("Max RefDate")
+    table1.add_column("Distinct Versions")
+    for r in rows_summary:
+        table1.add_row(*[str(x) for x in r])
+    console.print(table1)
+
+    # 2. Look-ahead anomaly check: available_at < reference_date
+    anomalies_count = store.connection.execute(
+        """
+        SELECT COUNT(*)
+        FROM macro_releases
+        WHERE available_at < reference_date
+        """
+    ).fetchone()[0]
+
+    if anomalies_count > 0:
+        console.print(f"[bold red]⚠ Look-ahead warning: {anomalies_count} records have available_at < reference_date[/bold red]")
+    else:
+        console.print("[bold green]✓ Zero look-ahead anomalies detected (available_at >= reference_date)[/bold green]")
+
+    # 3. Vintages check: multiple versions for same reference_date
+    vintages_rows = store.connection.execute(
+        """
+        SELECT source, indicator, reference_date, COUNT(*) AS versions
+        FROM macro_data_vintages
+        GROUP BY source, indicator, reference_date
+        HAVING COUNT(*) > 1
+        ORDER BY source, indicator, reference_date
+        """
+    ).fetchall()
+
+    table2 = Table(title=f"Macro Data Vintages ({len(vintages_rows)} multiple versions)")
+    table2.add_column("Source")
+    table2.add_column("Indicator")
+    table2.add_column("RefDate")
+    table2.add_column("Version Count")
+    for r in vintages_rows:
+        table2.add_row(*[str(x) for x in r])
+    console.print(table2)
+
+    store.close()
+
+
 @app.command("audit-macro-events")
 def audit_macro_events() -> None:
     """Print a summary of all MacroEventCandidates in the store."""
