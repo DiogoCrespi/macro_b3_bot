@@ -191,11 +191,12 @@ def test_pit_ingestor_preserves_b3_and_cvm_provenance() -> None:
 
 
 def test_b3_cotahist_reader_filters_spot_and_parses_implicit_price(tmp_path) -> None:
-    line = bytearray(b" " * 250)
+    line = bytearray(b" " * 245)
     line[0:2] = b"01"
-    line[2:10] = b"22072026"
+    line[2:10] = b"20260722"
     line[12:24] = b"MGLU3       "
     line[24:27] = b"010"
+    line[52:56] = b"R$  "
     line[108:121] = b"0000000000492"
     line[210:217] = b"0000001"
     line[230:242] = b"BRMGLUACNOR2"
@@ -204,20 +205,43 @@ def test_b3_cotahist_reader_filters_spot_and_parses_implicit_price(tmp_path) -> 
     rows = B3CotahistReader().read_text(path, ticker="MGLU3")
     assert len(rows) == 1
     assert rows[0]["close_price"] == pytest.approx(4.92)
+    assert rows[0]["reference_currency_raw"] == "R$"
     assert rows[0]["market_type"] == "010"
+
+
+def test_b3_cotahist_quote_factor_and_invalid_records(tmp_path) -> None:
+    line = bytearray(b" " * 245)
+    line[0:2] = b"01"
+    line[2:10] = b"20260721"
+    line[12:24] = b"MGLU3       "
+    line[24:27] = b"010"
+    line[52:56] = b"BRL "
+    line[108:121] = b"0000000123450"
+    line[210:217] = b"0001000"
+    invalid_date = bytearray(line)
+    invalid_date[2:10] = b"22072026"
+    invalid_length = bytes(line) + b"x"
+    path = tmp_path / "COTAHIST.txt"
+    path.write_bytes(b"00COTAHIST20260723\n" + bytes(line) + b"\n" + bytes(invalid_date) + b"\n" + invalid_length + b"\n")
+    rows = B3CotahistReader().read_text(path, ticker="MGLU3")
+    assert len(rows) == 1
+    assert rows[0]["raw_quoted_price"] == pytest.approx(1234.50)
+    assert rows[0]["normalized_unit_price"] == pytest.approx(1.2345)
+    assert rows[0]["quote_factor"] == 1000
 
 
 def test_cvm_capital_reader_selects_available_outstanding_row(tmp_path) -> None:
     path = tmp_path / "capital.csv"
     path.write_text(
         "CD_CVM;DT_REFER;DT_RECEB;VERSAO;SHARE_CLASS;SHARES_ISSUED;TREASURY_SHARES\n"
-        "123;2026-06-30;2026-07-10;2;ON;1000;100\n"
-        "123;2026-06-30;2026-08-10;3;ON;1100;100\n",
+        "123;2026-06-30;2026-07-10;9;ON;1000;100\n"
+        "123;2026-06-30;2026-07-20;10;ON;1100;100\n"
+        ";2026-08-31;2026-07-21;11;ON;1200;100\n",
         encoding="utf-8",
     )
     rows = CVMCapitalCompositionReader().read(
         path, cvm_code="123", assessment_as_of=datetime(2026, 7, 22, tzinfo=timezone.utc)
     )
     assert len(rows) == 1
-    assert rows[0]["outstanding_count"] == 900
-    assert rows[0]["document_version"] == "2"
+    assert rows[0]["outstanding_count"] == 1000
+    assert rows[0]["document_version"] == 10

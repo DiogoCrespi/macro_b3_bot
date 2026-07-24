@@ -13,6 +13,7 @@ class B3CotahistReader:
     """Parse only record type 01, spot market (TPMERC 010)."""
 
     layout_version = "COTAHIST-FW-v1"
+    record_length = 245
 
     @staticmethod
     def _checksum(payload: bytes) -> str:
@@ -20,7 +21,7 @@ class B3CotahistReader:
 
     @staticmethod
     def _date(raw: str) -> date:
-        return datetime.strptime(raw, "%d%m%Y").date()
+        return datetime.strptime(raw, "%Y%m%d").date()
 
     @staticmethod
     def _number(raw: str, scale: int = 100) -> float:
@@ -91,15 +92,26 @@ class B3CotahistReader:
         for line in lines:
             if line[:2] != "01":
                 continue
+            if len(line) != self.record_length:
+                continue
             if line[12:24].strip() != ticker:
                 continue
             if line[24:27] != "010":
                 continue
-            trade_date = self._date(line[2:10])
+            reference_currency_raw = line[52:56].strip()
+            currency_map = {"BRL": "BRL", "R$": "BRL"}
+            currency = currency_map.get(reference_currency_raw)
+            if currency is None:
+                continue
+            try:
+                trade_date = self._date(line[2:10])
+            except ValueError:
+                continue
             quote_factor = int(line[210:217].strip() or "1")
             if quote_factor <= 0:
                 continue
-            close_price = self._number(line[108:121]) / quote_factor
+            raw_quoted_price = self._number(line[108:121])
+            close_price = raw_quoted_price / quote_factor
             if close_price <= 0:
                 continue
             raw = line.encode("latin-1")
@@ -107,9 +119,12 @@ class B3CotahistReader:
                 "ticker": ticker,
                 "trade_date": datetime.combine(trade_date, datetime.min.time(), tzinfo=timezone.utc),
                 "close_price": close_price,
-                "currency": "BRL",
+                "currency": currency,
+                "reference_currency_raw": reference_currency_raw,
                 "market_type": "010",
                 "quote_factor": quote_factor,
+                "raw_quoted_price": raw_quoted_price,
+                "normalized_unit_price": close_price,
                 "isin": line[230:242].strip() or None,
                 "source_file": source_file,
                 "source_checksum": source_checksum,
