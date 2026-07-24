@@ -917,6 +917,80 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS paper_portfolio_policies (
+                policy_id VARCHAR PRIMARY KEY,
+                initial_capital DOUBLE NOT NULL,
+                max_weight_per_asset DOUBLE NOT NULL,
+                max_weight_per_sector DOUBLE NOT NULL,
+                min_cash_weight DOUBLE NOT NULL,
+                min_position_weight DOUBLE NOT NULL,
+                b3_emoluments_pct DOUBLE NOT NULL,
+                base_slippage_pct DOUBLE NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS historical_replay_runs (
+                replay_run_id VARCHAR PRIMARY KEY,
+                start_date TIMESTAMP NOT NULL,
+                end_date TIMESTAMP NOT NULL,
+                initial_capital DOUBLE NOT NULL,
+                portfolio_policy_id VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS paper_allocation_events (
+                allocation_event_id VARCHAR PRIMARY KEY,
+                portfolio_id VARCHAR NOT NULL,
+                ticker VARCHAR NOT NULL,
+                event_type VARCHAR NOT NULL,
+                research_decision_id VARCHAR NOT NULL,
+                timing_risk_id VARCHAR NOT NULL,
+                execution_session VARCHAR NOT NULL,
+                execution_price DOUBLE,
+                target_weight DOUBLE NOT NULL,
+                executed_weight DOUBLE NOT NULL,
+                quantity_simulated DOUBLE NOT NULL,
+                gross_value DOUBLE NOT NULL,
+                transaction_cost DOUBLE NOT NULL,
+                slippage_cost DOUBLE NOT NULL,
+                reason VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS paper_portfolio_snapshots (
+                portfolio_snapshot_id VARCHAR PRIMARY KEY,
+                portfolio_id VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                cash_balance DOUBLE NOT NULL,
+                positions_value DOUBLE NOT NULL,
+                nav DOUBLE NOT NULL,
+                daily_pnl DOUBLE NOT NULL,
+                total_realized_pnl DOUBLE NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS paper_portfolio_performance (
+                report_id VARCHAR PRIMARY KEY,
+                replay_run_id VARCHAR NOT NULL,
+                total_return_pct DOUBLE NOT NULL,
+                annualized_return_pct DOUBLE NOT NULL,
+                max_drawdown_pct DOUBLE NOT NULL,
+                total_costs_brl DOUBLE NOT NULL,
+                total_slippage_brl DOUBLE NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
         try:
             self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
         except Exception:
@@ -2448,6 +2522,72 @@ class DatabaseStore:
             payload = json.loads(r[7])
             result.append(payload)
         return result
+
+    def save_historical_replay_run(self, replay_run: dict[str, Any]) -> None:
+        """Persists a historical replay run into DuckDB idempotently."""
+        run_id = replay_run["replay_run_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM historical_replay_runs WHERE replay_run_id = ?",
+            [run_id]
+        ).fetchone()
+        if existing:
+            return
+
+        self.connection.execute(
+            """
+            INSERT INTO historical_replay_runs
+            (replay_run_id, start_date, end_date, initial_capital, portfolio_policy_id, status, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                run_id,
+                datetime.fromisoformat(replay_run["start_date"].replace("Z", "+00:00")),
+                datetime.fromisoformat(replay_run["end_date"].replace("Z", "+00:00")),
+                float(replay_run["initial_capital"]),
+                replay_run["portfolio_policy_id"],
+                replay_run["status"],
+                json.dumps(replay_run, default=str),
+            ],
+        )
+
+    def save_paper_allocation_event(self, event: dict[str, Any]) -> None:
+        """Persists a paper allocation event into DuckDB idempotently."""
+        event_id = event["allocation_event_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM paper_allocation_events WHERE allocation_event_id = ?",
+            [event_id]
+        ).fetchone()
+        if existing:
+            return
+
+        self.connection.execute(
+            """
+            INSERT INTO paper_allocation_events
+            (allocation_event_id, portfolio_id, ticker, event_type, research_decision_id,
+             timing_risk_id, execution_session, execution_price, target_weight,
+             executed_weight, quantity_simulated, gross_value, transaction_cost,
+             slippage_cost, reason, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                event_id,
+                event["portfolio_id"],
+                event["ticker"],
+                event["event_type"],
+                event["research_decision_id"],
+                event["timing_risk_id"],
+                event["execution_session"],
+                float(event["execution_price"]) if event.get("execution_price") is not None else None,
+                float(event["target_weight"]),
+                float(event["executed_weight"]),
+                float(event["quantity_simulated"]),
+                float(event["gross_value"]),
+                float(event["transaction_cost"]),
+                float(event["slippage_cost"]),
+                event["reason"],
+                json.dumps(event, default=str),
+            ],
+        )
 
     def close(self) -> None:
         self.connection.close()

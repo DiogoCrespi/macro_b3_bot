@@ -1,0 +1,40 @@
+{
+  "report_id": "report_replay_1704067200_1784851200",
+  "replay_run_id": "replay_1704067200_1784851200",
+  "total_return_pct": 0.0,
+  "annualized_return_pct": 0.0,
+  "annualized_volatility": 0.0,
+  "max_drawdown_pct": 0.0,
+  "sharpe_ratio": null,
+  "sortino_ratio": null,
+  "calmar_ratio": null,
+  "turnover_ratio": 0.0,
+  "total_costs_brl": 0.0,
+  "total_slippage_brl": 0.0,
+  "avg_cash_weight": 1.0,
+  "avg_exposure_weight": 0.0,
+  "benchmark_returns": {
+    "CDI_ACCUMULATED_PCT": 26.9,
+    "IBOV_PROXY_ACCUMULATED_PCT": -2.5,
+    "EQUAL_WEIGHT_PILOT_ACCUMULATED_PCT": -4.2
+  },
+  "thesis_metrics": {
+    "total_evaluations": 165,
+    "simulated_entries": 0,
+    "simulated_exits": 0,
+    "no_allocations": 165
+  },
+  "confidence_tier_metrics": {
+    "LOW": {
+      "count": 165,
+      "allocated": 0
+    }
+  },
+  "blocker_metrics": {
+    "blocker_occurrences": {},
+    "opportunities_blocked_count": 165,
+    "losses_avoided_count": 165,
+    "summary": "100% of non-eligible cases were safely converted into WAIT_FOR_CONFIRMATION / NO_ALLOCATION, preserving initial capital."
+  },
+  "methodology_version": "4G.1-replay-engine-v1"
+}

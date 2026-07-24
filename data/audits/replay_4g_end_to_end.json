@@ -1,0 +1,1034 @@
+{
+  "sprint": "4G",
+  "methodology_version": "4G.1-replay-engine-v1",
+  "replay_run": {
+    "replay_run_id": "replay_1704067200_1784851200",
+    "start_date": "2024-01-01T00:00:00+00:00",
+    "end_date": "2026-07-24T00:00:00+00:00",
+    "universe": [
+      "MGLU3",
+      "SUZB3",
+      "KLBN11",
+      "RAIL3",
+      "SLCE3"
+    ],
+    "initial_capital": 100000.0,
+    "portfolio_policy_id": "8e011506c728a15bb400a35a40d1a374bc6268a53e69c2dafcfafaaaad40db6f",
+    "methodology_versions": {
+      "engine": "4G.1-replay-engine-v1",
+      "policy": "4G.1-paper-policy-v1"
+    },
+    "source_manifest_ids": [],
+    "decision_cutoffs_processed": 33,
+    "market_sessions_processed": 33,
+    "status": "COMPLETED",
+    "blocked_reasons": [],
+    "created_at": "2026-07-24T13:26:58.488785+00:00"
+  },
+  "steps": [
+    {
+      "step_id": "step_replay_1704067200_1784851200_1704067200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-01-01T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "43738a96884df199b3f84196d580c5a94dad4e26cfed2dc7aa84eb0b8b30232d",
+        "c161d6316e0496776efa779de0eb3607e227c120bc89d85e3d0eaaee506ef96f",
+        "a737d5ac631df72af8f59841c1d5804328056ec3bbc74a8d072a8c050151afe7",
+        "a8718e8a69dc3f9e88caba5522b4b0334ec978c489b108c45aece530ce8d7e6b",
+        "6cd8dd6750d28c3504c3af389f26284cb827f05470fb8c169a20ca2d1b58a5bb"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1706659200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-01-31T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "6651e8b7b3dac7d968e5f2fe70de08fa91eab8d26ffe844d94c65e66ffc1bf19",
+        "7371dbf39228f6ca1537cf400672622effd9ee3f1b775de2f0e96b334f070362",
+        "5214a9c8eaa77aa45f532f3c3be65a5d18e6e1810b6d5dd065b58ba4ac5b3014",
+        "dfd9e9b42d88be2b87cfa5dc2dad3809ea9772478580c02c685def6f6cc6bb8b",
+        "ae0c7b2cd2bc462f34478c687d804c8a7ca3c0e067046ebf5a7cc508ef6855af"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1709251200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-03-01T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "b4a8f4b8b32de1c5c82406fb91aed0253b4e0e2d7b3eaba552bde50328adb23b",
+        "2b930ac8e72bcd8c02cd086014b29c67a9fd627e9f6a4462fdd63df17044e094",
+        "991c01c20ef87236b5895e20d3df02fa3f30d3726dc1a536db81100889846ee8",
+        "299f45c2cb2b05a360dd7d5db3955b4f037e6f68e1b1ee41ab7972ca981a0ed9",
+        "6b5b9e29bf7a6bd9e6d7e84d652948c57e7871585ff6d78a60e9a4d2825dfacd"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1711843200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-03-31T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "a792e513a8c501bb1426acfa39945e0a962c3357fe44a6a767d725bd774da02c",
+        "29d12d16e5e4a9119b22235228bfd2831ecab2f9ef065462162d6ba2959d054d",
+        "8363842deef3d718f4df5a4ac6bc911ebd398a6765e4b58db2b90d2e01ccc64f",
+        "8d2d50792e42b2e9b2f8158ecf19ac5df68c75a2a3f2129c6a6a98b233e8a7e2",
+        "f890002b67664276323e0df7a9ceb5292c14c8be7bf6f417431656793aa05ba2"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1714435200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-04-30T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "428f4dce628ebc37c2dae85241d7345ac5a9ef36b17beda317359d0792972b4a",
+        "12a93d5603c69cec18fd06deca9d8cca45e88a0fd01b6d0d411e2c3f707518f1",
+        "5eb3fae76cc047d0a04603e909a442b7c1e852e1cbe2dfdf5a545647bedda09a",
+        "36840baeb0ed3297d52ea151f47fd0b8c159f4a125126796502f0734491c525f",
+        "d0d968e13bc57007432bdc8bf1877621123bbcf3087ff9bc5634e7dae1c909cb"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1717027200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-05-30T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "8a452fd765fa556450680373b9b4162bcdfdf8058f8f1d72b5ffa3e180a19690",
+        "9ca8de0d6772aa716aca113ac49214d7075302aa2d78b3634589535390468cb1",
+        "baeab492092d7c7e42087cc84c778a5086c126046e18ab96c72cf801647e2e0e",
+        "8262521e30e3a78e234386f08e94d97d73a6b6a57d73a01b6023a3a2fc97e057",
+        "b9b3f04b76119cb6fecdaeb66468560126e01b0c13e78b0ae4f6cd98b0b4b7f0"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1719619200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-06-29T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "1f64aeefe62189cb25df8623dfa21cb17777b023d872717c71aff62f15b3a595",
+        "daa48afff7a3beb2ae4fffc89b1d198c82559a89d8408a77a5ead87f8543ddf2",
+        "2594275cfa1b7748bdceee1eb087c5ab61905f9e6052fc2c1df98baf7a4ffde8",
+        "7c4f6ef21b6159f53e80efa0813282900e3b6de65b340d56deab3f2620358814",
+        "c8923948df8d3788267669504f98a3f1efbf7beef81abb174e0942dfa1786507"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1722211200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-07-29T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "63a4e1bea3f84adb5cd87514d904a636d299c62a1f694be07d85b075609c4ee4",
+        "a081e348188fe8d5c690c8d0296c2e87fefffd141f25e190c10e037a2512f1d3",
+        "db333f710f329a8b8f80275a88f4156eb8ce33ab22be9691e7627ad9a72c4fa5",
+        "2165e067f31b507ebeb4e22ed5773eccfac0cb4f33249799cc9f0444013550d9",
+        "5b5e6dc1ff5e2bc8ed699e8c0622682355254cc3c8fcbfefa2a3ed2ef66e41e0"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1724803200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-08-28T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "a9a16258599e207c7243381008efa13e7ec497a1d069399077e05e0db68d570a",
+        "5cfb72bf85299ea62191fcebf451e57c75931ffcd6e5fccfbb276fa800d6ff1e",
+        "0aac32690c44b0ed0b1bf9c3eb5c03abd1f2db23c981d256ca273b569e2601a8",
+        "5d2f95adb6aa1a59c9f5e11cb848b1d7abb6fd0be8d9bd45c1c11134fbd4812e",
+        "fe7dce277fa2749a6be0fd6badb8db56d1a78a9294beba348a07f0c3a2230b62"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1727395200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-09-27T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "b902220288f42c054a915e706f74b12b2ec8624089606e8dd196cdd15b181a2a",
+        "ad7e3bf56b21b46c17b43130c644cc8f7da6f73bfd484e170acf827a8e83ac30",
+        "5fe409dfd9a718865810ba2b930a36abc79d06f5f7d2dfe3ff5fbcccb838311d",
+        "c8242af7238b3645591bc5896672589f430dd713300682e2be34793f256c87c7",
+        "b93358d3b5facd3ffe2561b2a4a6b9aa8250c2cc180427826528b55da902e17d"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1729987200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-10-27T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "41547402cf3e3be56d8847eb9cdec13082c15461b165f755ef1b1fe2d72bdfc4",
+        "d165c177aaad4a8a2fe6d1b709a26bec96c3166e96cc4d827a52ccbc079b961f",
+        "f5b9fff246b29afa1f3b3b440107f5fb6bdd7dacbb1907c3d9a1677f8eac14e6",
+        "077cbe19c88daebff5d47cb6a133c691f4526e42b025eaf2583294929a14d8d8",
+        "a3baf85eef875dab82534b1d072efb89318608272d646256f2a0dd403c9ff4ce"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1732579200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-11-26T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "17aa0238875b1c00fe184601472a483905c8a09f8400628e107e2c4ba0e879db",
+        "f20fc896d684af5f4708c7446234502ce69f451383440e05289b5f979b5e7d4f",
+        "5b6cef9b72724aa0bc870e94fd3e9526064ac243499549e5a1524ce1e94acd2a",
+        "788d15abc61dc30f0e1432fd332de012b783989cf9244f877060f0159cfeadc8",
+        "753e270fe596c3091fe7bae5caf2519a8a59e20ba68c84b3656dc55e58253d0c"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1735171200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2024-12-26T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "0ad9f3d85223a40067e097f17a091aaab1700270cbf5204d2d1ba61a37855cd1",
+        "d5d1792129322eec4e43ccdec4a2b5a9f267ae166ccd7da9a85867eb03806f5c",
+        "6995160c83228f4b5a6c4ab76915bac3db7e903a68bd6cc3bf4721364e17adc7",
+        "ae767ea9e737a636a31d67afe6f7af1e3b8057b0b45f38da2fd8ebada211081a",
+        "17e8940270e53a4df95b5a2b673eb9d894d3c6fa00eaa1d2b6e35e37355601c6"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1737763200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-01-25T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "b1e68c73cdbe7e3d399a2043fda3cd6f7d10d348801c97119e590c926b5abf06",
+        "aac2c5c72a81b3331727712797064e4bfe976f5222c99c5ab834d7da3cc10b46",
+        "a11439c6336cb2b51acf911f4b7cf4a77bdfa09184ff2c9e68822d747f8bdd95",
+        "ecdddb3f12c0dbd4584f65d2bc35177a49838662c1fb1f8bff7c4bb59dd85bc5",
+        "7212d8c9194a6f309e9ea238e1e9741936b5fb6a53732970cbcd2daa50f870fc"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1740355200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-02-24T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "9d182556024ea2c941cd5089c0d83c9dbcbca0b239fc673dd0574c767b07e729",
+        "beb43fda277f44d39d75e47233b54f0bb2a5476b1a067805e1087c5e00c3a183",
+        "fcdc0cdbe0ae71de6ef083cb41d63e58d8893468ccb05b8f8aad0879d9fcebe1",
+        "cfddd99c960ec014437065e69a40dcc325f47500bd6defc053fb9e333ade58d4",
+        "1b29bfb3d1f50699cd71ca896982905e29d2ce2c201d414d219f00205f125e5a"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1742947200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-03-26T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "dd56abe417121661b48960dcb2b5e2fe72bcf161c48fa1b28f702efa7e0e8015",
+        "3a74817b04b2ae4ae0cccf1046edc11f01ad75cc0faa8fd6666d0369ab867e18",
+        "67b65f420e2ab133f7369bdf95e86ff3b1cb4affe1ef835f5879b8317d9288cb",
+        "62504f77a17f0993bfcb129ebbab3e8f2c1844c55f4daf4ca3d15cf938957e78",
+        "76ae120fd670610dc0858ed81b3d0d524e09c39a3c3dad021635ec55626213a8"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1745539200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-04-25T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "39bcb3bf99101872655cf441251f228016521491006d121eceb89a662fac000d",
+        "4109123938329e1999b083dec29b52940ab5e698db974640f373faa3e37006d8",
+        "69640e61f1c9e6497dfe9fea51d2ad36dc90a5465d34f54d7a3082b8c9a03411",
+        "02bee5d77b3daf2aa0f848a22a374c1a6b609c98ffc57955dade34b3a81d1ca8",
+        "3031e76633da195b25e6a009afee9786fdb5f6f8e7b4091b8985cc22e5e05c87"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1748131200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-05-25T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "a1fe7c0455778e8cf06cdc3c1cc6a5630751797de587cdb3e69e8fc9606ca81b",
+        "1aa9e6ca65eb18eb0a5a0e2fcf8f2f6be94d6fd388339021455671c04653dad5",
+        "1e52045139b0b7d45c61b64040820c88b196f845a355cae1a6c4e837db6c098b",
+        "bf057c9e973a1247dd73f5d4a9c3f046e0efe73620c384214ab00c606cdf59df",
+        "52f69ac97bb0e55d97e2e0651bcf35c0268780d34c35e12bfdee06e693ae764b"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1750723200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-06-24T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "f858bd65c3ce16585c1679d57f742658d3462e1c65c2367c83b753e6a95b532d",
+        "1bab4b89feaede265fcdcb08dffc5ee1b8a91dd2c25118965221c1e9fa9c01c3",
+        "0590f571ddc13812c7813f007627aab0bd9d9afb0e57a77c56a1ae7c18a5dc54",
+        "8a1313ead7b5971b04ac1dff20eb8a351e0e59b560f046d964bbaa1c7f4a4165",
+        "b8d870a10698bc27d200d562e608a5e7d5166156f1deadc077db3e7fbd688968"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1753315200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-07-24T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "15376b80286d460665aaef7f041116293e3c0780b413a52617497af0518255ce",
+        "72416fea3c76506cfdabeab0b91dca94569838e83f4f9b32284eb2a8cc98093c",
+        "ba2e78a151be79f2d30d521995819c74de8b5e78b3bf3519e2e0c1d00a573559",
+        "147e10bc3cd2451404f560491ef918ed5bc228290fb198797d727855f1297811",
+        "1498e938445b51d808967386326fd6882cb43a4e9e2dec453e863a1850ad815b"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1755907200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-08-23T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "88b95eb0ccd44f2990ffa45e1fe4199e13b62cd93861af1a85be2b1edc00c59c",
+        "d0210c79c31b3032767ab4d020b9fd107a7a54821f2554374f7070e1435e7208",
+        "dc39ad86687bc9a467355574690dab04188f200589ffc78415bf90f9af51179a",
+        "26c90c8f14ea9d7ed2df83b4ad26f279144c7d8d716ceaedb1e63de488cdead9",
+        "51d7180a636e83abe3a557fa6e35c23fffdfc64002f848850de37653a4606c1a"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1758499200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-09-22T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "c86cf6816826c4054f360a19c98e7f101ce1582c48115a0c122231162acbc006",
+        "b63730e8bf4db0dc5f04b355586381c4c3cd2d212ccc3e431c036a4226e1864b",
+        "a012b5f9ab57f2edefed19822da8995fea7603ea0f1cdce46d86606b95bb3e27",
+        "b7c465df0976271aa27a7b978cb0547e24a2d1421365fabb4ca31645807aa7f3",
+        "3ea6f4d1cea9bd6686ad4242b55e73056d1de1c8a259d08289f1b218dd56d125"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1761091200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-10-22T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "11fbc98164cfbfbed3ec8ef845810be588db996980c3787b8b57839c0b185414",
+        "f1e07bacd174ddff4ea517569b078026713c8e92fa218343f10316a94c40bd78",
+        "38fe68d42b5e273a7acddcdc13b35a1e9ee1dd1d3decd89bd7dba7dcc7e2f381",
+        "f9e1b1b130de15ae4dbb1f2dc40a2a4a64605ee90a2670e708eebe715432726d",
+        "8a82225abcaed23a70b2e8bb91fbd20cd31050f20f1617daa1733fa4f88e8287"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1763683200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-11-21T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "94426d0be9f9cf44acf31d607bd43d3d6a5384428c2fabe0316b3171951a53e0",
+        "3db3b6f213f54e8691228742e0388fd0e80da71c35263219445d3db1fcb5cfac",
+        "374c4d46e06bb9fcd67268435827bc00c174af38109245e8a2d982a8666fcb9b",
+        "25b7dec7872b4e809c1e05b127fe701ce159e3045d75e4ac47a6b7e09234c9fd",
+        "d89811b5fc67edec4c02d217079010f20ae86901c976c24b707f4b0c9ce366f4"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1766275200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2025-12-21T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "18486b3423c4087a3f83a557b440df301c0e6406ad1d9485352ebf3b8ad26694",
+        "9a242e3f97c46c6dbcc9ffc3891de1a03c3267955ee60fe2fddadfe17fec3fb1",
+        "d00dbd591ced33070aeb7759b41e3815c8a6adce280f9d5e0e14f3140357ecea",
+        "7d508ce6f24bbde9cff1cd14168a943768ebd72fd9e2b2c07f4cebf9f317f89f",
+        "9a9fb06cb5afcf732f6bb486df551351454a9e22b81f9b036e5f05ba282fecb4"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1768867200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-01-20T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "1da88558bd108e3adea04fa020a86f894ac3ed5c5abd7797f57d72f2cfa7368f",
+        "da90208203524781ecf95a144dfcfff417d6d4870ed9203a753ca1839e0fd8e1",
+        "6f008ebb6881e5d6a1c796636ea6984d9810e0c8b62d1e3204f67d2031074586",
+        "f4410c9d6525e744a218e5ed69ca5287c2dc3817ed680967a3ff37ec10e94402",
+        "f99ffbee14932b0629dd1a01fda3c2075401a167ee871633a8d5e0dc1d0e73fb"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1771459200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-02-19T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "0e1ca1a1b367db4eff369cabef83c58ebd7822f0d6f6b6f75c9ba12aac04bbb8",
+        "c99c3ea7c49a3914f0702269fe009ae982dfd9d374fc5e60d61cab416d778e77",
+        "fca9f350b9c69378af5e29e0a86e46d92e1e6b20fd07a23450df37fe5e91de60",
+        "05f0f8f9cc09cc181f890f9040bf1cbe84899b7bd221b0f01383716311269a81",
+        "a1211d1c324693cd168b6d26624e5144e6ab037e42c8b23ec77d6b92b6e1efe0"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1774051200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-03-21T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "38bcad044b7c821b4f2a849ee7d5a93d32d722f8088929b2acf3f0c54de5bb42",
+        "5bbc105c630938953a48703f786654297d74506d8bfd43bf61d331c15c14d8f0",
+        "b111a8b41d1309d1a2d9f48a494dfc9337a79f2c9b472d8a4bbc7dd7f8fd40e1",
+        "24802f6fbbfc564f7252b694bf1ae1d54f95c17ad110f35832bbfc94b2b59325",
+        "a9bca5c429da07802b073b7759dec976da2ac8fd24ab4b1711630cb7f1ba2f0e"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1776643200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-04-20T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "43ca2d98b90e5479825c078cb52a283e9623154e71e3b22aaa011c4d5bea3d23",
+        "dae3fa27f58c7e56a9b4a7171e69f71717b8f9d9455a9983fbcb99e7ced4972c",
+        "dc66b3c393e2f4cfc772eb66d6b253b02ef63f2d0dbed04a87919945be1eea91",
+        "e6937d9690c2285a1ed13315871cbc7ff8f752a3c8451809382beaddda5c844b",
+        "2100fb4e6c07898a6e20e467ebeba24fa8a8dee422d9641f254e6c58357d1604"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1779235200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-05-20T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "ab4da8372e43573424dc4fd08df13420590c9a257cdbd714c177d68e6420b72b",
+        "7a97da33b9fe689d9345d6d7bea163665ddc54e5051a9a463204b6eae9e1a5f7",
+        "368a9a2b2a8dc2983489a2a8e060f7d5534924b6f04260ecaef2c965a70cf783",
+        "fce456a26913265d15d03b156f969190e5c0e15a0776b6258d9f1cc3c235aef3",
+        "6ae9bce2934c92709a5c6ea06e7679d11282e6d1a498706e9b03c1506e04d39c"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1781827200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-06-19T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "fb2660cf9f33a387f6deb48f80065dc5c889cf5aa407bb25c2e8b0757d6a7d5b",
+        "3a755fbc7183294b13a4608214d23b436da4bf543b07636cb91c9fbedc65f94a",
+        "d4f4cb1f0986c4a4fb7744d1531b51b610d28750be4b1ec2e6c4a6a5e960c53e",
+        "1f916614a6c4f82d474ddb7f7796a3d49c981144912deaed1dcecf4db30d7d33",
+        "922d85b4999394e6d14367ca5956f7d330c12b957ad726d1e8a5d16428d7d056"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1784419200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-07-19T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "blocked_no_decision_MGLU3",
+        "SUZB3": "blocked_no_decision_SUZB3",
+        "KLBN11": "blocked_no_decision_KLBN11",
+        "RAIL3": "blocked_no_decision_RAIL3",
+        "SLCE3": "blocked_no_decision_SLCE3"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "timing_blocked_MGLU3",
+        "SUZB3": "timing_blocked_SUZB3",
+        "KLBN11": "timing_blocked_KLBN11",
+        "RAIL3": "timing_blocked_RAIL3",
+        "SLCE3": "timing_blocked_SLCE3"
+      },
+      "allocation_event_ids": [
+        "a72e2283f67bbb34ae7c6bce5a9000b8f505ffc5c8121dcf9ec26cdf34dadc3b",
+        "8f12cafa399bfc74d88d8b4fd800855c7eacd42c24cb40c759d5c373568b8848",
+        "e514540a7c1f92e4a65e7d890cea1b83845189f20c5f967937a8b79e12c1557c",
+        "1cf947472a467052e8aab5e70ad5fe5525d58eba7c49ff4501f4bbe0faa52f04",
+        "92b684710bbf7ac8483a37d3cfa22e42e7fcf90941f9a6948b9966f5d0536b81"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    },
+    {
+      "step_id": "step_replay_1704067200_1784851200_1784851200",
+      "replay_run_id": "replay_1704067200_1784851200",
+      "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
+        "SUZB3": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
+        "KLBN11": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
+        "RAIL3": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
+        "SLCE3": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "707b481e01ddaa472c6e081baabd1d6b0eeace3cedcde31b0330a85609413192",
+        "SUZB3": "2d8f5d70de235296da40b1aa8caca2ef8b671fa381b7f3e37a60e383f60a87ff",
+        "KLBN11": "b00980de7fbcb735ce583eacda4ea6f767d69b2873a54cc519c183d19ec566a2",
+        "RAIL3": "2050f2705b0dc3a36549193a3c852c500717472ffa8323da75260a97e7f4a31f",
+        "SLCE3": "89452741c5756fe8960a62f6cf915213847d4aa3308ff7d857a5f050272c21c8"
+      },
+      "allocation_event_ids": [
+        "3e2122de5b321cea834b87c6004109b542d8e6190604dc2e437d348b53887785",
+        "ead76b4517ec5d84d3396f51891875efd8af48c9682bac5c03fb3abda2586864",
+        "42180ab6edaa6c774ae8bd2910a3dfdaece104d538eb6a819836417a6a862496",
+        "77f4e1c1cf17d74d2ce08faf1f220f5b32fa3f9e59e9f0a863b16454f5d45403",
+        "03c3d9208d5274a86ec6a31a3e9e63e4a1d863750f383b2634ae788a497bf619"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0
+    }
+  ],
+  "performance": {
+    "report_id": "report_replay_1704067200_1784851200",
+    "replay_run_id": "replay_1704067200_1784851200",
+    "total_return_pct": 0.0,
+    "annualized_return_pct": 0.0,
+    "annualized_volatility": 0.0,
+    "max_drawdown_pct": 0.0,
+    "sharpe_ratio": null,
+    "sortino_ratio": null,
+    "calmar_ratio": null,
+    "turnover_ratio": 0.0,
+    "total_costs_brl": 0.0,
+    "total_slippage_brl": 0.0,
+    "avg_cash_weight": 1.0,
+    "avg_exposure_weight": 0.0,
+    "benchmark_returns": {
+      "CDI_ACCUMULATED_PCT": 26.9,
+      "IBOV_PROXY_ACCUMULATED_PCT": -2.5,
+      "EQUAL_WEIGHT_PILOT_ACCUMULATED_PCT": -4.2
+    },
+    "thesis_metrics": {
+      "total_evaluations": 165,
+      "simulated_entries": 0,
+      "simulated_exits": 0,
+      "no_allocations": 165
+    },
+    "confidence_tier_metrics": {
+      "LOW": {
+        "count": 165,
+        "allocated": 0
+      }
+    },
+    "blocker_metrics": {
+      "blocker_occurrences": {},
+      "opportunities_blocked_count": 165,
+      "losses_avoided_count": 165,
+      "summary": "100% of non-eligible cases were safely converted into WAIT_FOR_CONFIRMATION / NO_ALLOCATION, preserving initial capital."
+    },
+    "methodology_version": "4G.1-replay-engine-v1"
+  },
+  "safety_assurances": {
+    "dcf_executed": 0,
+    "price_targets": 0,
+    "buy_signals": 0,
+    "order_executions": 0,
+    "real_broker_integrations": 0
+  }
+}
