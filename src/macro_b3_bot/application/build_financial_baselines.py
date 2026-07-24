@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import date, datetime, timezone
 import hashlib
 from typing import Any
+from dataclasses import dataclass
 
 from macro_b3_bot.domain.company_exposure_models import CompanyExposureSnapshot
 from macro_b3_bot.domain.financial_bridge_models import (
@@ -30,6 +31,16 @@ _BALANCE_ACCOUNTS = {
 }
 
 
+@dataclass(frozen=True)
+class FinancialAnchorSelection:
+    anchor_document_id: str
+    anchor_document_type: str
+    anchor_reference_date: date
+    anchor_available_at: datetime
+    supporting_document_ids: tuple[str, ...]
+    ttm_method: str
+
+
 class FinancialBaselineBuilder:
     """Normalize FY + current quarter - comparative quarter into a PIT TTM."""
 
@@ -51,9 +62,13 @@ class FinancialBaselineBuilder:
     ) -> FinancialBaselineSnapshot:
         as_of = self._utc(as_of_timestamp)
         documents = self._documents(ticker, as_of)
-        if "ITR" not in documents or "DFP" not in documents:
-            raise ValueError(f"{ticker}: PIT anchor/supporting documents are required")
-        latest_quarter = documents["ITR"]["reference_date"]
+        if "DFP" not in documents:
+            raise ValueError(f"{ticker}: PIT anchor/supporting DFP is required")
+        if "ITR" not in documents:
+            # DFP anchor: alias only for shared balance-reading paths; flow
+            # helpers detect the document type and use annual values directly.
+            documents["ITR"] = documents["DFP"]
+        latest_quarter = documents["anchor"].anchor_reference_date
         values: dict[str, float | None] = {}
         evidence: list[FinancialFieldEvidence] = []
 
@@ -178,6 +193,8 @@ class FinancialBaselineBuilder:
 
         identity = (
             f"{self.run_id}|{ticker}|{as_of.isoformat()}|{latest_quarter}|"
+            f"{documents['anchor'].anchor_document_id}|"
+            f"{','.join(documents['anchor'].supporting_document_ids)}|"
             f"{self.methodology_version}"
         )
         missing = [
@@ -194,7 +211,7 @@ class FinancialBaselineBuilder:
         snapshot = FinancialBaselineSnapshot(
             baseline_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
             ticker=ticker,
-            cvm_code=exposure.cvm_code if exposure else str(documents["ITR"].get("cvm_code") or "UNKNOWN"),
+            cvm_code=exposure.cvm_code if exposure else documents["cvm_code"],
             as_of_timestamp=as_of,
             latest_quarter=latest_quarter,
             methodology_version=self.methodology_version,
@@ -222,12 +239,12 @@ class FinancialBaselineBuilder:
             confidence=round(confidence, 4),
             run_id=self.run_id,
             created_at=datetime.now(timezone.utc),
-            anchor_document_id=documents["ITR"]["document_id"],
-            anchor_document_type="ITR",
-            anchor_reference_date=latest_quarter,
-            anchor_available_at=documents["ITR"]["available_at"],
-            supporting_dfp_id=documents["DFP"]["document_id"],
-            ttm_method="DFP_FY_PLUS_ITR_CURRENT_MINUS_COMPARATIVE",
+            anchor_document_id=documents["anchor"].anchor_document_id,
+            anchor_document_type=documents["anchor"].anchor_document_type,
+            anchor_reference_date=documents["anchor"].anchor_reference_date,
+            anchor_available_at=documents["anchor"].anchor_available_at,
+            supporting_dfp_id=(documents["DFP"]["document_id"] if "DFP" in documents else None),
+            ttm_method=documents["anchor"].ttm_method,
         )
         self.store.save_financial_baseline(snapshot.model_dump(mode="json"))
         return snapshot
@@ -235,7 +252,7 @@ class FinancialBaselineBuilder:
     def _documents(self, ticker: str, as_of: datetime) -> dict[str, dict[str, Any]]:
         rows = self.store.connection.execute(
             """
-            SELECT d.document_id,d.document_type,d.reference_date,d.version,
+            SELECT m.cvm_code,d.document_id,d.document_type,d.reference_date,d.version,
                    COALESCE(d.filing_available_at,d.resource_last_modified_at,
                             d.received_at,d.collected_at) AS available_at
               FROM company_ticker_map m
@@ -244,21 +261,45 @@ class FinancialBaselineBuilder:
                AND d.document_type IN ('ITR','DFP')
                AND COALESCE(d.filing_available_at,d.resource_last_modified_at,
                             d.received_at,d.collected_at) <= ?
-            QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY d.document_type
-                ORDER BY d.reference_date DESC,d.version DESC,available_at DESC
-            )=1
+            ORDER BY d.reference_date DESC,d.version DESC,available_at DESC
             """,
             [ticker, as_of.replace(tzinfo=None)],
         ).fetchall()
-        return {
-            row[1]: {
-                "document_id": row[0], "document_type": row[1],
-                "reference_date": row[2], "version": row[3],
-                "available_at": row[4].replace(tzinfo=timezone.utc),
-            }
-            for row in rows
-        }
+        candidates = [{
+            "cvm_code": str(row[0]), "document_id": row[1], "document_type": row[2],
+            "reference_date": row[3], "version": row[4],
+            "available_at": row[5].replace(tzinfo=timezone.utc),
+        } for row in rows]
+        if not candidates:
+            return {}
+        itrs = [row for row in candidates if row["document_type"] == "ITR"]
+        dfps = [row for row in candidates if row["document_type"] == "DFP"]
+        if itrs:
+            anchor = max(itrs, key=lambda row: (row["reference_date"], row["version"], row["available_at"]))
+            target_year = anchor["reference_date"].year - 1
+            support = [row for row in dfps if row["reference_date"].year == target_year]
+            if not support:
+                raise ValueError(f"{ticker}: ITR anchor requires DFP for year {target_year}")
+            dfp = max(support, key=lambda row: (row["version"], row["available_at"]))
+            selected = {"ITR": anchor, "DFP": dfp}
+            method = "DFP_FY_PLUS_ITR_CURRENT_MINUS_COMPARATIVE"
+        else:
+            anchor = max(dfps, key=lambda row: (row["reference_date"], row["version"], row["available_at"]))
+            selected = {"DFP": anchor}
+            method = "DFP_ANNUAL_DIRECT"
+        selected["cvm_code"] = anchor["cvm_code"]
+        selected["anchor"] = FinancialAnchorSelection(
+            anchor_document_id=anchor["document_id"],
+            anchor_document_type=anchor["document_type"],
+            anchor_reference_date=anchor["reference_date"],
+            anchor_available_at=anchor["available_at"],
+            supporting_document_ids=tuple(
+                item["document_id"] for key, item in selected.items()
+                if key in {"ITR", "DFP"} and item["document_id"] != anchor["document_id"]
+            ),
+            ttm_method=method,
+        )
+        return selected
 
     def _ttm_account(
         self, documents: dict[str, dict[str, Any]], statement: str, account: str
@@ -266,6 +307,14 @@ class FinancialBaselineBuilder:
         annual, annual_meta = self._line(
             documents["DFP"], statement, account, "ÚLTIMO"
         )
+        if documents["anchor"].anchor_document_type == "DFP":
+            return annual, {
+                "annual": annual, "current_quarter": annual,
+                "prior_comparative_quarter": 0,
+                "source_ids": annual_meta["source_ids"],
+                "source_locations": annual_meta["source_locations"],
+                "available_at": annual_meta["available_at"],
+            }
         current, current_meta = self._line(
             documents["ITR"], statement, account, "ÚLTIMO"
         )
