@@ -1,0 +1,11 @@
+{
+  "source": "B3 COTAHIST historical quotes",
+  "url_template": "https://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A{year}.ZIP",
+  "files": [
+    {"year":2023,"path":"data/raw/b3/historical/COTAHIST_A2023.ZIP","sha256":"AD1603788D78AAA1DE806498572277F1D9443F88AE116452751B5800CB23523E","status":"DOWNLOADED"},
+    {"year":2024,"path":"data/raw/b3/historical/COTAHIST_A2024_https.ZIP","sha256":"96A003D10FAB0FA2ACE0C64CDC2B892B4C111ADF9DA8E538AA0B28437BD2A172","status":"DOWNLOADED"},
+    {"year":2025,"path":"data/raw/b3/historical/COTAHIST_A2025.ZIP","sha256":"6CC0AD851C8F605CA30418ACAC48BE81F1767F6ED05B4F563772D06AE448047D","status":"DOWNLOADED"},
+    {"year":2026,"path":"C:/tmp/COTAHIST_A2026.ZIP","sha256":"EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42","status":"VALIDATED_EXTERNAL_RAW"}
+  ],
+  "filter": {"tickers":["MGLU3","SUZB3"],"market_type":"010","synthetic_values":false}
+}

@@ -1,13 +1,15 @@
 {
   "run_id": "valuation_4e2_historical_reverse",
   "methodology_version": "4E.2-historical-multiples-reverse-v1",
-  "status": "BLOCKED_INSUFFICIENT_PIT_HISTORY",
+  "status": "BLOCKED_HISTORICAL_BASELINE_ASSEMBLY_PENDING",
   "companies": ["MGLU3", "SUZB3"],
   "observations": {
     "MGLU3": 1,
     "SUZB3": 1
   },
   "required_observations_per_company": 8,
+  "official_packages_available": ["ITR2023","ITR2024","ITR2025","DFP2023","DFP2024","DFP2025"],
+  "official_price_years_available": [2023,2024,2025,2026],
   "lookahead_market_observations": 0,
   "lookahead_financial_observations": 0,
   "available_observations": [

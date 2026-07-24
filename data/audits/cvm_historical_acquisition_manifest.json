@@ -14,6 +14,7 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "AF0A4901067C905F3B7D54555027AD7B968197D00BF623965773D972CB902163",
       "zip_members": 19
+      ,"filtered_rows":{"MGLU3":6273,"SUZB3":7063}
     },
     {
       "document_type": "ITR",
@@ -23,7 +24,8 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "E3FE7482720B721BF60D79837A7606652676B1FBE1D11560CF446A4BA4F7E8CB",
       "zip_members": 19,
-      "transport": "HTTP fallback"
+      "transport": "HTTP fallback",
+      "filtered_rows":{"MGLU3":6288,"SUZB3":7083}
     },
     {
       "document_type": "ITR",
@@ -33,7 +35,8 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "A40CE79AE1684B7C8FF9836C3708A73DB3099510EF3EBD1BF4ECE3404B0952E5",
       "zip_members": 19,
-      "transport": "HTTP fallback"
+      "transport": "HTTP fallback",
+      "filtered_rows":{"MGLU3":6267,"SUZB3":7061}
     },
     {
       "document_type": "DFP",
@@ -43,7 +46,8 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "12C4CC5B59CF9A538EB672F88107D9FC3107165E4AF32D0912CAB9F93B6D7235",
       "zip_members": 19,
-      "transport": "HTTP fallback"
+      "transport": "HTTP fallback",
+      "filtered_rows":{"MGLU3":2059,"SUZB3":2475}
     },
     {
       "document_type": "DFP",
@@ -53,7 +57,8 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "624CC5776C06EA178E3D70852D1DBF782AEBB2506D05207B00B72FD89868D5C0",
       "zip_members": 19,
-      "transport": "HTTP fallback"
+      "transport": "HTTP fallback",
+      "filtered_rows":{"MGLU3":2077,"SUZB3":2515}
     },
     {
       "document_type": "DFP",
@@ -63,7 +68,8 @@
       "status": "DOWNLOADED_AND_ZIP_VALIDATED",
       "sha256": "8A35EAFF33EDB889921147F0A0B183DE7FB53791930FE4D189B17375836B129E",
       "zip_members": 19,
-      "transport": "HTTP fallback"
+      "transport": "HTTP fallback",
+      "filtered_rows":{"MGLU3":2165,"SUZB3":2501}
     }
   ],
   "ingestion_policy": {
