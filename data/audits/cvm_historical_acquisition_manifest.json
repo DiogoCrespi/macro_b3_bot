@@ -19,33 +19,51 @@
       "document_type": "ITR",
       "year": 2024,
       "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_2024.zip",
-      "path": "data/raw/cvm/historical/itr_cia_aberta_2024.partial",
-      "status": "PARTIAL_DOWNLOAD_REJECTED",
-      "reason": "CVM endpoint timed out before the complete response; not ingestible"
+      "path": "data/raw/cvm/historical/itr_cia_aberta_2024_http.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "E3FE7482720B721BF60D79837A7606652676B1FBE1D11560CF446A4BA4F7E8CB",
+      "zip_members": 19,
+      "transport": "HTTP fallback"
     },
     {
       "document_type": "ITR",
       "year": 2025,
       "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_2025.zip",
-      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+      "path": "data/raw/cvm/historical/itr_cia_aberta_2025_http.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "A40CE79AE1684B7C8FF9836C3708A73DB3099510EF3EBD1BF4ECE3404B0952E5",
+      "zip_members": 19,
+      "transport": "HTTP fallback"
     },
     {
       "document_type": "DFP",
       "year": 2023,
       "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2023.zip",
-      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+      "path": "data/raw/cvm/historical/dfp_cia_aberta_2023_http.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "12C4CC5B59CF9A538EB672F88107D9FC3107165E4AF32D0912CAB9F93B6D7235",
+      "zip_members": 19,
+      "transport": "HTTP fallback"
     },
     {
       "document_type": "DFP",
       "year": 2024,
       "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2024.zip",
-      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+      "path": "data/raw/cvm/historical/dfp_cia_aberta_2024_http.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "624CC5776C06EA178E3D70852D1DBF782AEBB2506D05207B00B72FD89868D5C0",
+      "zip_members": 19,
+      "transport": "HTTP fallback"
     },
     {
       "document_type": "DFP",
       "year": 2025,
       "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2025.zip",
-      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+      "path": "data/raw/cvm/historical/dfp_cia_aberta_2025_http.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "8A35EAFF33EDB889921147F0A0B183DE7FB53791930FE4D189B17375836B129E",
+      "zip_members": 19,
+      "transport": "HTTP fallback"
     }
   ],
   "ingestion_policy": {
