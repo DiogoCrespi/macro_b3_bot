@@ -164,7 +164,7 @@ def test_quote_can_be_published_after_quote_timestamp() -> None:
 
 def test_pit_ingestor_preserves_b3_and_cvm_provenance() -> None:
     snapshot = PITMarketDataIngestor().build_snapshot(
-        ticker="MGLU3", assessment_as_of=AS_OF,
+        ticker="MGLU3", assessment_as_of=AS_OF.replace(hour=23, minute=59),
         price_record={
             "trade_date": "2026-07-22T18:00:00+00:00",
             "available_at": "2026-07-22T18:05:00+00:00",
