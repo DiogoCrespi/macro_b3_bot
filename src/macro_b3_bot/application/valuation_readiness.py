@@ -103,7 +103,9 @@ class ValuationReadinessGate:
             "market_data_content": market_data,
             "methodology_version": self.methodology_version,
         }
-        identity = json.dumps(input_identity, sort_keys=True, separators=(",", ":"))
+        identity = json.dumps(
+            input_identity, sort_keys=True, separators=(",", ":"), default=str
+        )
         assessment_id = "4e1-" + sha256(identity.encode()).hexdigest()[:16]
         inputs = {
             "baseline_id": baseline.baseline_id,
