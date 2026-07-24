@@ -1,0 +1,56 @@
+{
+  "methodology_version": "4E.2C-official-cvm-acquisition-v1",
+  "source_base": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC",
+  "requested": [
+    "ITR 2023", "ITR 2024", "ITR 2025",
+    "DFP 2023", "DFP 2024", "DFP 2025"
+  ],
+  "files": [
+    {
+      "document_type": "ITR",
+      "year": 2023,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_2023.zip",
+      "path": "data/raw/cvm/historical/itr_cia_aberta_2023.zip",
+      "status": "DOWNLOADED_AND_ZIP_VALIDATED",
+      "sha256": "AF0A4901067C905F3B7D54555027AD7B968197D00BF623965773D972CB902163",
+      "zip_members": 19
+    },
+    {
+      "document_type": "ITR",
+      "year": 2024,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_2024.zip",
+      "path": "data/raw/cvm/historical/itr_cia_aberta_2024.partial",
+      "status": "PARTIAL_DOWNLOAD_REJECTED",
+      "reason": "CVM endpoint timed out before the complete response; not ingestible"
+    },
+    {
+      "document_type": "ITR",
+      "year": 2025,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_2025.zip",
+      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+    },
+    {
+      "document_type": "DFP",
+      "year": 2023,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2023.zip",
+      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+    },
+    {
+      "document_type": "DFP",
+      "year": 2024,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2024.zip",
+      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+    },
+    {
+      "document_type": "DFP",
+      "year": 2025,
+      "url": "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_2025.zip",
+      "status": "NOT_DOWNLOADED_ENDPOINT_TIMEOUT"
+    }
+  ],
+  "ingestion_policy": {
+    "synthetic_values": false,
+    "partial_archives_accepted": false,
+    "historical_observations_assembled": 0
+  }
+}
