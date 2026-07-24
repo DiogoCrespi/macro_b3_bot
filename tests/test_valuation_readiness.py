@@ -2,6 +2,8 @@ from datetime import date, datetime, timezone
 
 from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
 from macro_b3_bot.application.market_snapshot_pilot import PITMarketDataIngestor
+from macro_b3_bot.adapters.b3_cotahist import B3CotahistReader
+from macro_b3_bot.adapters.cvm_capital_composition import CVMCapitalCompositionReader
 from macro_b3_bot.domain.financial_bridge_models import (
     BridgeCalibrationResult,
     BridgeReplayObservation,
@@ -185,3 +187,36 @@ def test_pit_ingestor_preserves_b3_and_cvm_provenance() -> None:
     assert snapshot.price_source_checksum == "sha-b3"
     assert snapshot.share_document_checksum == "sha-cvm"
     assert snapshot.price_available_at > snapshot.price_as_of
+
+
+def test_b3_cotahist_reader_filters_spot_and_parses_implicit_price(tmp_path) -> None:
+    line = bytearray(b" " * 250)
+    line[0:2] = b"01"
+    line[2:10] = b"22072026"
+    line[12:24] = b"MGLU3       "
+    line[24:27] = b"010"
+    line[108:121] = b"0000000000492"
+    line[210:217] = b"0000001"
+    line[230:242] = b"BRMGLUACNOR2"
+    path = tmp_path / "COTAHIST.txt"
+    path.write_bytes(b"00COTAHIST20260723\n" + bytes(line) + b"\n")
+    rows = B3CotahistReader().read_text(path, ticker="MGLU3")
+    assert len(rows) == 1
+    assert rows[0]["close_price"] == pytest.approx(4.92)
+    assert rows[0]["market_type"] == "010"
+
+
+def test_cvm_capital_reader_selects_available_outstanding_row(tmp_path) -> None:
+    path = tmp_path / "capital.csv"
+    path.write_text(
+        "CD_CVM;DT_REFER;DT_RECEB;VERSAO;SHARE_CLASS;SHARES_ISSUED;TREASURY_SHARES\n"
+        "123;2026-06-30;2026-07-10;2;ON;1000;100\n"
+        "123;2026-06-30;2026-08-10;3;ON;1100;100\n",
+        encoding="utf-8",
+    )
+    rows = CVMCapitalCompositionReader().read(
+        path, cvm_code="123", assessment_as_of=datetime(2026, 7, 22, tzinfo=timezone.utc)
+    )
+    assert len(rows) == 1
+    assert rows[0]["outstanding_count"] == 900
+    assert rows[0]["document_version"] == "2"

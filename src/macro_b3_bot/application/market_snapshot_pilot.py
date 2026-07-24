@@ -36,8 +36,13 @@ class PITMarketDataIngestor:
     ) -> MarketSnapshotPIT:
         if price_record.get("close_price") is None:
             raise ValueError(f"{ticker}: B3 close_price is required")
-        if share_record.get("share_count") is None:
+        share_count = share_record.get("outstanding_count", share_record.get("share_count"))
+        share_as_of = share_record.get("share_count_as_of", share_record.get("as_of", share_record.get("capital_reference_date")))
+        share_available_at = share_record.get("share_count_available_at", share_record.get("available_at", share_record.get("document_available_at")))
+        if share_count is None:
             raise ValueError(f"{ticker}: official share_count is required")
+        if share_as_of is None or share_available_at is None:
+            raise ValueError(f"{ticker}: share-count PIT dates are required")
         source_file = str(price_record.get("source_file") or "")
         source_checksum = str(price_record.get("source_checksum") or "")
         if not source_file or not source_checksum:
@@ -51,10 +56,10 @@ class PITMarketDataIngestor:
             assessment_as_of=assessment_as_of,
             price_as_of=_timestamp(price_record["trade_date"]),
             price_available_at=_timestamp(price_record["available_at"]),
-            share_count_as_of=_timestamp(share_record["as_of"]),
-            share_count_available_at=_timestamp(share_record["available_at"]),
+            share_count_as_of=_timestamp(share_as_of),
+            share_count_available_at=_timestamp(share_available_at),
             price=float(price_record["close_price"]),
-            share_count=float(share_record["share_count"]),
+            share_count=float(share_count),
             share_count_basis=share_count_basis,
             currency=str(price_record.get("currency") or "BRL"),
             source_id=f"B3:{source_file}",
@@ -75,4 +80,3 @@ class PITMarketDataIngestor:
     @staticmethod
     def persist(store: DatabaseStore, snapshot: MarketSnapshotPIT) -> None:
         store.save_market_snapshot_pit(snapshot.model_dump(mode="json"))
-
