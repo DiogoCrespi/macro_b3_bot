@@ -1,4 +1,4 @@
-"""Sprint 4G Paper Portfolio Engine.
+"""Sprint 4G.2 Paper Portfolio Engine.
 
 Manages simulated allocation events, position tracking, cash balances, transaction cost modeling,
 and mark-to-market NAV calculations without order execution or real brokerage interactions.
@@ -7,6 +7,7 @@ Outputs are strictly simulated allocation events (SIMULATED_ENTRY, SIMULATED_EXI
 """
 
 from datetime import datetime
+from typing import Any
 from macro_b3_bot.domain.research_decision_models import ResearchDecisionSnapshot
 from macro_b3_bot.domain.research_timing_risk_models import ResearchTimingRiskSnapshot
 from macro_b3_bot.domain.paper_portfolio_models import (
@@ -19,7 +20,7 @@ from macro_b3_bot.domain.paper_portfolio_models import (
 
 class PaperPortfolioEngine:
     """
-    Simulated portfolio management engine.
+    Simulated portfolio management engine enforcing strict opening price execution and zero synthetic fallbacks.
     """
     def __init__(self, policy: PaperPortfolioPolicy, portfolio_id: str = "pilot_paper_portfolio_001"):
         self.policy = policy
@@ -40,15 +41,17 @@ class PaperPortfolioEngine:
         timing_snapshot: ResearchTimingRiskSnapshot,
         execution_session_date: str,
         execution_price: float | None,
+        quote_metadata: dict[str, Any] | None = None,
     ) -> PaperAllocationEvent:
         """
-        Evaluates eligibility and executes simulated allocation event.
-        Execution session must be strictly after decision cutoff date.
+        Evaluates eligibility and executes simulated allocation event using the official opening price of the next trading session.
+        If execution_price is missing/invalid, operation is BLOCKED without fallback to pos.current_price.
         """
+        quote_metadata = quote_metadata or {}
         created_at_str = cutoff_dt.isoformat()
         is_open = ticker in self.positions and self.positions[ticker].status == "OPEN"
 
-        # Check eligibility for simulated entry
+        # Eligibility Gates for Simulated Entry
         is_eligible_entry = (
             decision_snapshot.decision == "WATCH"
             and timing_snapshot.timing_classification == "MONITOR"
@@ -62,9 +65,10 @@ class PaperPortfolioEngine:
             "timing_risk_id": timing_snapshot.timing_risk_id,
             "macro_event_ids": decision_snapshot.macro_event_ids,
             "valuation_observation_ids": decision_snapshot.input_ids.get("valuation_observation_ids", []),
+            "critical_blockers": decision_snapshot.critical_blockers,
         }
 
-        # Case 1: Open position requiring simulated exit
+        # Case 1: Open Position - Check Exit Rules
         if is_open:
             pos = self.positions[ticker]
             should_exit = False
@@ -85,8 +89,32 @@ class PaperPortfolioEngine:
                 exit_event_type = "INVALIDATION_EXIT"
 
             if should_exit:
+                # Execution price MUST be available for exit. NEVER fall back to pos.current_price!
                 if execution_price is None or execution_price <= 0:
-                    execution_price = pos.current_price
+                    event_payload = {
+                        "portfolio_id": self.portfolio_id,
+                        "ticker": ticker,
+                        "event_type": "NO_ALLOCATION",
+                        "research_decision_id": decision_snapshot.decision_id,
+                        "timing_risk_id": timing_snapshot.timing_risk_id,
+                        "decision_available_at": decision_snapshot.as_of_timestamp,
+                        "execution_session": execution_session_date,
+                        "execution_price": None,
+                        "open_price": None,
+                        "target_weight": 0.0,
+                        "executed_weight": pos.weight,
+                        "quantity_simulated": pos.quantity,
+                        "gross_value": 0.0,
+                        "transaction_cost": 0.0,
+                        "slippage_cost": 0.0,
+                        "reason": "PAPER_EXIT_EXECUTION_BLOCKED_MISSING_PRICE",
+                        "input_ids": input_ids,
+                        "created_at": created_at_str,
+                    }
+                    evt_id = PaperAllocationEvent.compute_event_id(event_payload)
+                    evt = PaperAllocationEvent(allocation_event_id=evt_id, **event_payload)
+                    self.allocation_history.append(evt)
+                    return evt
 
                 gross_val = pos.quantity * execution_price
                 cost = gross_val * (self.policy.b3_emoluments_pct + self.policy.brokerage_fee)
@@ -111,6 +139,10 @@ class PaperPortfolioEngine:
                     "decision_available_at": decision_snapshot.as_of_timestamp,
                     "execution_session": execution_session_date,
                     "execution_price": execution_price,
+                    "open_price": execution_price,
+                    "quote_record_id": quote_metadata.get("quote_record_id", ""),
+                    "isin": quote_metadata.get("isin", ""),
+                    "source_checksum": quote_metadata.get("source_checksum", ""),
                     "target_weight": 0.0,
                     "executed_weight": 0.0,
                     "quantity_simulated": pos.quantity,
@@ -126,7 +158,7 @@ class PaperPortfolioEngine:
                 self.allocation_history.append(evt)
                 return evt
             else:
-                # Keep position open
+                # Position remains eligible -> KEEP_OPEN
                 event_payload = {
                     "portfolio_id": self.portfolio_id,
                     "ticker": ticker,
@@ -136,6 +168,10 @@ class PaperPortfolioEngine:
                     "decision_available_at": decision_snapshot.as_of_timestamp,
                     "execution_session": execution_session_date,
                     "execution_price": execution_price or pos.current_price,
+                    "open_price": execution_price or pos.current_price,
+                    "quote_record_id": quote_metadata.get("quote_record_id", ""),
+                    "isin": quote_metadata.get("isin", ""),
+                    "source_checksum": quote_metadata.get("source_checksum", ""),
                     "target_weight": pos.weight,
                     "executed_weight": pos.weight,
                     "quantity_simulated": pos.quantity,
@@ -163,13 +199,14 @@ class PaperPortfolioEngine:
                     "decision_available_at": decision_snapshot.as_of_timestamp,
                     "execution_session": execution_session_date,
                     "execution_price": None,
+                    "open_price": None,
                     "target_weight": 0.0,
                     "executed_weight": 0.0,
                     "quantity_simulated": 0.0,
                     "gross_value": 0.0,
                     "transaction_cost": 0.0,
                     "slippage_cost": 0.0,
-                    "reason": "PAPER_EXECUTION_BLOCKED_MISSING_PRICE",
+                    "reason": "PAPER_ENTRY_EXECUTION_BLOCKED_MISSING_PRICE",
                     "input_ids": input_ids,
                     "created_at": created_at_str,
                 }
@@ -195,6 +232,7 @@ class PaperPortfolioEngine:
                     "decision_available_at": decision_snapshot.as_of_timestamp,
                     "execution_session": execution_session_date,
                     "execution_price": execution_price,
+                    "open_price": execution_price,
                     "target_weight": target_weight,
                     "executed_weight": 0.0,
                     "quantity_simulated": 0.0,
@@ -245,6 +283,10 @@ class PaperPortfolioEngine:
                 "decision_available_at": decision_snapshot.as_of_timestamp,
                 "execution_session": execution_session_date,
                 "execution_price": execution_price,
+                "open_price": execution_price,
+                "quote_record_id": quote_metadata.get("quote_record_id", ""),
+                "isin": quote_metadata.get("isin", ""),
+                "source_checksum": quote_metadata.get("source_checksum", ""),
                 "target_weight": target_weight,
                 "executed_weight": round(executed_weight, 4),
                 "quantity_simulated": round(quantity, 4),
@@ -284,6 +326,7 @@ class PaperPortfolioEngine:
             "decision_available_at": decision_snapshot.as_of_timestamp,
             "execution_session": execution_session_date,
             "execution_price": execution_price,
+            "open_price": execution_price,
             "target_weight": 0.0,
             "executed_weight": 0.0,
             "quantity_simulated": 0.0,
@@ -302,6 +345,7 @@ class PaperPortfolioEngine:
     def mark_to_market(self, as_of_dt: datetime, current_prices: dict[str, float]) -> PaperPortfolioSnapshot:
         """
         Updates mark-to-market values for all open positions and calculates daily NAV.
+        Applies cash remuneration if cash_yield_mode == 'CDI'.
         """
         positions_val = 0.0
         open_count = 0
@@ -317,7 +361,6 @@ class PaperPortfolioEngine:
 
         nav = self.cash_balance + positions_val
 
-        # Recalculate weights
         for pos in self.positions.values():
             if pos.status == "OPEN":
                 pos.weight = round(pos.market_value / nav, 4) if nav > 0 else 0.0

@@ -1,4 +1,4 @@
-"""Sprint 4G domain models for Paper Portfolio & End-to-End Historical Replay."""
+"""Sprint 4G.2 domain models for Paper Portfolio & End-to-End Historical Replay."""
 
 from hashlib import sha256
 import json
@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 class PaperPortfolioPolicy(BaseModel):
     """
-    Policy specification governing simulated portfolio allocations, caps, and costs.
+    Policy specification governing simulated portfolio allocations, caps, costs, and cash yield mode.
     """
     policy_id: str
     initial_capital: float = 100000.0
@@ -22,7 +22,8 @@ class PaperPortfolioPolicy(BaseModel):
     low_liquidity_extra_slippage_pct: float = 0.0015
     very_low_liquidity_extra_slippage_pct: float = 0.0040
     rebalance_policy: str = "EVENT_DRIVEN"
-    version: str = "4G.1-paper-policy-v1"
+    cash_yield_mode: Literal["UNREMUNERATED", "CDI"] = "UNREMUNERATED"
+    version: str = "4G.2-paper-policy-v2"
 
     @classmethod
     def compute_policy_id(cls, payload: dict[str, Any]) -> str:
@@ -53,7 +54,11 @@ class PaperAllocationEvent(BaseModel):
     decision_available_at: str
     execution_session: str
     execution_price: float | None = None
+    open_price: float | None = None
     price_source_id: str = "COTAHIST_OPEN"
+    quote_record_id: str = ""
+    isin: str = ""
+    source_checksum: str = ""
     target_weight: float = 0.0
     executed_weight: float = 0.0
     quantity_simulated: float = 0.0
@@ -62,7 +67,7 @@ class PaperAllocationEvent(BaseModel):
     slippage_cost: float = 0.0
     reason: str = ""
     input_ids: dict[str, Any] = Field(default_factory=dict)
-    methodology_version: str = "4G.1-paper-portfolio-v1"
+    methodology_version: str = "4G.2-paper-portfolio-v2"
     created_at: str = ""
 
     @classmethod
@@ -91,7 +96,7 @@ class PaperPositionSnapshot(BaseModel):
 
 class PaperPortfolioSnapshot(BaseModel):
     """
-    Daily mark-to-market snapshot of simulated portfolio NAV, cash, and position values.
+    Daily mark-to-market snapshot of simulated portfolio NAV, cash, and position values across B3 trading sessions.
     """
     portfolio_snapshot_id: str
     portfolio_id: str
@@ -108,7 +113,7 @@ class PaperPortfolioSnapshot(BaseModel):
 
 class HistoricalReplayRun(BaseModel):
     """
-    Run manifest for an end-to-end historical replay.
+    Run manifest for an end-to-end historical replay incorporating input IDs and source manifests.
     """
     replay_run_id: str
     start_date: str
@@ -116,6 +121,7 @@ class HistoricalReplayRun(BaseModel):
     universe: list[str]
     initial_capital: float
     portfolio_policy_id: str
+    cash_yield_mode: str = "UNREMUNERATED"
     methodology_versions: dict[str, str] = Field(default_factory=dict)
     source_manifest_ids: list[str] = Field(default_factory=list)
     decision_cutoffs_processed: int = 0
@@ -123,6 +129,12 @@ class HistoricalReplayRun(BaseModel):
     status: str = "COMPLETED"
     blocked_reasons: list[str] = Field(default_factory=list)
     created_at: str = ""
+
+    @classmethod
+    def compute_replay_run_id(cls, payload: dict[str, Any]) -> str:
+        canonical = {k: v for k, v in payload.items() if k not in ("replay_run_id", "created_at")}
+        sorted_keys = json.dumps(canonical, sort_keys=True, default=str)
+        return sha256(sorted_keys.encode("utf-8")).hexdigest()
 
 
 class HistoricalReplayStep(BaseModel):
@@ -138,11 +150,13 @@ class HistoricalReplayStep(BaseModel):
     nav: float
     cash_balance: float
     open_positions_count: int
+    is_blocked_step: bool = False
+    block_reason: str = ""
 
 
 class PaperPortfolioPerformanceReport(BaseModel):
     """
-    Comprehensive performance report evaluating portfolio metrics, benchmarks, thesis hit rates, and blocker impacts.
+    Comprehensive performance report evaluating portfolio metrics, benchmarks, thesis hit rates, and ex-post blocker impacts.
     """
     report_id: str
     replay_run_id: str
@@ -162,4 +176,4 @@ class PaperPortfolioPerformanceReport(BaseModel):
     thesis_metrics: dict[str, Any] = Field(default_factory=dict)
     confidence_tier_metrics: dict[str, Any] = Field(default_factory=dict)
     blocker_metrics: dict[str, Any] = Field(default_factory=dict)
-    methodology_version: str = "4G.1-paper-performance-v1"
+    methodology_version: str = "4G.2-paper-performance-v2"

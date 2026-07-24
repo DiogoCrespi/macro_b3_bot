@@ -1,6 +1,6 @@
 {
-  "report_id": "report_replay_1704067200_1784851200",
-  "replay_run_id": "replay_1704067200_1784851200",
+  "report_id": "report_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+  "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
   "total_return_pct": 0.0,
   "annualized_return_pct": 0.0,
   "annualized_volatility": 0.0,
@@ -14,27 +14,27 @@
   "avg_cash_weight": 1.0,
   "avg_exposure_weight": 0.0,
   "benchmark_returns": {
-    "CDI_ACCUMULATED_PCT": 26.9,
-    "IBOV_PROXY_ACCUMULATED_PCT": -2.5,
+    "CDI_COMPOUNDED_ACCUMULATED_PCT": 29.15,
+    "IBOV_REAL_ACCUMULATED_PCT": -2.5,
     "EQUAL_WEIGHT_PILOT_ACCUMULATED_PCT": -4.2
   },
   "thesis_metrics": {
-    "total_evaluations": 165,
+    "total_evaluations": 5,
     "simulated_entries": 0,
     "simulated_exits": 0,
-    "no_allocations": 165
+    "no_allocations": 5
   },
   "confidence_tier_metrics": {
     "LOW": {
-      "count": 165,
+      "count": 5,
       "allocated": 0
     }
   },
   "blocker_metrics": {
-    "blocker_occurrences": {},
-    "opportunities_blocked_count": 165,
-    "losses_avoided_count": 165,
-    "summary": "100% of non-eligible cases were safely converted into WAIT_FOR_CONFIRMATION / NO_ALLOCATION, preserving initial capital."
+    "losses_avoided_count": 0,
+    "missed_opportunities_count": 0,
+    "outcomes_not_evaluable_count": 5,
+    "summary": "All 5 evaluated allocation events strictly preserved capital under OUTCOME_NOT_EVALUABLE classification without synthetic loss avoidance claims."
   },
-  "methodology_version": "4G.1-replay-engine-v1"
+  "methodology_version": "4G.2-replay-engine-v2"
 }

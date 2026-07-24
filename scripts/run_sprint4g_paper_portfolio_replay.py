@@ -1,9 +1,17 @@
 """
-Sprint 4G: Paper Portfolio & End-to-End Historical Replay
+Sprint 4G.2: Real Event-Driven PIT Replay & Benchmark Integrity
 
-Orchestrates sequential, point-in-time historical replays without look-ahead bias.
+Orchestrates sequential, event-driven point-in-time historical replays without look-ahead bias or synthetic fallback decisions.
 Evaluates paper portfolio allocations, returns, drawdowns, transaction costs,
-benchmark comparisons (IBOV, CDI, Equal-Weight Pilot Universe), thesis metrics, and blocker impacts.
+real benchmark series (CDI compounded daily via BCB series 12, IBOV historical, Equal-Weight Pilot Universe),
+thesis metrics, and ex-post blocker impacts.
+
+Mandatory CLI parameters are strictly required:
+  --start-date <ISO_TIMESTAMP>
+  --end-date <ISO_TIMESTAMP>
+  --initial-capital <FLOAT>
+  --policy-version <STRING>
+  --cash-yield-mode <UNREMUNERATED|CDI>
 
 Generates 4 audit artifacts:
 - data/audits/paper_portfolio_4g_run.json
@@ -38,11 +46,12 @@ def load_json_file(path: Path) -> dict[str, Any]:
     return {}
 
 
-def parse_cli_args() -> tuple[datetime, datetime, float, str]:
-    start_str = "2024-01-01T00:00:00Z"
-    end_str = "2026-07-24T00:00:00Z"
-    capital = 100000.0
-    policy_ver = "4G.1-paper-policy-v1"
+def parse_mandatory_cli_args() -> tuple[datetime, datetime, float, str, str]:
+    start_str = None
+    end_str = None
+    capital = None
+    policy_ver = None
+    cash_yield_mode = None
 
     for i, arg in enumerate(sys.argv[1:], 1):
         if arg.startswith("--start-date="):
@@ -59,6 +68,39 @@ def parse_cli_args() -> tuple[datetime, datetime, float, str]:
             capital = float(sys.argv[i + 1])
         elif arg.startswith("--policy-version="):
             policy_ver = arg.split("=", 1)[1]
+        elif arg == "--policy-version" and i < len(sys.argv) - 1:
+            policy_ver = sys.argv[i + 1]
+        elif arg.startswith("--cash-yield-mode="):
+            cash_yield_mode = arg.split("=", 1)[1]
+        elif arg == "--cash-yield-mode" and i < len(sys.argv) - 1:
+            cash_yield_mode = sys.argv[i + 1]
+
+    missing = []
+    if not start_str:
+        missing.append("--start-date")
+    if not end_str:
+        missing.append("--end-date")
+    if capital is None:
+        missing.append("--initial-capital")
+    if not policy_ver:
+        missing.append("--policy-version")
+    if not cash_yield_mode:
+        missing.append("--cash-yield-mode")
+
+    if missing:
+        print(f"Usage error: Mandatory arguments missing: {', '.join(missing)}")
+        print("Required syntax:")
+        print("  python scripts/run_sprint4g_paper_portfolio_replay.py \\")
+        print("    --start-date 2024-01-01T00:00:00Z \\")
+        print("    --end-date 2026-07-24T00:00:00Z \\")
+        print("    --initial-capital 100000.0 \\")
+        print("    --policy-version 4G.2-paper-policy-v2 \\")
+        print("    --cash-yield-mode UNREMUNERATED")
+        sys.exit(1)
+
+    if cash_yield_mode not in ("UNREMUNERATED", "CDI"):
+        print(f"Usage error: Invalid --cash-yield-mode '{cash_yield_mode}'. Must be UNREMUNERATED or CDI.")
+        sys.exit(1)
 
     s_dt = datetime.fromisoformat(start_str.replace("Z", "+00:00"))
     e_dt = datetime.fromisoformat(end_str.replace("Z", "+00:00"))
@@ -67,14 +109,14 @@ def parse_cli_args() -> tuple[datetime, datetime, float, str]:
     if e_dt.tzinfo is None:
         e_dt = e_dt.replace(tzinfo=timezone.utc)
 
-    return s_dt, e_dt, capital, policy_ver
+    return s_dt, e_dt, capital, policy_ver, cash_yield_mode
 
 
 def main() -> None:
-    print("=== Sprint 4G: Paper Portfolio & End-to-End Historical Replay ===")
-    start_dt, end_dt, initial_capital, policy_version = parse_cli_args()
+    print("=== Sprint 4G.2: Real Event-Driven PIT Replay & Benchmark Integrity ===")
+    start_dt, end_dt, initial_capital, policy_version, cash_yield_mode = parse_mandatory_cli_args()
     print(f"Replay Interval: {start_dt.isoformat()} to {end_dt.isoformat()}")
-    print(f"Initial Capital: R$ {initial_capital:,.2f} | Policy Version: {policy_version}")
+    print(f"Initial Capital: R$ {initial_capital:,.2f} | Policy Version: {policy_version} | Cash Yield Mode: {cash_yield_mode}")
 
     settings = Settings()
     db_path = settings.data_dir / "macro_b3_bot.duckdb"
@@ -84,9 +126,20 @@ def main() -> None:
     audit_4e3 = load_json_file(audits_dir / "research_4e3_decisions.json")
     audit_4f = load_json_file(audits_dir / "research_4f_timing_risk.json")
     audit_4e2 = load_json_file(audits_dir / "valuation_4e2_historical_reverse.json")
+    cvm_manifest = load_json_file(audits_dir / "cvm_historical_acquisition_manifest.json")
+
+    # Collect source manifest IDs
+    source_manifest_ids = [
+        "data/audits/research_4e3_decisions.json",
+        "data/audits/research_4f_timing_risk.json",
+        "data/audits/valuation_4e2_historical_reverse.json",
+    ]
+    if cvm_manifest:
+        source_manifest_ids.append("data/audits/cvm_historical_acquisition_manifest.json")
 
     policy_payload = {
         "initial_capital": initial_capital,
+        "cash_yield_mode": cash_yield_mode,
         "version": policy_version,
     }
     policy_id = PaperPortfolioPolicy.compute_policy_id(policy_payload)
@@ -95,13 +148,14 @@ def main() -> None:
     engine = HistoricalReplayEngine()
     pilot_universe = ["MGLU3", "SUZB3", "KLBN11", "RAIL3", "SLCE3"]
 
-    print("\nExecuting historical replay cutoffs...")
+    print("\nExecuting event-driven historical replay cutoffs...")
     replay_run, replay_steps, report, all_events, snapshots_history = engine.run_replay(
         store_conn=store.connection,
         policy=policy,
         universe=pilot_universe,
         start_date=start_dt,
         end_date=end_dt,
+        source_manifest_ids=source_manifest_ids,
         audit_4e3=audit_4e3,
         audit_4f=audit_4f,
         audit_4e2=audit_4e2,
@@ -138,7 +192,7 @@ def main() -> None:
     # 4. replay_4g_end_to_end.json
     e2e_file = audits_dir / "replay_4g_end_to_end.json"
     e2e_payload = {
-        "sprint": "4G",
+        "sprint": "4G.2",
         "methodology_version": engine.methodology_version,
         "replay_run": replay_run.model_dump(mode="json"),
         "steps": [s.model_dump(mode="json") for s in replay_steps],
@@ -149,6 +203,7 @@ def main() -> None:
             "buy_signals": 0,
             "order_executions": 0,
             "real_broker_integrations": 0,
+            "synthetic_decision_ids": 0,
         },
     }
     with open(e2e_file, "w", encoding="utf-8") as f:
@@ -163,6 +218,7 @@ def main() -> None:
     print("\n--- Paper Portfolio Replay Summary ---")
     print(f"Replay Run ID:               {replay_run.replay_run_id}")
     print(f"Cutoffs Processed:           {replay_run.decision_cutoffs_processed}")
+    print(f"Market Sessions Processed:   {replay_run.market_sessions_processed}")
     print(f"Initial Capital:             R$ {policy.initial_capital:,.2f}")
     print(f"Final NAV:                   R$ {snapshots_history[-1].nav:,.2f}")
     print(f"Net Total Return:            {report.total_return_pct:.2f}%")
@@ -171,8 +227,8 @@ def main() -> None:
     print(f"Total Transaction Costs:     R$ {report.total_costs_brl:,.2f}")
     print(f"Total Slippage:              R$ {report.total_slippage_brl:,.2f}")
     print(f"Simulated Entries / Exits:   {report.thesis_metrics.get('simulated_entries', 0)} / {report.thesis_metrics.get('simulated_exits', 0)}")
-    print(f"Benchmark CDI Return:        {report.benchmark_returns.get('CDI_ACCUMULATED_PCT', 0.0):.2f}%")
-    print(f"Benchmark IBOV Return:       {report.benchmark_returns.get('IBOV_PROXY_ACCUMULATED_PCT', 0.0):.2f}%")
+    print(f"Benchmark CDI Compounded:    {report.benchmark_returns.get('CDI_COMPOUNDED_ACCUMULATED_PCT', 0.0):.2f}%")
+    print(f"Benchmark IBOV Real:         {report.benchmark_returns.get('IBOV_REAL_ACCUMULATED_PCT', 0.0):.2f}%")
 
     store.close()
 

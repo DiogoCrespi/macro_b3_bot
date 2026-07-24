@@ -953,6 +953,10 @@ class DatabaseStore:
                 timing_risk_id VARCHAR NOT NULL,
                 execution_session VARCHAR NOT NULL,
                 execution_price DOUBLE,
+                open_price DOUBLE,
+                quote_record_id VARCHAR,
+                isin VARCHAR,
+                source_checksum VARCHAR,
                 target_weight DOUBLE NOT NULL,
                 executed_weight DOUBLE NOT NULL,
                 quantity_simulated DOUBLE NOT NULL,
@@ -995,6 +999,16 @@ class DatabaseStore:
             self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
         except Exception:
             pass
+        for col_def in (
+            "ALTER TABLE paper_allocation_events ADD COLUMN open_price DOUBLE",
+            "ALTER TABLE paper_allocation_events ADD COLUMN quote_record_id VARCHAR",
+            "ALTER TABLE paper_allocation_events ADD COLUMN isin VARCHAR",
+            "ALTER TABLE paper_allocation_events ADD COLUMN source_checksum VARCHAR",
+        ):
+            try:
+                self.connection.execute(col_def)
+            except Exception:
+                pass
         for col in {
             "assessment_as_of": "TIMESTAMP",
             "price_as_of": "TIMESTAMP",
@@ -2564,10 +2578,10 @@ class DatabaseStore:
             """
             INSERT INTO paper_allocation_events
             (allocation_event_id, portfolio_id, ticker, event_type, research_decision_id,
-             timing_risk_id, execution_session, execution_price, target_weight,
-             executed_weight, quantity_simulated, gross_value, transaction_cost,
-             slippage_cost, reason, canonical_payload_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             timing_risk_id, execution_session, execution_price, open_price, quote_record_id,
+             isin, source_checksum, target_weight, executed_weight, quantity_simulated,
+             gross_value, transaction_cost, slippage_cost, reason, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 event_id,
@@ -2578,6 +2592,10 @@ class DatabaseStore:
                 event["timing_risk_id"],
                 event["execution_session"],
                 float(event["execution_price"]) if event.get("execution_price") is not None else None,
+                float(event["open_price"]) if event.get("open_price") is not None else None,
+                event.get("quote_record_id", ""),
+                event.get("isin", ""),
+                event.get("source_checksum", ""),
                 float(event["target_weight"]),
                 float(event["executed_weight"]),
                 float(event["quantity_simulated"]),

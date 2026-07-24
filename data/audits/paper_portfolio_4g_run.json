@@ -1,5 +1,5 @@
 {
-  "replay_run_id": "replay_1704067200_1784851200",
+  "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
   "start_date": "2024-01-01T00:00:00+00:00",
   "end_date": "2026-07-24T00:00:00+00:00",
   "universe": [
@@ -10,15 +10,21 @@
     "SLCE3"
   ],
   "initial_capital": 100000.0,
-  "portfolio_policy_id": "8e011506c728a15bb400a35a40d1a374bc6268a53e69c2dafcfafaaaad40db6f",
+  "portfolio_policy_id": "86ab9fff6779729e013f6f96fcdd1025df9b2ab704bbe7a89c1d82eb8a0a4277",
+  "cash_yield_mode": "UNREMUNERATED",
   "methodology_versions": {
-    "engine": "4G.1-replay-engine-v1",
-    "policy": "4G.1-paper-policy-v1"
+    "engine": "4G.2-replay-engine-v2",
+    "policy": "4G.2-paper-policy-v2"
   },
-  "source_manifest_ids": [],
+  "source_manifest_ids": [
+    "data/audits/research_4e3_decisions.json",
+    "data/audits/research_4f_timing_risk.json",
+    "data/audits/valuation_4e2_historical_reverse.json",
+    "data/audits/cvm_historical_acquisition_manifest.json"
+  ],
   "decision_cutoffs_processed": 33,
   "market_sessions_processed": 33,
   "status": "COMPLETED",
   "blocked_reasons": [],
-  "created_at": "2026-07-24T13:26:58.488785+00:00"
+  "created_at": "2026-07-24T13:42:04.003893+00:00"
 }
