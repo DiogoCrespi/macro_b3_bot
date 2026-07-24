@@ -902,6 +902,21 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS research_timing_risk_snapshots (
+                timing_risk_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                research_decision_id VARCHAR NOT NULL,
+                timing_classification VARCHAR NOT NULL,
+                risk_classification VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                input_ids_json VARCHAR NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
         try:
             self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
         except Exception:
@@ -2320,6 +2335,77 @@ class DatabaseStore:
         result = []
         for r in rows:
             payload = json.loads(r[6])
+            result.append(payload)
+        return result
+
+    def save_research_timing_risk_snapshot(self, snapshot: dict[str, Any]) -> None:
+        """Persists a research timing risk snapshot into DuckDB idempotently."""
+        timing_risk_id = snapshot["timing_risk_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM research_timing_risk_snapshots WHERE timing_risk_id = ?",
+            [timing_risk_id]
+        ).fetchone()
+        if existing:
+            return
+
+        as_of_val = snapshot.get("as_of_timestamp")
+        if isinstance(as_of_val, str):
+            as_of_ts = datetime.fromisoformat(as_of_val.replace("Z", "+00:00"))
+        elif isinstance(as_of_val, datetime):
+            as_of_ts = as_of_val
+        else:
+            as_of_ts = datetime.now(timezone.utc)
+
+        self.connection.execute(
+            """
+            INSERT INTO research_timing_risk_snapshots
+            (timing_risk_id, ticker, as_of_timestamp, research_decision_id,
+             timing_classification, risk_classification, confidence,
+             canonical_payload_json, input_ids_json, methodology_version)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                timing_risk_id,
+                snapshot["ticker"],
+                as_of_ts,
+                snapshot["research_decision_id"],
+                snapshot["timing_classification"],
+                snapshot["risk_classification"],
+                float(snapshot["confidence"]),
+                json.dumps(snapshot, default=str),
+                json.dumps(snapshot.get("input_ids", {}), default=str),
+                snapshot.get("methodology_version", "4F.1-research-timing-risk-v1"),
+            ],
+        )
+
+    def get_research_timing_risk_snapshots(self, ticker: Optional[str] = None) -> list[dict[str, Any]]:
+        """Retrieves research timing risk snapshots from DuckDB."""
+        if ticker:
+            rows = self.connection.execute(
+                """
+                SELECT timing_risk_id, ticker, as_of_timestamp, research_decision_id,
+                       timing_classification, risk_classification, confidence,
+                       canonical_payload_json, input_ids_json, methodology_version, created_at
+                FROM research_timing_risk_snapshots
+                WHERE ticker = ?
+                ORDER BY as_of_timestamp DESC
+                """,
+                [ticker]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT timing_risk_id, ticker, as_of_timestamp, research_decision_id,
+                       timing_classification, risk_classification, confidence,
+                       canonical_payload_json, input_ids_json, methodology_version, created_at
+                FROM research_timing_risk_snapshots
+                ORDER BY as_of_timestamp DESC
+                """
+            ).fetchall()
+
+        result = []
+        for r in rows:
+            payload = json.loads(r[7])
             result.append(payload)
         return result
 
