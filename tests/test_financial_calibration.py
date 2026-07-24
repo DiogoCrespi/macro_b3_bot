@@ -9,6 +9,7 @@ import pytest
 from macro_b3_bot.application.calibrate_financial_bridges import (
     FinancialBridgeCalibrator,
 )
+from macro_b3_bot.application.build_financial_baselines import select_anchor_documents
 from macro_b3_bot.application.run_financial_calibration_pilot import (
     FinancialCalibrationPilot,
 )
@@ -17,6 +18,54 @@ from macro_b3_bot.domain.financial_bridge_models import (
     BridgeReplayObservation,
 )
 from macro_b3_bot.infrastructure.store import DatabaseStore
+
+
+def _anchor_doc(doc_type: str, ref: date, version: int, available_day: int, cvm: str = "22470") -> dict:
+    return {
+        "cvm_code": cvm, "document_id": f"{doc_type}-{ref}-{version}",
+        "document_type": doc_type, "reference_date": ref, "version": version,
+        "available_at": datetime(2026, 1, available_day, tzinfo=timezone.utc),
+    }
+
+
+def test_anchor_precedence_dfp_newer_than_existing_itr() -> None:
+    selected, anchor, _ = select_anchor_documents([
+        _anchor_doc("ITR", date(2025, 9, 30), 1, 10),
+        _anchor_doc("DFP", date(2024, 12, 31), 1, 10),
+        _anchor_doc("DFP", date(2025, 12, 31), 1, 20),
+    ], "MGLU3")
+    assert anchor.anchor_document_type == "DFP"
+    assert anchor.ttm_method == "DFP_ANNUAL_DIRECT"
+    assert selected["DFP"]["reference_date"] == date(2025, 12, 31)
+
+
+def test_anchor_precedence_itr_before_dfp_publication() -> None:
+    selected, anchor, _ = select_anchor_documents([
+        _anchor_doc("ITR", date(2025, 9, 30), 1, 10),
+        _anchor_doc("DFP", date(2024, 12, 31), 1, 10),
+    ], "MGLU3")
+    assert anchor.anchor_document_type == "ITR"
+    assert selected["DFP"]["reference_date"] == date(2024, 12, 31)
+
+
+def test_anchor_precedence_itr_2026_uses_dfp_2025() -> None:
+    selected, anchor, _ = select_anchor_documents([
+        _anchor_doc("DFP", date(2025, 12, 31), 1, 10),
+        _anchor_doc("ITR", date(2026, 3, 31), 1, 20),
+    ], "MGLU3")
+    assert anchor.anchor_document_type == "ITR"
+    assert selected["DFP"]["reference_date"] == date(2025, 12, 31)
+
+
+def test_anchor_republication_and_cvm_identity() -> None:
+    selected, _, cvm = select_anchor_documents([
+        _anchor_doc("DFP", date(2025, 12, 31), 9, 10),
+        _anchor_doc("DFP", date(2025, 12, 31), 10, 20),
+    ], "MGLU3")
+    assert selected["DFP"]["version"] == 10
+    assert cvm == "22470"
+    with pytest.raises(ValueError):
+        select_anchor_documents([_anchor_doc("ITR", date(2026, 3, 31), 1, 20)], "MGLU3")
 
 
 AS_OF = datetime(2026, 7, 22, 23, 59, 59, tzinfo=timezone.utc)

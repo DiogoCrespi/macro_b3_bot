@@ -41,6 +41,50 @@ class FinancialAnchorSelection:
     ttm_method: str
 
 
+def select_anchor_documents(
+    candidates: list[dict[str, Any]], ticker: str,
+) -> tuple[dict[str, dict[str, Any]], FinancialAnchorSelection, str]:
+    """Deduplicate PIT document versions and select the latest financial period."""
+    selected_by_period: dict[tuple[str, str, date], dict[str, Any]] = {}
+    for row in candidates:
+        key = (row["cvm_code"], row["document_type"], row["reference_date"])
+        previous = selected_by_period.get(key)
+        if previous is None or (
+            row["version"], row["available_at"]
+        ) > (previous["version"], previous["available_at"]):
+            selected_by_period[key] = row
+    eligible = list(selected_by_period.values())
+    if not eligible:
+        raise ValueError(f"{ticker}: no eligible PIT documents")
+    dfps = [row for row in eligible if row["document_type"] == "DFP"]
+    anchor = max(eligible, key=lambda row: (row["reference_date"], row["available_at"]))
+    if anchor["document_type"] == "ITR":
+        target_year = anchor["reference_date"].year - 1
+        support = [row for row in dfps if row["reference_date"].year == target_year]
+        if not support:
+            raise ValueError(f"{ticker}: ITR anchor requires DFP for year {target_year}")
+        dfp = max(support, key=lambda row: (row["version"], row["available_at"]))
+        selected = {"ITR": anchor, "DFP": dfp}
+        method = "DFP_FY_PLUS_ITR_CURRENT_MINUS_COMPARATIVE"
+    else:
+        selected = {"DFP": anchor}
+        method = "DFP_ANNUAL_DIRECT"
+    if any(item["cvm_code"] != anchor["cvm_code"] for item in selected.values()):
+        raise ValueError(f"{ticker}: anchor and support CVM codes differ")
+    selection = FinancialAnchorSelection(
+        anchor_document_id=anchor["document_id"],
+        anchor_document_type=anchor["document_type"],
+        anchor_reference_date=anchor["reference_date"],
+        anchor_available_at=anchor["available_at"],
+        supporting_document_ids=tuple(
+            item["document_id"] for item in selected.values()
+            if item["document_id"] != anchor["document_id"]
+        ),
+        ttm_method=method,
+    )
+    return selected, selection, anchor["cvm_code"]
+
+
 class FinancialBaselineBuilder:
     """Normalize FY + current quarter - comparative quarter into a PIT TTM."""
 
@@ -272,33 +316,9 @@ class FinancialBaselineBuilder:
         } for row in rows]
         if not candidates:
             return {}
-        itrs = [row for row in candidates if row["document_type"] == "ITR"]
-        dfps = [row for row in candidates if row["document_type"] == "DFP"]
-        if itrs:
-            anchor = max(itrs, key=lambda row: (row["reference_date"], row["version"], row["available_at"]))
-            target_year = anchor["reference_date"].year - 1
-            support = [row for row in dfps if row["reference_date"].year == target_year]
-            if not support:
-                raise ValueError(f"{ticker}: ITR anchor requires DFP for year {target_year}")
-            dfp = max(support, key=lambda row: (row["version"], row["available_at"]))
-            selected = {"ITR": anchor, "DFP": dfp}
-            method = "DFP_FY_PLUS_ITR_CURRENT_MINUS_COMPARATIVE"
-        else:
-            anchor = max(dfps, key=lambda row: (row["reference_date"], row["version"], row["available_at"]))
-            selected = {"DFP": anchor}
-            method = "DFP_ANNUAL_DIRECT"
-        selected["cvm_code"] = anchor["cvm_code"]
-        selected["anchor"] = FinancialAnchorSelection(
-            anchor_document_id=anchor["document_id"],
-            anchor_document_type=anchor["document_type"],
-            anchor_reference_date=anchor["reference_date"],
-            anchor_available_at=anchor["available_at"],
-            supporting_document_ids=tuple(
-                item["document_id"] for key, item in selected.items()
-                if key in {"ITR", "DFP"} and item["document_id"] != anchor["document_id"]
-            ),
-            ttm_method=method,
-        )
+        selected, anchor, cvm_code = select_anchor_documents(candidates, ticker)
+        selected["cvm_code"] = cvm_code
+        selected["anchor"] = anchor
         return selected
 
     def _ttm_account(
