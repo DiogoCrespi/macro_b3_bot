@@ -47,12 +47,12 @@ class FinancialBaselineBuilder:
         self,
         ticker: str,
         as_of_timestamp: datetime,
-        exposure: CompanyExposureSnapshot,
+        exposure: CompanyExposureSnapshot | None = None,
     ) -> FinancialBaselineSnapshot:
         as_of = self._utc(as_of_timestamp)
         documents = self._documents(ticker, as_of)
         if "ITR" not in documents or "DFP" not in documents:
-            raise ValueError(f"{ticker}: PIT ITR and DFP are required")
+            raise ValueError(f"{ticker}: PIT anchor/supporting documents are required")
         latest_quarter = documents["ITR"]["reference_date"]
         values: dict[str, float | None] = {}
         evidence: list[FinancialFieldEvidence] = []
@@ -194,7 +194,7 @@ class FinancialBaselineBuilder:
         snapshot = FinancialBaselineSnapshot(
             baseline_id=hashlib.sha256(identity.encode()).hexdigest()[:24],
             ticker=ticker,
-            cvm_code=exposure.cvm_code,
+            cvm_code=exposure.cvm_code if exposure else str(documents["ITR"].get("cvm_code") or "UNKNOWN"),
             as_of_timestamp=as_of,
             latest_quarter=latest_quarter,
             methodology_version=self.methodology_version,
@@ -222,6 +222,12 @@ class FinancialBaselineBuilder:
             confidence=round(confidence, 4),
             run_id=self.run_id,
             created_at=datetime.now(timezone.utc),
+            anchor_document_id=documents["ITR"]["document_id"],
+            anchor_document_type="ITR",
+            anchor_reference_date=latest_quarter,
+            anchor_available_at=documents["ITR"]["available_at"],
+            supporting_dfp_id=documents["DFP"]["document_id"],
+            ttm_method="DFP_FY_PLUS_ITR_CURRENT_MINUS_COMPARATIVE",
         )
         self.store.save_financial_baseline(snapshot.model_dump(mode="json"))
         return snapshot
@@ -449,10 +455,12 @@ class FinancialBaselineBuilder:
     def _debt_exposure_values(
         self,
         average_debt: float,
-        exposure: CompanyExposureSnapshot,
+        exposure: CompanyExposureSnapshot | None,
         period_end: date,
         baseline_evidence: list[FinancialFieldEvidence],
     ) -> dict[str, tuple[float, FinancialFieldEvidence]]:
+        if exposure is None:
+            return {}
         result: dict[str, tuple[float, FinancialFieldEvidence]] = {}
         mappings = {
             "average_floating_debt": (

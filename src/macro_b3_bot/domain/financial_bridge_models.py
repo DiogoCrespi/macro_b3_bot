@@ -65,6 +65,12 @@ class FinancialBaselineSnapshot(BaseModel):
     confidence: float = Field(ge=0, le=1)
     run_id: str
     created_at: datetime
+    anchor_document_id: str | None = None
+    anchor_document_type: str | None = None
+    anchor_reference_date: date | None = None
+    anchor_available_at: datetime | None = None
+    supporting_dfp_id: str | None = None
+    ttm_method: str | None = None
 
     @model_validator(mode="after")
     def every_value_is_evidenced(self) -> "FinancialBaselineSnapshot":
@@ -75,7 +81,9 @@ class FinancialBaselineSnapshot(BaseModel):
             "fcf_definition", "fcf_normalization_status",
             "average_debt_method", "net_debt_method",
             "field_evidence", "missing_fields", "confidence", "run_id",
-            "created_at",
+            "created_at", "anchor_document_id", "anchor_document_type",
+            "anchor_reference_date", "anchor_available_at", "supporting_dfp_id",
+            "ttm_method",
         }
         for name in self.__class__.model_fields:
             if name not in excluded and getattr(self, name) is not None and name not in evidenced:
