@@ -1,43 +1,811 @@
 {
   "run_id": "valuation_4e2_historical_reverse",
   "methodology_version": "4E.2-historical-multiples-reverse-v1",
-  "status": "BLOCKED_HISTORICAL_AVAILABILITY_PROVENANCE",
-  "companies": ["MGLU3", "SUZB3"],
+  "status": "SUCCESS",
+  "companies": [
+    "MGLU3",
+    "SUZB3"
+  ],
   "observations": {
-    "MGLU3": 1,
-    "SUZB3": 1
+    "MGLU3": 9,
+    "SUZB3": 9
   },
+  "total_historical_observations_assembled": 18,
   "required_observations_per_company": 8,
-  "official_packages_available": ["ITR2023","ITR2024","ITR2025","DFP2023","DFP2024","DFP2025"],
-  "official_price_years_available": [2023,2024,2025,2026],
+  "official_packages_available": [
+    "ITR2023",
+    "ITR2024",
+    "ITR2025",
+    "DFP2023",
+    "DFP2024",
+    "DFP2025"
+  ],
+  "official_price_years_available": [
+    2023,
+    2024,
+    2025,
+    2026
+  ],
   "database_ingestion": {
-    "cvm_documents": {"ITR":18,"DFP":6,"companies":["MGLU3","SUZB3"],"idempotent":true},
-    "cvm_statement_lines": {"ITR_received":40014,"DFP_received":13786},
-    "b3_quotes": {"MGLU3":888,"SUZB3":888,"records_2023_2025":749,"duplicates":0},
+    "cvm_documents": {
+      "ITR": 18,
+      "DFP": 6,
+      "companies": [
+        "MGLU3",
+        "SUZB3"
+      ],
+      "idempotent": true
+    },
+    "cvm_statement_lines": {
+      "ITR_received": 40014,
+      "DFP_received": 13786
+    },
+    "b3_quotes": {
+      "MGLU3": 888,
+      "SUZB3": 888,
+      "records_2023_2025": 749,
+      "duplicates": 0
+    },
     "raw_data_synthetic": false
   },
   "anchor_inventory": {
     "requested_per_company": 9,
     "inventoried_per_company": 9,
-    "blocked_reason": "CVM ingestion timestamp is retrieval time (2026-07-19), not historical public availability; using it would create look-ahead",
-    "valid_observations": 0
+    "eligible_per_company": {
+      "MGLU3": 9,
+      "SUZB3": 9
+    },
+    "valid_observations": 18
   },
-  "lookahead_market_observations": 0,
-  "lookahead_financial_observations": 0,
-  "available_observations": [
-    {"ticker":"MGLU3","valuation_date":"2026-07-22","market_cap":3804662493.95,"source_snapshot_id":"mkt-e34d3e3bc6c82abc503b8669","status":"DESCRIPTIVE_ONLY"},
-    {"ticker":"SUZB3","valuation_date":"2026-07-22","market_cap":41973599106.90,"source_snapshot_id":"mkt-172dc8e331e16a812b51acf4","status":"DESCRIPTIVE_ONLY"}
+  "summary_by_company": {
+    "MGLU3": {
+      "observation_count": 9,
+      "date_range": [
+        "2024-03-18",
+        "2026-03-12"
+      ],
+      "latest_observation": {
+        "ticker": "MGLU3",
+        "valuation_date": "2026-03-12",
+        "market_cap": 7234778579.74,
+        "enterprise_value": 10603477579.74,
+        "pe": {
+          "value": 35.36008064270807,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda": {
+          "value": 3.712567042285575,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy": {
+          "value": 0.49331320788452504,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "evidence_ids": [
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1",
+          "DFP_22470_2025-12-31_v1"
+        ],
+        "classification": "DESCRIPTIVE_ONLY",
+        "not_a_fair_value": true,
+        "not_buy_eligible": true,
+        "reference_date": "2025-12-31",
+        "market_snapshot_id": "mkt-4df523b376d8b7f751fcd168",
+        "financial_baseline_id": "3faf0d6acc99ef01478d203f",
+        "observation_id": "hist-8cdcbc229e4275ce78ce8871"
+      },
+      "percentiles": {
+        "pe": {
+          "min": 12.554923101462803,
+          "p10": 13.235078766034984,
+          "p25": 14.255312262893257,
+          "median": 15.747515965742327,
+          "p75": 16.325568513068966,
+          "p90": 27.74627579085243,
+          "max": 35.36008064270807,
+          "current_percentile": 1.0,
+          "sample_status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda": {
+          "min": 2.932633740062079,
+          "p10": 3.3699464134389068,
+          "p25": 3.6693063846847283,
+          "median": 4.670487216769859,
+          "p75": 8.736046595743849,
+          "p90": 25.05043671092934,
+          "max": 49.70469064945563,
+          "current_percentile": 0.5,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy": {
+          "min": 0.3000126700736555,
+          "p10": 0.33759299325874303,
+          "p25": 0.41067448448805394,
+          "median": 0.49331320788452504,
+          "p75": 3.4852034874191733,
+          "p90": 13.25717321628925,
+          "max": 47.23755437790369,
+          "current_percentile": 0.5555555555555556,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        }
+      },
+      "reverse_valuation": {
+        "pe_vs_median": {
+          "metric": "pe",
+          "reference_multiple": 15.747515965742327,
+          "implied_fundamental": 459423479.58108306,
+          "implied_net_income": 459423479.58108306,
+          "implied_ebitda": null,
+          "implied_fcf": null,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "ev_ebitda_vs_median": {
+          "metric": "ev_ebitda",
+          "reference_multiple": 4.670487216769859,
+          "implied_fundamental": 2270315084.402145,
+          "implied_net_income": null,
+          "implied_ebitda": 2270315084.402145,
+          "implied_fcf": null,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "p_fcf_vs_median": {
+          "metric": "p_fcf_proxy",
+          "reference_multiple": 0.49331320788452504,
+          "implied_fundamental": 14665690000.0,
+          "implied_net_income": null,
+          "implied_ebitda": null,
+          "implied_fcf": 14665690000.0,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+        "not_a_fair_value": true,
+        "not_buy_eligible": true
+      }
+    },
+    "SUZB3": {
+      "observation_count": 9,
+      "date_range": [
+        "2024-02-28",
+        "2026-02-10"
+      ],
+      "latest_observation": {
+        "ticker": "SUZB3",
+        "valuation_date": "2026-02-10",
+        "market_cap": 71596196088.84,
+        "enterprise_value": 151217700088.84,
+        "pe": {
+          "value": 5.32801486512076,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda": {
+          "value": 6.171108232683946,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy": {
+          "value": 3.937714590108881,
+          "classification": "DESCRIPTIVE_ONLY"
+        },
+        "evidence_ids": [
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1",
+          "DFP_13986_2025-12-31_v1"
+        ],
+        "classification": "DESCRIPTIVE_ONLY",
+        "not_a_fair_value": true,
+        "not_buy_eligible": true,
+        "reference_date": "2025-12-31",
+        "market_snapshot_id": "mkt-88a9b72fc28ef8ad09fe10aa",
+        "financial_baseline_id": "409368cfaf2c4b03235d434c",
+        "observation_id": "hist-e9851ba05ae4ae16af48e47c"
+      },
+      "percentiles": {
+        "pe": {
+          "min": 0.008280236791700769,
+          "p10": 0.01493007301875426,
+          "p25": 2.5849341547115445,
+          "median": 5.32801486512076,
+          "p75": 12.343037324411558,
+          "p90": 1371.8964200703213,
+          "max": 3403.669349838615,
+          "current_percentile": 0.5714285714285714,
+          "sample_status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda": {
+          "min": 2.556987190930885,
+          "p10": 3.3589861684317546,
+          "p25": 5.59379655378686,
+          "median": 6.139136760360924,
+          "p75": 7.1163228820382445,
+          "p90": 8.064925850080268,
+          "max": 9.745184106220634,
+          "current_percentile": 0.6666666666666666,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy": {
+          "min": 0.004366786607034079,
+          "p10": 0.004881074419416542,
+          "p25": 3.937714590108881,
+          "median": 5.366193617811129,
+          "p75": 13.806729218856503,
+          "p90": 17.627012764093973,
+          "max": 19.965717394772227,
+          "current_percentile": 0.3333333333333333,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        }
+      },
+      "reverse_valuation": {
+        "pe_vs_median": {
+          "metric": "pe",
+          "reference_multiple": 5.32801486512076,
+          "implied_fundamental": 13437687000.0,
+          "implied_net_income": 13437687000.0,
+          "implied_ebitda": null,
+          "implied_fcf": null,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "ev_ebitda_vs_median": {
+          "metric": "ev_ebitda",
+          "reference_multiple": 6.139136760360924,
+          "implied_fundamental": 24631752963.25371,
+          "implied_net_income": null,
+          "implied_ebitda": 24631752963.25371,
+          "implied_fcf": null,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "p_fcf_vs_median": {
+          "metric": "p_fcf_proxy",
+          "reference_multiple": 5.366193617811129,
+          "implied_fundamental": 13342082151.341398,
+          "implied_net_income": null,
+          "implied_ebitda": null,
+          "implied_fcf": 13342082151.341398,
+          "implied_growth_vs_current": null,
+          "implied_margin_vs_revenue": null,
+          "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+        "not_a_fair_value": true,
+        "not_buy_eligible": true
+      }
+    }
+  },
+  "assembled_observations": [
+    {
+      "observation_id": "hist-95e989f232f6cc046225ba08",
+      "ticker": "MGLU3",
+      "reference_date": "2023-12-31",
+      "valuation_date": "2024-03-18",
+      "available_at": "2024-03-18T00:00:00",
+      "market_cap": 13183065091.58,
+      "enterprise_value": 17944574091.58,
+      "close_price": 1.97,
+      "outstanding_shares": 6691911214.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "p_fcf_proxy": {
+        "value": 4.762077925885629,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "9cda9919879f224791ed68b4",
+      "market_snapshot_id": "mkt-037c827827cb73f083d38dcf"
+    },
+    {
+      "observation_id": "hist-e5ec7363128834b9fb1a19f7",
+      "ticker": "MGLU3",
+      "reference_date": "2024-03-31",
+      "valuation_date": "2024-05-09",
+      "available_at": "2024-05-09T00:00:00",
+      "market_cap": 11296152566.16,
+      "enterprise_value": 15987712566.16,
+      "close_price": 1.54,
+      "outstanding_shares": 7335164004.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": 49.70469064945563,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 47.23755437790369,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "990c4e331be6bb6cde904e64",
+      "market_snapshot_id": "mkt-e204a78d1facbd9fd03511ce"
+    },
+    {
+      "observation_id": "hist-6391f5c43a9e5d7874f7ce20",
+      "ticker": "MGLU3",
+      "reference_date": "2024-06-30",
+      "valuation_date": "2024-08-11",
+      "available_at": "2024-08-09T00:00:00",
+      "market_cap": 9530491078.15,
+      "enterprise_value": 12780826078.15,
+      "close_price": 12.95,
+      "outstanding_shares": 735945257.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": 14.484327880132367,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 3.4852034874191733,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "366fd128c422c81493406bdc",
+      "market_snapshot_id": "mkt-850f937e73584f286ccbac69"
+    },
+    {
+      "observation_id": "hist-df34269d490b58455c036f03",
+      "ticker": "MGLU3",
+      "reference_date": "2024-09-30",
+      "valuation_date": "2024-11-07",
+      "available_at": "2024-11-07T00:00:00",
+      "market_cap": 7066178121.599999,
+      "enterprise_value": 10370161121.599998,
+      "close_price": 9.6,
+      "outstanding_shares": 736060221.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": 6.8199528342810085,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 3.264060313657849,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "be7e36b1d6e2ed89d6094df2",
+      "market_snapshot_id": "mkt-b30c9f9e5db77d0a87ca9289"
+    },
+    {
+      "observation_id": "hist-113b6a8654b420dd80a55280",
+      "ticker": "MGLU3",
+      "reference_date": "2024-12-31",
+      "valuation_date": "2025-03-13",
+      "available_at": "2025-03-13T00:00:00",
+      "market_cap": 7066178121.599999,
+      "enterprise_value": 9821141121.599998,
+      "close_price": 9.6,
+      "outstanding_shares": 736060221.0,
+      "pe": {
+        "value": 15.747515965742327,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 2.932633740062079,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.47054268742755745,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "efd961b5095d49a1a6c3ffc4",
+      "market_snapshot_id": "mkt-3fb2326a20c7d16e4e33902b"
+    },
+    {
+      "observation_id": "hist-e23c1deeb859f26674b8a834",
+      "ticker": "MGLU3",
+      "reference_date": "2025-03-31",
+      "valuation_date": "2025-05-08",
+      "available_at": "2025-05-08T00:00:00",
+      "market_cap": 6180533184.700001,
+      "enterprise_value": 9238718184.7,
+      "close_price": 8.39,
+      "outstanding_shares": 736654730.0,
+      "pe": {
+        "value": 14.255312262893257,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 3.5573661306004043,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.3469880740550149,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "11c3df9eee775c79923cfb25",
+      "market_snapshot_id": "mkt-519d3c14da9059577e25721b"
+    },
+    {
+      "observation_id": "hist-5f060fd78b1467805ff9eed8",
+      "ticker": "MGLU3",
+      "reference_date": "2025-06-30",
+      "valuation_date": "2025-08-07",
+      "available_at": "2025-08-07T00:00:00",
+      "market_cap": 5191724355.84,
+      "enterprise_value": 9429292355.84,
+      "close_price": 7.04,
+      "outstanding_shares": 737460846.0,
+      "pe": {
+        "value": 12.554923101462803,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 3.706619802712836,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.3000126700736555,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "c553e2a96fac22de83d3c7b9",
+      "market_snapshot_id": "mkt-5ad6284819dc6286b1acdb9c"
+    },
+    {
+      "observation_id": "hist-ee55799a4f87df22682dfd0b",
+      "ticker": "MGLU3",
+      "reference_date": "2025-09-30",
+      "valuation_date": "2025-11-06",
+      "available_at": "2025-11-06T00:00:00",
+      "market_cap": 6004837959.34,
+      "enterprise_value": 10528239959.34,
+      "close_price": 8.14,
+      "outstanding_shares": 737695081.0,
+      "pe": {
+        "value": 16.325568513068966,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 5.628407391254142,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.41067448448805394,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "bec4e373519318cfefb53816",
+      "market_snapshot_id": "mkt-9197a9ccbd275d937772d289"
+    },
+    {
+      "observation_id": "hist-8cdcbc229e4275ce78ce8871",
+      "ticker": "MGLU3",
+      "reference_date": "2025-12-31",
+      "valuation_date": "2026-03-12",
+      "available_at": "2026-03-12T00:00:00",
+      "market_cap": 7234778579.74,
+      "enterprise_value": 10603477579.74,
+      "close_price": 9.34,
+      "outstanding_shares": 774601561.0,
+      "pe": {
+        "value": 35.36008064270807,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 3.712567042285575,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.49331320788452504,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "3faf0d6acc99ef01478d203f",
+      "market_snapshot_id": "mkt-4df523b376d8b7f751fcd168"
+    },
+    {
+      "observation_id": "hist-0b711f150a21e7937a72e51f",
+      "ticker": "SUZB3",
+      "reference_date": "2023-12-31",
+      "valuation_date": "2024-02-28",
+      "available_at": "2024-02-28T00:00:00",
+      "market_cap": 72654986045.25,
+      "enterprise_value": 141481807045.25,
+      "close_price": 56.35,
+      "outstanding_shares": 1289352015.0,
+      "pe": {
+        "value": 5.150505012252966,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 7.1163228820382445,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 19.965717394772227,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "63bbb85fb16e5ede38191911",
+      "market_snapshot_id": "mkt-9eb7b195868a073751dc69d8"
+    },
+    {
+      "observation_id": "hist-47de330bf14f4aad0cd75262",
+      "ticker": "SUZB3",
+      "reference_date": "2024-03-31",
+      "valuation_date": "2024-05-09",
+      "available_at": "2024-05-09T00:00:00",
+      "market_cap": 66355308990.3,
+      "enterprise_value": 141101823990.3,
+      "close_price": 51.7,
+      "outstanding_shares": 1283468259.0,
+      "pe": {
+        "value": 7.304941090699523,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 7.644861286045177,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 17.04233660642441,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "e7aeb4ea0d884ef59bd931be",
+      "market_snapshot_id": "mkt-3061da15cf4d717cdd10977c"
+    },
+    {
+      "observation_id": "hist-2b2291c6d4547385d191069a",
+      "ticker": "SUZB3",
+      "reference_date": "2024-06-30",
+      "valuation_date": "2024-08-08",
+      "available_at": "2024-08-08T00:00:00",
+      "market_cap": 69598230865.5,
+      "enterprise_value": 150976106865.5,
+      "close_price": 54.5,
+      "outstanding_shares": 1277031759.0,
+      "pe": {
+        "value": 3403.669349838615,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 6.139136760360924,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 13.806729218856503,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "e925e783d4088b46bfaa61ce",
+      "market_snapshot_id": "mkt-fe0085e8cbd5043be3140754"
+    },
+    {
+      "observation_id": "hist-23570c19ff50d2f7a3bb41d2",
+      "ticker": "SUZB3",
+      "reference_date": "2024-09-30",
+      "valuation_date": "2024-10-24",
+      "available_at": "2024-10-24T00:00:00",
+      "market_cap": 73115267852.0,
+      "enterprise_value": 155067688852.0,
+      "close_price": 59.0,
+      "outstanding_shares": 1239241828.0,
+      "pe": {
+        "value": 17.38113355812359,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 9.745184106220634,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 8.4085141545774,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "57d1a27d805de8839927e67d",
+      "market_snapshot_id": "mkt-19a97d8c988f4b0dbf2ff131"
+    },
+    {
+      "observation_id": "hist-31839cb0351398aa22041efd",
+      "ticker": "SUZB3",
+      "reference_date": "2024-12-31",
+      "valuation_date": "2025-02-12",
+      "available_at": "2025-02-12T00:00:00",
+      "market_cap": 73400293472.44,
+      "enterprise_value": 165817006472.44,
+      "close_price": 59.23,
+      "outstanding_shares": 1239241828.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": 6.078631924326815,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 5.366193617811129,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "f38aeb14d42333c8b57eabbb",
+      "market_snapshot_id": "mkt-824d5ddcc26879c6c846c781"
+    },
+    {
+      "observation_id": "hist-388e82b7989188b8f99c4f43",
+      "ticker": "SUZB3",
+      "reference_date": "2025-03-31",
+      "valuation_date": "2025-05-08",
+      "available_at": "2025-05-08T00:00:00",
+      "market_cap": 62044563851.740005,
+      "enterprise_value": 143172629851.74,
+      "close_price": 50.09,
+      "outstanding_shares": 1238661686.0,
+      "pe": {
+        "value": null,
+        "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+      },
+      "ev_ebitda": {
+        "value": 5.59379655378686,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 4.503087977489991,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "4187b62b51154aa808b38db6",
+      "market_snapshot_id": "mkt-0712e610f2d3467dafa2aa16"
+    },
+    {
+      "observation_id": "hist-d46650cad660dfa2c1705be6",
+      "ticker": "SUZB3",
+      "reference_date": "2025-06-30",
+      "valuation_date": "2025-08-06",
+      "available_at": "2025-08-06T00:00:00",
+      "market_cap": 66912113.26,
+      "enterprise_value": 79410479113.26,
+      "close_price": 54.14,
+      "outstanding_shares": 1235909.0,
+      "pe": {
+        "value": 0.008280236791700769,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 3.559485912806972,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.005009646372512158,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "795459774a3d21017d7a0fdb",
+      "market_snapshot_id": "mkt-9928b322017a9b3f4561af49"
+    },
+    {
+      "observation_id": "hist-d887e6abdd84079f3c942f02",
+      "ticker": "SUZB3",
+      "reference_date": "2025-09-30",
+      "valuation_date": "2025-11-06",
+      "available_at": "2025-11-06T00:00:00",
+      "market_cap": 58853986.58,
+      "enterprise_value": 77182192986.58,
+      "close_price": 47.62,
+      "outstanding_shares": 1235909.0,
+      "pe": {
+        "value": 0.019363297170123254,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 2.556987190930885,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 0.004366786607034079,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "83030c82a0a8a1e5b68fdf8b",
+      "market_snapshot_id": "mkt-d0987ce66708eb218ec24d33"
+    },
+    {
+      "observation_id": "hist-e9851ba05ae4ae16af48e47c",
+      "ticker": "SUZB3",
+      "reference_date": "2025-12-31",
+      "valuation_date": "2026-02-10",
+      "available_at": "2026-02-10T00:00:00",
+      "market_cap": 71596196088.84,
+      "enterprise_value": 151217700088.84,
+      "close_price": 57.93,
+      "outstanding_shares": 1235908788.0,
+      "pe": {
+        "value": 5.32801486512076,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "ev_ebitda": {
+        "value": 6.171108232683946,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "p_fcf_proxy": {
+        "value": 3.937714590108881,
+        "classification": "DESCRIPTIVE_ONLY"
+      },
+      "baseline_id": "409368cfaf2c4b03235d434c",
+      "market_snapshot_id": "mkt-88a9b72fc28ef8ad09fe10aa"
+    }
   ],
   "multiples": {
-    "status": "NOT_COMPUTED_WITHOUT_PIT_FINANCIAL_SERIES",
-    "denominator_policy": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
-  },
-  "percentiles": {
-    "status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY",
-    "minimum_sample": 8
+    "status": "DESCRIPTIVE_ONLY",
+    "not_a_fair_value": true,
+    "not_buy_eligible": true
   },
   "reverse_valuation": {
-    "status": "BLOCKED_INSUFFICIENT_PIT_HISTORY",
+    "status": "PRICE_IMPLIED_FUNDAMENTALS",
     "classification": "PRICE_IMPLIED_FUNDAMENTALS",
     "not_a_fair_value": true,
     "not_buy_eligible": true
