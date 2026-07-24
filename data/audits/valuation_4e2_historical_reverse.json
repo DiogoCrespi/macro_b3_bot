@@ -1,7 +1,7 @@
 {
   "run_id": "valuation_4e2_historical_reverse",
   "methodology_version": "4E.2-historical-multiples-reverse-v1",
-  "status": "BLOCKED_HISTORICAL_BASELINE_ASSEMBLY_PENDING",
+  "status": "BLOCKED_HISTORICAL_AVAILABILITY_PROVENANCE",
   "companies": ["MGLU3", "SUZB3"],
   "observations": {
     "MGLU3": 1,
@@ -10,6 +10,18 @@
   "required_observations_per_company": 8,
   "official_packages_available": ["ITR2023","ITR2024","ITR2025","DFP2023","DFP2024","DFP2025"],
   "official_price_years_available": [2023,2024,2025,2026],
+  "database_ingestion": {
+    "cvm_documents": {"ITR":18,"DFP":6,"companies":["MGLU3","SUZB3"],"idempotent":true},
+    "cvm_statement_lines": {"ITR_received":40014,"DFP_received":13786},
+    "b3_quotes": {"MGLU3":888,"SUZB3":888,"records_2023_2025":749,"duplicates":0},
+    "raw_data_synthetic": false
+  },
+  "anchor_inventory": {
+    "requested_per_company": 9,
+    "inventoried_per_company": 9,
+    "blocked_reason": "CVM ingestion timestamp is retrieval time (2026-07-19), not historical public availability; using it would create look-ahead",
+    "valid_observations": 0
+  },
   "lookahead_market_observations": 0,
   "lookahead_financial_observations": 0,
   "available_observations": [
