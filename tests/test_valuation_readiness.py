@@ -8,6 +8,7 @@ from macro_b3_bot.domain.financial_bridge_models import (
     FinancialBaselineSnapshot,
     FinancialFieldEvidence,
     NormalizedCashFlowSnapshot,
+    MarketSnapshotPIT,
 )
 
 
@@ -88,3 +89,42 @@ def test_gate_flags_missing_market_data_and_persists_identity() -> None:
     )
     assert "MISSING_MARKET_DATA" in result.blockers
     assert result.assessment_id.startswith("4e1-")
+
+
+def test_market_snapshot_is_content_addressed_and_pit() -> None:
+    snapshot = MarketSnapshotPIT.from_content(
+        ticker="MGLU3", as_of_timestamp=AS_OF, available_at=AS_OF,
+        price=10, share_count=100, share_count_basis="SHARES_OUTSTANDING",
+        currency="BRL", source_id="b3-close", market_data_version="v1",
+        security_type="COMMON_SHARE", equity_value_basis="PRICE_X_SHARES",
+    )
+    same = MarketSnapshotPIT.from_content(**snapshot.model_dump(exclude={"market_snapshot_id"}))
+    assert snapshot.market_snapshot_id == same.market_snapshot_id
+    assert snapshot.price > 0 and snapshot.share_count > 0
+
+
+def test_nonpositive_denominators_are_not_meaningful() -> None:
+    baseline = _baseline().model_copy(update={"ttm_net_income": -10, "ttm_ebitda": 0, "ttm_fcf": -2})
+    snapshot = MarketSnapshotPIT.from_content(
+        ticker="MGLU3", as_of_timestamp=AS_OF, available_at=AS_OF,
+        price=10, share_count=100, share_count_basis="SHARES_OUTSTANDING",
+        currency="BRL", source_id="b3-close", market_data_version="v1",
+        security_type="COMMON_SHARE", equity_value_basis="PRICE_X_SHARES",
+    )
+    result = ValuationReadinessGate().assess(
+        baseline=baseline, calibrations=[], normalized_cash_flow=_fcf(),
+        market_snapshot=snapshot,
+    )
+    assert result.descriptive_metrics["pe_observed"].classification == "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+    assert result.descriptive_metrics["ev_ebitda_observed"].value is None
+
+
+def test_klbn_unit_basis_cannot_use_class_aggregate() -> None:
+    import pytest
+    with pytest.raises(ValueError):
+        MarketSnapshotPIT.from_content(
+            ticker="KLBN11", as_of_timestamp=AS_OF, available_at=AS_OF,
+            price=20, share_count=100, share_count_basis="AGGREGATE_CLASSES",
+            currency="BRL", source_id="b3-close", market_data_version="v1",
+            security_type="UNIT", equity_value_basis="UNIT_PRICE_X_UNITS",
+        )

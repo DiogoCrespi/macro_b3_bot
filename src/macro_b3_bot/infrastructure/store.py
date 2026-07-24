@@ -827,6 +827,24 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS market_snapshots_pit (
+                market_snapshot_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                available_at TIMESTAMP NOT NULL,
+                price DOUBLE NOT NULL,
+                share_count DOUBLE NOT NULL,
+                share_count_basis VARCHAR NOT NULL,
+                currency VARCHAR NOT NULL,
+                source_id VARCHAR NOT NULL,
+                market_data_version VARCHAR NOT NULL,
+                security_type VARCHAR NOT NULL,
+                equity_value_basis VARCHAR NOT NULL,
+                snapshot_payload VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
 
 
     def _init_views(self) -> None:
@@ -2052,6 +2070,24 @@ class DatabaseStore:
                 item["assessment_id"], item["ticker"], item["as_of_timestamp"],
                 json.dumps(item, default=str), item["status"],
                 item["valuation_eligible"], item["run_id"],
+            ],
+        )
+
+    def save_market_snapshot_pit(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR IGNORE INTO market_snapshots_pit
+            (market_snapshot_id,ticker,as_of_timestamp,available_at,price,
+             share_count,share_count_basis,currency,source_id,market_data_version,
+             security_type,equity_value_basis,snapshot_payload)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            [
+                item["market_snapshot_id"], item["ticker"], item["as_of_timestamp"],
+                item["available_at"], item["price"], item["share_count"],
+                item["share_count_basis"], item["currency"], item["source_id"],
+                item["market_data_version"], item["security_type"],
+                item["equity_value_basis"], json.dumps(item, default=str),
             ],
         )
 

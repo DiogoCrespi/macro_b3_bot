@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from datetime import date, datetime
+import hashlib
+import json
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -260,9 +262,72 @@ class DescriptiveMarketMetric(BaseModel):
     """Observed multiple; never a fair-value or trading recommendation."""
 
     value: float | None = None
-    classification: Literal["DESCRIPTIVE_ONLY"] = "DESCRIPTIVE_ONLY"
+    classification: Literal[
+        "DESCRIPTIVE_ONLY", "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+    ] = "DESCRIPTIVE_ONLY"
     not_a_fair_value: Literal[True] = True
     not_buy_eligible: Literal[True] = True
+
+
+class MarketSnapshotPIT(BaseModel):
+    """Content-addressed, point-in-time market data for one security basis."""
+
+    market_snapshot_id: str
+    ticker: str
+    as_of_timestamp: datetime
+    available_at: datetime
+    price: float = Field(gt=0)
+    share_count: float = Field(gt=0)
+    share_count_basis: Literal[
+        "SHARES_OUTSTANDING", "UNITS_OUTSTANDING", "AGGREGATE_CLASSES"
+    ]
+    currency: str
+    source_id: str
+    market_data_version: str
+    security_type: Literal[
+        "COMMON_SHARE", "PREFERRED_SHARE", "UNIT", "MIXED_CLASSES"
+    ]
+    equity_value_basis: Literal[
+        "PRICE_X_SHARES", "UNIT_PRICE_X_UNITS", "SUM_CLASS_PRICES_X_CLASS_SHARES"
+    ]
+    unit_composition: list[str] = Field(default_factory=list)
+    class_components: dict[str, float] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def validate_security_basis(self) -> "MarketSnapshotPIT":
+        if self.available_at > self.as_of_timestamp:
+            raise ValueError("market data cannot become available after its quote date")
+        if self.ticker == "KLBN11":
+            if self.security_type == "UNIT":
+                if self.share_count_basis != "UNITS_OUTSTANDING":
+                    raise ValueError("KLBN11 unit basis requires units outstanding")
+                if self.equity_value_basis != "UNIT_PRICE_X_UNITS":
+                    raise ValueError("KLBN11 units must use unit price times units")
+                if not self.unit_composition:
+                    raise ValueError("KLBN11 unit composition is required")
+            elif self.security_type == "MIXED_CLASSES":
+                if self.share_count_basis != "AGGREGATE_CLASSES":
+                    raise ValueError("class aggregate basis required for mixed classes")
+                if self.equity_value_basis != "SUM_CLASS_PRICES_X_CLASS_SHARES":
+                    raise ValueError("mixed classes require class-level valuation basis")
+                if not self.class_components:
+                    raise ValueError("class components are required for mixed classes")
+        return self
+
+    @classmethod
+    def from_content(cls, **payload: object) -> "MarketSnapshotPIT":
+        payload = dict(payload)
+        payload.pop("market_snapshot_id", None)
+        draft = cls.model_validate({**payload, "market_snapshot_id": "pending"})
+        canonical = draft.canonical_content()
+        return draft.model_copy(update={
+            "market_snapshot_id": "mkt-" + hashlib.sha256(canonical.encode()).hexdigest()[:24]
+        })
+
+    def canonical_content(self) -> str:
+        payload = self.model_dump(mode="json")
+        payload.pop("market_snapshot_id", None)
+        return json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
 
 
 class ValuationReadinessAssessment(BaseModel):

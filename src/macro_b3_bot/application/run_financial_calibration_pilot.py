@@ -9,7 +9,10 @@ from macro_b3_bot.application.calibrate_financial_bridges import (
     FinancialBridgeCalibrator,
 )
 from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
-from macro_b3_bot.domain.financial_bridge_models import FinancialBaselineSnapshot
+from macro_b3_bot.domain.financial_bridge_models import (
+    FinancialBaselineSnapshot,
+    MarketSnapshotPIT,
+)
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
 
@@ -23,6 +26,7 @@ class FinancialCalibrationPilot:
         sector_run_id: str,
         as_of_timestamp: datetime,
         run_id: str = "financial_4d3b_integrity",
+        market_snapshots: dict[str, MarketSnapshotPIT] | None = None,
     ) -> dict[str, object]:
         calibrator = FinancialBridgeCalibrator(self.store, run_id)
         diagnostics = calibrator.conflict_diagnostics(
@@ -67,6 +71,7 @@ class FinancialCalibrationPilot:
                 calibrations=[item for item in calibrations if item.ticker == ticker],
                 normalized_cash_flow=next(item for item in normalized if item.ticker == ticker),
                 conflict_diagnostics=[item for item in diagnostics if item.ticker == ticker],
+                market_snapshot=(market_snapshots or {}).get(ticker),
                 run_id=run_id,
                 as_of_timestamp=as_of_timestamp,
             )

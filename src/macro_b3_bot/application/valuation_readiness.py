@@ -6,7 +6,7 @@ keeps observed market multiples explicitly descriptive.
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from hashlib import sha256
 import json
 from typing import Any, Iterable
@@ -17,6 +17,7 @@ from macro_b3_bot.domain.financial_bridge_models import (
     FinancialBaselineSnapshot,
     FinancialScenarioOutcome,
     NormalizedCashFlowSnapshot,
+    MarketSnapshotPIT,
     ValuationReadinessAssessment,
 )
 
@@ -33,12 +34,18 @@ class ValuationReadinessGate:
         conflict_diagnostics: Iterable[FactorConflictDiagnostic] = (),
         scenario_outcomes: Iterable[FinancialScenarioOutcome] = (),
         market_data: dict[str, Any] | None = None,
+        market_snapshot: MarketSnapshotPIT | None = None,
         run_id: str = "valuation_readiness",
         as_of_timestamp: datetime | None = None,
     ) -> ValuationReadinessAssessment:
         calibrations = list(calibrations)
         conflicts = list(conflict_diagnostics)
         outcomes = list(scenario_outcomes)
+        if market_snapshot is not None:
+            market_data = market_snapshot.model_dump(mode="json")
+            market_data["shares_outstanding"] = market_snapshot.share_count
+            market_data["market_snapshot_id"] = market_snapshot.market_snapshot_id
+            market_data["as_of"] = market_snapshot.as_of_timestamp
         market_data = market_data or {}
         timestamp = as_of_timestamp or baseline.as_of_timestamp
         blockers: list[str] = []
@@ -80,6 +87,9 @@ class ValuationReadinessGate:
         valuation_eligible = not blockers
         dcf_eligible = valuation_eligible and normalized_cash_flow.dcf_eligible is True
         descriptive = self._descriptive_metrics(baseline, market_data)
+        market_snapshot_id = market_data.get("market_snapshot_id")
+        if not market_snapshot_id and market_data:
+            market_snapshot_id = self._market_snapshot_id(market_data)
         input_identity = {
             "ticker": baseline.ticker,
             "as_of": timestamp.isoformat(),
@@ -89,6 +99,8 @@ class ValuationReadinessGate:
             "diagnostic_ids": sorted(item.diagnostic_id for item in conflicts),
             "scenario_outcome_ids": sorted(item.outcome_id for item in outcomes),
             "market_data_version": market_data.get("market_data_version"),
+            "market_snapshot_id": market_snapshot_id,
+            "market_data_content": market_data,
             "methodology_version": self.methodology_version,
         }
         identity = json.dumps(input_identity, sort_keys=True, separators=(",", ":"))
@@ -101,6 +113,7 @@ class ValuationReadinessGate:
             "scenario_outcome_ids": [item.outcome_id for item in outcomes],
             "market_data_fields": sorted(market_data),
             "market_data_version": market_data.get("market_data_version"),
+            "market_snapshot_id": market_snapshot_id,
             "market_data_source_id": market_data.get("source_id"),
             "market_data_as_of": market_data.get("as_of", market_data.get("market_data_as_of")),
             "dcf_blocked": not dcf_eligible,
@@ -137,12 +150,19 @@ class ValuationReadinessGate:
         return next(status for code, status in order if code in blockers)
 
     @staticmethod
+    def _market_snapshot_id(market_data: dict[str, Any]) -> str:
+        payload = dict(market_data)
+        payload.pop("market_snapshot_id", None)
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+        return "mkt-" + sha256(canonical.encode()).hexdigest()[:24]
+
+    @staticmethod
     def _market_data_is_pit(
         market_data: dict[str, Any], assessment_timestamp: datetime
     ) -> tuple[bool, str]:
         price = market_data.get("price")
         shares = market_data.get("shares_outstanding")
-        if price is None or shares is None or float(shares) <= 0:
+        if price is None or float(price) <= 0 or shares is None or float(shares) <= 0:
             return False, "PIT market data requires positive price and shares_outstanding"
         if not market_data.get("source_id"):
             return False, "PIT market data source_id is required"
@@ -159,9 +179,17 @@ class ValuationReadinessGate:
             as_of_dt = ValuationReadinessGate._parse_timestamp(as_of)
         except (TypeError, ValueError):
             return False, "PIT market timestamps must be ISO datetime values"
-        if available_dt > assessment_timestamp or as_of_dt > assessment_timestamp:
+        if ValuationReadinessGate._is_after(available_dt, assessment_timestamp) or ValuationReadinessGate._is_after(as_of_dt, assessment_timestamp):
             return False, "market data is not point-in-time valid for the assessment"
         return True, ""
+
+    @staticmethod
+    def _is_after(value: datetime, reference: datetime) -> bool:
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        if reference.tzinfo is None:
+            reference = reference.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc) > reference.astimezone(timezone.utc)
 
     @staticmethod
     def _parse_timestamp(value: Any) -> datetime:
@@ -179,12 +207,17 @@ class ValuationReadinessGate:
         shares = market_data.get("shares_outstanding")
         market_cap = price * shares if price is not None and shares is not None and float(shares) > 0 else None
         ev = market_cap + baseline.net_debt if market_cap is not None else None
-        def ratio(numerator: float | None, denominator: float | None) -> float | None:
-            return None if numerator is None or denominator in (None, 0) else numerator / denominator
+        def metric(numerator: float | None, denominator: float | None) -> dict[str, Any]:
+            if denominator is None or denominator <= 0:
+                return {
+                    "value": None,
+                    "classification": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR",
+                }
+            return {"value": None if numerator is None else numerator / denominator}
         return {
             "market_capitalization": {"value": market_cap},
             "enterprise_value": {"value": ev},
-            "pe_observed": {"value": ratio(market_cap, baseline.ttm_net_income)},
-            "ev_ebitda_observed": {"value": ratio(ev, baseline.ttm_ebitda)},
-            "p_fcf_proxy_observed": {"value": ratio(market_cap, baseline.ttm_fcf)},
+            "pe_observed": metric(market_cap, baseline.ttm_net_income),
+            "ev_ebitda_observed": metric(ev, baseline.ttm_ebitda),
+            "p_fcf_proxy_observed": metric(market_cap, baseline.ttm_fcf),
         }
