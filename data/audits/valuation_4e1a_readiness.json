@@ -1,0 +1,40 @@
+{
+  "run_id": "valuation_readiness_4e1a",
+  "methodology_version": "4E.1A-readiness-contract-v1",
+  "source_4d_artifact": "financial_4d3b_integrity.json",
+  "market_data_posture": "NOT_PROVIDED_PIT",
+  "valuation_policy": {
+    "valuation_eligible": false,
+    "dcf_eligible": false,
+    "fair_value": false,
+    "buy_eligible": false
+  },
+  "assessments": [
+    {
+      "ticker": "MGLU3",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "blockers": ["LOW_CALIBRATION_CONFIDENCE", "FCF_NOT_READY", "MISSING_MARKET_DATA"],
+      "calibration_id": "dead81af928fe47b7462b176",
+      "normalized_cash_flow_id": "6443e3d74ed24ff42690f992",
+      "market_data": "MISSING_PIT_SOURCE"
+    },
+    {
+      "ticker": "SUZB3",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "blockers": ["LOW_CALIBRATION_CONFIDENCE", "EMPIRICAL_VALIDATION", "FCF_NOT_READY", "CONFLICTING_MACRO_DIRECTION", "MISSING_MARKET_DATA"],
+      "calibration_id": "c1dcded0ad8dbdcc060df9d2",
+      "normalized_cash_flow_id": "ea07a238a504e8cef5942bf0",
+      "diagnostic_id": "f4464e3e1aaa9bc6a56d37f6",
+      "market_data": "MISSING_PIT_SOURCE"
+    },
+    {
+      "ticker": "KLBN11",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "blockers": ["LOW_CALIBRATION_CONFIDENCE", "EMPIRICAL_VALIDATION", "FCF_NOT_READY", "CONFLICTING_MACRO_DIRECTION", "MISSING_MARKET_DATA"],
+      "calibration_id": "3b27ad4e145f7857280f84a6",
+      "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
+      "diagnostic_id": "34bd428fe47834407d437019",
+      "market_data": "MISSING_PIT_SOURCE"
+    }
+  ]
+}

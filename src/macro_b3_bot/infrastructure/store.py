@@ -2043,7 +2043,7 @@ class DatabaseStore:
     def save_valuation_readiness_assessment(self, item: dict) -> None:
         self.connection.execute(
             """
-            INSERT OR REPLACE INTO valuation_readiness_assessments
+            INSERT OR IGNORE INTO valuation_readiness_assessments
             (assessment_id,ticker,as_of_timestamp,assessment_payload,status,
              valuation_eligible,run_id)
             VALUES (?,?,?,?,?,?,?)

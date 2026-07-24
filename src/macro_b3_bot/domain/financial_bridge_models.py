@@ -274,13 +274,14 @@ class ValuationReadinessAssessment(BaseModel):
     status: Literal[
         "VALUATION_READY",
         "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+        "VALUATION_BLOCKED_EMPIRICAL_VALIDATION",
         "VALUATION_BLOCKED_FCF_NOT_READY",
         "VALUATION_BLOCKED_CONFLICTING_MACRO_DIRECTION",
         "VALUATION_BLOCKED_MISSING_MARKET_DATA",
         "VALUATION_BLOCKED_INSUFFICIENT_HISTORY",
     ]
-    valuation_eligible: Literal[False] = False
-    dcf_eligible: Literal[False] = False
+    valuation_eligible: bool
+    dcf_eligible: bool
     blockers: list[str] = Field(default_factory=list)
     reasons: list[str] = Field(default_factory=list)
     evidence_ids: list[str] = Field(default_factory=list)
@@ -288,6 +289,15 @@ class ValuationReadinessAssessment(BaseModel):
     descriptive_metrics: dict[str, DescriptiveMarketMetric] = Field(default_factory=dict)
     methodology_version: str
     run_id: str
+
+    @model_validator(mode="after")
+    def eligibility_matches_status(self) -> "ValuationReadinessAssessment":
+        ready = self.status == "VALUATION_READY"
+        if self.valuation_eligible != ready:
+            raise ValueError("valuation_eligible must match readiness status")
+        if self.dcf_eligible and not self.valuation_eligible:
+            raise ValueError("DCF cannot be eligible when valuation is blocked")
+        return self
 
 
 class BridgeReplayObservation(BaseModel):
