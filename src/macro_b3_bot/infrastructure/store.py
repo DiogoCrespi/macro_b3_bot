@@ -875,6 +875,18 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS historical_valuation_observations (
+                observation_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                valuation_date DATE NOT NULL,
+                market_snapshot_id VARCHAR NOT NULL,
+                financial_baseline_id VARCHAR NOT NULL,
+                methodology_version VARCHAR NOT NULL,
+                observation_payload VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
         for col in {
             "assessment_as_of": "TIMESTAMP",
             "price_as_of": "TIMESTAMP",
@@ -2168,6 +2180,21 @@ class DatabaseStore:
                 item["valid_from"], item.get("valid_to"), item["mapping_source"],
                 item["mapping_available_at"], item["mapping_checksum"],
                 json.dumps(item, default=str),
+            ],
+        )
+
+    def save_historical_valuation_observation(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR IGNORE INTO historical_valuation_observations
+            (observation_id,ticker,valuation_date,market_snapshot_id,
+             financial_baseline_id,methodology_version,observation_payload)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            [
+                item["observation_id"], item["ticker"], item["valuation_date"],
+                item["market_snapshot_id"], item["financial_baseline_id"],
+                item["methodology_version"], json.dumps(item, default=str),
             ],
         )
 

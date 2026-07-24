@@ -7,6 +7,10 @@ from macro_b3_bot.application.pit_market_assembly import (
     PITMarketSnapshotAssembler,
     PITSecurityMapping,
 )
+from macro_b3_bot.application.historical_reverse_valuation import (
+    HistoricalMultiplesAnalyzer,
+    HistoricalObservation,
+)
 from macro_b3_bot.adapters.b3_cotahist import B3CotahistReader
 from macro_b3_bot.adapters.cvm_capital_composition import CVMCapitalCompositionReader
 from macro_b3_bot.domain.financial_bridge_models import (
@@ -307,3 +311,20 @@ def test_pit_snapshot_assembly_rejects_cross_company_isin() -> None:
                           "document_available_at": as_of,
                           "document_id": "x", "document_checksum": "x"},
         )
+
+
+def test_historical_reverse_uses_metric_specific_numerators_and_sorted_current() -> None:
+    analyzer = HistoricalMultiplesAnalyzer()
+    old = analyzer.observe(HistoricalObservation(
+        ticker="MGLU3", valuation_date="2025-01-01", market_cap=100,
+        enterprise_value=150, net_income=10, ebitda=30, fcf_proxy=20,
+    ))
+    current = analyzer.observe(HistoricalObservation(
+        ticker="MGLU3", valuation_date="2026-01-01", market_cap=200,
+        enterprise_value=300, net_income=20, ebitda=60, fcf_proxy=40,
+    ))
+    stats = analyzer.percentiles([current, old], "p_fcf_proxy")
+    assert stats["current_percentile"] == 1.0
+    reverse = analyzer.reverse(current, 5, "p_fcf_proxy", current_fundamental=40, revenue=100)
+    assert reverse["implied_fcf"] == 40
+    assert reverse["implied_ebitda"] is None
