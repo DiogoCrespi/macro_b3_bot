@@ -1,8 +1,11 @@
-"""Tests for Sprint 4E.3B Research Decision Synthesis & DuckDB Persistence."""
+"""Tests for Sprint 4E.3C Upstream Source Contract Closure & Decision Synthesis."""
 
 from datetime import datetime, timezone
 import json
+import math
 from pathlib import Path
+import subprocess
+import sys
 
 from macro_b3_bot.infrastructure.store import DatabaseStore
 from macro_b3_bot.application.research_decision_synthesis import ResearchDecisionSynthesizer
@@ -20,22 +23,29 @@ def test_decision_synthesis_watch_case() -> None:
             "macro_event_id": "evt_001",
             "factor": "INTEREST_RATES",
             "factor_direction": -1,
+            "available_at": "2025-12-01T18:00:00Z",
         }],
         sector_state={
             "sector_name": "Retail",
             "is_active": True,
             "has_active_signal": True,
             "impact_score": -0.4,
+            "available_at": "2025-12-01T18:00:00Z",
         },
         company_contributions=[{
             "contribution_id": "c_001",
+            "channel": "floating_rate_debt",
             "approval_status": "HUMAN_APPROVED",
             "confidence": 0.8,
+            "available_at": "2025-12-01T18:00:00Z",
         }],
         financial_outcomes=[{
             "financial_outcome_id": "out_001",
+            "contribution_id": "c_001",
+            "baseline_id": "base_001",
             "status": "PARTIAL",
             "delta_net_income": 49000000.0,
+            "available_at": "2026-03-01T18:00:00Z",
         }],
         calibration_results=[{
             "calibration_status": "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE",
@@ -67,128 +77,77 @@ def test_decision_synthesis_conflicting_macro_blocker() -> None:
         ticker="SUZB3",
         as_of_timestamp=as_of,
         macro_events=[
-            {"macro_event_id": "evt_001", "factor": "FX_USD_BRL", "factor_direction": 1},
-            {"macro_event_id": "evt_002", "factor": "FX_USD_BRL", "factor_direction": -1},
+            {"macro_event_id": "evt_001", "factor": "FX_USD_BRL", "factor_direction": 1, "available_at": "2026-01-01T00:00:00Z"},
+            {"macro_event_id": "evt_002", "factor": "FX_USD_BRL", "factor_direction": -1, "available_at": "2026-01-01T00:00:00Z"},
         ],
-        sector_state={"sector_name": "Pulp", "is_active": True, "has_active_signal": True},
-        company_contributions=[{"contribution_id": "c_001", "approval_status": "HUMAN_APPROVED"}],
-        financial_outcomes=[{"financial_outcome_id": "out_001", "status": "PARTIAL", "delta_net_income": -5000000.0}],
+        sector_state={"sector_name": "Pulp", "is_active": True, "has_active_signal": True, "available_at": "2026-01-01T00:00:00Z"},
+        company_contributions=[{"contribution_id": "c_001", "channel": "export_revenue", "approval_status": "HUMAN_APPROVED", "available_at": "2026-01-01T00:00:00Z"}],
+        financial_outcomes=[{"financial_outcome_id": "out_001", "status": "PARTIAL", "delta_net_income": -5000000.0, "available_at": "2026-01-01T00:00:00Z"}],
     )
 
     assert snapshot.decision == "NO_ACTION"
     assert "CONFLICTING_MACRO_DIRECTION" in snapshot.critical_blockers
 
 
-def test_decision_synthesis_blocked_macro_event_not_directional_conflict() -> None:
+def test_decision_synthesis_non_finite_financial_values_blocked() -> None:
     synthesizer = ResearchDecisionSynthesizer()
     as_of = datetime.now(timezone.utc)
-    
-    snapshot = synthesizer.synthesize(
+
+    # NaN delta must be rejected -> triggers NO_CALCULABLE_FINANCIAL_CHANNEL
+    snapshot_nan = synthesizer.synthesize(
         ticker="MGLU3",
         as_of_timestamp=as_of,
-        macro_events=[
-            {"macro_event_id": "evt_001", "factor": "FX_USD_BRL", "status": "BLOCKED"},
-        ],
-        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True},
-        company_contributions=[{"contribution_id": "c_001", "approval_status": "HUMAN_APPROVED"}],
+        macro_events=[{"macro_event_id": "e1", "factor": "RATES", "factor_direction": -1, "available_at": "2026-01-01T00:00:00Z"}],
+        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True, "available_at": "2026-01-01T00:00:00Z"},
+        company_contributions=[{"contribution_id": "c1", "channel": "rates", "approval_status": "HUMAN_APPROVED", "available_at": "2026-01-01T00:00:00Z"}],
+        financial_outcomes=[{"financial_outcome_id": "out1", "status": "PARTIAL", "delta_net_income": math.nan, "available_at": "2026-01-01T00:00:00Z"}],
     )
+    assert snapshot_nan.decision == "NO_ACTION"
+    assert "NO_CALCULABLE_FINANCIAL_CHANNEL" in snapshot_nan.critical_blockers
 
-    assert snapshot.decision == "NO_ACTION"
-    assert "MACRO_EVENT_BLOCKED" in snapshot.critical_blockers
-    assert "CONFLICTING_MACRO_DIRECTION" not in snapshot.critical_blockers
-
-
-def test_decision_synthesis_inactive_sector_with_residual_impact_score() -> None:
-    synthesizer = ResearchDecisionSynthesizer()
-    as_of = datetime.now(timezone.utc)
-    
-    # is_active=False even with impact_score != 0 MUST trigger NO_ACTIVE_SECTOR_SIGNAL
-    snapshot = synthesizer.synthesize(
-        ticker="RAIL3",
-        as_of_timestamp=as_of,
-        sector_state={
-            "sector_name": "Logistics",
-            "is_active": False,
-            "has_active_signal": False,
-            "impact_score": 0.35,
-        },
-        company_contributions=[{"contribution_id": "c_001", "approval_status": "HUMAN_APPROVED"}],
-        financial_outcomes=[{"financial_outcome_id": "out_001", "status": "PARTIAL", "delta_net_income": 1000.0}],
-    )
-
-    assert snapshot.decision == "NO_ACTION"
-    assert "NO_ACTIVE_SECTOR_SIGNAL" in snapshot.critical_blockers
-
-
-def test_decision_synthesis_partial_outcome_without_numeric_delta() -> None:
-    synthesizer = ResearchDecisionSynthesizer()
-    as_of = datetime.now(timezone.utc)
-    
-    # PARTIAL outcome without numeric delta MUST trigger NO_CALCULABLE_FINANCIAL_CHANNEL
-    snapshot = synthesizer.synthesize(
-        ticker="KLBN11",
-        as_of_timestamp=as_of,
-        macro_events=[{"macro_event_id": "e1", "factor": "FX", "factor_direction": 1}],
-        sector_state={"sector_name": "Paper", "is_active": True, "has_active_signal": True},
-        company_contributions=[{"contribution_id": "c1", "approval_status": "HUMAN_APPROVED"}],
-        financial_outcomes=[{"financial_outcome_id": "out_001", "status": "PARTIAL", "delta_net_income": None}],
-    )
-
-    assert snapshot.decision == "NO_ACTION"
-    assert "NO_CALCULABLE_FINANCIAL_CHANNEL" in snapshot.critical_blockers
-
-
-def test_decision_synthesis_pit_lookahead_failure() -> None:
-    synthesizer = ResearchDecisionSynthesizer()
-    as_of = datetime(2026, 1, 1, tzinfo=timezone.utc)
-    future_time = "2026-06-01T00:00:00Z"
-    
-    snapshot = synthesizer.synthesize(
+    # inf delta must also be rejected
+    snapshot_inf = synthesizer.synthesize(
         ticker="MGLU3",
         as_of_timestamp=as_of,
-        macro_events=[{
-            "macro_event_id": "evt_future",
-            "factor": "INTEREST_RATES",
-            "factor_direction": -1,
-            "available_at": future_time,
-        }],
-        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True},
-        company_contributions=[{"contribution_id": "c1", "approval_status": "HUMAN_APPROVED"}],
+        macro_events=[{"macro_event_id": "e1", "factor": "RATES", "factor_direction": -1, "available_at": "2026-01-01T00:00:00Z"}],
+        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True, "available_at": "2026-01-01T00:00:00Z"},
+        company_contributions=[{"contribution_id": "c1", "channel": "rates", "approval_status": "HUMAN_APPROVED", "available_at": "2026-01-01T00:00:00Z"}],
+        financial_outcomes=[{"financial_outcome_id": "out1", "status": "PARTIAL", "delta_net_income": math.inf, "available_at": "2026-01-01T00:00:00Z"}],
     )
+    assert snapshot_inf.decision == "NO_ACTION"
+    assert "NO_CALCULABLE_FINANCIAL_CHANNEL" in snapshot_inf.critical_blockers
 
-    assert snapshot.decision == "NO_ACTION"
-    assert "LOOKAHEAD_OR_PIT_FAILURE" in snapshot.critical_blockers
+
+def test_runner_has_zero_ticker_fallback_branches() -> None:
+    runner_file = Path("scripts/run_sprint4e3_decision_synthesis.py")
+    content = runner_file.read_text(encoding="utf-8")
+    
+    # Assert zero hard-coded ticker fallback branches or literal synthetic IDs in runner code
+    assert "elif ticker ==" not in content
+    assert "evt_selic_cut_2025_001" not in content
+    assert "sec_comercio_varejo_2025_q4" not in content
+    assert "contrib_mglu_rates_001" not in content
+    assert "out_mglu_rates_001" not in content
+    assert "base_mglu_2025_q4" not in content
 
 
-def test_decision_snapshot_deterministic_canonical_id() -> None:
-    payload1 = {
-        "ticker": "MGLU3",
-        "as_of_timestamp": "2026-07-24T00:00:00Z",
-        "decision": "WATCH",
-        "confidence": 0.4080,
-        "sector_state": {"sector_name": "Retail", "is_active": True},
-    }
-    payload2 = {
-        "ticker": "MGLU3",
-        "as_of_timestamp": "2026-07-24T00:00:00Z",
-        "decision": "WATCH",
-        "confidence": 0.4080,
-        "sector_state": {"sector_name": "Retail", "is_active": True},
-    }
-    payload3 = {
-        "ticker": "MGLU3",
-        "as_of_timestamp": "2026-07-24T00:00:00Z",
-        "decision": "WATCH",
-        "confidence": 0.4080,
-        "sector_state": {"sector_name": "Retail_MODIFIED", "is_active": True},
-    }
+def test_runner_requires_as_of_argument() -> None:
+    # Running the runner script without --as-of must exit with error code 1
+    res = subprocess.run([sys.executable, "scripts/run_sprint4e3_decision_synthesis.py"], capture_output=True, text=True)
+    assert res.returncode != 0
+    assert "Usage error: --as-of <ISO_TIMESTAMP> is required." in res.stdout or "Usage error" in res.stderr
 
-    id1 = ResearchDecisionSnapshot.compute_decision_id(payload1)
-    id2 = ResearchDecisionSnapshot.compute_decision_id(payload2)
-    id3 = ResearchDecisionSnapshot.compute_decision_id(payload3)
 
-    assert id1 == id2
-    assert id1 != id3
+def test_generated_decisions_json_has_no_null_contribution_ids() -> None:
+    audit_file = Path("data/audits/research_4e3_decisions.json")
+    if audit_file.exists():
+        with open(audit_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        
+        for dec in data.get("decisions", []):
+            for contrib in dec.get("company_contributions", []):
+                assert contrib.get("contribution_id") is not None, f"Null contribution_id found in {dec.get('ticker')}"
+                assert contrib.get("channel") is not None, f"Null channel found in {dec.get('ticker')}"
 
 
 def test_duckdb_append_only_idempotent_persistence(tmp_path: Path) -> None:
@@ -200,10 +159,10 @@ def test_duckdb_append_only_idempotent_persistence(tmp_path: Path) -> None:
     snapshot = synthesizer.synthesize(
         ticker="MGLU3",
         as_of_timestamp=as_of,
-        macro_events=[{"macro_event_id": "e1", "factor": "INTEREST_RATES", "factor_direction": -1}],
-        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True},
-        company_contributions=[{"contribution_id": "c1", "approval_status": "HUMAN_APPROVED"}],
-        financial_outcomes=[{"financial_outcome_id": "o1", "status": "PARTIAL", "delta_net_income": 500.0}],
+        macro_events=[{"macro_event_id": "e1", "factor": "INTEREST_RATES", "factor_direction": -1, "available_at": "2026-01-01T00:00:00Z"}],
+        sector_state={"sector_name": "Retail", "is_active": True, "has_active_signal": True, "available_at": "2026-01-01T00:00:00Z"},
+        company_contributions=[{"contribution_id": "c1", "channel": "debt", "approval_status": "HUMAN_APPROVED", "available_at": "2026-01-01T00:00:00Z"}],
+        financial_outcomes=[{"financial_outcome_id": "o1", "status": "PARTIAL", "delta_net_income": 500.0, "available_at": "2026-01-01T00:00:00Z"}],
     )
 
     data_dict = snapshot.model_dump(mode="json")

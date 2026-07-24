@@ -132,52 +132,78 @@ class ResearchDecisionSynthesizer:
             critical_blockers.append("NO_ACTIVE_SECTOR_SIGNAL")
             invalidation_conditions.append("No active macro/sector signal for company's sector")
 
-        # 3. Company exposure evaluation
+        # 3. Company exposure evaluation (Strict: contribution_id and channel must be non-null)
         approved_exposures = [
             c for c in company_contributions
-            if c.get("approval_status") in ("HUMAN_APPROVED", "DELEGATED_AI_APPROVED", "APPROVED")
-            or c.get("is_approved", False)
+            if (c.get("approval_status") in ("HUMAN_APPROVED", "DELEGATED_AI_APPROVED", "APPROVED")
+                or c.get("is_approved", False))
+            and c.get("contribution_id") is not None
+            and c.get("channel") is not None
         ]
         if not approved_exposures:
             critical_blockers.append("NO_APPROVED_COMPANY_EXPOSURE")
-            invalidation_conditions.append("No approved company macro exposure ingested")
+            invalidation_conditions.append("No approved company macro exposure with valid ID and channel ingested")
 
-        # 4. Financial channel calculability (Strict: requires finite numeric delta)
+        # 4. Financial channel calculability (Strict: requires finite numeric delta and non-null IDs)
+        import math
+
         def is_calculable(outcome: dict[str, Any]) -> bool:
             status = outcome.get("status")
             if status not in ("CALCULATED", "PARTIAL"):
+                return False
+            if not outcome.get("financial_outcome_id"):
                 return False
             numeric_fields = ["delta_net_income", "delta_ebitda", "delta_fcf", "calculated_value", "delta_revenue"]
             for f in numeric_fields:
                 val = outcome.get(f)
                 if val is not None and isinstance(val, (int, float)) and not isinstance(val, bool):
-                    return True
+                    if math.isfinite(val):
+                        return True
             return False
 
         calculable_channels = [f for f in financial_outcomes if is_calculable(f)]
         if not calculable_channels and approved_exposures:
             critical_blockers.append("NO_CALCULABLE_FINANCIAL_CHANNEL")
-            invalidation_conditions.append("No calculable financial bridge channel with numeric output for approved exposures")
+            invalidation_conditions.append("No calculable financial bridge channel with finite numeric output for approved exposures")
 
         # 5. Direct PIT & Security Integrity Checks
-        def check_pit(item: dict[str, Any]) -> bool:
-            avail = item.get("available_at") or item.get("as_of_timestamp") or item.get("price_available_at")
-            if not avail:
-                return True
-            if isinstance(avail, str):
-                avail_dt = datetime.fromisoformat(avail.replace("Z", "+00:00"))
-            elif isinstance(avail, datetime):
-                avail_dt = avail
-            else:
-                return True
-            if avail_dt.tzinfo is None:
-                avail_dt = avail_dt.replace(tzinfo=timezone.utc)
-            return avail_dt <= as_of_dt
+        temporal_keys = [
+            "available_at", "event_available_at", "document_available_at",
+            "price_available_at", "share_count_available_at", "mapping_available_at",
+            "baseline_available_at", "created_from_data_available_at", "as_of_timestamp"
+        ]
 
-        all_inputs = macro_events + ([sector_state] if sector_state else []) + company_contributions + financial_outcomes + ([historical_multiple_position] if historical_multiple_position else [])
+        def check_pit(item: dict[str, Any]) -> bool:
+            found_ts = False
+            for tk in temporal_keys:
+                avail = item.get(tk)
+                if avail is not None:
+                    found_ts = True
+                    if isinstance(avail, str):
+                        avail_dt = datetime.fromisoformat(avail.replace("Z", "+00:00"))
+                    elif isinstance(avail, datetime):
+                        avail_dt = avail
+                    else:
+                        continue
+                    if avail_dt.tzinfo is None:
+                        avail_dt = avail_dt.replace(tzinfo=timezone.utc)
+                    if avail_dt > as_of_dt:
+                        return False
+            # Mandatory availability timestamp check for macro events, exposures, outcomes
+            if not found_ts and item.get("require_timestamp", True):
+                return False
+            return True
+
+        all_inputs = (
+            [dict(e, require_timestamp=True) for e in macro_events]
+            + ([dict(sector_state, require_timestamp=True)] if sector_state else [])
+            + [dict(c, require_timestamp=True) for c in company_contributions]
+            + [dict(f, require_timestamp=True) for f in financial_outcomes]
+        )
+
         if any(not check_pit(inp) for inp in all_inputs):
             critical_blockers.append("LOOKAHEAD_OR_PIT_FAILURE")
-            invalidation_conditions.append("Input available_at timestamp occurs after assessment as_of_timestamp")
+            invalidation_conditions.append("Input timestamp is missing or occurs after assessment as_of_timestamp")
 
         if valuation_assessment.get("security_mismatch") or any(
             c.get("ticker") and c.get("ticker") != ticker for c in company_contributions
@@ -218,10 +244,10 @@ class ResearchDecisionSynthesizer:
         if not historical_multiple_position:
             missing_inputs.append("historical_multiple_position")
 
-        # 8. Decision logic
+        # 8. Decision logic (Strict: WATCH requires active sector AND approved exposures AND calculable_channels AND 0 critical blockers)
         if critical_blockers:
             decision = "NO_ACTION"
-        elif sector_active and approved_exposures and (calculable_channels or financial_outcomes):
+        elif sector_active and approved_exposures and calculable_channels:
             decision = "WATCH"
         else:
             decision = "NO_ACTION"
