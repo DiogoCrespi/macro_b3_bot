@@ -36,6 +36,7 @@ class ResearchDecisionSnapshot(BaseModel):
     rationale: str = ""
     invalidation_conditions: list[str] = Field(default_factory=list)
     methodology_version: str = "4E.3-research-decision-synthesis-v1"
+    execution_mode: str = "BLOCKED_MISSING_UPSTREAM_INPUT"
     input_ids: dict[str, Any] = Field(default_factory=dict)
 
     @classmethod

@@ -52,6 +52,8 @@ class ResearchDecisionSynthesizer:
         valuation_assessment: dict[str, Any] | None = None,
         historical_multiple_position: dict[str, Any] | None = None,
         price_implied_fundamentals: dict[str, Any] | None = None,
+        security_mapping: dict[str, Any] | None = None,
+        execution_mode: str = "BLOCKED_MISSING_UPSTREAM_INPUT",
         input_ids: dict[str, Any] | None = None,
     ) -> ResearchDecisionSnapshot:
         macro_events = macro_events or []
@@ -244,8 +246,14 @@ class ResearchDecisionSynthesizer:
         if not historical_multiple_position:
             missing_inputs.append("historical_multiple_position")
 
-        # 8. Decision logic (Strict: WATCH requires active sector AND approved exposures AND calculable_channels AND 0 critical blockers)
-        if critical_blockers:
+        # 8. Decision logic (Absolute Rule: execution_mode != REAL_UPSTREAM_SYNTHESIS or 0 macro_events or critical_blockers strictly forces NO_ACTION)
+        if execution_mode != "REAL_UPSTREAM_SYNTHESIS":
+            if execution_mode not in critical_blockers:
+                critical_blockers.append(execution_mode)
+            decision = "NO_ACTION"
+        elif critical_blockers or not macro_events:
+            if not macro_events and "BLOCKED_MISSING_UPSTREAM_INPUT" not in critical_blockers:
+                critical_blockers.append("BLOCKED_MISSING_UPSTREAM_INPUT")
             decision = "NO_ACTION"
         elif sector_active and approved_exposures and calculable_channels:
             decision = "WATCH"
@@ -327,6 +335,7 @@ class ResearchDecisionSynthesizer:
             "rationale": rationale,
             "invalidation_conditions": sorted(invalidation_conditions),
             "methodology_version": self.methodology_version,
+            "execution_mode": execution_mode,
             "input_ids": input_ids,
         }
         decision_id = ResearchDecisionSnapshot.compute_decision_id(full_payload_data)
@@ -356,5 +365,6 @@ class ResearchDecisionSynthesizer:
             rationale=rationale,
             invalidation_conditions=sorted(invalidation_conditions),
             methodology_version=self.methodology_version,
+            execution_mode=execution_mode,
             input_ids=input_ids,
         )

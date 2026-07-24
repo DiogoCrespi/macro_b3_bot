@@ -898,9 +898,14 @@ class DatabaseStore:
                 canonical_payload_json VARCHAR NOT NULL,
                 input_ids_json VARCHAR NOT NULL,
                 methodology_version VARCHAR NOT NULL,
+                execution_mode VARCHAR NOT NULL DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT',
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        try:
+            self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
+        except Exception:
+            pass
         for col in {
             "assessment_as_of": "TIMESTAMP",
             "price_as_of": "TIMESTAMP",
@@ -2272,8 +2277,8 @@ class DatabaseStore:
             """
             INSERT INTO research_decision_snapshots
             (decision_id, ticker, as_of_timestamp, decision, confidence, confidence_tier,
-             canonical_payload_json, input_ids_json, methodology_version)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+             canonical_payload_json, input_ids_json, methodology_version, execution_mode)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 decision_id,
@@ -2285,6 +2290,7 @@ class DatabaseStore:
                 json.dumps(snapshot, default=str),
                 json.dumps(snapshot.get("input_ids", {}), default=str),
                 snapshot.get("methodology_version", "4E.3-research-decision-synthesis-v1"),
+                snapshot.get("execution_mode", "BLOCKED_MISSING_UPSTREAM_INPUT"),
             ],
         )
 
