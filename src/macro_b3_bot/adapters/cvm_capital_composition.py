@@ -7,7 +7,7 @@ import hashlib
 import io
 from pathlib import Path
 import zipfile
-from typing import Any, Iterable
+from typing import Any
 
 
 def _parse_number(value: Any) -> float | None:
@@ -149,4 +149,3 @@ class CVMCapitalCompositionReader:
                 "section": self.section_name,
             })
         return rows
-

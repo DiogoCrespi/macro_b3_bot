@@ -5,7 +5,7 @@ from datetime import date, datetime, timezone
 import hashlib
 from pathlib import Path
 import re
-from typing import Any, Iterable
+from typing import Any
 import zipfile
 
 
@@ -122,4 +122,3 @@ class B3CotahistReader:
             }
             result[(ticker, trade_date, "010")] = record
         return list(result.values())
-

@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+import pytest
 
 from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
 from macro_b3_bot.application.market_snapshot_pilot import PITMarketDataIngestor
