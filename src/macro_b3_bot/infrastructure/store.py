@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from datetime import datetime, timezone, date
-from typing import Optional
+from typing import Optional, Any
 import duckdb
 
 class DatabaseStore:
@@ -884,6 +884,20 @@ class DatabaseStore:
                 financial_baseline_id VARCHAR NOT NULL,
                 methodology_version VARCHAR NOT NULL,
                 observation_payload VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS research_decision_snapshots (
+                decision_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                decision VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                confidence_tier VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                input_ids_json VARCHAR NOT NULL,
+                methodology_version VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
@@ -2234,6 +2248,74 @@ class DatabaseStore:
             "status", "detected_at"
         ]
         return [dict(zip(cols, r)) for r in rows]
+
+    def save_research_decision_snapshot(self, snapshot: dict[str, Any]) -> None:
+        """Persists a research decision snapshot into DuckDB idempotently."""
+        decision_id = snapshot["decision_id"]
+        # Check if already exists for idempotency
+        existing = self.connection.execute(
+            "SELECT 1 FROM research_decision_snapshots WHERE decision_id = ?",
+            [decision_id]
+        ).fetchone()
+        if existing:
+            return
+
+        as_of_val = snapshot.get("as_of_timestamp")
+        if isinstance(as_of_val, str):
+            as_of_ts = datetime.fromisoformat(as_of_val.replace("Z", "+00:00"))
+        elif isinstance(as_of_val, datetime):
+            as_of_ts = as_of_val
+        else:
+            as_of_ts = datetime.now(timezone.utc)
+
+        self.connection.execute(
+            """
+            INSERT INTO research_decision_snapshots
+            (decision_id, ticker, as_of_timestamp, decision, confidence, confidence_tier,
+             canonical_payload_json, input_ids_json, methodology_version)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                decision_id,
+                snapshot["ticker"],
+                as_of_ts,
+                snapshot["decision"],
+                float(snapshot["confidence"]),
+                snapshot["confidence_tier"],
+                json.dumps(snapshot, default=str),
+                json.dumps(snapshot.get("input_ids", {}), default=str),
+                snapshot.get("methodology_version", "4E.3-research-decision-synthesis-v1"),
+            ],
+        )
+
+    def get_research_decision_snapshots(self, ticker: Optional[str] = None) -> list[dict[str, Any]]:
+        """Retrieves research decision snapshots from DuckDB."""
+        if ticker:
+            rows = self.connection.execute(
+                """
+                SELECT decision_id, ticker, as_of_timestamp, decision, confidence, confidence_tier,
+                       canonical_payload_json, input_ids_json, methodology_version, created_at
+                FROM research_decision_snapshots
+                WHERE ticker = ?
+                ORDER BY as_of_timestamp DESC
+                """,
+                [ticker]
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT decision_id, ticker, as_of_timestamp, decision, confidence, confidence_tier,
+                       canonical_payload_json, input_ids_json, methodology_version, created_at
+                FROM research_decision_snapshots
+                ORDER BY as_of_timestamp DESC
+                """
+            ).fetchall()
+
+        result = []
+        for r in rows:
+            payload = json.loads(r[6])
+            result.append(payload)
+        return result
 
     def close(self) -> None:
         self.connection.close()

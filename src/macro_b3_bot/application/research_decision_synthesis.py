@@ -26,6 +26,7 @@ class ResearchDecisionSynthesizer:
     CRITICAL_GATES = {
         "NO_ACTIVE_SECTOR_SIGNAL",
         "CONFLICTING_MACRO_DIRECTION",
+        "MACRO_EVENT_BLOCKED",
         "NO_APPROVED_COMPANY_EXPOSURE",
         "NO_CALCULABLE_FINANCIAL_CHANNEL",
         "LOOKAHEAD_OR_PIT_FAILURE",
@@ -64,10 +65,15 @@ class ResearchDecisionSynthesizer:
 
         if isinstance(as_of_timestamp, datetime):
             if as_of_timestamp.tzinfo is None:
-                as_of_timestamp = as_of_timestamp.replace(tzinfo=timezone.utc)
-            as_of_str = as_of_timestamp.isoformat()
+                as_of_dt = as_of_timestamp.replace(tzinfo=timezone.utc)
+            else:
+                as_of_dt = as_of_timestamp.astimezone(timezone.utc)
+            as_of_str = as_of_dt.isoformat()
         else:
             as_of_str = str(as_of_timestamp)
+            as_of_dt = datetime.fromisoformat(as_of_str.replace("Z", "+00:00"))
+            if as_of_dt.tzinfo is None:
+                as_of_dt = as_of_dt.replace(tzinfo=timezone.utc)
 
         critical_blockers: list[str] = []
         noncritical_warnings: list[str] = []
@@ -75,46 +81,110 @@ class ResearchDecisionSynthesizer:
         invalidation_conditions: list[str] = []
 
         # 1. Macro events & directional conflicts
-        macro_event_ids = [e.get("macro_event_id") or e.get("event_id") for e in macro_events if e.get("macro_event_id") or e.get("event_id")]
-        active_factors = list({e.get("factor") for e in macro_events if e.get("factor")})
-        factor_directions = {}
-        has_conflict = False
+        macro_event_ids = [
+            str(e.get("macro_event_id") or e.get("event_id"))
+            for e in macro_events
+            if e.get("macro_event_id") or e.get("event_id")
+        ]
+        active_factors = list({str(e.get("factor")) for e in macro_events if e.get("factor")})
+        
+        factor_direction_sets: dict[str, set[int]] = {}
+        factor_directions: dict[str, Any] = {}
+        has_directional_conflict = False
+        has_blocked_macro_event = False
+
         for e in macro_events:
             factor = e.get("factor")
-            direction = e.get("factor_direction", 1)
-            if factor:
-                if factor in factor_directions and factor_directions[factor] != direction:
-                    has_conflict = True
-                factor_directions[factor] = direction
-        
+            direction = e.get("factor_direction")
+            status = e.get("decision_mode_status") or e.get("status")
+            
+            if status == "BLOCKED" and direction is None:
+                has_blocked_macro_event = True
+
+            if factor and direction is not None:
+                factor_direction_sets.setdefault(factor, set()).add(int(direction))
+
+        for factor, dirs in factor_direction_sets.items():
+            if len(dirs) > 1:
+                has_directional_conflict = True
+                factor_directions[factor] = None
+            elif len(dirs) == 1:
+                factor_directions[factor] = next(iter(dirs))
+
         macro_conflict_status = "NO_CONFLICT"
-        if has_conflict or any(c.get("decision_mode_status") == "BLOCKED" for c in macro_events):
-            has_conflict = True
+        if has_directional_conflict:
             macro_conflict_status = "CONFLICTING_MACRO_DIRECTION"
             critical_blockers.append("CONFLICTING_MACRO_DIRECTION")
-            invalidation_conditions.append("Unresolved conflicting macro factor directions detected")
+            invalidation_conditions.append("Unresolved opposing macro factor directions detected")
+        elif has_blocked_macro_event:
+            critical_blockers.append("MACRO_EVENT_BLOCKED")
+            invalidation_conditions.append("Macro event blocked for non-directional reasons")
 
-        # 2. Sector signal evaluation
+        # 2. Sector signal evaluation (Strict: BOTH is_active and has_active_signal must be True)
         sector_active = False
         if sector_state:
-            sector_active = bool(sector_state.get("is_active", False) or sector_state.get("impact_score", 0.0) != 0.0 or sector_state.get("has_active_signal", False))
+            is_act = bool(sector_state.get("is_active", False))
+            has_sig = bool(sector_state.get("has_active_signal", False))
+            if is_act and has_sig:
+                sector_active = True
+
         if not sector_active:
             critical_blockers.append("NO_ACTIVE_SECTOR_SIGNAL")
             invalidation_conditions.append("No active macro/sector signal for company's sector")
 
         # 3. Company exposure evaluation
-        approved_exposures = [c for c in company_contributions if c.get("approval_status") in ("HUMAN_APPROVED", "DELEGATED_AI_APPROVED", "APPROVED") or c.get("is_approved", False)]
+        approved_exposures = [
+            c for c in company_contributions
+            if c.get("approval_status") in ("HUMAN_APPROVED", "DELEGATED_AI_APPROVED", "APPROVED")
+            or c.get("is_approved", False)
+        ]
         if not approved_exposures:
             critical_blockers.append("NO_APPROVED_COMPANY_EXPOSURE")
             invalidation_conditions.append("No approved company macro exposure ingested")
 
-        # 4. Financial channel calculability
-        calculable_channels = [f for f in financial_outcomes if f.get("status") in ("CALCULATED", "PARTIAL") and f.get("financial_outcome_id")]
+        # 4. Financial channel calculability (Strict: requires finite numeric delta)
+        def is_calculable(outcome: dict[str, Any]) -> bool:
+            status = outcome.get("status")
+            if status not in ("CALCULATED", "PARTIAL"):
+                return False
+            numeric_fields = ["delta_net_income", "delta_ebitda", "delta_fcf", "calculated_value", "delta_revenue"]
+            for f in numeric_fields:
+                val = outcome.get(f)
+                if val is not None and isinstance(val, (int, float)) and not isinstance(val, bool):
+                    return True
+            return False
+
+        calculable_channels = [f for f in financial_outcomes if is_calculable(f)]
         if not calculable_channels and approved_exposures:
             critical_blockers.append("NO_CALCULABLE_FINANCIAL_CHANNEL")
-            invalidation_conditions.append("No calculable financial bridge channel for approved exposures")
+            invalidation_conditions.append("No calculable financial bridge channel with numeric output for approved exposures")
 
-        # 5. Security & PIT integrity checks
+        # 5. Direct PIT & Security Integrity Checks
+        def check_pit(item: dict[str, Any]) -> bool:
+            avail = item.get("available_at") or item.get("as_of_timestamp") or item.get("price_available_at")
+            if not avail:
+                return True
+            if isinstance(avail, str):
+                avail_dt = datetime.fromisoformat(avail.replace("Z", "+00:00"))
+            elif isinstance(avail, datetime):
+                avail_dt = avail
+            else:
+                return True
+            if avail_dt.tzinfo is None:
+                avail_dt = avail_dt.replace(tzinfo=timezone.utc)
+            return avail_dt <= as_of_dt
+
+        all_inputs = macro_events + ([sector_state] if sector_state else []) + company_contributions + financial_outcomes + ([historical_multiple_position] if historical_multiple_position else [])
+        if any(not check_pit(inp) for inp in all_inputs):
+            critical_blockers.append("LOOKAHEAD_OR_PIT_FAILURE")
+            invalidation_conditions.append("Input available_at timestamp occurs after assessment as_of_timestamp")
+
+        if valuation_assessment.get("security_mismatch") or any(
+            c.get("ticker") and c.get("ticker") != ticker for c in company_contributions
+        ):
+            critical_blockers.append("MARKET_SECURITY_MISMATCH")
+            invalidation_conditions.append("Security/ticker mismatch detected in upstream inputs")
+
         if valuation_assessment.get("blockers"):
             for b in valuation_assessment["blockers"]:
                 if b in self.CRITICAL_GATES and b not in critical_blockers:
@@ -166,7 +236,6 @@ class ResearchDecisionSynthesizer:
             avg_exp_conf = sum(float(c.get("confidence", 0.5)) for c in approved_exposures) / len(approved_exposures)
             base_confidence = base_confidence * 0.5 + avg_exp_conf * 0.5
 
-        # Penalize confidence for non-critical warnings
         confidence = base_confidence
         if "FCF_NOT_DCF_READY" in noncritical_warnings:
             confidence *= 0.80
@@ -194,39 +263,55 @@ class ResearchDecisionSynthesizer:
                 f"and {len(calculable_channels)} calculable financial channels without critical blockers."
             )
         else:
-            blocker_str = ", ".join(critical_blockers) if critical_blockers else "insufficient active signals"
+            blocker_str = ", ".join(sorted(critical_blockers)) if critical_blockers else "insufficient active signals"
             rationale_parts.append(
                 f"Company {ticker} assigned NO_ACTION due to critical blockers: [{blocker_str}]."
             )
 
         if noncritical_warnings:
-            rationale_parts.append(f"Non-critical warnings noted: [{', '.join(noncritical_warnings)}].")
+            rationale_parts.append(f"Non-critical warnings noted: [{', '.join(sorted(noncritical_warnings))}].")
 
         if historical_multiple_position.get("summary"):
             rationale_parts.append(f"Valuation Context: {historical_multiple_position['summary']}")
 
         rationale = " ".join(rationale_parts)
 
-        # 11. Build payload & content hash
-        payload_data = {
+        # 11. Full Canonical Payload Hashing
+        full_payload_data = {
             "ticker": ticker,
             "as_of_timestamp": as_of_str,
             "decision": decision,
+            "macro_event_ids": sorted(macro_event_ids),
+            "active_factors": sorted(active_factors),
+            "factor_directions": factor_directions,
+            "macro_conflict_status": macro_conflict_status,
+            "sector_state": sector_state,
+            "sector_impact": sector_state.get("impact_summary") if sector_state else None,
+            "company_contributions": company_contributions,
+            "financial_outcomes": financial_outcomes,
+            "historical_multiple_position": historical_multiple_position,
+            "price_implied_fundamentals": price_implied_fundamentals,
+            "valuation_classification": valuation_assessment.get("classification", "VALUATION_BLOCKED"),
+            "evidence_completeness": evidence_completeness,
+            "confidence": confidence,
+            "confidence_tier": confidence_tier,
             "critical_blockers": sorted(critical_blockers),
             "noncritical_warnings": sorted(noncritical_warnings),
-            "macro_event_ids": sorted(macro_event_ids),
-            "confidence": confidence,
+            "missing_inputs": sorted(missing_inputs),
+            "rationale": rationale,
+            "invalidation_conditions": sorted(invalidation_conditions),
+            "methodology_version": self.methodology_version,
             "input_ids": input_ids,
         }
-        decision_id = ResearchDecisionSnapshot.compute_decision_id(payload_data)
+        decision_id = ResearchDecisionSnapshot.compute_decision_id(full_payload_data)
 
         return ResearchDecisionSnapshot(
             decision_id=decision_id,
             ticker=ticker,
             as_of_timestamp=as_of_str,
             decision=decision,
-            macro_event_ids=macro_event_ids,
-            active_factors=active_factors,
+            macro_event_ids=sorted(macro_event_ids),
+            active_factors=sorted(active_factors),
             factor_directions=factor_directions,
             macro_conflict_status=macro_conflict_status,
             sector_state=sector_state,
@@ -239,11 +324,11 @@ class ResearchDecisionSynthesizer:
             evidence_completeness=evidence_completeness,
             confidence=confidence,
             confidence_tier=confidence_tier,
-            critical_blockers=critical_blockers,
-            noncritical_warnings=noncritical_warnings,
-            missing_inputs=missing_inputs,
+            critical_blockers=sorted(critical_blockers),
+            noncritical_warnings=sorted(noncritical_warnings),
+            missing_inputs=sorted(missing_inputs),
             rationale=rationale,
-            invalidation_conditions=invalidation_conditions,
+            invalidation_conditions=sorted(invalidation_conditions),
             methodology_version=self.methodology_version,
             input_ids=input_ids,
         )

@@ -1,8 +1,15 @@
 {
-  "sprint": "4E.3",
+  "sprint": "4E.3B",
   "methodology_version": "4E.3-research-decision-synthesis-v1",
-  "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+  "as_of_timestamp": "2026-07-24T00:00:00+00:00",
   "total_evaluated": 5,
+  "execution_modes": {
+    "MGLU3": "REAL_UPSTREAM_SYNTHESIS",
+    "SUZB3": "REAL_UPSTREAM_SYNTHESIS",
+    "KLBN11": "REAL_UPSTREAM_SYNTHESIS",
+    "RAIL3": "BLOCKED_MISSING_UPSTREAM_INPUT",
+    "SLCE3": "BLOCKED_MISSING_UPSTREAM_INPUT"
+  },
   "decisions_count": {
     "WATCH": 1,
     "NO_ACTION": 4
@@ -14,9 +21,9 @@
   ],
   "decisions": [
     {
-      "decision_id": "70b6b438d32c82acea2d6a3e9b2f2139c62a057d0bd7d66ff40176c8f42beb8d",
+      "decision_id": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
       "ticker": "MGLU3",
-      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "WATCH",
       "macro_event_ids": [
         "evt_selic_cut_2025_001"
@@ -29,176 +36,432 @@
       },
       "macro_conflict_status": "NO_CONFLICT",
       "sector_state": {
-        "sector_name": "Retail & Commerce",
+        "sector_name": "COMERCIO_VAREJO",
         "is_active": true,
         "has_active_signal": true,
         "impact_score": -0.45,
-        "impact_summary": "High interest rate sensitivity on consumer credit"
+        "impact_summary": "Alta sensibilidade de juros sobre crédito ao consumidor",
+        "available_at": "2025-12-01T18:00:00Z"
       },
-      "sector_impact": "High interest rate sensitivity on consumer credit",
+      "sector_impact": "Alta sensibilidade de juros sobre crédito ao consumidor",
       "company_contributions": [
         {
-          "contribution_id": "contrib_mglu_rates_001",
-          "channel": "floating_rate_debt",
-          "approval_status": "HUMAN_APPROVED",
-          "confidence": 0.75
+          "contribution_id": null,
+          "ticker": "MGLU3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.947,
+          "available_at": "2026-07-02T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "MGLU3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.954,
+          "available_at": "2026-07-02T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "MGLU3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.923,
+          "available_at": "2026-07-02T00:00:00Z"
         }
       ],
       "financial_outcomes": [
         {
           "financial_outcome_id": "out_mglu_rates_001",
+          "baseline_id": "base_mglu_2025_q4",
           "status": "PARTIAL",
-          "delta_net_income": 49000000.0
+          "delta_net_income": 49000000.0,
+          "available_at": "2026-03-01T18:00:00Z"
         }
       ],
       "historical_multiple_position": {
         "observation_count": 9,
-        "median_ev_ebitda": 11.2,
-        "summary": "Observed EV/EBITDA median is 11.2x across 9 PIT observations."
+        "median_ev_ebitda": 4.670487216769859,
+        "pe_percentiles": {
+          "min": 12.554923101462803,
+          "p10": 13.235078766034984,
+          "p25": 14.255312262893257,
+          "median": 15.747515965742327,
+          "p75": 16.325568513068966,
+          "p90": 27.74627579085243,
+          "max": 35.36008064270807,
+          "current_percentile": 1.0,
+          "sample_status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda_percentiles": {
+          "min": 2.932633740062079,
+          "p10": 3.3699464134389068,
+          "p25": 3.6693063846847283,
+          "median": 4.670487216769859,
+          "p75": 8.736046595743849,
+          "p90": 25.05043671092934,
+          "max": 49.70469064945563,
+          "current_percentile": 0.5,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy_percentiles": {
+          "min": 0.3000126700736555,
+          "p10": 0.33759299325874303,
+          "p25": 0.41067448448805394,
+          "median": 0.49331320788452504,
+          "p75": 3.4852034874191733,
+          "p90": 13.25717321628925,
+          "max": 47.23755437790369,
+          "current_percentile": 0.5555555555555556,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "summary": "Real 4E.2 EV/EBITDA median is 4.670487x across 9 PIT observations."
       },
-      "price_implied_fundamentals": {
-        "implied_revenue_growth_p50": 0.045,
-        "implied_ebitda_margin_p50": 0.062
-      },
+      "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
       "evidence_completeness": 1.0,
-      "confidence": 0.408,
+      "confidence": 0.4568,
       "confidence_tier": "MEDIUM",
       "critical_blockers": [],
       "noncritical_warnings": [
-        "FCF_NOT_DCF_READY",
         "EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "FCF_NOT_DCF_READY",
         "SMALL_VALUATION_SAMPLE"
       ],
       "missing_inputs": [],
-      "rationale": "Company MGLU3 qualified for WATCH list: active sector signal, 1 approved exposures, and 1 calculable financial channels without critical blockers. Non-critical warnings noted: [FCF_NOT_DCF_READY, EMPIRICAL_CALIBRATION_INCOMPLETE, SMALL_VALUATION_SAMPLE]. Valuation Context: Observed EV/EBITDA median is 11.2x across 9 PIT observations.",
+      "rationale": "Company MGLU3 qualified for WATCH list: active sector signal, 3 approved exposures, and 1 calculable financial channels without critical blockers. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 4.670487x across 9 PIT observations.",
       "invalidation_conditions": [],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
       "input_ids": {
+        "sector_snapshot_id": "sec_comercio_varejo_2025_q4",
+        "valuation_observation_ids": [
+          "hist-67f1cc84f052f0b7287e8e78"
+        ],
+        "market_snapshot_ids": [
+          "mkt-b2fa9821724be7229b67148c"
+        ],
+        "financial_baseline_ids": [
+          "6f117cc79bf099cb77f82942"
+        ],
         "macro_event_ids": [
           "evt_selic_cut_2025_001"
         ],
-        "sector_snapshot_id": "sec_retail_2025_q4",
         "company_contribution_ids": [
-          "contrib_mglu_rates_001"
+          null,
+          null,
+          null
         ],
         "financial_outcome_ids": [
           "out_mglu_rates_001"
-        ],
-        "valuation_observation_count": 9
+        ]
       }
     },
     {
-      "decision_id": "32eb6b06344e531b1a81e0e1b9b2e5c7d12670b99ac9c19e695a5f1e88394f45",
+      "decision_id": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
       "ticker": "SUZB3",
-      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
       "macro_event_ids": [
-        "evt_fx_up_001",
-        "evt_fx_down_002"
+        "0bb655e7ff44276931fbfb90",
+        "1686a5e15f14a811bbaeb5b3",
+        "1f57afa16480a74080b1aa97",
+        "1f868a896127e3428b8758ee",
+        "35a08a49785311301abc3cab",
+        "35df06988a75a6edbb108790",
+        "3bc58960d693695fd2c44f4d",
+        "4036cbb3b28152eba5c46f61",
+        "43f2a44fe37d6ac788efb244",
+        "47a2148d54b139fa8f007c43",
+        "4955054cd2edb6b5ad79805d",
+        "56dc8604580e75112fcb8e83",
+        "736fa4e13a32a03426d04478",
+        "769d02c641172ff633de4662",
+        "7fb32fe161ea14257f8db05b",
+        "82c067e905e3c651c26f0d94",
+        "83fc8908b03941d3ef3b6493",
+        "8988b917dfd33f5a83364b5a",
+        "9446a5189fa3b77935163c55",
+        "95295c2efe1e180e23f57511",
+        "9669f96f4ad0ef729b5548dc",
+        "9a52fdea3f0341b9e74e3991",
+        "9bd9d01044aa95ddeca910bd",
+        "9dec4651209fe07ec2c71371",
+        "a41b3dbba46af7c74231091d",
+        "a7c97984462c606ccd0af7bb",
+        "d7b4625f828c390b8777cf34",
+        "d8b20be4e07b18a71550293e",
+        "de1b106b8f3aadb790ba0ca8",
+        "e2ee04c67fc112a6975af356",
+        "e6c5f2d62196d7f4fa3a9bc0",
+        "e764bc91d5e3c9359f73a324",
+        "ebb3e062d89a0b62b9fc542d",
+        "ef99bc0c1f04cb0c39899247",
+        "f5efe20a281d55a4b6ac20cf"
       ],
       "active_factors": [
-        "FX_USD_BRL"
+        "FX"
       ],
       "factor_directions": {
-        "FX_USD_BRL": -1
+        "FX": null
       },
       "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
       "sector_state": {
-        "sector_name": "Pulp & Paper",
+        "sector_name": "PAPEL_CELULOSE",
         "is_active": true,
         "has_active_signal": true,
-        "impact_score": 0.6
+        "impact_score": 0.6,
+        "impact_summary": "Exposição cambial exportadora e insumos dolarizados",
+        "available_at": "2025-12-01T18:00:00Z"
       },
-      "sector_impact": null,
+      "sector_impact": "Exposição cambial exportadora e insumos dolarizados",
       "company_contributions": [
         {
-          "contribution_id": "contrib_suzb_fx_001",
-          "channel": "export_revenue",
-          "approval_status": "HUMAN_APPROVED",
-          "confidence": 0.8
+          "contribution_id": null,
+          "ticker": "SUZB3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.981,
+          "available_at": "2026-06-10T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "SUZB3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.978,
+          "available_at": "2026-06-10T00:00:00Z"
         }
       ],
       "financial_outcomes": [
         {
           "financial_outcome_id": "out_suzb_fx_001",
-          "status": "PARTIAL"
+          "baseline_id": "base_suzb_2025_q4",
+          "status": "PARTIAL",
+          "delta_net_income": -50000000.0,
+          "available_at": "2026-03-01T18:00:00Z"
         }
       ],
       "historical_multiple_position": {
         "observation_count": 9,
-        "median_ev_ebitda": 6.8,
-        "summary": "Observed EV/EBITDA median is 6.8x across 9 PIT observations."
+        "median_ev_ebitda": 6.171108232683946,
+        "pe_percentiles": {
+          "min": 5.150505012252966,
+          "p10": 5.257010923973643,
+          "p25": 6.316477977910141,
+          "median": 8.28023679170077,
+          "p75": 18.372215364123424,
+          "p90": 1373.0857182375212,
+          "max": 3403.669349838615,
+          "current_percentile": 0.2857142857142857,
+          "sample_status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY"
+        },
+        "ev_ebitda_percentiles": {
+          "min": 4.504825093860099,
+          "p10": 5.376002261801508,
+          "p25": 6.078631924326815,
+          "median": 6.171108232683946,
+          "p75": 7.1163228820382445,
+          "p90": 8.064925850080268,
+          "max": 9.745184106220634,
+          "current_percentile": 0.5555555555555556,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "p_fcf_proxy_percentiles": {
+          "min": 3.937714590108881,
+          "p10": 4.280972203649039,
+          "p25": 4.503087977489991,
+          "median": 5.366193617811129,
+          "p75": 13.806729218856503,
+          "p90": 17.627012764093973,
+          "max": 19.965717394772227,
+          "current_percentile": 0.1111111111111111,
+          "sample_status": "DESCRIPTIVE_ONLY"
+        },
+        "summary": "Real 4E.2 EV/EBITDA median is 6.171108x across 9 PIT observations."
       },
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
       "evidence_completeness": 1.0,
-      "confidence": 0.3315,
+      "confidence": 0.3773,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "CONFLICTING_MACRO_DIRECTION"
       ],
       "noncritical_warnings": [
-        "FCF_NOT_DCF_READY",
         "EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "FCF_NOT_DCF_READY",
         "SMALL_VALUATION_SAMPLE"
       ],
       "missing_inputs": [],
-      "rationale": "Company SUZB3 assigned NO_ACTION due to critical blockers: [CONFLICTING_MACRO_DIRECTION]. Non-critical warnings noted: [FCF_NOT_DCF_READY, EMPIRICAL_CALIBRATION_INCOMPLETE, SMALL_VALUATION_SAMPLE]. Valuation Context: Observed EV/EBITDA median is 6.8x across 9 PIT observations.",
+      "rationale": "Company SUZB3 assigned NO_ACTION due to critical blockers: [CONFLICTING_MACRO_DIRECTION]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 6.171108x across 9 PIT observations.",
       "invalidation_conditions": [
-        "Unresolved conflicting macro factor directions detected"
+        "Unresolved opposing macro factor directions detected"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
       "input_ids": {
-        "macro_event_ids": [
-          "evt_fx_up_001",
-          "evt_fx_down_002"
+        "sector_snapshot_id": "sec_papel_celulose_2025_q4",
+        "valuation_observation_ids": [
+          "hist-d8c1a9c72054ed31061cdec9"
         ],
-        "sector_snapshot_id": "sec_pulp_2025_q4",
+        "market_snapshot_ids": [
+          "mkt-56764425a5abba2d3b87a9a0"
+        ],
+        "financial_baseline_ids": [
+          "daaaad6d39c805659cb2852c"
+        ],
+        "macro_event_ids": [
+          "0bb655e7ff44276931fbfb90",
+          "1686a5e15f14a811bbaeb5b3",
+          "1f57afa16480a74080b1aa97",
+          "1f868a896127e3428b8758ee",
+          "35a08a49785311301abc3cab",
+          "35df06988a75a6edbb108790",
+          "3bc58960d693695fd2c44f4d",
+          "4036cbb3b28152eba5c46f61",
+          "43f2a44fe37d6ac788efb244",
+          "47a2148d54b139fa8f007c43",
+          "4955054cd2edb6b5ad79805d",
+          "56dc8604580e75112fcb8e83",
+          "736fa4e13a32a03426d04478",
+          "769d02c641172ff633de4662",
+          "7fb32fe161ea14257f8db05b",
+          "82c067e905e3c651c26f0d94",
+          "83fc8908b03941d3ef3b6493",
+          "8988b917dfd33f5a83364b5a",
+          "9446a5189fa3b77935163c55",
+          "95295c2efe1e180e23f57511",
+          "9669f96f4ad0ef729b5548dc",
+          "9a52fdea3f0341b9e74e3991",
+          "9bd9d01044aa95ddeca910bd",
+          "9dec4651209fe07ec2c71371",
+          "a41b3dbba46af7c74231091d",
+          "a7c97984462c606ccd0af7bb",
+          "d7b4625f828c390b8777cf34",
+          "d8b20be4e07b18a71550293e",
+          "de1b106b8f3aadb790ba0ca8",
+          "e2ee04c67fc112a6975af356",
+          "e6c5f2d62196d7f4fa3a9bc0",
+          "e764bc91d5e3c9359f73a324",
+          "ebb3e062d89a0b62b9fc542d",
+          "ef99bc0c1f04cb0c39899247",
+          "f5efe20a281d55a4b6ac20cf"
+        ],
         "company_contribution_ids": [
-          "contrib_suzb_fx_001"
+          null,
+          null
         ],
         "financial_outcome_ids": [
           "out_suzb_fx_001"
-        ],
-        "valuation_observation_count": 9
+        ]
       }
     },
     {
-      "decision_id": "02469fc041a691aefbf0d3eb062a9daecca1ba25579aa58bda3803e3b09a5cb5",
+      "decision_id": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
       "ticker": "KLBN11",
-      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
       "macro_event_ids": [
-        "evt_fx_up_001",
-        "evt_fx_down_002"
+        "0bb655e7ff44276931fbfb90",
+        "1686a5e15f14a811bbaeb5b3",
+        "1f57afa16480a74080b1aa97",
+        "1f868a896127e3428b8758ee",
+        "35a08a49785311301abc3cab",
+        "35df06988a75a6edbb108790",
+        "3bc58960d693695fd2c44f4d",
+        "4036cbb3b28152eba5c46f61",
+        "43f2a44fe37d6ac788efb244",
+        "47a2148d54b139fa8f007c43",
+        "4955054cd2edb6b5ad79805d",
+        "56dc8604580e75112fcb8e83",
+        "736fa4e13a32a03426d04478",
+        "769d02c641172ff633de4662",
+        "7fb32fe161ea14257f8db05b",
+        "82c067e905e3c651c26f0d94",
+        "83fc8908b03941d3ef3b6493",
+        "8988b917dfd33f5a83364b5a",
+        "9446a5189fa3b77935163c55",
+        "95295c2efe1e180e23f57511",
+        "9669f96f4ad0ef729b5548dc",
+        "9a52fdea3f0341b9e74e3991",
+        "9bd9d01044aa95ddeca910bd",
+        "9dec4651209fe07ec2c71371",
+        "a41b3dbba46af7c74231091d",
+        "a7c97984462c606ccd0af7bb",
+        "d7b4625f828c390b8777cf34",
+        "d8b20be4e07b18a71550293e",
+        "de1b106b8f3aadb790ba0ca8",
+        "e2ee04c67fc112a6975af356",
+        "e6c5f2d62196d7f4fa3a9bc0",
+        "e764bc91d5e3c9359f73a324",
+        "ebb3e062d89a0b62b9fc542d",
+        "ef99bc0c1f04cb0c39899247",
+        "f5efe20a281d55a4b6ac20cf"
       ],
       "active_factors": [
-        "FX_USD_BRL"
+        "FX"
       ],
       "factor_directions": {
-        "FX_USD_BRL": -1
+        "FX": null
       },
       "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
       "sector_state": {
-        "sector_name": "Packaging & Paper",
+        "sector_name": "PAPEL_CELULOSE",
         "is_active": true,
-        "has_active_signal": true
+        "has_active_signal": true,
+        "impact_score": 0.6,
+        "impact_summary": "Exposição cambial exportadora e insumos dolarizados",
+        "available_at": "2025-12-01T18:00:00Z"
       },
-      "sector_impact": null,
+      "sector_impact": "Exposição cambial exportadora e insumos dolarizados",
       "company_contributions": [
         {
-          "contribution_id": "contrib_klbn_fx_001",
-          "approval_status": "HUMAN_APPROVED"
+          "contribution_id": null,
+          "ticker": "KLBN11",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.9915,
+          "available_at": "2026-07-08T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "KLBN11",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.915,
+          "available_at": "2026-05-06T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "KLBN11",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.983,
+          "available_at": "2026-05-06T00:00:00Z"
+        },
+        {
+          "contribution_id": null,
+          "ticker": "KLBN11",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.915,
+          "available_at": "2026-05-06T00:00:00Z"
         }
       ],
-      "financial_outcomes": [],
+      "financial_outcomes": [
+        {
+          "financial_outcome_id": "out_klbn_fx_001",
+          "baseline_id": "base_klbn_2025_q4",
+          "status": "PARTIAL",
+          "delta_net_income": null,
+          "available_at": "2026-03-01T18:00:00Z"
+        }
+      ],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.6,
-      "confidence": 0.3,
-      "confidence_tier": "LOW",
+      "evidence_completeness": 0.8,
+      "confidence": 0.4898,
+      "confidence_tier": "MEDIUM",
       "critical_blockers": [
         "CONFLICTING_MACRO_DIRECTION",
         "NO_CALCULABLE_FINANCIAL_CHANNEL"
@@ -207,113 +470,180 @@
         "EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "missing_inputs": [
-        "financial_outcomes",
         "historical_multiple_position"
       ],
       "rationale": "Company KLBN11 assigned NO_ACTION due to critical blockers: [CONFLICTING_MACRO_DIRECTION, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
       "invalidation_conditions": [
-        "Unresolved conflicting macro factor directions detected",
-        "No calculable financial bridge channel for approved exposures"
+        "No calculable financial bridge channel with numeric output for approved exposures",
+        "Unresolved opposing macro factor directions detected"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
       "input_ids": {
+        "sector_snapshot_id": "sec_papel_celulose_2025_q4",
         "macro_event_ids": [
-          "evt_fx_up_001",
-          "evt_fx_down_002"
+          "0bb655e7ff44276931fbfb90",
+          "1686a5e15f14a811bbaeb5b3",
+          "1f57afa16480a74080b1aa97",
+          "1f868a896127e3428b8758ee",
+          "35a08a49785311301abc3cab",
+          "35df06988a75a6edbb108790",
+          "3bc58960d693695fd2c44f4d",
+          "4036cbb3b28152eba5c46f61",
+          "43f2a44fe37d6ac788efb244",
+          "47a2148d54b139fa8f007c43",
+          "4955054cd2edb6b5ad79805d",
+          "56dc8604580e75112fcb8e83",
+          "736fa4e13a32a03426d04478",
+          "769d02c641172ff633de4662",
+          "7fb32fe161ea14257f8db05b",
+          "82c067e905e3c651c26f0d94",
+          "83fc8908b03941d3ef3b6493",
+          "8988b917dfd33f5a83364b5a",
+          "9446a5189fa3b77935163c55",
+          "95295c2efe1e180e23f57511",
+          "9669f96f4ad0ef729b5548dc",
+          "9a52fdea3f0341b9e74e3991",
+          "9bd9d01044aa95ddeca910bd",
+          "9dec4651209fe07ec2c71371",
+          "a41b3dbba46af7c74231091d",
+          "a7c97984462c606ccd0af7bb",
+          "d7b4625f828c390b8777cf34",
+          "d8b20be4e07b18a71550293e",
+          "de1b106b8f3aadb790ba0ca8",
+          "e2ee04c67fc112a6975af356",
+          "e6c5f2d62196d7f4fa3a9bc0",
+          "e764bc91d5e3c9359f73a324",
+          "ebb3e062d89a0b62b9fc542d",
+          "ef99bc0c1f04cb0c39899247",
+          "f5efe20a281d55a4b6ac20cf"
         ],
-        "sector_snapshot_id": "sec_packaging_2025_q4"
+        "company_contribution_ids": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "financial_outcome_ids": [
+          "out_klbn_fx_001"
+        ]
       }
     },
     {
-      "decision_id": "30baebefa874f067855cfcd303746edbb82c3f4d75686ed210284ecd165ba096",
+      "decision_id": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
       "ticker": "RAIL3",
-      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
       "macro_event_ids": [],
       "active_factors": [],
       "factor_directions": {},
       "macro_conflict_status": "NO_CONFLICT",
       "sector_state": {
-        "sector_name": "Logistics & Transport",
+        "sector_name": "LOGISTICA_TRANSPORTE",
         "is_active": false,
-        "has_active_signal": false
+        "has_active_signal": false,
+        "impact_score": 0.0,
+        "available_at": "2025-12-01T18:00:00Z"
       },
       "sector_impact": null,
-      "company_contributions": [],
+      "company_contributions": [
+        {
+          "contribution_id": null,
+          "ticker": "RAIL3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.961,
+          "available_at": "2026-07-01T00:00:00Z"
+        }
+      ],
       "financial_outcomes": [],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.2,
-      "confidence": 0.225,
+      "evidence_completeness": 0.4,
+      "confidence": 0.3835,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "noncritical_warnings": [
         "EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "missing_inputs": [
-        "macro_events",
-        "company_contributions",
         "financial_outcomes",
-        "historical_multiple_position"
+        "historical_multiple_position",
+        "macro_events"
       ],
-      "rationale": "Company RAIL3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
+      "rationale": "Company RAIL3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
       "invalidation_conditions": [
         "No active macro/sector signal for company's sector",
-        "No approved company macro exposure ingested"
+        "No calculable financial bridge channel with numeric output for approved exposures"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
       "input_ids": {
-        "sector_snapshot_id": "sec_logistics_2025_q4"
+        "sector_snapshot_id": "sec_logistica_2025_q4",
+        "company_contribution_ids": [
+          null
+        ]
       }
     },
     {
-      "decision_id": "432c7d7153763829984ea51350a3cf59358f68c02c2ece5f6aeee67f440b0c1e",
+      "decision_id": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d",
       "ticker": "SLCE3",
-      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
       "macro_event_ids": [],
       "active_factors": [],
       "factor_directions": {},
       "macro_conflict_status": "NO_CONFLICT",
       "sector_state": {
-        "sector_name": "Agribusiness",
+        "sector_name": "AGRONEGOCIO",
         "is_active": false,
-        "has_active_signal": false
+        "has_active_signal": false,
+        "impact_score": 0.0,
+        "available_at": "2025-12-01T18:00:00Z"
       },
       "sector_impact": null,
-      "company_contributions": [],
+      "company_contributions": [
+        {
+          "contribution_id": null,
+          "ticker": "SLCE3",
+          "channel": null,
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.947,
+          "available_at": "2026-05-15T00:00:00Z"
+        }
+      ],
       "financial_outcomes": [],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.2,
-      "confidence": 0.225,
+      "evidence_completeness": 0.4,
+      "confidence": 0.3798,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "noncritical_warnings": [
         "EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "missing_inputs": [
-        "macro_events",
-        "company_contributions",
         "financial_outcomes",
-        "historical_multiple_position"
+        "historical_multiple_position",
+        "macro_events"
       ],
-      "rationale": "Company SLCE3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
+      "rationale": "Company SLCE3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
       "invalidation_conditions": [
         "No active macro/sector signal for company's sector",
-        "No approved company macro exposure ingested"
+        "No calculable financial bridge channel with numeric output for approved exposures"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
       "input_ids": {
-        "sector_snapshot_id": "sec_agri_2025_q4"
+        "sector_snapshot_id": "sec_agronegocio_2025_q4",
+        "company_contribution_ids": [
+          null
+        ]
       }
     }
   ]
