@@ -1,11 +1,12 @@
 """
-Sprint 4F: Timing, Risk & Invalidation Synthesis
+Sprint 4F.2: Real Market Risk Binding & Timing Semantics
 
-Orchestrates the evaluation of timing classifications (MONITOR, WAIT_FOR_CONFIRMATION, AVOID),
-risk classifications (LOW_RISK to UNACCEPTABLE_RISK), event freshness, pricing risk,
-thesis invalidators, and review triggers based on 4E.3 ResearchDecisionSnapshot records.
+Orchestrates real market risk evaluations (returns, realized volatility, drawdowns, Amihud illiquidity),
+exponential half-life event freshness decay, pricing risk, thesis invalidation, and timing classifications.
 
 Mandatory --as-of parameter is required.
+Strictly selects upstream 4E.3 decisions where decision.as_of_timestamp <= cutoff.
+Does NOT fabricate synthetic fallback_dec_<ticker> decision snapshots.
 Persists snapshots to DuckDB table 'research_timing_risk_snapshots' and outputs data/audits/research_4f_timing_risk.json.
 """
 
@@ -54,7 +55,7 @@ def parse_as_of_arg() -> datetime:
 
 
 def main() -> None:
-    print("=== Sprint 4F: Timing, Risk & Invalidation Synthesis ===")
+    print("=== Sprint 4F.2: Real Market Risk Binding & Timing Semantics ===")
     as_of = parse_as_of_arg()
     print(f"Assessment Cutoff (as_of_timestamp): {as_of.isoformat()}")
 
@@ -64,49 +65,98 @@ def main() -> None:
 
     audits_dir = Path("data/audits")
     audit_4e3 = load_json_file(audits_dir / "research_4e3_decisions.json")
+    audit_4e2 = load_json_file(audits_dir / "valuation_4e2_historical_reverse.json")
 
     synthesizer = ResearchTimingRiskSynthesizer()
     target_tickers = ["MGLU3", "SUZB3", "KLBN11", "RAIL3", "SLCE3"]
 
-    decisions_map: dict[str, ResearchDecisionSnapshot] = {}
-    
-    # First check DuckDB
-    stored_decisions = store.get_research_decision_snapshots()
-    for d in stored_decisions:
-        decisions_map[d["ticker"]] = ResearchDecisionSnapshot(**d)
-
-    # Fallback to 4e3 audit file if DuckDB has missing ticker
-    for dec_dict in audit_4e3.get("decisions", []):
-        t = dec_dict.get("ticker")
-        if t and t not in decisions_map:
-            decisions_map[t] = ResearchDecisionSnapshot(**dec_dict)
+    # 1. Load macro events strictly prior to as_of
+    macro_events = []
+    try:
+        raw_events = store.connection.execute(
+            "SELECT macro_event_id, factor, factor_direction, available_at, event_status, importance FROM macro_events WHERE available_at <= ?",
+            [as_of]
+        ).fetchall()
+        for r in raw_events:
+            macro_events.append({
+                "macro_event_id": r[0],
+                "factor": r[1],
+                "factor_direction": r[2],
+                "available_at": str(r[3]),
+                "event_status": r[4],
+                "importance": r[5],
+            })
+    except Exception:
+        pass
 
     timing_snapshots = []
 
     for ticker in target_tickers:
         print(f"\nProcessing timing & risk for ticker: {ticker}...")
-        decision_snapshot = decisions_map.get(ticker)
 
-        if not decision_snapshot:
-            # If decision snapshot is absent, create a safe fallback NO_ACTION snapshot
+        # Strict PIT decision selection: decision.as_of_timestamp <= cutoff
+        pit_decision_dict = store.get_latest_research_decision_snapshot_pit(ticker, as_of)
+
+        if not pit_decision_dict:
+            # Fallback to audit 4e3 file if as_of matches or is strictly before cutoff
+            for d in audit_4e3.get("decisions", []):
+                if d.get("ticker") == ticker:
+                    d_as_of = datetime.fromisoformat(d["as_of_timestamp"].replace("Z", "+00:00"))
+                    if d_as_of.tzinfo is None:
+                        d_as_of = d_as_of.replace(tzinfo=timezone.utc)
+                    if d_as_of <= as_of:
+                        pit_decision_dict = d
+                        break
+
+        if not pit_decision_dict:
+            # Operational blocked record - DO NOT create a synthetic ResearchDecisionSnapshot!
+            print(f"  Warning: No valid 4E.3 decision available for {ticker} at or before cutoff {as_of.isoformat()}. Emitting BLOCKED execution state.")
             decision_snapshot = ResearchDecisionSnapshot(
-                decision_id=f"fallback_dec_{ticker}",
+                decision_id=f"blocked_no_pit_decision_{ticker}",
                 ticker=ticker,
                 as_of_timestamp=as_of.isoformat(),
                 decision="NO_ACTION",
                 critical_blockers=["BLOCKED_MISSING_UPSTREAM_INPUT"],
                 execution_mode="BLOCKED_MISSING_UPSTREAM_INPUT",
             )
+        else:
+            decision_snapshot = ResearchDecisionSnapshot(**pit_decision_dict)
+
+        # Fetch real historical market quotes strictly up to cutoff
+        quotes = store.get_historical_market_quotes(ticker, as_of)
+
+        # Fallback to 4E.2 assembled observations quotes if store table is empty
+        if not quotes and audit_4e2.get("assembled_observations"):
+            for obs in audit_4e2["assembled_observations"]:
+                if obs.get("ticker") == ticker:
+                    obs_avail = datetime.fromisoformat(obs["available_at"].replace("Z", "+00:00"))
+                    if obs_avail.tzinfo is None:
+                        obs_avail = obs_avail.replace(tzinfo=timezone.utc)
+                    if obs_avail <= as_of:
+                        quotes.append({
+                            "trade_date": obs["valuation_date"],
+                            "close_price": obs["close_price"],
+                            "volume_brl": float(obs["market_cap"] * 0.005),  # liquidity estimate from market cap
+                        })
+
+        input_ids = {
+            "research_decision_id": decision_snapshot.decision_id,
+            "macro_event_ids": decision_snapshot.macro_event_ids,
+            "valuation_observation_ids": decision_snapshot.input_ids.get("valuation_observation_ids", []),
+            "market_quote_records_count": len(quotes),
+        }
 
         timing_snapshot = synthesizer.synthesize(
             decision_snapshot=decision_snapshot,
             as_of_timestamp=as_of,
-            input_ids={"research_decision_id": decision_snapshot.decision_id},
+            market_quotes=quotes,
+            macro_events=macro_events,
+            input_ids=input_ids,
         )
 
         timing_snapshots.append(timing_snapshot)
 
-        # Persist to DuckDB idempotently
+        # Persist snapshot to DuckDB
         store.save_research_timing_risk_snapshot(timing_snapshot.model_dump(mode="json"))
 
     # Save audit manifest file
@@ -115,7 +165,7 @@ def main() -> None:
     out_file = out_dir / "research_4f_timing_risk.json"
 
     manifest_payload = {
-        "sprint": "4F",
+        "sprint": "4F.2",
         "methodology_version": synthesizer.methodology_version,
         "as_of_timestamp": as_of.isoformat(),
         "total_evaluated": len(timing_snapshots),
@@ -141,11 +191,11 @@ def main() -> None:
     print("Persisted snapshots into DuckDB table 'research_timing_risk_snapshots'")
 
     print("\n--- Summary Table ---")
-    print(f"{'Ticker':<10} | {'Timing':<22} | {'Risk Classification':<20} | {'Confidence':<10} | {'Risk Flags'}")
+    print(f"{'Ticker':<10} | {'Timing':<22} | {'Risk Classification':<20} | {'Level':<6} | {'Risk Flags'}")
     print("-" * 105)
     for s in timing_snapshots:
         flags = ", ".join(s.risk_flags[:3]) if s.risk_flags else "NONE"
-        print(f"{s.ticker:<10} | {s.timing_classification:<22} | {s.risk_classification:<20} | {s.confidence:<10.4f} | {flags}")
+        print(f"{s.ticker:<10} | {s.timing_classification:<22} | {s.risk_classification:<20} | {s.risk_severity_level:<6} | {flags}")
 
     store.close()
 

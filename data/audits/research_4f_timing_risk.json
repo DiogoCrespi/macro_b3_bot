@@ -1,59 +1,60 @@
 {
-  "sprint": "4F",
-  "methodology_version": "4F.1-research-timing-risk-v1",
+  "sprint": "4F.2",
+  "methodology_version": "4F.2-research-timing-risk-v2",
   "as_of_timestamp": "2026-07-24T00:00:00+00:00",
   "total_evaluated": 5,
   "timing_classifications_count": {
     "MONITOR": 0,
-    "WAIT_FOR_CONFIRMATION": 0,
-    "AVOID": 5
+    "WAIT_FOR_CONFIRMATION": 5,
+    "AVOID": 0
   },
   "risk_classifications_count": {
     "LOW_RISK": 0,
     "MODERATE_RISK": 0,
-    "ELEVATED_RISK": 2,
-    "HIGH_RISK": 3,
+    "ELEVATED_RISK": 0,
+    "HIGH_RISK": 5,
     "UNACCEPTABLE_RISK": 0
   },
   "snapshots": [
     {
-      "timing_risk_id": "b21187159dd1d2c6b1086e0b5256563432b4f279a1f1e4b5a6851cb508def407",
+      "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
+      "research_decision_id": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
-        "min_horizon_days": 30,
         "target_horizon_days": 180,
-        "max_horizon_days": 360
+        "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
         "freshness_status": "STALE_OR_MISSING",
-        "decay_factor": 0.0
+        "average_decay_factor": 0.0,
+        "monitored_events_count": 0
+      },
+      "market_metrics": {
+        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "observations_count": 9,
+        "returns": {},
+        "realized_volatility": {},
+        "drawdowns": {},
+        "volume": {}
       },
       "pricing_risk": {
-        "priced_in_estimate": "UNKNOWN_DATA_INCOMPLETE",
-        "market_discount_pct": null
+        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
+        "explanation": "Insufficient market quotes to assess pricing risk."
       },
       "volatility_state": {
-        "volatility_status": "NORMAL",
-        "historical_volatility": 0.25
+        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "historical_volatility": null
       },
       "liquidity_state": {
-        "liquidity_status": "ADEQUATE",
-        "daily_volume_brl": 50000000.0
+        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "daily_volume_brl": null
       },
-      "thesis_invalidators": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested"
-      ],
+      "thesis_invalidators": [],
       "risk_flags": [
-        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
+        "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
         "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
         "WARNING_FCF_NOT_DCF_READY",
@@ -64,232 +65,66 @@
         "Material news release",
         "Quarterly CVM statement release"
       ],
-      "next_review_at": "2026-08-23T00:00:00+00:00",
-      "timing_classification": "AVOID",
+      "next_review_at": "",
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
-      "confidence": 0.1377,
-      "methodology_version": "4F.1-research-timing-risk-v1",
+      "risk_severity_level": 4,
+      "confidence": 0.4111,
+      "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb"
+        "research_decision_id": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
+        "macro_event_ids": [
+          "evt_selic_cut_2025_001"
+        ],
+        "valuation_observation_ids": [
+          "hist-67f1cc84f052f0b7287e8e78"
+        ],
+        "market_quote_records_count": 9
       }
     },
     {
-      "timing_risk_id": "de6d330694cdd5f4ea5bfb78390d7eaf71c2de1b12e79175139b6bb7aea870f4",
+      "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
-      "catalysts": [
-        {
-          "event_id": "0bb655e7ff44276931fbfb90",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1686a5e15f14a811bbaeb5b3",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1f57afa16480a74080b1aa97",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1f868a896127e3428b8758ee",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "35a08a49785311301abc3cab",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "35df06988a75a6edbb108790",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "3bc58960d693695fd2c44f4d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "4036cbb3b28152eba5c46f61",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "43f2a44fe37d6ac788efb244",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "47a2148d54b139fa8f007c43",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "4955054cd2edb6b5ad79805d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "56dc8604580e75112fcb8e83",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "736fa4e13a32a03426d04478",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "769d02c641172ff633de4662",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "7fb32fe161ea14257f8db05b",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "82c067e905e3c651c26f0d94",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "83fc8908b03941d3ef3b6493",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "8988b917dfd33f5a83364b5a",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9446a5189fa3b77935163c55",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "95295c2efe1e180e23f57511",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9669f96f4ad0ef729b5548dc",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9a52fdea3f0341b9e74e3991",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9bd9d01044aa95ddeca910bd",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9dec4651209fe07ec2c71371",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "a41b3dbba46af7c74231091d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "a7c97984462c606ccd0af7bb",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "d7b4625f828c390b8777cf34",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "d8b20be4e07b18a71550293e",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "de1b106b8f3aadb790ba0ca8",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e2ee04c67fc112a6975af356",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e6c5f2d62196d7f4fa3a9bc0",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e764bc91d5e3c9359f73a324",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "ebb3e062d89a0b62b9fc542d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "ef99bc0c1f04cb0c39899247",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "f5efe20a281d55a4b6ac20cf",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        }
-      ],
+      "research_decision_id": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "catalysts": [],
       "expected_horizon": {
-        "min_horizon_days": 30,
         "target_horizon_days": 180,
-        "max_horizon_days": 360
+        "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "FRESH",
-        "decay_factor": 1.0
+        "freshness_status": "STALE_OR_MISSING",
+        "average_decay_factor": 0.0,
+        "monitored_events_count": 0
+      },
+      "market_metrics": {
+        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "observations_count": 9,
+        "returns": {},
+        "realized_volatility": {},
+        "drawdowns": {},
+        "volume": {}
       },
       "pricing_risk": {
-        "priced_in_estimate": "UNKNOWN_DATA_INCOMPLETE",
-        "market_discount_pct": null
+        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
+        "explanation": "Insufficient market quotes to assess pricing risk."
       },
       "volatility_state": {
-        "volatility_status": "NORMAL",
-        "historical_volatility": 0.25
+        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "historical_volatility": null
       },
       "liquidity_state": {
-        "liquidity_status": "ADEQUATE",
-        "daily_volume_brl": 50000000.0
+        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "daily_volume_brl": null
       },
       "thesis_invalidators": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested",
         "Unresolved opposing macro factor directions detected"
       ],
       "risk_flags": [
-        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_CONFLICTING_MACRO_DIRECTION",
-        "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
+        "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
         "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
         "WARNING_FCF_NOT_DCF_READY",
@@ -300,360 +135,292 @@
         "Material news release",
         "Quarterly CVM statement release"
       ],
-      "next_review_at": "2026-08-23T00:00:00+00:00",
-      "timing_classification": "AVOID",
-      "risk_classification": "ELEVATED_RISK",
-      "confidence": 0.1606,
-      "methodology_version": "4F.1-research-timing-risk-v1",
+      "next_review_at": "",
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "risk_severity_level": 4,
+      "confidence": 0.3396,
+      "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673"
+        "research_decision_id": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
+        "macro_event_ids": [
+          "0bb655e7ff44276931fbfb90",
+          "1686a5e15f14a811bbaeb5b3",
+          "1f57afa16480a74080b1aa97",
+          "1f868a896127e3428b8758ee",
+          "35a08a49785311301abc3cab",
+          "35df06988a75a6edbb108790",
+          "3bc58960d693695fd2c44f4d",
+          "4036cbb3b28152eba5c46f61",
+          "43f2a44fe37d6ac788efb244",
+          "47a2148d54b139fa8f007c43",
+          "4955054cd2edb6b5ad79805d",
+          "56dc8604580e75112fcb8e83",
+          "736fa4e13a32a03426d04478",
+          "769d02c641172ff633de4662",
+          "7fb32fe161ea14257f8db05b",
+          "82c067e905e3c651c26f0d94",
+          "83fc8908b03941d3ef3b6493",
+          "8988b917dfd33f5a83364b5a",
+          "9446a5189fa3b77935163c55",
+          "95295c2efe1e180e23f57511",
+          "9669f96f4ad0ef729b5548dc",
+          "9a52fdea3f0341b9e74e3991",
+          "9bd9d01044aa95ddeca910bd",
+          "9dec4651209fe07ec2c71371",
+          "a41b3dbba46af7c74231091d",
+          "a7c97984462c606ccd0af7bb",
+          "d7b4625f828c390b8777cf34",
+          "d8b20be4e07b18a71550293e",
+          "de1b106b8f3aadb790ba0ca8",
+          "e2ee04c67fc112a6975af356",
+          "e6c5f2d62196d7f4fa3a9bc0",
+          "e764bc91d5e3c9359f73a324",
+          "ebb3e062d89a0b62b9fc542d",
+          "ef99bc0c1f04cb0c39899247",
+          "f5efe20a281d55a4b6ac20cf"
+        ],
+        "valuation_observation_ids": [
+          "hist-d8c1a9c72054ed31061cdec9"
+        ],
+        "market_quote_records_count": 9
       }
     },
     {
-      "timing_risk_id": "64ca845d4a22a8fdee74232d120e3f9961fbf4fbf653c503b0b333a0c6da59a9",
+      "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
-      "catalysts": [
-        {
-          "event_id": "0bb655e7ff44276931fbfb90",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1686a5e15f14a811bbaeb5b3",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1f57afa16480a74080b1aa97",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "1f868a896127e3428b8758ee",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "35a08a49785311301abc3cab",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "35df06988a75a6edbb108790",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "3bc58960d693695fd2c44f4d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "4036cbb3b28152eba5c46f61",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "43f2a44fe37d6ac788efb244",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "47a2148d54b139fa8f007c43",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "4955054cd2edb6b5ad79805d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "56dc8604580e75112fcb8e83",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "736fa4e13a32a03426d04478",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "769d02c641172ff633de4662",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "7fb32fe161ea14257f8db05b",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "82c067e905e3c651c26f0d94",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "83fc8908b03941d3ef3b6493",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "8988b917dfd33f5a83364b5a",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9446a5189fa3b77935163c55",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "95295c2efe1e180e23f57511",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9669f96f4ad0ef729b5548dc",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9a52fdea3f0341b9e74e3991",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9bd9d01044aa95ddeca910bd",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "9dec4651209fe07ec2c71371",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "a41b3dbba46af7c74231091d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "a7c97984462c606ccd0af7bb",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "d7b4625f828c390b8777cf34",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "d8b20be4e07b18a71550293e",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "de1b106b8f3aadb790ba0ca8",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e2ee04c67fc112a6975af356",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e6c5f2d62196d7f4fa3a9bc0",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "e764bc91d5e3c9359f73a324",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "ebb3e062d89a0b62b9fc542d",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "ef99bc0c1f04cb0c39899247",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        },
-        {
-          "event_id": "f5efe20a281d55a4b6ac20cf",
-          "status": "ACTIVE_MONITORED",
-          "importance": "HIGH"
-        }
-      ],
+      "research_decision_id": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "catalysts": [],
       "expected_horizon": {
-        "min_horizon_days": 30,
         "target_horizon_days": 180,
-        "max_horizon_days": 360
+        "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "FRESH",
-        "decay_factor": 1.0
+        "freshness_status": "STALE_OR_MISSING",
+        "average_decay_factor": 0.0,
+        "monitored_events_count": 0
+      },
+      "market_metrics": {
+        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "observations_count": 0,
+        "returns": {},
+        "realized_volatility": {},
+        "drawdowns": {},
+        "volume": {}
       },
       "pricing_risk": {
-        "priced_in_estimate": "UNKNOWN_DATA_INCOMPLETE",
-        "market_discount_pct": null
+        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
+        "explanation": "Insufficient market quotes to assess pricing risk."
       },
       "volatility_state": {
-        "volatility_status": "NORMAL",
-        "historical_volatility": 0.25
+        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "historical_volatility": null
       },
       "liquidity_state": {
-        "liquidity_status": "ADEQUATE",
-        "daily_volume_brl": 50000000.0
+        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "daily_volume_brl": null
       },
       "thesis_invalidators": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "No calculable financial bridge channel with numeric output for approved exposures",
         "Unresolved opposing macro factor directions detected"
       ],
       "risk_flags": [
-        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_CONFLICTING_MACRO_DIRECTION",
-        "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
+        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
-        "WARNING_FCF_NOT_DCF_READY"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
         "Material news release",
         "Quarterly CVM statement release"
       ],
-      "next_review_at": "2026-08-23T00:00:00+00:00",
-      "timing_classification": "AVOID",
-      "risk_classification": "ELEVATED_RISK",
-      "confidence": 0.162,
-      "methodology_version": "4F.1-research-timing-risk-v1",
+      "next_review_at": "",
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "risk_severity_level": 4,
+      "confidence": 0.4408,
+      "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8"
+        "research_decision_id": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
+        "macro_event_ids": [
+          "0bb655e7ff44276931fbfb90",
+          "1686a5e15f14a811bbaeb5b3",
+          "1f57afa16480a74080b1aa97",
+          "1f868a896127e3428b8758ee",
+          "35a08a49785311301abc3cab",
+          "35df06988a75a6edbb108790",
+          "3bc58960d693695fd2c44f4d",
+          "4036cbb3b28152eba5c46f61",
+          "43f2a44fe37d6ac788efb244",
+          "47a2148d54b139fa8f007c43",
+          "4955054cd2edb6b5ad79805d",
+          "56dc8604580e75112fcb8e83",
+          "736fa4e13a32a03426d04478",
+          "769d02c641172ff633de4662",
+          "7fb32fe161ea14257f8db05b",
+          "82c067e905e3c651c26f0d94",
+          "83fc8908b03941d3ef3b6493",
+          "8988b917dfd33f5a83364b5a",
+          "9446a5189fa3b77935163c55",
+          "95295c2efe1e180e23f57511",
+          "9669f96f4ad0ef729b5548dc",
+          "9a52fdea3f0341b9e74e3991",
+          "9bd9d01044aa95ddeca910bd",
+          "9dec4651209fe07ec2c71371",
+          "a41b3dbba46af7c74231091d",
+          "a7c97984462c606ccd0af7bb",
+          "d7b4625f828c390b8777cf34",
+          "d8b20be4e07b18a71550293e",
+          "de1b106b8f3aadb790ba0ca8",
+          "e2ee04c67fc112a6975af356",
+          "e6c5f2d62196d7f4fa3a9bc0",
+          "e764bc91d5e3c9359f73a324",
+          "ebb3e062d89a0b62b9fc542d",
+          "ef99bc0c1f04cb0c39899247",
+          "f5efe20a281d55a4b6ac20cf"
+        ],
+        "valuation_observation_ids": [],
+        "market_quote_records_count": 0
       }
     },
     {
-      "timing_risk_id": "3bd0561c5993bfdd7416e7c3bfbd84d44d8e851e6323cfbb04b57af6545acf98",
+      "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
       "ticker": "RAIL3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
+      "research_decision_id": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
-        "min_horizon_days": 30,
         "target_horizon_days": 180,
-        "max_horizon_days": 360
+        "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
         "freshness_status": "STALE_OR_MISSING",
-        "decay_factor": 0.0
+        "average_decay_factor": 0.0,
+        "monitored_events_count": 0
+      },
+      "market_metrics": {
+        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "observations_count": 0,
+        "returns": {},
+        "realized_volatility": {},
+        "drawdowns": {},
+        "volume": {}
       },
       "pricing_risk": {
-        "priced_in_estimate": "UNKNOWN_DATA_INCOMPLETE",
-        "market_discount_pct": null
+        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
+        "explanation": "Insufficient market quotes to assess pricing risk."
       },
       "volatility_state": {
-        "volatility_status": "NORMAL",
-        "historical_volatility": 0.25
+        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "historical_volatility": null
       },
       "liquidity_state": {
-        "liquidity_status": "ADEQUATE",
-        "daily_volume_brl": 50000000.0
+        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "daily_volume_brl": null
       },
       "thesis_invalidators": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
         "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested"
+        "No calculable financial bridge channel with numeric output for approved exposures"
       ],
       "risk_flags": [
-        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
+        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
-        "WARNING_FCF_NOT_DCF_READY"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
         "Material news release",
         "Quarterly CVM statement release"
       ],
-      "next_review_at": "2026-08-23T00:00:00+00:00",
-      "timing_classification": "AVOID",
+      "next_review_at": "",
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
-      "confidence": 0.135,
-      "methodology_version": "4F.1-research-timing-risk-v1",
+      "risk_severity_level": 4,
+      "confidence": 0.3452,
+      "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8"
+        "research_decision_id": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
+        "macro_event_ids": [],
+        "valuation_observation_ids": [],
+        "market_quote_records_count": 0
       }
     },
     {
-      "timing_risk_id": "61cf2fd19936c663913a2c705a3d5855cab4151f47338dbc676334ebb5bf1c5c",
+      "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
       "ticker": "SLCE3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
+      "research_decision_id": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
-        "min_horizon_days": 30,
         "target_horizon_days": 180,
-        "max_horizon_days": 360
+        "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
         "freshness_status": "STALE_OR_MISSING",
-        "decay_factor": 0.0
+        "average_decay_factor": 0.0,
+        "monitored_events_count": 0
+      },
+      "market_metrics": {
+        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "observations_count": 0,
+        "returns": {},
+        "realized_volatility": {},
+        "drawdowns": {},
+        "volume": {}
       },
       "pricing_risk": {
-        "priced_in_estimate": "UNKNOWN_DATA_INCOMPLETE",
-        "market_discount_pct": null
+        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
+        "explanation": "Insufficient market quotes to assess pricing risk."
       },
       "volatility_state": {
-        "volatility_status": "NORMAL",
-        "historical_volatility": 0.25
+        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "historical_volatility": null
       },
       "liquidity_state": {
-        "liquidity_status": "ADEQUATE",
-        "daily_volume_brl": 50000000.0
+        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
+        "daily_volume_brl": null
       },
       "thesis_invalidators": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
         "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested"
+        "No calculable financial bridge channel with numeric output for approved exposures"
       ],
       "risk_flags": [
-        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
+        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
-        "WARNING_FCF_NOT_DCF_READY"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
         "Material news release",
         "Quarterly CVM statement release"
       ],
-      "next_review_at": "2026-08-23T00:00:00+00:00",
-      "timing_classification": "AVOID",
+      "next_review_at": "",
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
-      "confidence": 0.135,
-      "methodology_version": "4F.1-research-timing-risk-v1",
+      "risk_severity_level": 4,
+      "confidence": 0.3418,
+      "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14"
+        "research_decision_id": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d",
+        "macro_event_ids": [],
+        "valuation_observation_ids": [],
+        "market_quote_records_count": 0
       }
     }
   ]

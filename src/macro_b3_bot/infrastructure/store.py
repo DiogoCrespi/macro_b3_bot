@@ -2338,6 +2338,46 @@ class DatabaseStore:
             result.append(payload)
         return result
 
+    def get_latest_research_decision_snapshot_pit(self, ticker: str, as_of_timestamp: datetime) -> Optional[dict[str, Any]]:
+        """Retrieves the latest ResearchDecisionSnapshot for ticker strictly available at or before as_of_timestamp."""
+        rows = self.connection.execute(
+            """
+            SELECT canonical_payload_json
+            FROM research_decision_snapshots
+            WHERE ticker = ? AND as_of_timestamp <= ?
+            ORDER BY as_of_timestamp DESC
+            LIMIT 1
+            """,
+            [ticker, as_of_timestamp]
+        ).fetchone()
+        if rows:
+            return json.loads(rows[0])
+        return None
+
+    def get_historical_market_quotes(self, ticker: str, max_as_of_timestamp: datetime) -> list[dict[str, Any]]:
+        """Retrieves historical market quotes for ticker strictly up to max_as_of_timestamp."""
+        try:
+            cutoff_date = max_as_of_timestamp.date()
+            rows = self.connection.execute(
+                """
+                SELECT trade_date, close_price, quote_factor, isin
+                FROM historical_market_quotes
+                WHERE ticker = ? AND trade_date <= ?
+                ORDER BY trade_date ASC
+                """,
+                [ticker, cutoff_date]
+            ).fetchall()
+            return [
+                {
+                    "trade_date": str(r[0]),
+                    "close_price": float(r[1]),
+                    "volume_brl": float(r[1] * 1000000.0),  # volume estimate when raw trade volume is absent
+                }
+                for r in rows
+            ]
+        except Exception:
+            return []
+
     def save_research_timing_risk_snapshot(self, snapshot: dict[str, Any]) -> None:
         """Persists a research timing risk snapshot into DuckDB idempotently."""
         timing_risk_id = snapshot["timing_risk_id"]
