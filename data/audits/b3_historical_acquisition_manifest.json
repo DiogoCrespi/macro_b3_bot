@@ -47,16 +47,16 @@
     },
     "date_range_2023_2026": {
       "MGLU3": [
-        "2023-01-01",
-        "2026-07-22"
+        "2023-01-02",
+        "2026-07-23"
       ],
       "SUZB3": [
-        "2023-01-01",
-        "2026-07-22"
+        "2023-01-02",
+        "2026-07-23"
       ]
     },
-    "minimum_trade_date": "2023-01-01",
-    "maximum_trade_date": "2026-07-22",
+    "minimum_trade_date": "2023-01-02",
+    "maximum_trade_date": "2026-07-23",
     "duplicates_rejected": 0,
     "invalid_records": 0
   }

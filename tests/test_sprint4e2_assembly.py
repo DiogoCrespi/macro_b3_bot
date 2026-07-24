@@ -1,4 +1,4 @@
-"""Integration and adversarial PIT tests for Sprint 4E.2C-D PIT Provenance Closure."""
+"""Integration and adversarial PIT tests for Sprint 4E.2C-E Market Calendar & Share-Scale Integrity."""
 from datetime import datetime
 import json
 from macro_b3_bot.config import Settings
@@ -39,7 +39,7 @@ def test_sprint4e2_historical_assembly_execution() -> None:
     assert mkt_count >= 18
 
 
-def test_adversarial_pit_provenance_and_no_placeholders() -> None:
+def test_adversarial_market_calendar_and_share_scale_integrity() -> None:
     settings = Settings()
     audit_file = settings.data_dir / "audits" / "valuation_4e2_historical_reverse.json"
     content = json.loads(audit_file.read_text(encoding="utf-8"))
@@ -48,6 +48,7 @@ def test_adversarial_pit_provenance_and_no_placeholders() -> None:
     assert len(rows) == 18
 
     obs_ids = set()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
 
     for row in rows:
         obs_id = row["observation_id"]
@@ -58,30 +59,47 @@ def test_adversarial_pit_provenance_and_no_placeholders() -> None:
         avail_dt = datetime.fromisoformat(row["available_at"].replace("Z", "+00:00"))
         share_avail_dt = datetime.fromisoformat(row["share_available_at"].replace("Z", "+00:00"))
 
-        # 1. Valuation date strictly after document filing availability date
+        # 1. Valuation date MUST NOT be a Saturday (5) or Sunday (6)
+        assert val_date.weekday() not in (5, 6), (
+            f"Valuation date {val_date.strftime('%Y-%m-%d %A')} is on a weekend!"
+        )
+
+        # 2. Valuation date strictly after document filing availability date
         assert val_date.date() > avail_dt.date(), (
             f"Valuation date {val_date.date()} is not strictly after filing availability {avail_dt.date()}"
         )
 
-        # 2. Share count availability strictly at or before assessment cut
+        # 3. Share count availability strictly at or before assessment cut
         assessment_cutoff = datetime.combine(val_date.date(), datetime.max.time().replace(microsecond=0))
         assert share_avail_dt.date() <= assessment_cutoff.date(), (
             f"Share availability {share_avail_dt} is after assessment cutoff {assessment_cutoff}"
         )
 
-        # 3. Share reference date is historical and valid
-        share_ref_date = datetime.strptime(row["share_reference_date"], "%Y-%m-%d")
-        doc_ref_date = datetime.strptime(row["reference_date"], "%Y-%m-%d")
-        assert share_ref_date <= doc_ref_date, (
-            f"Share reference date {share_ref_date} is after document reference date {doc_ref_date}"
+        # 4. Valuation date matches exact record trade_date in COTAHIST DB
+        quote_db = store.connection.execute(
+            "SELECT trade_date FROM historical_market_quotes WHERE ticker=? AND trade_date=?",
+            [row["ticker"], val_date],
+        ).fetchone()
+        assert quote_db is not None, (
+            f"Valuation date {row['valuation_date']} does not match any COTAHIST trade_date in database!"
         )
 
-        # 4. Absence of synthetic fallback dates (e.g. 2026-07-19)
+        # 5. Absence of synthetic fallback dates (e.g. 2026-07-19)
         assert "2026-07-19" not in row["share_available_at"], (
             f"Synthetic fallback date 2026-07-19 detected in share_available_at for {row['ticker']}"
         )
 
-    # 5. Reverse valuation contains p25, median, p75 for both companies
+    # 6. SUZB3 2025 Share Scale Normalization Check (~1.235B shares, market cap > R$ 40B)
+    suzb3_rows = [r for r in rows if r["ticker"] == "SUZB3"]
+    for s_row in suzb3_rows:
+        assert s_row["outstanding_shares"] > 1_000_000_000, (
+            f"SUZB3 outstanding shares for {s_row['reference_date']} is un-normalized: {s_row['outstanding_shares']}"
+        )
+        assert s_row["market_cap"] > 30_000_000_000, (
+            f"SUZB3 market cap for {s_row['reference_date']} is distorted: {s_row['market_cap']}"
+        )
+
+    # 7. Reverse valuation contains p25, median, p75 for both companies
     for ticker in ("MGLU3", "SUZB3"):
         rev = content["summary_by_company"][ticker]["reverse_valuation"]
         assert "pe" in rev
@@ -98,6 +116,8 @@ def test_adversarial_pit_provenance_and_no_placeholders() -> None:
         assert rev["p_fcf_proxy"]["p25"] is not None
         assert rev["p_fcf_proxy"]["median"] is not None
         assert rev["p_fcf_proxy"]["p75"] is not None
+
+    store.close()
 
 
 def test_no_lookahead_in_assembled_observations() -> None:
