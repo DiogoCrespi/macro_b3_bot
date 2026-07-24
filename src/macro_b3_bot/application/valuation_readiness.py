@@ -76,6 +76,9 @@ class ValuationReadinessGate:
         market_data_ready, market_data_reason = self._market_data_is_pit(
             market_data, timestamp
         )
+        if market_data_ready and market_data.get("currency") != baseline.currency:
+            market_data_ready = False
+            market_data_reason = "market currency does not match the financial baseline currency"
         if not market_data_ready:
             blockers.append("MISSING_MARKET_DATA")
             reasons.append(market_data_reason)
