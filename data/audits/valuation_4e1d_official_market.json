@@ -1,40 +1,29 @@
 {
-  "run_id": "valuation_4e1d_official_market",
-  "methodology_version": "4E.1D-A-official-market-readers-v2",
-  "status": "BLOCKED_NO_OFFICIAL_INPUTS",
-  "official_reader_validation": {
-    "b3_cotahist": {
-      "archive_sha256": "EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42",
-      "sample_records_sha256": "5F5323B378B400B11DD86744883AAE637DAE9FA5FA3B73474FB06AEDF5A1FFFE",
-      "tickers_checked": ["MGLU3", "SUZB3", "KLBN11"],
-      "trade_date": "2026-07-22",
-      "layout_version": "COTAHIST-FW-v1",
-      "record_length": 245,
-      "pit_assurance": "RECONSTRUCTED_OFFICIAL_BACKFILL"
-    },
-    "cvm_capital_composition": {
-      "archive_sha256": "2B914148477639BD7C3A09785F4AB43D1992612FD2B51F09DC149A3D40F1FBF8",
-      "package": "itr_cia_aberta_composicao_capital_2026.csv",
-      "companies_checked": ["MGLU3", "SUZB3", "KLBN11"],
-      "identity_basis": "CNPJ_CIA_exact",
-      "document_available_at": "2026-07-13T00:00:00Z",
-      "pit_assurance": "RECONSTRUCTED_OFFICIAL_BACKFILL"
-    }
+  "run_id": "valuation_4e1e_market_snapshots",
+  "methodology_version": "4E.1E-pit-market-snapshot-assembly-v1",
+  "status": "BLOCKED_MISSING_PIT_COMPANY_MAPPING",
+  "assessment_as_of": "2026-07-22T23:59:00Z",
+  "source_manifest": {
+    "b3_zip_sha256": "EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42",
+    "b3_sample_txt_sha256": "5F5323B378B400B11DD86744883AAE637DAE9FA5FA3B73474FB06AEDF5A1FFFE",
+    "cvm_itr_zip_sha256": "2B914148477639BD7C3A09785F4AB43D1992612FD2B51F09DC149A3D40F1FBF8",
+    "pit_assurance": "RECONSTRUCTED_OFFICIAL_BACKFILL"
   },
-  "market_snapshots": {
-    "accepted": 0,
-    "required": 3,
-    "tickers": ["MGLU3", "SUZB3", "KLBN11"],
-    "synthetic_values": false,
-    "reason": "official inputs validated locally; no snapshots persisted without full PIT company mapping"
-  },
-  "assessments": [
-    {"ticker": "MGLU3", "status": "VALUATION_BLOCKED_MISSING_MARKET_DATA"},
-    {"ticker": "SUZB3", "status": "VALUATION_BLOCKED_MISSING_MARKET_DATA"},
-    {"ticker": "KLBN11", "status": "VALUATION_BLOCKED_MISSING_UNIT_COUNT"}
+  "pit_mappings": [
+    {"ticker":"MGLU3","cvm_code":"22470","cnpj":"47.960.950/0001-21","isin":"BRMGLUACNOR2","security_type":"COMMON_SHARE","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-mglu3"},
+    {"ticker":"SUZB3","cvm_code":"13986","cnpj":"16.404.287/0001-55","isin":"BRSUZBACNOR0","security_type":"COMMON_SHARE","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-suzb3"},
+    {"ticker":"KLBN11","cvm_code":"12653","cnpj":"89.637.490/0001-45","isin":"BRKLBNCDAM1","security_type":"UNIT","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-klbn11"}
   ],
-  "valuation_ready": 0,
-  "dcf_executed": 0,
-  "price_targets": 0,
-  "buy_or_orders": 0
+  "snapshots": [
+    {"ticker":"MGLU3","market_snapshot_id":"mkt-e34d3e3bc6c82abc503b8669","price":4.91,"share_count":774880345,"market_capitalization":3804662493.95,"isin":"BRMGLUACNOR2","price_record_hash":"a61242b879e9c6552160096a5af3ee04e88d2c0fa424fe87e6b45b9ec797bcf1","share_document_id":"itr_cia_aberta_composicao_capital_2026.csv","pit_assurance":"RECONSTRUCTED_OFFICIAL_BACKFILL"},
+    {"ticker":"SUZB3","market_snapshot_id":"mkt-172dc8e331e16a812b51acf4","price":42.66,"share_count":983909965,"market_capitalization":41973599106.90,"isin":"BRSUZBACNOR0","price_record_hash":"54d6f83d0dc5897022a14fd034c6ab6f0e3cca740f58ebaebdd5e5d580ae0c2a","share_document_id":"itr_cia_aberta_composicao_capital_2026.csv","pit_assurance":"RECONSTRUCTED_OFFICIAL_BACKFILL"}
+  ],
+  "klbn11": {"status":"VALUATION_BLOCKED_MISSING_UNIT_COUNT","synthetic_values":false},
+  "assessments": [
+    {"ticker":"MGLU3","status":"VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE","valuation_eligible":false,"dcf_eligible":false},
+    {"ticker":"SUZB3","status":"VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE","valuation_eligible":false,"dcf_eligible":false},
+    {"ticker":"KLBN11","status":"VALUATION_BLOCKED_MISSING_UNIT_COUNT","valuation_eligible":false,"dcf_eligible":false}
+  ],
+  "metrics_policy": {"classification":"DESCRIPTIVE_ONLY","not_a_fair_value":true,"not_buy_eligible":true,"dcf_executed":0,"price_targets":0,"buy_or_orders":0},
+  "acceptance_checks": {"pit_mappings_reconciled":3,"real_snapshots":2,"synthetic_values":0,"cross_company_mismatch":0,"post_assessment_inputs":0,"valuation_ready":0}
 }

@@ -3,6 +3,10 @@ import pytest
 
 from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
 from macro_b3_bot.application.market_snapshot_pilot import PITMarketDataIngestor
+from macro_b3_bot.application.pit_market_assembly import (
+    PITMarketSnapshotAssembler,
+    PITSecurityMapping,
+)
 from macro_b3_bot.adapters.b3_cotahist import B3CotahistReader
 from macro_b3_bot.adapters.cvm_capital_composition import CVMCapitalCompositionReader
 from macro_b3_bot.domain.financial_bridge_models import (
@@ -245,3 +249,56 @@ def test_cvm_capital_reader_selects_available_outstanding_row(tmp_path) -> None:
     assert len(rows) == 1
     assert rows[0]["outstanding_count"] == 1000
     assert rows[0]["document_version"] == 10
+
+
+def test_pit_snapshot_assembly_reconciles_security_identity() -> None:
+    as_of = datetime(2026, 7, 22, 23, 59, tzinfo=timezone.utc)
+    mapping = PITSecurityMapping(
+        ticker="MGLU3", cvm_code="22470", cnpj="47.960.950/0001-21",
+        isin="BRMGLUACNOR2", security_type="COMMON_SHARE",
+        valid_from=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        mapping_source="official_registry", mapping_available_at=as_of,
+        mapping_checksum="mapping-checksum",
+    )
+    price = {
+        "ticker": "MGLU3", "isin": "BRMGLUACNOR2", "close_price": 4.91,
+        "trade_date": as_of, "retrieved_at": as_of, "source_file": "COTAHIST.TXT",
+        "source_checksum": "b3-checksum", "layout_version": "COTAHIST-FW-v1",
+        "record_hash": "record-hash",
+    }
+    shares = {
+        "company_cnpj": "47.960.950/0001-21", "outstanding_count": 1000,
+        "capital_reference_date": datetime(2026, 3, 31, tzinfo=timezone.utc),
+        "document_available_at": datetime(2026, 7, 20, tzinfo=timezone.utc),
+        "document_id": "ITR-1", "document_checksum": "cvm-checksum",
+        "document_version": 10,
+    }
+    snapshot = PITMarketSnapshotAssembler().assemble(
+        mapping=mapping, assessment_as_of=as_of,
+        price_record=price, share_record=shares,
+    )
+    assert snapshot.market_snapshot_id.startswith("mkt-")
+    assert snapshot.share_count == 1000
+    assert snapshot.price * snapshot.share_count == pytest.approx(4910)
+
+
+def test_pit_snapshot_assembly_rejects_cross_company_isin() -> None:
+    as_of = datetime(2026, 7, 22, 23, 59, tzinfo=timezone.utc)
+    mapping = PITSecurityMapping(
+        ticker="SUZB3", cvm_code="13986", cnpj="16.404.287/0001-55",
+        isin="BRSUZBACNOR0", security_type="COMMON_SHARE",
+        valid_from=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        mapping_source="official_registry", mapping_available_at=as_of,
+        mapping_checksum="mapping-checksum",
+    )
+    with pytest.raises(ValueError, match="ISIN"):
+        PITMarketSnapshotAssembler().assemble(
+            mapping=mapping, assessment_as_of=as_of,
+            price_record={"ticker": "SUZB3", "isin": "BRMGLUACNOR2", "close_price": 1,
+                          "trade_date": as_of, "retrieved_at": as_of,
+                          "source_file": "x", "source_checksum": "x"},
+            share_record={"outstanding_count": 1,
+                          "capital_reference_date": as_of,
+                          "document_available_at": as_of,
+                          "document_id": "x", "document_checksum": "x"},
+        )

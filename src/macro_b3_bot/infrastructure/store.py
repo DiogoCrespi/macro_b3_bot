@@ -858,6 +858,23 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS pit_security_mappings (
+                mapping_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                cvm_code VARCHAR NOT NULL,
+                cnpj VARCHAR NOT NULL,
+                isin VARCHAR NOT NULL,
+                security_type VARCHAR NOT NULL,
+                valid_from TIMESTAMP NOT NULL,
+                valid_to TIMESTAMP,
+                mapping_source VARCHAR NOT NULL,
+                mapping_available_at TIMESTAMP NOT NULL,
+                mapping_checksum VARCHAR NOT NULL,
+                mapping_payload VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
         for col in {
             "assessment_as_of": "TIMESTAMP",
             "price_as_of": "TIMESTAMP",
@@ -2133,6 +2150,24 @@ class DatabaseStore:
                 item.get("price_record_hash"), item.get("share_document_id"),
                 item.get("share_document_version"), item.get("share_document_checksum"),
                 item.get("share_section"), json.dumps(item, default=str),
+            ],
+        )
+
+    def save_pit_security_mapping(self, item: dict) -> None:
+        self.connection.execute(
+            """
+            INSERT OR IGNORE INTO pit_security_mappings
+            (mapping_id,ticker,cvm_code,cnpj,isin,security_type,valid_from,
+             valid_to,mapping_source,mapping_available_at,mapping_checksum,
+             mapping_payload)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            [
+                item["mapping_id"], item["ticker"], item["cvm_code"],
+                item["cnpj"], item["isin"], item["security_type"],
+                item["valid_from"], item.get("valid_to"), item["mapping_source"],
+                item["mapping_available_at"], item["mapping_checksum"],
+                json.dumps(item, default=str),
             ],
         )
 

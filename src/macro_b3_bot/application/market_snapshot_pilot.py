@@ -72,7 +72,10 @@ class PITMarketDataIngestor:
             price_layout_version=price_record.get("layout_version"),
             price_record_hash=price_record.get("record_hash"),
             share_document_id=document_id,
-            share_document_version=share_record.get("document_version"),
+            share_document_version=(
+                str(share_record["document_version"])
+                if share_record.get("document_version") is not None else None
+            ),
             share_document_checksum=document_checksum,
             share_section=share_record.get("section"),
         )
