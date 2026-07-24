@@ -1,0 +1,166 @@
+{
+  "total_scenario_sets": 1,
+  "scenario_sets": [
+    {
+      "scenario_set_id": "975b0973255c7cfb4b8055fefc9e6499dc0d45c2696cadb3cacb87d0c15dd342",
+      "event_id": "GENERAL_MACRO_CUTOFF",
+      "as_of_timestamp": "2026-07-24T00:00:00+00:00",
+      "scenario_hypothesis_ids": [
+        "5d13cb1596e2fa3d97eb88ac778bc6c4193ebea87cdb3c1655c5ae74aec8e6b8",
+        "338a8bee8b7af3cf9a48b04914ae34348b2fd6e904b32263b47c1c22d70b5d9a",
+        "ad2d37a766031133219f19bc8505f7bc2ba9baba294c4f568e7a72230255bdc0",
+        "afc38165a143da3bd95362ec1e6b88d3be3d5407291aa167fb5240628b007e92",
+        "a5335d01c8f7b570f7fd84af0760945b9fe421e5463de4f7b900339bb21ab03f"
+      ],
+      "coverage_summary": "Offline fallback scenario set generated for cutoff 2026-07-24T00:00:00+00:00 across 5 scenario types.",
+      "contradiction_summary": "Zero material contradictions detected in offline mode.",
+      "missing_variables": [
+        "REALTIME_MIROFISH_INTERACTION"
+      ],
+      "methodology_version": "5A.1-scenario-set-v1",
+      "created_at": "2026-07-24T13:46:19.382186+00:00"
+    }
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "5d13cb1596e2fa3d97eb88ac778bc6c4193ebea87cdb3c1655c5ae74aec8e6b8",
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "scenario_type": "BASE",
+      "trigger": "Fiscal expansion maintains GDP growth near 2.0% with SELIC held at 10.5%.",
+      "actors": [
+        "BCB",
+        "MINISTRY_OF_FINANCE"
+      ],
+      "actions": [
+        "MONETARY_POLICY_STABILITY"
+      ],
+      "macro_factors": [
+        "SELIC_10_5"
+      ],
+      "sector_effects": [
+        "RETAIL_NEUTRAL",
+        "PULP_NEUTRAL"
+      ],
+      "second_order_effects": [
+        "INFLATION_EXPECTATIONS_ANCHORED"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.6
+    },
+    {
+      "hypothesis_id": "338a8bee8b7af3cf9a48b04914ae34348b2fd6e904b32263b47c1c22d70b5d9a",
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "scenario_type": "BULL",
+      "trigger": "Faster disinflation allows early BCB rate cuts, boosting domestic retail sentiment.",
+      "actors": [
+        "BCB",
+        "B3_EXCHANGE"
+      ],
+      "actions": [
+        "RATE_CUT"
+      ],
+      "macro_factors": [
+        "SELIC_CUT_50BP"
+      ],
+      "sector_effects": [
+        "RETAIL_POSITIVE",
+        "LOGISTICS_POSITIVE"
+      ],
+      "second_order_effects": [
+        "DISCRETIONARY_CONSUMPTION_RECOVERY"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.5
+    },
+    {
+      "hypothesis_id": "ad2d37a766031133219f19bc8505f7bc2ba9baba294c4f568e7a72230255bdc0",
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "scenario_type": "BEAR",
+      "trigger": "Global commodity weakness lowers exporter revenues while fiscal deficit pushes USD/BRL higher.",
+      "actors": [
+        "MINISTRY_OF_FINANCE",
+        "FED"
+      ],
+      "actions": [
+        "CURRENCY_DEPRECIATION"
+      ],
+      "macro_factors": [
+        "USD_BRL_UP"
+      ],
+      "sector_effects": [
+        "PULP_NEGATIVE",
+        "AGRICULTURE_NEGATIVE"
+      ],
+      "second_order_effects": [
+        "IMPORT_COST_PRESSURES"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.55
+    },
+    {
+      "hypothesis_id": "afc38165a143da3bd95362ec1e6b88d3be3d5407291aa167fb5240628b007e92",
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "scenario_type": "CONTRARIAN",
+      "trigger": "China fiscal stimulus exceeds expectations, driving sharp rally in pulp and paper exports.",
+      "actors": [
+        "CHINA_STATE_COUNCIL",
+        "CVM"
+      ],
+      "actions": [
+        "CHINA_STIMULUS"
+      ],
+      "macro_factors": [
+        "CHINA_GDP_REBOUND"
+      ],
+      "sector_effects": [
+        "PULP_BULLISH",
+        "LOGISTICS_BULLISH"
+      ],
+      "second_order_effects": [
+        "FREIGHT_RATE_SURGE"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.4
+    },
+    {
+      "hypothesis_id": "a5335d01c8f7b570f7fd84af0760945b9fe421e5463de4f7b900339bb21ab03f",
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "scenario_type": "TAIL",
+      "trigger": "Severe drought accelerates agricultural crop failure and power tariff spikes.",
+      "actors": [
+        "BCB",
+        "MINISTRY_OF_FINANCE"
+      ],
+      "actions": [
+        "CLIMATE_SHOCK"
+      ],
+      "macro_factors": [
+        "INFLATION_SPIKE"
+      ],
+      "sector_effects": [
+        "AGRICULTURE_TAIL_RISK",
+        "RETAIL_MARGIN_COMPRESSION"
+      ],
+      "second_order_effects": [
+        "EMERGENCY_FISCAL_SPENDING"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.25
+    }
+  ]
+}

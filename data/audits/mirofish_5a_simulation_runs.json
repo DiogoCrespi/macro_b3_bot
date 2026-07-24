@@ -1,0 +1,26 @@
+{
+  "total_runs": 1,
+  "runs": [
+    {
+      "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
+      "seed_package_id": "92839d719ef81513286d7da0f78dea3970c127b2c05e3656fc3f98183b8a24b6",
+      "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
+      "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
+      "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
+      "requested_at": "2026-07-24T13:46:19.381911+00:00",
+      "completed_at": "2026-07-24T13:46:19.381932+00:00",
+      "service_version": "mirofish-v1.0-offline",
+      "model_information": "NOT_EXPOSED_BY_SERVICE",
+      "configuration": {
+        "offline_fallback": true
+      },
+      "random_seed": "NOT_EXPOSED_BY_SERVICE",
+      "prompt_hash": "d1932ed2184d57f5666fd20af71585ba42f162a18bc2faefa59e8ca7b75c7d56",
+      "input_checksum": "92839d719ef81513286d7da0f78dea3970c127b2c05e3656fc3f98183b8a24b6",
+      "status": "SERVICE_OFFLINE_DETERMINISTIC_FALLBACK",
+      "raw_report_ids": [],
+      "raw_response_checksum": "SERVICE_OFFLINE_NO_RESPONSE",
+      "methodology_version": "5A.1-mirofish-engine-v1"
+    }
+  ]
+}

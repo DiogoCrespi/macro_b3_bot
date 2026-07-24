@@ -995,6 +995,46 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_seed_packages (
+                seed_package_id VARCHAR PRIMARY KEY,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                prompt_template_version VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS mirofish_simulation_runs (
+                simulation_run_id VARCHAR PRIMARY KEY,
+                seed_package_id VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                prompt_hash VARCHAR NOT NULL,
+                input_checksum VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_hypotheses (
+                hypothesis_id VARCHAR PRIMARY KEY,
+                simulation_run_id VARCHAR NOT NULL,
+                scenario_type VARCHAR NOT NULL,
+                verification_status VARCHAR NOT NULL,
+                confidence DOUBLE NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_sets (
+                scenario_set_id VARCHAR PRIMARY KEY,
+                event_id VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
         try:
             self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
         except Exception:
@@ -2604,6 +2644,80 @@ class DatabaseStore:
                 float(event["slippage_cost"]),
                 event["reason"],
                 json.dumps(event, default=str),
+            ],
+        )
+
+    def save_scenario_seed_package(self, seed: dict[str, Any]) -> None:
+        """Persists a ScenarioSeedPackage into DuckDB idempotently."""
+        seed_id = seed["seed_package_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM scenario_seed_packages WHERE seed_package_id = ?",
+            [seed_id]
+        ).fetchone()
+        if existing:
+            return
+
+        self.connection.execute(
+            """
+            INSERT INTO scenario_seed_packages
+            (seed_package_id, as_of_timestamp, prompt_template_version, canonical_payload_json)
+            VALUES (?, ?, ?, ?)
+            """,
+            [
+                seed_id,
+                datetime.fromisoformat(seed["as_of_timestamp"].replace("Z", "+00:00")),
+                seed.get("prompt_template_version", "5A.1-mirofish-seed-v1"),
+                json.dumps(seed, default=str),
+            ],
+        )
+
+    def save_mirofish_simulation_run(self, run: dict[str, Any]) -> None:
+        """Persists a MiroFishSimulationRun into DuckDB idempotently."""
+        run_id = run["simulation_run_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM mirofish_simulation_runs WHERE simulation_run_id = ?",
+            [run_id]
+        ).fetchone()
+        if existing:
+            return
+
+        self.connection.execute(
+            """
+            INSERT INTO mirofish_simulation_runs
+            (simulation_run_id, seed_package_id, status, prompt_hash, input_checksum, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            [
+                run_id,
+                run["seed_package_id"],
+                run["status"],
+                run["prompt_hash"],
+                run["input_checksum"],
+                json.dumps(run, default=str),
+            ],
+        )
+
+    def save_scenario_set(self, scenario_set: dict[str, Any]) -> None:
+        """Persists a ScenarioSet into DuckDB idempotently."""
+        set_id = scenario_set["scenario_set_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM scenario_sets WHERE scenario_set_id = ?",
+            [set_id]
+        ).fetchone()
+        if existing:
+            return
+
+        self.connection.execute(
+            """
+            INSERT INTO scenario_sets
+            (scenario_set_id, event_id, as_of_timestamp, canonical_payload_json)
+            VALUES (?, ?, ?, ?)
+            """,
+            [
+                set_id,
+                scenario_set["event_id"],
+                datetime.fromisoformat(scenario_set["as_of_timestamp"].replace("Z", "+00:00")),
+                json.dumps(scenario_set, default=str),
             ],
         )
 
