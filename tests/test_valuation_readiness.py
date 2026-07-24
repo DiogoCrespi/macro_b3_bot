@@ -258,7 +258,9 @@ def test_pit_snapshot_assembly_reconciles_security_identity() -> None:
         isin="BRMGLUACNOR2", security_type="COMMON_SHARE",
         valid_from=datetime(2026, 1, 1, tzinfo=timezone.utc),
         mapping_source="official_registry", mapping_available_at=as_of,
-        mapping_checksum="mapping-checksum",
+        mapping_checksum="a" * 64, source_file="registry.csv",
+        source_file_checksum="b" * 64, source_record_hash="c" * 64,
+        source_locator="row:1",
     )
     price = {
         "ticker": "MGLU3", "isin": "BRMGLUACNOR2", "close_price": 4.91,
@@ -268,6 +270,7 @@ def test_pit_snapshot_assembly_reconciles_security_identity() -> None:
     }
     shares = {
         "company_cnpj": "47.960.950/0001-21", "outstanding_count": 1000,
+        "cvm_code": "22470",
         "capital_reference_date": datetime(2026, 3, 31, tzinfo=timezone.utc),
         "document_available_at": datetime(2026, 7, 20, tzinfo=timezone.utc),
         "document_id": "ITR-1", "document_checksum": "cvm-checksum",
@@ -289,7 +292,9 @@ def test_pit_snapshot_assembly_rejects_cross_company_isin() -> None:
         isin="BRSUZBACNOR0", security_type="COMMON_SHARE",
         valid_from=datetime(2026, 1, 1, tzinfo=timezone.utc),
         mapping_source="official_registry", mapping_available_at=as_of,
-        mapping_checksum="mapping-checksum",
+        mapping_checksum="a" * 64, source_file="registry.csv",
+        source_file_checksum="b" * 64, source_record_hash="c" * 64,
+        source_locator="row:1",
     )
     with pytest.raises(ValueError, match="ISIN"):
         PITMarketSnapshotAssembler().assemble(

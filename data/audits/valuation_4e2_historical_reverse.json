@@ -1,0 +1,38 @@
+{
+  "run_id": "valuation_4e2_historical_reverse",
+  "methodology_version": "4E.2-historical-multiples-reverse-v1",
+  "status": "BLOCKED_INSUFFICIENT_PIT_HISTORY",
+  "companies": ["MGLU3", "SUZB3"],
+  "observations": {
+    "MGLU3": 1,
+    "SUZB3": 1
+  },
+  "required_observations_per_company": 8,
+  "lookahead_market_observations": 0,
+  "lookahead_financial_observations": 0,
+  "available_observations": [
+    {"ticker":"MGLU3","valuation_date":"2026-07-22","market_cap":3804662493.95,"source_snapshot_id":"mkt-e34d3e3bc6c82abc503b8669","status":"DESCRIPTIVE_ONLY"},
+    {"ticker":"SUZB3","valuation_date":"2026-07-22","market_cap":41973599106.90,"source_snapshot_id":"mkt-172dc8e331e16a812b51acf4","status":"DESCRIPTIVE_ONLY"}
+  ],
+  "multiples": {
+    "status": "NOT_COMPUTED_WITHOUT_PIT_FINANCIAL_SERIES",
+    "denominator_policy": "NOT_MEANINGFUL_NONPOSITIVE_DENOMINATOR"
+  },
+  "percentiles": {
+    "status": "SMALL_SAMPLE_DESCRIPTIVE_ONLY",
+    "minimum_sample": 8
+  },
+  "reverse_valuation": {
+    "status": "BLOCKED_INSUFFICIENT_PIT_HISTORY",
+    "classification": "PRICE_IMPLIED_FUNDAMENTALS",
+    "not_a_fair_value": true,
+    "not_buy_eligible": true
+  },
+  "safety": {
+    "fair_value_produced": 0,
+    "price_targets": 0,
+    "dcf_executed": 0,
+    "buy_or_orders": 0,
+    "mirofish": "BLOCKED"
+  }
+}

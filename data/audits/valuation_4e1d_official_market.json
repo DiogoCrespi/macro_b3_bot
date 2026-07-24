@@ -1,7 +1,7 @@
 {
   "run_id": "valuation_4e1e_market_snapshots",
   "methodology_version": "4E.1E-pit-market-snapshot-assembly-v1",
-  "status": "BLOCKED_MISSING_PIT_COMPANY_MAPPING",
+  "status": "PARTIAL_SUCCESS_2_OF_3",
   "assessment_as_of": "2026-07-22T23:59:00Z",
   "source_manifest": {
     "b3_zip_sha256": "EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42",
@@ -10,9 +10,9 @@
     "pit_assurance": "RECONSTRUCTED_OFFICIAL_BACKFILL"
   },
   "pit_mappings": [
-    {"ticker":"MGLU3","cvm_code":"22470","cnpj":"47.960.950/0001-21","isin":"BRMGLUACNOR2","security_type":"COMMON_SHARE","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-mglu3"},
-    {"ticker":"SUZB3","cvm_code":"13986","cnpj":"16.404.287/0001-55","isin":"BRSUZBACNOR0","security_type":"COMMON_SHARE","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-suzb3"},
-    {"ticker":"KLBN11","cvm_code":"12653","cnpj":"89.637.490/0001-45","isin":"BRKLBNCDAM1","security_type":"UNIT","valid_from":"2026-01-01T00:00:00Z","mapping_source":"official B3/CVM registry","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"mapping-official-klbn11"}
+    {"ticker":"MGLU3","cvm_code":"22470","cnpj":"47.960.950/0001-21","isin":"BRMGLUACNOR2","security_type":"COMMON_SHARE","valid_from":null,"effective_date_source":"UNKNOWN_EFFECTIVE_DATE","mapping_source":"official B3/CVM registry","source_file":"COTAHIST_A2026.TXT + itr_cia_aberta_composicao_capital_2026.csv","source_file_checksum":"EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42","source_record_hash":"a61242b879e9c6552160096a5af3ee04e88d2c0fa424fe87e6b45b9ec797bcf1","source_locator":"B3 record_hash + CVM row 8e9dbfcb1630d5991f44f62352735ad5500661f908dcb0da02419562a177a5fa","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"07b728ebcc29b30dedf3d1071ef42dc15a3f33b359211635227ee0dbe7af6fb6"},
+    {"ticker":"SUZB3","cvm_code":"13986","cnpj":"16.404.287/0001-55","isin":"BRSUZBACNOR0","security_type":"COMMON_SHARE","valid_from":null,"effective_date_source":"UNKNOWN_EFFECTIVE_DATE","mapping_source":"official B3/CVM registry","source_file":"COTAHIST_A2026.TXT + itr_cia_aberta_composicao_capital_2026.csv","source_file_checksum":"EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42","source_record_hash":"54d6f83d0dc5897022a14fd034c6ab6f0e3cca740f58ebaebdd5e5d580ae0c2a","source_locator":"B3 record_hash + CVM row 5ec69d6b32a9f73ddeae65ca407653ef538b40c5514eeda58d4bfc8526b35449","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"24b70264379362682c3d40a1fcb89ae8641556eee1c599064ef94e92b1ba52b0"},
+    {"ticker":"KLBN11","cvm_code":"12653","cnpj":"89.637.490/0001-45","isin":"BRKLBNCDAM1","security_type":"UNIT","valid_from":null,"effective_date_source":"UNKNOWN_EFFECTIVE_DATE","mapping_source":"official B3/CVM registry","source_file":"COTAHIST_A2026.TXT + itr_cia_aberta_composicao_capital_2026.csv","source_file_checksum":"EED87D0896C5F87915E1F60A73B19A34F68AFB73267460EF8FA286219D11EA42","source_record_hash":null,"source_locator":"mapping resolved; unit count absent","mapping_available_at":"2026-07-13T00:00:00Z","mapping_checksum":"58c190661df21d8e791f9fadfec726f66fa95f328009d49fdaef5ec356491779"}
   ],
   "snapshots": [
     {"ticker":"MGLU3","market_snapshot_id":"mkt-e34d3e3bc6c82abc503b8669","price":4.91,"share_count":774880345,"market_capitalization":3804662493.95,"isin":"BRMGLUACNOR2","price_record_hash":"a61242b879e9c6552160096a5af3ee04e88d2c0fa424fe87e6b45b9ec797bcf1","share_document_id":"itr_cia_aberta_composicao_capital_2026.csv","pit_assurance":"RECONSTRUCTED_OFFICIAL_BACKFILL"},
