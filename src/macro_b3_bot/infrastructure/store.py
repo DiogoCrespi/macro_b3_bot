@@ -831,6 +831,11 @@ class DatabaseStore:
             CREATE TABLE IF NOT EXISTS market_snapshots_pit (
                 market_snapshot_id VARCHAR PRIMARY KEY,
                 ticker VARCHAR NOT NULL,
+                assessment_as_of TIMESTAMP NOT NULL,
+                price_as_of TIMESTAMP NOT NULL,
+                price_available_at TIMESTAMP NOT NULL,
+                share_count_as_of TIMESTAMP NOT NULL,
+                share_count_available_at TIMESTAMP NOT NULL,
                 as_of_timestamp TIMESTAMP NOT NULL,
                 available_at TIMESTAMP NOT NULL,
                 price DOUBLE NOT NULL,
@@ -841,10 +846,39 @@ class DatabaseStore:
                 market_data_version VARCHAR NOT NULL,
                 security_type VARCHAR NOT NULL,
                 equity_value_basis VARCHAR NOT NULL,
+                price_source_file VARCHAR,
+                price_source_checksum VARCHAR,
+                price_layout_version VARCHAR,
+                price_record_hash VARCHAR,
+                share_document_id VARCHAR,
+                share_document_version VARCHAR,
+                share_document_checksum VARCHAR,
+                share_section VARCHAR,
                 snapshot_payload VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        for col in {
+            "assessment_as_of": "TIMESTAMP",
+            "price_as_of": "TIMESTAMP",
+            "price_available_at": "TIMESTAMP",
+            "share_count_as_of": "TIMESTAMP",
+            "share_count_available_at": "TIMESTAMP",
+            "price_source_file": "VARCHAR",
+            "price_source_checksum": "VARCHAR",
+            "price_layout_version": "VARCHAR",
+            "price_record_hash": "VARCHAR",
+            "share_document_id": "VARCHAR",
+            "share_document_version": "VARCHAR",
+            "share_document_checksum": "VARCHAR",
+            "share_section": "VARCHAR",
+        }.items():
+            try:
+                self.connection.execute(
+                    f"ALTER TABLE market_snapshots_pit ADD COLUMN {col} {kind}"
+                )
+            except Exception:
+                pass
 
 
     def _init_views(self) -> None:
@@ -2077,17 +2111,28 @@ class DatabaseStore:
         self.connection.execute(
             """
             INSERT OR IGNORE INTO market_snapshots_pit
-            (market_snapshot_id,ticker,as_of_timestamp,available_at,price,
+            (market_snapshot_id,ticker,assessment_as_of,price_as_of,
+             price_available_at,share_count_as_of,share_count_available_at,
+             as_of_timestamp,available_at,price,
              share_count,share_count_basis,currency,source_id,market_data_version,
-             security_type,equity_value_basis,snapshot_payload)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+             security_type,equity_value_basis,price_source_file,
+             price_source_checksum,price_layout_version,price_record_hash,
+             share_document_id,share_document_version,share_document_checksum,
+             share_section,snapshot_payload)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             [
-                item["market_snapshot_id"], item["ticker"], item["as_of_timestamp"],
-                item["available_at"], item["price"], item["share_count"],
+                item["market_snapshot_id"], item["ticker"], item["assessment_as_of"],
+                item["price_as_of"], item["price_available_at"],
+                item["share_count_as_of"], item["share_count_available_at"],
+                item["as_of_timestamp"], item["available_at"], item["price"], item["share_count"],
                 item["share_count_basis"], item["currency"], item["source_id"],
                 item["market_data_version"], item["security_type"],
-                item["equity_value_basis"], json.dumps(item, default=str),
+                item["equity_value_basis"], item.get("price_source_file"),
+                item.get("price_source_checksum"), item.get("price_layout_version"),
+                item.get("price_record_hash"), item.get("share_document_id"),
+                item.get("share_document_version"), item.get("share_document_checksum"),
+                item.get("share_section"), json.dumps(item, default=str),
             ],
         )
 

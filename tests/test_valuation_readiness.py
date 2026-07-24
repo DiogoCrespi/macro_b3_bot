@@ -1,6 +1,7 @@
 from datetime import date, datetime, timezone
 
 from macro_b3_bot.application.valuation_readiness import ValuationReadinessGate
+from macro_b3_bot.application.market_snapshot_pilot import PITMarketDataIngestor
 from macro_b3_bot.domain.financial_bridge_models import (
     BridgeCalibrationResult,
     BridgeReplayObservation,
@@ -128,3 +129,59 @@ def test_klbn_unit_basis_cannot_use_class_aggregate() -> None:
             currency="BRL", source_id="b3-close", market_data_version="v1",
             security_type="UNIT", equity_value_basis="UNIT_PRICE_X_UNITS",
         )
+
+
+def test_market_snapshot_ticker_mismatch_is_a_primary_blocker() -> None:
+    snapshot = MarketSnapshotPIT.from_content(
+        ticker="MGLU3", as_of_timestamp=AS_OF, available_at=AS_OF,
+        price=10, share_count=100, share_count_basis="SHARES_OUTSTANDING",
+        currency="BRL", source_id="b3-close", market_data_version="v1",
+        security_type="COMMON_SHARE", equity_value_basis="PRICE_X_SHARES",
+    )
+    result = ValuationReadinessGate().assess(
+        baseline=_baseline().model_copy(update={"ticker": "SUZB3"}),
+        calibrations=[], normalized_cash_flow=_fcf(), market_snapshot=snapshot,
+    )
+    assert result.status == "VALUATION_BLOCKED_MARKET_SECURITY_MISMATCH"
+    assert "MARKET_SECURITY_MISMATCH" in result.blockers
+
+
+def test_quote_can_be_published_after_quote_timestamp() -> None:
+    quote = datetime(2026, 7, 22, 18, tzinfo=timezone.utc)
+    published = datetime(2026, 7, 22, 18, 5, tzinfo=timezone.utc)
+    assessment = datetime(2026, 7, 22, 23, 59, tzinfo=timezone.utc)
+    snapshot = MarketSnapshotPIT.from_content(
+        ticker="MGLU3", assessment_as_of=assessment, price_as_of=quote,
+        price_available_at=published, share_count_as_of=quote,
+        share_count_available_at=published, price=10, share_count=100,
+        share_count_basis="SHARES_OUTSTANDING", currency="BRL", source_id="b3-close",
+        market_data_version="v1", security_type="COMMON_SHARE",
+        equity_value_basis="PRICE_X_SHARES",
+    )
+    assert snapshot.assessment_as_of == assessment
+    assert snapshot.price_available_at > snapshot.price_as_of
+
+
+def test_pit_ingestor_preserves_b3_and_cvm_provenance() -> None:
+    snapshot = PITMarketDataIngestor().build_snapshot(
+        ticker="MGLU3", assessment_as_of=AS_OF,
+        price_record={
+            "trade_date": "2026-07-22T18:00:00+00:00",
+            "available_at": "2026-07-22T18:05:00+00:00",
+            "close_price": 10, "currency": "BRL",
+            "source_file": "B3_20260722.txt", "source_checksum": "sha-b3",
+            "layout_version": "B3-2026-01", "record_hash": "row-hash",
+        },
+        share_record={
+            "as_of": "2026-06-30T00:00:00+00:00",
+            "available_at": "2026-07-10T00:00:00+00:00",
+            "share_count": 100, "document_id": "FRE-1",
+            "document_version": "3", "document_checksum": "sha-cvm",
+            "section": "capital_structure",
+        },
+        security_type="COMMON_SHARE", equity_value_basis="PRICE_X_SHARES",
+        share_count_basis="SHARES_OUTSTANDING",
+    )
+    assert snapshot.price_source_checksum == "sha-b3"
+    assert snapshot.share_document_checksum == "sha-cvm"
+    assert snapshot.price_available_at > snapshot.price_as_of

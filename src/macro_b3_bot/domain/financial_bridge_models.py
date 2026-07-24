@@ -274,8 +274,16 @@ class MarketSnapshotPIT(BaseModel):
 
     market_snapshot_id: str
     ticker: str
-    as_of_timestamp: datetime
-    available_at: datetime
+    # `assessment_as_of` is the replay cut; the two source timelines are
+    # intentionally independent (a filing can predate a quote publication).
+    assessment_as_of: datetime | None = None
+    price_as_of: datetime | None = None
+    price_available_at: datetime | None = None
+    share_count_as_of: datetime | None = None
+    share_count_available_at: datetime | None = None
+    # Legacy aliases retained for serialized 4E.1 compatibility.
+    as_of_timestamp: datetime | None = None
+    available_at: datetime | None = None
     price: float = Field(gt=0)
     share_count: float = Field(gt=0)
     share_count_basis: Literal[
@@ -292,11 +300,37 @@ class MarketSnapshotPIT(BaseModel):
     ]
     unit_composition: list[str] = Field(default_factory=list)
     class_components: dict[str, float] = Field(default_factory=dict)
+    price_source_file: str | None = None
+    price_source_checksum: str | None = None
+    price_layout_version: str | None = None
+    price_record_hash: str | None = None
+    share_document_id: str | None = None
+    share_document_version: str | None = None
+    share_document_checksum: str | None = None
+    share_section: str | None = None
 
     @model_validator(mode="after")
     def validate_security_basis(self) -> "MarketSnapshotPIT":
-        if self.available_at > self.as_of_timestamp:
-            raise ValueError("market data cannot become available after its quote date")
+        assessment = self.assessment_as_of or self.as_of_timestamp
+        price_as_of = self.price_as_of or self.as_of_timestamp
+        price_available = self.price_available_at or self.available_at
+        share_as_of = self.share_count_as_of or price_as_of
+        share_available = self.share_count_available_at or price_available
+        if assessment is None or price_as_of is None or price_available is None:
+            raise ValueError("assessment and price PIT timestamps are required")
+        if share_as_of is None or share_available is None:
+            raise ValueError("share-count PIT timestamps are required")
+        if price_as_of > assessment or price_available > assessment:
+            raise ValueError("price data is not available at the assessment cut")
+        if share_as_of > assessment or share_available > assessment:
+            raise ValueError("share-count data is not available at the assessment cut")
+        object.__setattr__(self, "assessment_as_of", assessment)
+        object.__setattr__(self, "price_as_of", price_as_of)
+        object.__setattr__(self, "price_available_at", price_available)
+        object.__setattr__(self, "share_count_as_of", share_as_of)
+        object.__setattr__(self, "share_count_available_at", share_available)
+        object.__setattr__(self, "as_of_timestamp", assessment)
+        object.__setattr__(self, "available_at", max(price_available, share_available))
         if self.ticker == "KLBN11":
             if self.security_type == "UNIT":
                 if self.share_count_basis != "UNITS_OUTSTANDING":
@@ -344,6 +378,8 @@ class ValuationReadinessAssessment(BaseModel):
         "VALUATION_BLOCKED_CONFLICTING_MACRO_DIRECTION",
         "VALUATION_BLOCKED_MISSING_MARKET_DATA",
         "VALUATION_BLOCKED_INSUFFICIENT_HISTORY",
+        "VALUATION_BLOCKED_MARKET_SECURITY_MISMATCH",
+        "VALUATION_BLOCKED_UNSUPPORTED_SECURITY_BASIS",
     ]
     valuation_eligible: bool
     dcf_eligible: bool

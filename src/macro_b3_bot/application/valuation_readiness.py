@@ -41,15 +41,33 @@ class ValuationReadinessGate:
         calibrations = list(calibrations)
         conflicts = list(conflict_diagnostics)
         outcomes = list(scenario_outcomes)
+        blockers: list[str] = []
+        reasons: list[str] = []
         if market_snapshot is not None:
+            if market_snapshot.ticker != baseline.ticker:
+                blockers = ["MARKET_SECURITY_MISMATCH"]
+                reasons = [
+                    "market snapshot ticker does not match the financial baseline ticker"
+                ]
+            elif market_snapshot.security_type == "MIXED_CLASSES":
+                blockers = ["MIXED_CLASSES_UNSUPPORTED"]
+                reasons = [
+                    "mixed-class market capitalization is disabled until class-level pricing is implemented"
+                ]
             market_data = market_snapshot.model_dump(mode="json")
             market_data["shares_outstanding"] = market_snapshot.share_count
             market_data["market_snapshot_id"] = market_snapshot.market_snapshot_id
-            market_data["as_of"] = market_snapshot.as_of_timestamp
+            market_data["as_of"] = market_snapshot.price_as_of
+            market_data["available_at"] = max(
+                market_snapshot.price_available_at,
+                market_snapshot.share_count_available_at,
+            )
         market_data = market_data or {}
-        timestamp = as_of_timestamp or baseline.as_of_timestamp
-        blockers: list[str] = []
-        reasons: list[str] = []
+        timestamp = (
+            as_of_timestamp
+            or (market_snapshot.assessment_as_of if market_snapshot else None)
+            or baseline.as_of_timestamp
+        )
 
         if not calibrations or any(
             not item.validation_gate_passed
@@ -145,6 +163,8 @@ class ValuationReadinessGate:
         if not blockers:
             return "VALUATION_READY"
         order = (
+            ("MARKET_SECURITY_MISMATCH", "VALUATION_BLOCKED_MARKET_SECURITY_MISMATCH"),
+            ("MIXED_CLASSES_UNSUPPORTED", "VALUATION_BLOCKED_UNSUPPORTED_SECURITY_BASIS"),
             ("LOW_CALIBRATION_CONFIDENCE", "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE"),
             ("EMPIRICAL_VALIDATION", "VALUATION_BLOCKED_EMPIRICAL_VALIDATION"),
             ("FCF_NOT_READY", "VALUATION_BLOCKED_FCF_NOT_READY"),
@@ -210,6 +230,14 @@ class ValuationReadinessGate:
     ) -> dict[str, Any]:
         price = market_data.get("price")
         shares = market_data.get("shares_outstanding")
+        if market_data.get("security_type") == "MIXED_CLASSES":
+            return {
+                name: {"value": None}
+                for name in (
+                    "market_capitalization", "enterprise_value", "pe_observed",
+                    "ev_ebitda_observed", "p_fcf_proxy_observed",
+                )
+            }
         market_cap = price * shares if price is not None and shares is not None and float(shares) > 0 else None
         ev = market_cap + baseline.net_debt if market_cap is not None else None
         def metric(numerator: float | None, denominator: float | None) -> dict[str, Any]:
