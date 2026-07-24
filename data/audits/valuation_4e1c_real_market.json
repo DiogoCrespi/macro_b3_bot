@@ -1,0 +1,24 @@
+{
+  "run_id": "valuation_4e1c_real_market",
+  "methodology_version": "4E.1C-real-pit-market-pilot-v1",
+  "status": "BLOCKED_NO_OFFICIAL_INPUTS",
+  "market_snapshots": {
+    "accepted": 0,
+    "required": 3,
+    "tickers": ["MGLU3", "SUZB3", "KLBN11"]
+  },
+  "source_policy": {
+    "price": "OFFICIAL_B3_CLOSE_FILE_REQUIRED",
+    "share_count": "OFFICIAL_CVM_FRE_OR_CAPITAL_STRUCTURE_REQUIRED",
+    "synthetic_values": false
+  },
+  "assessments": [
+    {"ticker": "MGLU3", "status": "VALUATION_BLOCKED_MISSING_MARKET_DATA"},
+    {"ticker": "SUZB3", "status": "VALUATION_BLOCKED_MISSING_MARKET_DATA"},
+    {"ticker": "KLBN11", "status": "VALUATION_BLOCKED_MISSING_MARKET_DATA"}
+  ],
+  "valuation_ready": 0,
+  "dcf_executed": 0,
+  "price_targets": 0,
+  "buy_or_orders": 0
+}
