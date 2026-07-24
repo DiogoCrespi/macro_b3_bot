@@ -1,0 +1,320 @@
+{
+  "sprint": "4E.3",
+  "methodology_version": "4E.3-research-decision-synthesis-v1",
+  "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+  "total_evaluated": 5,
+  "decisions_count": {
+    "WATCH": 1,
+    "NO_ACTION": 4
+  },
+  "technical_debts": [
+    "PITSecurityMapping is RECONSTRUCTED_VALIDATED_MAPPING, not strict contemporaneous PIT",
+    "source_retrieved_at prefers acquisition manifest timestamp over datetime.now()",
+    "SUZB3 share scale adjustment is PILOT_COMPANY_RECONCILIATION_HEURISTIC"
+  ],
+  "decisions": [
+    {
+      "decision_id": "70b6b438d32c82acea2d6a3e9b2f2139c62a057d0bd7d66ff40176c8f42beb8d",
+      "ticker": "MGLU3",
+      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "decision": "WATCH",
+      "macro_event_ids": [
+        "evt_selic_cut_2025_001"
+      ],
+      "active_factors": [
+        "INTEREST_RATES"
+      ],
+      "factor_directions": {
+        "INTEREST_RATES": -1
+      },
+      "macro_conflict_status": "NO_CONFLICT",
+      "sector_state": {
+        "sector_name": "Retail & Commerce",
+        "is_active": true,
+        "has_active_signal": true,
+        "impact_score": -0.45,
+        "impact_summary": "High interest rate sensitivity on consumer credit"
+      },
+      "sector_impact": "High interest rate sensitivity on consumer credit",
+      "company_contributions": [
+        {
+          "contribution_id": "contrib_mglu_rates_001",
+          "channel": "floating_rate_debt",
+          "approval_status": "HUMAN_APPROVED",
+          "confidence": 0.75
+        }
+      ],
+      "financial_outcomes": [
+        {
+          "financial_outcome_id": "out_mglu_rates_001",
+          "status": "PARTIAL",
+          "delta_net_income": 49000000.0
+        }
+      ],
+      "historical_multiple_position": {
+        "observation_count": 9,
+        "median_ev_ebitda": 11.2,
+        "summary": "Observed EV/EBITDA median is 11.2x across 9 PIT observations."
+      },
+      "price_implied_fundamentals": {
+        "implied_revenue_growth_p50": 0.045,
+        "implied_ebitda_margin_p50": 0.062
+      },
+      "valuation_classification": "VALUATION_BLOCKED",
+      "evidence_completeness": 1.0,
+      "confidence": 0.408,
+      "confidence_tier": "MEDIUM",
+      "critical_blockers": [],
+      "noncritical_warnings": [
+        "FCF_NOT_DCF_READY",
+        "EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "SMALL_VALUATION_SAMPLE"
+      ],
+      "missing_inputs": [],
+      "rationale": "Company MGLU3 qualified for WATCH list: active sector signal, 1 approved exposures, and 1 calculable financial channels without critical blockers. Non-critical warnings noted: [FCF_NOT_DCF_READY, EMPIRICAL_CALIBRATION_INCOMPLETE, SMALL_VALUATION_SAMPLE]. Valuation Context: Observed EV/EBITDA median is 11.2x across 9 PIT observations.",
+      "invalidation_conditions": [],
+      "methodology_version": "4E.3-research-decision-synthesis-v1",
+      "input_ids": {
+        "macro_event_ids": [
+          "evt_selic_cut_2025_001"
+        ],
+        "sector_snapshot_id": "sec_retail_2025_q4",
+        "company_contribution_ids": [
+          "contrib_mglu_rates_001"
+        ],
+        "financial_outcome_ids": [
+          "out_mglu_rates_001"
+        ],
+        "valuation_observation_count": 9
+      }
+    },
+    {
+      "decision_id": "32eb6b06344e531b1a81e0e1b9b2e5c7d12670b99ac9c19e695a5f1e88394f45",
+      "ticker": "SUZB3",
+      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "decision": "NO_ACTION",
+      "macro_event_ids": [
+        "evt_fx_up_001",
+        "evt_fx_down_002"
+      ],
+      "active_factors": [
+        "FX_USD_BRL"
+      ],
+      "factor_directions": {
+        "FX_USD_BRL": -1
+      },
+      "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
+      "sector_state": {
+        "sector_name": "Pulp & Paper",
+        "is_active": true,
+        "has_active_signal": true,
+        "impact_score": 0.6
+      },
+      "sector_impact": null,
+      "company_contributions": [
+        {
+          "contribution_id": "contrib_suzb_fx_001",
+          "channel": "export_revenue",
+          "approval_status": "HUMAN_APPROVED",
+          "confidence": 0.8
+        }
+      ],
+      "financial_outcomes": [
+        {
+          "financial_outcome_id": "out_suzb_fx_001",
+          "status": "PARTIAL"
+        }
+      ],
+      "historical_multiple_position": {
+        "observation_count": 9,
+        "median_ev_ebitda": 6.8,
+        "summary": "Observed EV/EBITDA median is 6.8x across 9 PIT observations."
+      },
+      "price_implied_fundamentals": {},
+      "valuation_classification": "VALUATION_BLOCKED",
+      "evidence_completeness": 1.0,
+      "confidence": 0.3315,
+      "confidence_tier": "LOW",
+      "critical_blockers": [
+        "CONFLICTING_MACRO_DIRECTION"
+      ],
+      "noncritical_warnings": [
+        "FCF_NOT_DCF_READY",
+        "EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "SMALL_VALUATION_SAMPLE"
+      ],
+      "missing_inputs": [],
+      "rationale": "Company SUZB3 assigned NO_ACTION due to critical blockers: [CONFLICTING_MACRO_DIRECTION]. Non-critical warnings noted: [FCF_NOT_DCF_READY, EMPIRICAL_CALIBRATION_INCOMPLETE, SMALL_VALUATION_SAMPLE]. Valuation Context: Observed EV/EBITDA median is 6.8x across 9 PIT observations.",
+      "invalidation_conditions": [
+        "Unresolved conflicting macro factor directions detected"
+      ],
+      "methodology_version": "4E.3-research-decision-synthesis-v1",
+      "input_ids": {
+        "macro_event_ids": [
+          "evt_fx_up_001",
+          "evt_fx_down_002"
+        ],
+        "sector_snapshot_id": "sec_pulp_2025_q4",
+        "company_contribution_ids": [
+          "contrib_suzb_fx_001"
+        ],
+        "financial_outcome_ids": [
+          "out_suzb_fx_001"
+        ],
+        "valuation_observation_count": 9
+      }
+    },
+    {
+      "decision_id": "02469fc041a691aefbf0d3eb062a9daecca1ba25579aa58bda3803e3b09a5cb5",
+      "ticker": "KLBN11",
+      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "decision": "NO_ACTION",
+      "macro_event_ids": [
+        "evt_fx_up_001",
+        "evt_fx_down_002"
+      ],
+      "active_factors": [
+        "FX_USD_BRL"
+      ],
+      "factor_directions": {
+        "FX_USD_BRL": -1
+      },
+      "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
+      "sector_state": {
+        "sector_name": "Packaging & Paper",
+        "is_active": true,
+        "has_active_signal": true
+      },
+      "sector_impact": null,
+      "company_contributions": [
+        {
+          "contribution_id": "contrib_klbn_fx_001",
+          "approval_status": "HUMAN_APPROVED"
+        }
+      ],
+      "financial_outcomes": [],
+      "historical_multiple_position": {},
+      "price_implied_fundamentals": {},
+      "valuation_classification": "VALUATION_BLOCKED",
+      "evidence_completeness": 0.6,
+      "confidence": 0.3,
+      "confidence_tier": "LOW",
+      "critical_blockers": [
+        "CONFLICTING_MACRO_DIRECTION",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
+      ],
+      "noncritical_warnings": [
+        "EMPIRICAL_CALIBRATION_INCOMPLETE"
+      ],
+      "missing_inputs": [
+        "financial_outcomes",
+        "historical_multiple_position"
+      ],
+      "rationale": "Company KLBN11 assigned NO_ACTION due to critical blockers: [CONFLICTING_MACRO_DIRECTION, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
+      "invalidation_conditions": [
+        "Unresolved conflicting macro factor directions detected",
+        "No calculable financial bridge channel for approved exposures"
+      ],
+      "methodology_version": "4E.3-research-decision-synthesis-v1",
+      "input_ids": {
+        "macro_event_ids": [
+          "evt_fx_up_001",
+          "evt_fx_down_002"
+        ],
+        "sector_snapshot_id": "sec_packaging_2025_q4"
+      }
+    },
+    {
+      "decision_id": "30baebefa874f067855cfcd303746edbb82c3f4d75686ed210284ecd165ba096",
+      "ticker": "RAIL3",
+      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "decision": "NO_ACTION",
+      "macro_event_ids": [],
+      "active_factors": [],
+      "factor_directions": {},
+      "macro_conflict_status": "NO_CONFLICT",
+      "sector_state": {
+        "sector_name": "Logistics & Transport",
+        "is_active": false,
+        "has_active_signal": false
+      },
+      "sector_impact": null,
+      "company_contributions": [],
+      "financial_outcomes": [],
+      "historical_multiple_position": {},
+      "price_implied_fundamentals": {},
+      "valuation_classification": "VALUATION_BLOCKED",
+      "evidence_completeness": 0.2,
+      "confidence": 0.225,
+      "confidence_tier": "LOW",
+      "critical_blockers": [
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "noncritical_warnings": [
+        "EMPIRICAL_CALIBRATION_INCOMPLETE"
+      ],
+      "missing_inputs": [
+        "macro_events",
+        "company_contributions",
+        "financial_outcomes",
+        "historical_multiple_position"
+      ],
+      "rationale": "Company RAIL3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
+      "invalidation_conditions": [
+        "No active macro/sector signal for company's sector",
+        "No approved company macro exposure ingested"
+      ],
+      "methodology_version": "4E.3-research-decision-synthesis-v1",
+      "input_ids": {
+        "sector_snapshot_id": "sec_logistics_2025_q4"
+      }
+    },
+    {
+      "decision_id": "432c7d7153763829984ea51350a3cf59358f68c02c2ece5f6aeee67f440b0c1e",
+      "ticker": "SLCE3",
+      "as_of_timestamp": "2026-07-24T12:26:39.173757+00:00",
+      "decision": "NO_ACTION",
+      "macro_event_ids": [],
+      "active_factors": [],
+      "factor_directions": {},
+      "macro_conflict_status": "NO_CONFLICT",
+      "sector_state": {
+        "sector_name": "Agribusiness",
+        "is_active": false,
+        "has_active_signal": false
+      },
+      "sector_impact": null,
+      "company_contributions": [],
+      "financial_outcomes": [],
+      "historical_multiple_position": {},
+      "price_implied_fundamentals": {},
+      "valuation_classification": "VALUATION_BLOCKED",
+      "evidence_completeness": 0.2,
+      "confidence": 0.225,
+      "confidence_tier": "LOW",
+      "critical_blockers": [
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "noncritical_warnings": [
+        "EMPIRICAL_CALIBRATION_INCOMPLETE"
+      ],
+      "missing_inputs": [
+        "macro_events",
+        "company_contributions",
+        "financial_outcomes",
+        "historical_multiple_position"
+      ],
+      "rationale": "Company SLCE3 assigned NO_ACTION due to critical blockers: [NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE].",
+      "invalidation_conditions": [
+        "No active macro/sector signal for company's sector",
+        "No approved company macro exposure ingested"
+      ],
+      "methodology_version": "4E.3-research-decision-synthesis-v1",
+      "input_ids": {
+        "sector_snapshot_id": "sec_agri_2025_q4"
+      }
+    }
+  ]
+}
