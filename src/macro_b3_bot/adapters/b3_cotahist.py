@@ -20,7 +20,7 @@ class B3CotahistReader:
 
     @staticmethod
     def _date(raw: str) -> date:
-        return datetime.strptime(raw, "%Y%m%d").date()
+        return datetime.strptime(raw, "%d%m%Y").date()
 
     @staticmethod
     def _number(raw: str, scale: int = 100) -> float:
