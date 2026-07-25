@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `2b7931f`
+**Estado avaliado:** commit `6e3fefa`
 **Última suíte local:** 341 testes aprovados em 78,81 s
 
 ## Veredito
@@ -27,7 +27,7 @@ restrições:
   `REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE` e não criou `SectorImpactCandidate` inexistente.
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
-- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 338 testes.
+- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 341 testes.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.
@@ -73,7 +73,7 @@ produção.
 | Ambiente               | Permitido  | Condição                                             |
 | ---------------------- | ---------- | ------------------------------------------------------ |
 | Desenvolvimento        | Sim        | Dados e credenciais locais, sem decisão operacional   |
-| Staging/piloto interno | Sim        | Dados PIT, logs, backup e`BUY` desabilitado          |
+| Staging/piloto interno | Sim        | Dados PIT, logs, backup e `BUY` desabilitado         |
 | Produção de pesquisa | Ainda não | Requer operação, segurança e monitoramento mínimos |
 | Produção decisória  | Não       | Requer validação estatística e financeira           |
 | Execução de ordens   | Não       | Requer governança, aprovação e controles de risco   |
@@ -97,13 +97,141 @@ produção.
 5. Paper portfolio com custos, slippage, limites e reconciliação.
 6. Aprovação humana autenticada antes de qualquer ação externa.
 
-## Próximo roteiro de implementação
+## Plano mestre de implementação
 
-1. Fechar a infraestrutura operacional de staging.
-2. Implementar observabilidade, backup, restore e execução idempotente.
-3. Executar validação histórica dos bridges existentes.
-4. Implementar o gate formal de prontidão para valuation.
-5. Somente então avaliar paper portfolio e, posteriormente, qualquer integração de ordens.
+Este arquivo é o caminho oficial de implementação. Cada alteração futura deve:
+
+1. referenciar uma fase e um item deste plano;
+2. atualizar o status e a evidência nesta seção;
+3. registrar testes, artefatos e bloqueios;
+4. atualizar a data e o commit avaliado;
+5. não avançar uma fase enquanto seus critérios de aceite não estiverem comprovados.
+
+### Fase P0 — Higiene e baseline reprodutível
+
+**Status:** `EM ANDAMENTO`
+**Objetivo:** garantir que qualquer execução possa ser reproduzida e auditada.
+
+- [x] Suíte local completa executada (`341 passed`).
+- [x] Ruff e `git diff --check` aprovados.
+- [x] Bytecodes rastreados removidos do Git.
+- [ ] Fixar dependências e versão Python em artefato reproduzível.
+- [ ] Definir manifesto de execução com commit, configuração, seed, `as_of` e checksums.
+- [ ] Separar claramente dados de teste, fixtures controladas e dados upstream reais.
+
+**Saída:** `baseline_reproducible.json` e instrução de execução limpa.
+
+### Fase P1 — Staging operacional seguro
+
+**Status:** `PENDENTE`
+**Objetivo:** executar o orquestrador e o sidecar como serviço controlado, sem ordens.
+
+- [ ] Containerizar orquestrador e MiroFish com versões imutáveis.
+- [ ] Criar configuração de staging distinta de `.env` de desenvolvimento.
+- [ ] Mover secrets para mecanismo externo e rotacionar a chave Zep exposta.
+- [ ] Implementar health checks, timeout, retry, circuit breaker e cancelamento.
+- [ ] Implementar scheduler com lock, idempotência e status por execução.
+- [ ] Definir volumes, retenção e backup do DuckDB/artefatos.
+- [ ] Testar restauração em ambiente limpo.
+
+**Aceite:** duas execuções idempotentes, falha do sidecar recuperável, backup restaurado
+com checksums iguais e `BUY/ordens` bloqueados.
+
+### Fase P2 — Observabilidade e governança
+
+**Status:** `PENDENTE`
+**Objetivo:** tornar falhas e decisões auditáveis por uma pessoa responsável.
+
+- [ ] Autenticação e autorização para revisão, decisão e administração.
+- [ ] RBAC separando operador, revisor e administrador.
+- [ ] Log append-only de revisão, binding e decisão com retenção definida.
+- [ ] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios.
+- [ ] Alertas de dados atrasados, conflitos, runs incompletos e checksum divergente.
+- [ ] Dashboard de teses, hipóteses, `WATCH`, `NO_ACTION` e invalidadores.
+- [ ] Runbook de incidentes, rollback e kill switch.
+
+**Aceite:** cada decisão possui operador, versão, inputs, motivo, checksum e trilha de
+auditoria; um administrador consegue interromper o pipeline sem apagar dados.
+
+### Fase P3 — Grounding e binding econômico real
+
+**Status:** `PARCIALMENTE CONCLUÍDA`
+**Objetivo:** obter hipóteses realmente compatíveis com eventos e estados PIT reais.
+
+- [x] Remover templates locais de cenário.
+- [x] Persistir relatório bruto, checksum e extração estruturada.
+- [x] Rejeitar incompatibilidade semântica IPCA/global e ITR/tecnologia.
+- [x] Separar revisão delegada de revisão humana.
+- [x] Persistir revisão, validação e binding append-only.
+- [x] Proibir matching por número ou substring isolada.
+- [ ] Executar um relatório MiroFish semanticamente compatível com evento brasileiro real.
+- [ ] Obter `source_document_ids` preservados na hipótese.
+- [ ] Obter `SUPPORTED + BOUND + CONSISTENT` sem conflito.
+- [ ] Demonstrar candidato setorial ativo no mesmo corte.
+
+**Aceite:** pelo menos um caso real passa todos os gates sem alterar o payload canônico.
+O caso atual continua rejeitado corretamente e não deve ser promovido artificialmente.
+
+### Fase P4 — Validação histórica dos bridges
+
+**Status:** `PENDENTE`
+**Objetivo:** medir se os impactos financeiros têm poder explicativo fora da amostra.
+
+- [ ] Replays walk-forward por data de disponibilidade.
+- [ ] Mínimo de cinco janelas por bridge; preferir oito a doze trimestres.
+- [ ] MGLU3: juros líquidos, caixa sensível, repricing e derivativos.
+- [ ] SUZB3: FX, celulose, volume, custos cambiais e margem incremental.
+- [ ] KLBN11: FX, CDI/SOFR e IPCA em bridges separados.
+- [ ] MAE/RMSE fora da amostra e estabilidade de sinal.
+- [ ] Precision@k, hit rate, drawdown, turnover e custos.
+- [ ] Ablação `DETERMINISTIC_ONLY` versus `DETERMINISTIC_PLUS_MIROFISH`.
+
+**Aceite:** resultados persistidos com premissas, erro observado e intervalos; nenhum
+coeficiente in-sample é promovido automaticamente a calibração validada.
+
+### Fase P5 — Valuation readiness
+
+**Status:** `BLOQUEADA POR P4`
+**Objetivo:** impedir valuation artificial e liberar somente dados qualificados.
+
+- [ ] Gate formal `VALUATION_READY`/`VALUATION_BLOCKED`.
+- [ ] Bloqueio explícito para FCF estatístico não normalizado.
+- [ ] Baselines e mercado point-in-time reproduzíveis.
+- [ ] Múltiplos observados com amostra e data válidas.
+- [ ] Cenários de receita, EBITDA, lucro e FCF com premissas auditáveis.
+- [ ] DCF somente para empresas que passarem todos os gates.
+
+**Aceite:** cada bloqueio informa código e evidência; nenhum preço-alvo é produzido para
+empresa sem FCF e calibração aptos.
+
+### Fase P6 — Paper portfolio e decisão controlada
+
+**Status:** `BLOQUEADA POR P5`
+**Objetivo:** testar decisões sem capital real.
+
+- [ ] Paper portfolio com custos, impostos, slippage e liquidez.
+- [ ] Reconciliação diária e tratamento de eventos corporativos.
+- [ ] Limites de concentração, exposição e perda.
+- [ ] Aprovação humana autenticada antes de qualquer ação externa.
+- [ ] Relatório de performance e calibração por período.
+
+**Aceite:** período mínimo de paper trading definido, reconciliação sem diferenças
+materiais e kill switch testado.
+
+### Fase P7 — Produção decisória e execução
+
+**Status:** `BLOQUEADA`
+**Objetivo:** somente após P0–P6, avaliar produção e eventual integração de corretora.
+
+- [ ] Revisão de segurança e compliance.
+- [ ] Segregação de credenciais de corretora.
+- [ ] Sandbox de ordens e reconciliação com broker.
+- [ ] Aprovação humana segregada e auditável.
+- [ ] Limites pré-trade, pós-trade e kill switch independente.
+- [ ] Rollback operacional e plano de incidente.
+
+**Aceite:** somente uma aprovação formal de produção pode alterar o estado para
+`PRODUÇÃO DECISÓRIA`. Até lá, `BUY` e ordens continuam bloqueados.
 
 Até que esses critérios sejam atendidos, o comportamento correto do sistema é bloquear
 ou retornar `NO_ACTION`, nunca fabricar uma tese, valuation ou ordem.
@@ -126,15 +254,22 @@ históricos suficientes.
 
 ---
 
-Implementações:
+## Registro de progresso
 
-validação semântica perfeita do MiroFish
-ablação histórica completa com/sem MiroFish
-replay diário integral de 2024–2026
-generalização para centenas de empresas
-eliminação de toda regra específica por ticker
-autenticação e hardening do sidecar
-otimização de pesos
-produção de WATCH obrigatória
-integração com corretora
-BUY ou execução real
+| Data | Commit | Fase | Resultado | Próximo bloqueio |
+|---|---|---|---|---|
+| 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
+| 25/07/2026 | `6e3fefa` | P0 | 341 testes, Ruff e diff check aprovados | Baseline reproduzível |
+
+## Backlog posterior
+
+- [ ] Validação semântica adicional do MiroFish com dados upstream reais.
+- [ ] Ablação histórica completa com e sem MiroFish.
+- [ ] Replays diários 2024–2026, somente quando houver vintages PIT.
+- [ ] Generalização para centenas de empresas após cobertura piloto.
+- [ ] Eliminação de regras específicas por ticker.
+- [ ] Hardening completo do sidecar e autenticação.
+- [ ] Otimização de pesos após validação, nunca antes.
+- [ ] Produção de `WATCH` não é objetivo obrigatório; `NO_ACTION` continua válido.
+- [ ] Integração com corretora somente na Fase P7.
+- [ ] `BUY` e execução real permanecem bloqueados.
