@@ -6,6 +6,17 @@ O sistema não tenta prever preços diretamente a partir de notícias. Ele execu
 
 `evidência -> evento -> cenário -> mecanismo causal -> exposição setorial/empresarial -> valuation -> timing -> risco -> recomendação`
 
+## Estado de prontidão
+
+O projeto está em **modo de pesquisa/staging**, não em produção decisória. A cadeia
+experimental de eventos, causalidade, exposições, bridge financeiro e MiroFish está
+implementada, mas ainda faltam validação fora da amostra, FCF normalizado para valuation,
+operação segura, monitoramento e governança de produção.
+
+As únicas saídas operacionais permitidas são `WATCH` e `NO_ACTION`. `BUY`, ordens e DCF
+permanecem bloqueados. O diagnóstico completo e os critérios de liberação estão em
+[PRODUCTION_READINESS.md](PRODUCTION_READINESS.md).
+
 ## Decisão arquitetural
 
 - **Python 3.11/3.12** como orquestrador principal.
@@ -14,6 +25,9 @@ O sistema não tenta prever preços diretamente a partir de notícias. Ele execu
 - **Advanced_Btc_Bot como biblioteca legada configurável**, reaproveitando tribunal, risco, notícias e observabilidade somente quando os contratos forem compatíveis.
 - **DuckDB** para snapshots, eventos, previsões e auditoria.
 - **Execução event-driven**: a coleta pode ser frequente; recomendações só são emitidas quando há mudança material.
+
+Para produção, a escrita DuckDB deverá ser serializada por um único processo escritor ou
+substituída por um banco transacional; o setup atual é local e experimental.
 
 ## O que já funciona no scaffold
 

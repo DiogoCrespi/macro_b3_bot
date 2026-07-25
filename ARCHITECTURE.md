@@ -85,3 +85,17 @@ Toda recomendação precisa conter:
 - tamanho máximo da posição;
 - riscos de liquidez, correlação e concentração;
 - nível de confiança e motivos de incerteza.
+
+## 6. Limites atuais de implantação
+
+O contrato acima descreve o alvo arquitetural, não o estado atualmente liberado. O
+orquestrador está restrito a pesquisa/staging: `WATCH` e `NO_ACTION` são permitidos;
+`BUY`, ordens, DCF e preço-alvo permanecem bloqueados.
+
+O MiroFish produz hipóteses que precisam de binding causal, consistência temporal e
+verificação antes de entrar na decisão. Hipótese não suportada, evento sem candidato
+setorial, conflito não resolvido ou dado ausente deve resultar em bloqueio/`NO_ACTION`.
+
+Antes de produção são obrigatórios: deployment reproduzível, secrets externos, escrita
+transacional segura, backup/restore, observabilidade, scheduler idempotente, validação
+histórica fora da amostra e aprovação humana autenticada para qualquer ação externa.

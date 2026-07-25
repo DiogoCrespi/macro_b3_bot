@@ -23,10 +23,10 @@
 
 ## Fase 3 — MiroFish
 
-- [ ] Subir MiroFish como sidecar.
-- [ ] Gerar seed pack com fontes e hipóteses.
-- [ ] Transformar relatório em `ScenarioSet` estruturado.
-- [ ] Validar consistência e contradições.
+- [x] Subir MiroFish como sidecar em ambiente de pesquisa.
+- [x] Gerar seed pack com fontes e hipóteses.
+- [x] Transformar relatório compatível em `ScenarioSet` estruturado; schema incompatível gera zero hipóteses.
+- [x] Validar consistência, binding point-in-time e contradições.
 
 ## Fase 4 — decisão
 
@@ -46,5 +46,13 @@
 
 - [ ] Alertas somente em mudança material.
 - [ ] Dashboard de teses ativas e invalidadas.
-- [ ] Aprovação humana antes de qualquer ordem.
+- [ ] Aprovação humana autenticada antes de qualquer ordem.
 - [ ] Kill switch e limite diário/semanal de exposição.
+- [ ] Deployment reproduzível, secrets externos, health checks e rollback.
+- [ ] Backup/restauração testados e escrita concorrente segura.
+
+## Estado atual
+
+As fases 0–4 possuem componentes implementados, mas a Fase 5 ainda não foi homologada
+e a Fase 6 não está concluída. O sistema deve permanecer em pesquisa/staging até que
+os critérios de [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) sejam atendidos.
