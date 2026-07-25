@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import time
+import os
 from typing import Any
 from hashlib import sha256
 import json
@@ -59,7 +60,10 @@ class MiroFishClient:
         graph_prefix: str = "/api/graph",
         simulation_prefix: str = "/api/simulation",
         report_prefix: str = "/api/report",
-        timeout_seconds: float = 120,
+        # Local Ollama-backed ontology/report generation can legitimately take
+        # several minutes on CPU. Keep the HTTP request alive long enough for
+        # the real sidecar workflow; semantic parsing never falls back locally.
+        timeout_seconds: float = 600,
     ):
         self.client = httpx.Client(base_url=base_url.rstrip("/"), timeout=timeout_seconds)
         self.graph_prefix = graph_prefix.rstrip("/")
@@ -111,10 +115,7 @@ class MiroFishClient:
             response.raise_for_status()
             res = response.json()
             if isinstance(res, dict) and isinstance(res.get("data"), dict):
-                data = res["data"]
-                if "project_id" in data and "graph_id" not in data:
-                    data["graph_id"] = data["project_id"]
-                return data
+                return res["data"]
             return res
         finally:
             for handle in opened:
@@ -140,15 +141,25 @@ class MiroFishClient:
                     data = res.get("data", res) if isinstance(res, dict) else res
                     if isinstance(data, dict):
                         status = str(data.get("status") or "SUCCESS")
+                        status_normalized = status.lower()
                         last_status = status
-                        if status in ("ONTOLOGY_GENERATED", "GRAPH_BUILT", "COMPLETED", "SUCCESS", "created"):
+                        if status_normalized in ("ontology_generated", "graph_built", "graph_completed", "completed", "success", "created"):
                             return data
-                        if status in ("FAILED", "ERROR", "FAILED_GRAPH_BUILD"):
+                        if status_normalized in ("failed", "error", "failed_graph_build"):
                             raise RuntimeError(f"Project graph build failed with status {status}")
             except (httpx.HTTPError, ValueError):
                 pass
             time.sleep(interval_seconds)
         return {"project_id": project_id, "last_status": last_status, "attempts": attempts}
+
+    def build_graph(self, project_id: str, *, graph_name: str | None = None) -> dict[str, Any]:
+        payload: dict[str, Any] = {"project_id": project_id}
+        if graph_name:
+            payload["graph_name"] = graph_name
+        response = self.client.post(f"{self.graph_prefix}/build", json=payload)
+        response.raise_for_status()
+        res = response.json()
+        return res.get("data", res) if isinstance(res, dict) else res
 
     def create_simulation(
         self,
@@ -348,7 +359,66 @@ class MiroFishClient:
         res = response.json()
         if isinstance(res, dict) and isinstance(res.get("data"), dict):
             return res["data"]
+        if isinstance(res, dict) and isinstance(res.get("data"), list):
+            return {"reports": res["data"], "count": len(res["data"])}
+        if isinstance(res, list):
+            return {"reports": res, "count": len(res)}
         return res
+
+    def extract_structured_report(self, report_text: str) -> dict[str, Any]:
+        """Extract the strict scenario schema from narrative sidecar output.
+
+        This is a separate, auditable extraction step using the configured
+        Ollama/OpenAI-compatible backend. It never supplies local scenarios or
+        confidence values; malformed output is returned for strict validation.
+        """
+        if not isinstance(report_text, str) or not report_text.strip():
+            raise ValueError("REPORT_TEXT_MISSING_FOR_EXTRACTION")
+        llm_url = os.getenv("MIROFISH_LLM_BASE_URL", "http://localhost:11434/v1").rstrip("/")
+        model = os.getenv("MIROFISH_LLM_MODEL", os.getenv("LLM_MODEL_NAME", "qwen2.5:7b"))
+        prompt = (
+            "Extract scenarios from the MiroFish report below. Return ONLY valid JSON "
+            f"matching schema version {MIROFISH_REPORT_SCHEMA_VERSION}. Preserve report_excerpt "
+            "as an exact substring of report_text. The JSON MUST contain a non-empty "
+            "scenarios array (at least one item) with scenario_type, trigger, actors, "
+            "actions, macro_factors, sector_effects, second_order_effects, "
+            "expected_horizon and report_excerpt. actors/actions/macro_factors/"
+            "sector_effects/second_order_effects MUST be JSON arrays of strings "
+            "(use [] when the report has no items). Derive every field only from the "
+            "report; do not invent facts, actors, effects, or confidence. Use null "
+            "when confidence is not explicitly stated.\n\n"
+            + report_text
+        )
+        response = httpx.post(
+            f"{llm_url}/chat/completions",
+            json={
+                "model": model,
+                "temperature": 0,
+                "messages": [{"role": "user", "content": prompt}],
+                "response_format": {"type": "json_object"},
+            },
+            timeout=600,
+        )
+        response.raise_for_status()
+        body = response.json()
+        content = body["choices"][0]["message"]["content"]
+        parsed = json.loads(content)
+        if not isinstance(parsed, dict):
+            raise ValueError("STRUCTURED_EXTRACTION_NOT_OBJECT")
+        # The schema version is the extraction contract, not a model claim.
+        # Pin it locally so omitted metadata cannot silently pass as another
+        # schema; semantic fields remain uncoerced and are validated below.
+        parsed["schema_version"] = MIROFISH_REPORT_SCHEMA_VERSION
+        parsed["_extraction_metadata"] = {
+            "extraction_model": model,
+            "extraction_prompt": prompt,
+            "extraction_prompt_hash": sha256(prompt.encode("utf-8")).hexdigest(),
+            "extraction_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+            "raw_extraction_response": content,
+            "extraction_response_checksum": sha256(content.encode("utf-8")).hexdigest(),
+            "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+        }
+        return parsed
 
     def poll_report(
         self,

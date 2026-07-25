@@ -311,13 +311,24 @@ class MiroFishScenarioEngine:
             project_id = res.get("project_id")
             graph_id = res.get("graph_id")
 
-            if not (project_id and graph_id):
-                raise ValueError("MiroFish generate_ontology response missing project_id or graph_id.")
+            if not project_id:
+                raise ValueError("MiroFish generate_ontology response missing project_id.")
+
+            # Ontology generation does not create a Zep graph.  Build it
+            # explicitly and use the returned graph_id for all later calls.
+            build_graph = getattr(self.client, "build_graph", None)
+            if callable(build_graph):
+                build_res = build_graph(project_id, graph_name=f"macro_b3_{project_id}")
+                graph_id = build_res.get("graph_id") if isinstance(build_res, dict) else None
 
             # Poll project status until graph build completes
             poll_proj = getattr(self.client, "poll_project_ontology", None)
             if callable(poll_proj):
-                poll_proj(project_id)
+                project_state = poll_proj(project_id, timeout_seconds=600.0)
+                if not graph_id and isinstance(project_state, dict):
+                    graph_id = project_state.get("graph_id")
+            if not graph_id:
+                raise ValueError("MiroFish graph_id was not exposed after graph build.")
 
             # 2. Create simulation
             sim_res = self.client.create_simulation(project_id, graph_id, config=report_config)
@@ -587,13 +598,31 @@ class MiroFishScenarioEngine:
         raw_report_checksum = sha256(raw_report_json_str.encode("utf-8")).hexdigest()
 
         valid_report, validation_reason = MiroFishClient.validate_structured_report(raw_report)
+        extraction_meta: dict[str, Any] = {}
         if not valid_report:
-            return []
+            # The installed sidecar currently returns a native narrative
+            # report (markdown_content). Use an explicit second-stage LLM
+            # extraction when available; never synthesize local scenarios.
+            narrative = raw_report.get("markdown_content") or raw_report.get("report_text")
+            extractor = getattr(self.client, "extract_structured_report", None)
+            if not isinstance(narrative, str) or not narrative.strip() or not callable(extractor):
+                return []
+            extracted = extractor(narrative)
+            extraction_meta = extracted.pop("_extraction_metadata", {}) if isinstance(extracted, dict) else {}
+            # The report body is the sidecar's retrieved bytes. Never let the
+            # extraction model replace it with a summary; excerpts must be
+            # verifiable against this exact narrative.
+            extracted["report_text"] = narrative
+            valid_report, validation_reason = MiroFishClient.validate_structured_report(extracted)
+            if not valid_report:
+                return []
+            raw_report = {**raw_report, **extracted}
         scenarios_from_report = raw_report["scenarios"]
         extraction_meta = {
+            **extraction_meta,
             "report_schema_version": raw_report["schema_version"],
             "report_schema_validation": validation_reason,
-            "extraction_mode": "NATIVE_SIDEcar_STRUCTURED_REPORT",
+            "extraction_mode": extraction_meta.get("extraction_mode", "NATIVE_SIDEcar_STRUCTURED_REPORT"),
         }
 
         macro_event_ids = list(seed_package.material_event_ids) if seed_package else []

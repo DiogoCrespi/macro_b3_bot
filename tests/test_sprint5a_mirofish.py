@@ -37,6 +37,7 @@ def mock_client():
         "seed": "12345",
     }
     client.create_simulation.return_value = {"simulation_id": "test_sim_789"}
+    client.build_graph.return_value = {"project_id": "test_proj_123", "task_id": "task_graph"}
     client.prepare_simulation.return_value = {"simulation_id": "test_sim_789", "status": "ready"}
     client.poll_prepare.return_value = {"simulation_id": "test_sim_789", "status": "ready"}
     client.start_simulation.return_value = {"simulation_id": "test_sim_789", "runner_status": "running"}
@@ -62,7 +63,7 @@ def mock_client():
         ]
     }
     client.list_reports.return_value = reports_payload
-    client.poll_project_ontology.return_value = {"status": "ONTOLOGY_GENERATED"}
+    client.poll_project_ontology.return_value = {"status": "GRAPH_BUILT", "graph_id": "test_graph_456"}
     client.poll_simulation.return_value = {"status": "created"}
     client.poll_report.return_value = reports_payload
     return client
@@ -169,6 +170,8 @@ def test_online_service_incomplete_ontology_fail(mock_client, mock_store, tmp_pa
         {"document_id": "doc_101", "available_at": cutoff.isoformat()}
     ]
     mock_client.generate_ontology.return_value = {"project_id": "test_proj_123"}
+    mock_client.build_graph.return_value = {}
+    mock_client.poll_project_ontology.return_value = {}
 
     with patch("macro_b3_bot.application.mirofish_scenario_engine.Path") as MockPath:
         mock_path_instance = MockPath.return_value
