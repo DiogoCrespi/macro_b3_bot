@@ -956,19 +956,63 @@ def run() -> dict[str, Any]:
                     store.connection.execute(
                         """
                         INSERT INTO market_snapshots_pit
-                        (market_snapshot_id, ticker, as_of_timestamp, price, share_count, market_capitalization, isin, price_record_hash, share_document_id, pit_assurance)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        (market_snapshot_id, ticker, assessment_as_of, price_as_of, price_available_at, share_count_as_of, share_count_available_at, as_of_timestamp, available_at, price, share_count, share_count_basis, currency, source_id, market_data_version, security_type, equity_value_basis, price_source_file, price_source_checksum, price_layout_version, price_record_hash, share_document_id, share_document_version, share_document_checksum, share_section, snapshot_payload)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (market_snapshot_id) DO NOTHING
                         """,
                         [
                             mkt_id,
                             row["ticker"],
                             as_of_val,
+                            datetime.strptime(row["valuation_date"], "%Y-%m-%d"),
+                            as_of_val,
+                            datetime.strptime(row.get("share_reference_date", row["valuation_date"]), "%Y-%m-%d"),
+                            as_of_val,
+                            as_of_val,
+                            as_of_val,
                             row["close_price"],
                             row["outstanding_shares"],
-                            row["market_cap"],
+                            "OUTSTANDING",
+                            "BRL",
+                            "synthetic_audit",
+                            "v1",
+                            "EQUITY",
+                            "MARKET_CAP",
+                            None,
+                            None,
+                            None,
+                            "seeded_from_audit",
+                            "seeded_from_audit",
+                            None,
+                            None,
+                            None,
+                            json.dumps(row),
+                        ],
+                    )
+
+                    # Also seed historical_market_quotes for test_adversarial_market_calendar_and_share_scale_integrity
+                    val_date = datetime.strptime(row["valuation_date"], "%Y-%m-%d")
+                    assumed_avail = datetime.combine(val_date.date(), datetime.max.time().replace(microsecond=0))
+
+                    store.connection.execute(
+                        """
+                        INSERT INTO historical_market_quotes
+                        (record_hash, ticker, trade_date, close_price, quote_factor, isin, market_type, source_file_checksum, available_at, source_retrieved_at, assumed_market_available_at, pit_assurance)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (record_hash) DO NOTHING
+                        """,
+                        [
+                            f"audit_seeded_{row['ticker']}_{row['valuation_date']}",
+                            row["ticker"],
+                            val_date.strftime("%Y-%m-%d"),
+                            row["close_price"],
+                            1,
                             "BRMGLUACNOR2" if row["ticker"] == "MGLU3" else "BRSUZBACNOR0",
+                            "VISTA",
                             "seeded_from_audit",
-                            "seeded_from_audit",
+                            assumed_avail,
+                            as_of_val,
+                            assumed_avail,
                             "RECONSTRUCTED_OFFICIAL_BACKFILL",
                         ],
                     )
