@@ -2,23 +2,23 @@
   "total_scenario_sets": 1,
   "scenario_sets": [
     {
-      "scenario_set_id": "b775f52b6ee611878aab21e084a8dc4da4f1766acac84fa020be7c35e762b83f",
+      "scenario_set_id": "1198bf37509065d6f420bb9e65848e867805808222409178ec2adfedfc8f426d",
       "event_id": "rel_bcb_ipca_202607",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "scenario_hypothesis_ids": [
-        "007ed1fb38ef1a56b1113b6f71c006ba893cc18196f1b54db14ec91f851dffbf"
+        "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733"
       ],
       "coverage_summary": "Finalized completed MiroFish sidecar report with strict extraction.",
       "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
       "missing_variables": [],
       "methodology_version": "5A.3-scenario-set-v3",
-      "created_at": "2026-07-25T22:07:57.130162+00:00"
+      "created_at": "2026-07-25T22:13:06.089032+00:00"
     }
   ],
   "hypotheses": [
     {
-      "hypothesis_id": "007ed1fb38ef1a56b1113b6f71c006ba893cc18196f1b54db14ec91f851dffbf",
-      "simulation_run_id": "141170d6aee7cd7220c5e5e7a71ad736e97e3d3852337e4c48b2f1ff89065a71",
+      "hypothesis_id": "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733",
+      "simulation_run_id": "bc541d95a838300c4ad82a9c752a10a5dfdfab2a7a86f92d9ed50dffd141ebe7",
       "scenario_type": "UNKNOWN",
       "trigger": "2026年7月全球通胀率为0.45%",
       "actors": [

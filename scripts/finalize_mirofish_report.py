@@ -83,7 +83,10 @@ def main() -> None:
     report = next((x for x in reports if x.get("status") == "completed"), None)
     if not report:
         raise RuntimeError("COMPLETED_REPORT_NOT_AVAILABLE")
-    canonical = json.dumps(report, sort_keys=True, default=str, ensure_ascii=False)
+    # Match the engine's canonical JSON byte representation exactly.  The
+    # checksum must be identical in the raw-report file, extraction record,
+    # DuckDB row, and manifests.
+    canonical = json.dumps(report, sort_keys=True, default=str)
     raw_bytes = canonical.encode("utf-8")
     checksum = sha256(raw_bytes).hexdigest()
     raw_path = Path(f"data/raw/mirofish/reports/{checksum}.json")

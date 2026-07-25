@@ -1,7 +1,7 @@
 {
   "sprint": "5A.3",
   "simulation_run": {
-    "simulation_run_id": "141170d6aee7cd7220c5e5e7a71ad736e97e3d3852337e4c48b2f1ff89065a71",
+    "simulation_run_id": "bc541d95a838300c4ad82a9c752a10a5dfdfab2a7a86f92d9ed50dffd141ebe7",
     "seed_package_id": "202ffd2df21ffaca7af7b0c3b2cd6a5019b2571632e7be6c4f5b6c3628a25bcf",
     "mirofish_project_id": "proj_74d5e29ce102",
     "mirofish_graph_id": "mirofish_d12253d799d84cd2",
@@ -171,21 +171,21 @@
     "raw_report_ids": [
       "report_06da834bee25"
     ],
-    "raw_response_checksum": "2725bdf0d2d0b550ea486e007811296fe1afe9d8bcd5f6bbf59600ecf86e07d6",
+    "raw_response_checksum": "be2a620b13c80d7680143028f6498c767b41a09aaf34954ddade3c2014a35670",
     "methodology_version": "5A.3-mirofish-engine-v3"
   },
   "scenario_set": {
-    "scenario_set_id": "b775f52b6ee611878aab21e084a8dc4da4f1766acac84fa020be7c35e762b83f",
+    "scenario_set_id": "1198bf37509065d6f420bb9e65848e867805808222409178ec2adfedfc8f426d",
     "event_id": "rel_bcb_ipca_202607",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
     "scenario_hypothesis_ids": [
-      "007ed1fb38ef1a56b1113b6f71c006ba893cc18196f1b54db14ec91f851dffbf"
+      "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733"
     ],
     "coverage_summary": "Finalized completed MiroFish sidecar report with strict extraction.",
     "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
     "missing_variables": [],
     "methodology_version": "5A.3-scenario-set-v3",
-    "created_at": "2026-07-25T22:07:57.130162+00:00"
+    "created_at": "2026-07-25T22:13:06.089032+00:00"
   },
   "total_hypotheses": 1,
   "unverified_count": 1,
