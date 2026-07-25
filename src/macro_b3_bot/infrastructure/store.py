@@ -874,6 +874,15 @@ class DatabaseStore:
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
+        for col, kind in {
+            "market_capitalization": "DOUBLE",
+            "enterprise_value": "DOUBLE",
+            "pe_observed": "DOUBLE",
+        }.items():
+            try:
+                self.connection.execute(f"ALTER TABLE market_snapshots_pit ADD COLUMN {col} {kind};")
+            except Exception:
+                pass
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS pit_security_mappings (
                 mapping_id VARCHAR PRIMARY KEY,
