@@ -110,7 +110,7 @@
       "causal_path_ids": [],
       "causal_edge_ids": [],
       "contradiction_ids": [],
-      "binding_status": "PARTIAL_MISSING_CAUSAL_PATH",
+      "binding_status": "REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE",
       "temporal_consistency_status": "CONSISTENT",
       "contradiction_status": "SECTOR_CONFLICT_PRESENT"
     }

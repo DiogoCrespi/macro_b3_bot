@@ -41,6 +41,25 @@ series:
     event_family: GROWTH_SURPRISE
     lookback_days: 1825
 
+  - source: BCB_SGS
+    series_code: "433"
+    indicator: "IPCA (Índice Nacional de Preços ao Consumidor Amplo)"
+    geography: [BR]
+    frequency: MONTHLY
+    unit: "%"
+    event_family: INFLATION_SURPRISE
+    lookback_days: 1825
+
+  # Normalized source alias used by the PIT pilot fixture.
+  - source: BCB
+    series_code: "433"
+    indicator: "IPCA (Índice Nacional de Preços ao Consumidor Amplo)"
+    geography: [BR]
+    frequency: MONTHLY
+    unit: "%"
+    event_family: INFLATION_SURPRISE
+    lookback_days: 1825
+
   - source: BCB_FOCUS
     series_code: "IPCA"
     indicator: "Focus IPCA (Expectativa Mediana 12m)"

@@ -24,6 +24,13 @@ class MiroFishHypothesisBinder:
     def bind(self, hypothesis: dict[str, Any], as_of: datetime) -> dict[str, Any]:
         event_ids = set(hypothesis.get("macro_event_ids", []))
         sector_ids = set(hypothesis.get("sector_state_ids", []))
+        # MiroFish seeds may carry release IDs while the causal engine stores
+        # its own event IDs. Resolve that identity bridge before querying paths.
+        linked_event_rows = self.store.connection.execute(
+            "SELECT event_id, release_id FROM macro_event_evidence_links WHERE release_id IN (SELECT UNNEST(?))",
+            [list(event_ids)],
+        ).fetchall() if event_ids else []
+        resolved_event_ids = event_ids | {str(row[0]) for row in linked_event_rows}
         event_rows = self.store.connection.execute(
             "SELECT release_id, available_at FROM macro_releases WHERE release_id IN (SELECT UNNEST(?))",
             [list(event_ids)],
@@ -50,13 +57,19 @@ class MiroFishHypothesisBinder:
         edge_ids: set[str] = set()
         contradiction_ids: set[str] = set()
         candidate_rows = []
-        if event_ids:
+        rejected_event = bool(self.store.connection.execute(
+            "SELECT 1 FROM macro_event_candidates WHERE event_id IN (SELECT UNNEST(?)) "
+            "AND status='MACRO_EVENT_REJECTED' LIMIT 1",
+            [list(resolved_event_ids)],
+        ).fetchone()) if resolved_event_ids else False
+        if resolved_event_ids:
             candidate_rows = self.store.connection.execute(
-                "SELECT candidate_id, causal_paths, conflict_detected, event_available_at, as_of_timestamp "
+                "SELECT candidate_id, causal_paths, conflict_detected, event_available_at, as_of_timestamp, status "
                 "FROM sector_impact_candidates WHERE event_id IN (SELECT UNNEST(?))",
-                [list(event_ids)],
+                [list(resolved_event_ids)],
             ).fetchall()
-        for candidate_id, paths_json, conflict, event_available, candidate_as_of in candidate_rows:
+        for candidate_id, paths_json, conflict, event_available, candidate_as_of, candidate_status in candidate_rows:
+            rejected_event = rejected_event or candidate_status == "SECTOR_IMPACT_REJECTED"
             try:
                 paths = json.loads(paths_json or "[]")
             except json.JSONDecodeError:
@@ -74,7 +87,7 @@ class MiroFishHypothesisBinder:
             temporal_ok = temporal_ok and self._aware(available_at) is not None and self._aware(available_at) <= self._aware(as_of)
         for _, snapshot_as_of, *_ in sector_rows:
             temporal_ok = temporal_ok and self._aware(snapshot_as_of) is not None and self._aware(snapshot_as_of) <= self._aware(as_of)
-        for _, _, event_available, candidate_as_of in candidate_rows:
+        for _, _, _, event_available, candidate_as_of, _ in candidate_rows:
             if event_available and self._aware(event_available) > self._aware(as_of):
                 temporal_ok = False
             if candidate_as_of and self._aware(candidate_as_of) > self._aware(as_of):
@@ -92,6 +105,8 @@ class MiroFishHypothesisBinder:
             contradiction_status = "NO_CONTRADICTION_DETECTED"
         if path_ids:
             binding_status = "BOUND"
+        elif rejected_event:
+            binding_status = "REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE"
         elif event_rows and sector_rows:
             binding_status = "PARTIAL_MISSING_CAUSAL_PATH"
         else:
