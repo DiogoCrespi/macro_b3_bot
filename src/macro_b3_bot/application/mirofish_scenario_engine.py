@@ -41,6 +41,7 @@ class MiroFishScenarioEngine:
         self,
         *,
         cutoff_dt: datetime,
+        event_id: str | None = None,
         macro_releases_pit: list[dict[str, Any]] | None = None,
         evidence_claims_pit: list[dict[str, Any]] | None = None,
         sector_state_snapshots_pit: list[dict[str, Any]] | None = None,
@@ -59,6 +60,15 @@ class MiroFishScenarioEngine:
             raise ValueError("DatabaseStore must be provided to MiroFishScenarioEngine for PIT data loading.")
 
         as_of_str = cutoff_dt.isoformat()
+
+        # Load loader diagnostics if store is available
+        loader_diagnostics = {}
+        if self.store is not None:
+            res_diag = getattr(self.store, "get_loader_diagnostics", None)
+            if callable(res_diag):
+                diag_val = res_diag(cutoff_dt, event_id=event_id)
+                if isinstance(diag_val, dict):
+                    loader_diagnostics = diag_val
 
         # Load PIT data using store if not directly supplied
         if macro_releases_pit is None and self.store is not None:
@@ -85,6 +95,22 @@ class MiroFishScenarioEngine:
             source_documents_pit = self.store.get_source_documents_pit(cutoff_dt)
         else:
             source_documents_pit = source_documents_pit or []
+
+        # Filter by specific event_id if provided
+        if event_id:
+            filtered_releases = [m for m in macro_releases_pit if m.get("release_id") == event_id]
+            if filtered_releases:
+                macro_releases_pit = filtered_releases
+            doc_ids_from_event = {m.get("document_id") for m in macro_releases_pit if m.get("document_id")}
+            filtered_claims = [c for c in evidence_claims_pit if c.get("claim_id") == event_id or c.get("document_id") in doc_ids_from_event or event_id in str(c.get("subject", ""))]
+            if filtered_claims:
+                evidence_claims_pit = filtered_claims
+            doc_ids_from_claims = {c.get("document_id") for c in evidence_claims_pit if c.get("document_id")}
+            all_target_docs = doc_ids_from_event | doc_ids_from_claims
+            if all_target_docs:
+                filtered_docs = [d for d in source_documents_pit if d.get("document_id") in all_target_docs]
+                if filtered_docs:
+                    source_documents_pit = filtered_docs
 
         if causal_graph_version_pit is None and self.store is not None:
             getter = getattr(self.store, "get_causal_graph_version_pit", None)
@@ -125,11 +151,12 @@ class MiroFishScenarioEngine:
             "prompt_template_version": "5A.2-mirofish-seed-v2",
             "mime_type": "text/markdown",
             "source_input_ids": source_input_ids,
+            "loader_diagnostics": loader_diagnostics,
         }
         seed_id = ScenarioSeedPackage.compute_seed_id(seed_payload_base)
 
-        # Check for empty PIT seed
-        if not source_input_ids:
+        # Check for empty PIT seed (seed must contain at least 1 event, 1 claim, 1 source document)
+        if not (material_event_ids and evidence_claim_ids and source_document_ids):
             seed_package = ScenarioSeedPackage(
                 seed_package_id=seed_id,
                 seed_file_path="BLOCKED_EMPTY_PIT_SEED",
@@ -145,7 +172,7 @@ class MiroFishScenarioEngine:
                 "completed_at": datetime.now(timezone.utc).isoformat(),
                 "service_version": "mirofish-v1.0-blocked",
                 "model_information": "BLOCKED_EMPTY_PIT_SEED",
-                "configuration": {"empty_pit_seed": True},
+                "configuration": {"empty_pit_seed": True, "loader_diagnostics": loader_diagnostics},
                 "random_seed": "BLOCKED_EMPTY_PIT_SEED",
                 "prompt_hash": "",
                 "input_checksum": "",
@@ -158,7 +185,7 @@ class MiroFishScenarioEngine:
             sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **run_payload)
 
             set_payload = {
-                "event_id": "BLOCKED_EMPTY_PIT_SEED",
+                "event_id": event_id or (material_event_ids[0] if material_event_ids else "BLOCKED_EMPTY_PIT_SEED"),
                 "as_of_timestamp": as_of_str,
                 "scenario_hypothesis_ids": [],
                 "coverage_summary": f"Scenario generation blocked due to empty PIT seed for cutoff {as_of_str}.",
@@ -198,6 +225,7 @@ class MiroFishScenarioEngine:
         prompt_str = f"Simulate macro and sector scenarios as of {as_of_str} with {len(material_event_ids)} macro events, {len(evidence_claim_ids)} evidence claims, and {len(sector_state_snapshots_pit)} sector states."
         prompt_hash = sha256(prompt_str.encode("utf-8")).hexdigest()
         input_checksum = seed_file_checksum
+
         requested_at_str = datetime.now(timezone.utc).isoformat()
 
         # Check service health
@@ -218,7 +246,7 @@ class MiroFishScenarioEngine:
                 "completed_at": datetime.now(timezone.utc).isoformat(),
                 "service_version": "mirofish-v1.0-offline",
                 "model_information": "NOT_EXPOSED_BY_SERVICE",
-                "configuration": {"offline_fallback": True},
+                "configuration": {"offline_fallback": True, "loader_diagnostics": loader_diagnostics},
                 "random_seed": "NOT_EXPOSED_BY_SERVICE",
                 "prompt_hash": prompt_hash,
                 "input_checksum": input_checksum,
@@ -231,7 +259,7 @@ class MiroFishScenarioEngine:
             sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **run_payload)
 
             set_payload = {
-                "event_id": material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF",
+                "event_id": event_id or (material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF"),
                 "as_of_timestamp": as_of_str,
                 "scenario_hypothesis_ids": [],
                 "coverage_summary": f"Offline scenario run for cutoff {as_of_str}. Zero hypotheses generated.",
@@ -260,6 +288,11 @@ class MiroFishScenarioEngine:
             if not (project_id and graph_id):
                 raise ValueError("MiroFish generate_ontology response missing project_id or graph_id.")
 
+            # Poll project status until graph build completes
+            poll_proj = getattr(self.client, "poll_project_ontology", None)
+            if callable(poll_proj):
+                poll_proj(project_id)
+
             # 2. Create simulation
             sim_res = self.client.create_simulation(project_id, graph_id, config={})
             simulation_id = sim_res.get("simulation_id")
@@ -267,8 +300,18 @@ class MiroFishScenarioEngine:
             if not simulation_id:
                 raise ValueError("MiroFish create_simulation response missing simulation_id.")
 
+            # Poll simulation status
+            poll_sim = getattr(self.client, "poll_simulation", None)
+            if callable(poll_sim):
+                poll_sim(simulation_id)
+
             # 3. Retrieve reports
-            reports_res = self.client.list_reports(project_id=project_id, simulation_id=simulation_id)
+            poll_rep = getattr(self.client, "poll_report", None)
+            if callable(poll_rep):
+                reports_res = poll_rep(simulation_id, project_id=project_id)
+            else:
+                reports_res = self.client.list_reports(project_id=project_id, simulation_id=simulation_id)
+
             reports = reports_res.get("reports", []) if isinstance(reports_res, dict) else []
 
             if not reports:
@@ -301,7 +344,7 @@ class MiroFishScenarioEngine:
                 "completed_at": datetime.now(timezone.utc).isoformat(),
                 "service_version": "mirofish-v1.0-online",
                 "model_information": str(res.get("model", "qwen2.5:7b")),
-                "configuration": res.get("config", {}),
+                "configuration": {"loader_diagnostics": loader_diagnostics, **res.get("config", {})},
                 "random_seed": str(res.get("seed", "NOT_EXPOSED_BY_SERVICE")),
                 "prompt_hash": prompt_hash,
                 "input_checksum": input_checksum,
@@ -318,7 +361,7 @@ class MiroFishScenarioEngine:
             hyp_ids = [h.hypothesis_id for h in hypotheses]
 
             set_payload = {
-                "event_id": material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF",
+                "event_id": event_id or (material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF"),
                 "as_of_timestamp": as_of_str,
                 "scenario_hypothesis_ids": hyp_ids,
                 "coverage_summary": f"Online MiroFish simulation set completed for cutoff {as_of_str}.",
@@ -331,6 +374,43 @@ class MiroFishScenarioEngine:
             scenario_set = ScenarioSet(scenario_set_id=set_id, **set_payload)
 
             return seed_package, sim_run, scenario_set, hypotheses
+
+        except Exception as e:
+            run_payload = {
+                "seed_package_id": seed_id,
+                "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
+                "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
+                "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
+                "requested_at": requested_at_str,
+                "completed_at": datetime.now(timezone.utc).isoformat(),
+                "service_version": "mirofish-v1.0-online",
+                "model_information": "NOT_EXPOSED_BY_SERVICE",
+                "configuration": {"network_error_fallback": True, "error_message": str(e), "loader_diagnostics": loader_diagnostics},
+                "random_seed": "NOT_EXPOSED_BY_SERVICE",
+                "prompt_hash": prompt_hash,
+                "input_checksum": input_checksum,
+                "status": "FAILED_INCOMPLETE_SERVICE_RUN",
+                "raw_report_ids": [],
+                "raw_response_checksum": "FAILED_INCOMPLETE_SERVICE_RUN",
+                "methodology_version": self.methodology_version,
+            }
+            run_id = MiroFishSimulationRun.compute_run_id(run_payload)
+            sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **run_payload)
+
+            set_payload = {
+                "event_id": event_id or (material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF"),
+                "as_of_timestamp": as_of_str,
+                "scenario_hypothesis_ids": [],
+                "coverage_summary": f"Online scenario set failed for cutoff {as_of_str}: {e}",
+                "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
+                "missing_variables": ["REALTIME_MIROFISH_INTERACTION"],
+                "methodology_version": "5A.2-scenario-set-v2",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+            set_id = ScenarioSet.compute_scenario_set_id(set_payload)
+            scenario_set = ScenarioSet(scenario_set_id=set_id, **set_payload)
+
+            return seed_package, sim_run, scenario_set, []
 
         except Exception as e:
             run_payload = {

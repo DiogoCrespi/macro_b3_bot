@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import time
 from typing import Any
 import httpx
 
@@ -79,6 +80,36 @@ class MiroFishClient:
             for handle in opened:
                 handle.close()
 
+    def poll_project_ontology(
+        self,
+        project_id: str,
+        *,
+        timeout_seconds: float = 30.0,
+        interval_seconds: float = 1.0,
+    ) -> dict[str, Any]:
+        """Polls GET /api/graph/project/<project_id> until graph build completes."""
+        start_time = time.monotonic()
+        attempts = 0
+        last_status = "UNKNOWN"
+        while (time.monotonic() - start_time) < timeout_seconds:
+            attempts += 1
+            try:
+                response = self.client.get(f"{self.graph_prefix}/project/{project_id}")
+                if response.status_code == 200:
+                    res = response.json()
+                    data = res.get("data", res) if isinstance(res, dict) else res
+                    if isinstance(data, dict):
+                        status = str(data.get("status") or "SUCCESS")
+                        last_status = status
+                        if status in ("ONTOLOGY_GENERATED", "GRAPH_BUILT", "COMPLETED", "SUCCESS", "created"):
+                            return data
+                        if status in ("FAILED", "ERROR", "FAILED_GRAPH_BUILD"):
+                            raise RuntimeError(f"Project graph build failed with status {status}")
+            except (httpx.HTTPError, ValueError):
+                pass
+            time.sleep(interval_seconds)
+        return {"project_id": project_id, "last_status": last_status, "attempts": attempts}
+
     def create_simulation(
         self,
         project_id: str,
@@ -101,6 +132,36 @@ class MiroFishClient:
             return res["data"]
         return res
 
+    def poll_simulation(
+        self,
+        simulation_id: str,
+        *,
+        timeout_seconds: float = 30.0,
+        interval_seconds: float = 1.0,
+    ) -> dict[str, Any]:
+        """Polls simulation status until runner completes or returns status."""
+        start_time = time.monotonic()
+        attempts = 0
+        last_status = "UNKNOWN"
+        while (time.monotonic() - start_time) < timeout_seconds:
+            attempts += 1
+            try:
+                response = self.client.get(f"{self.simulation_prefix}/{simulation_id}")
+                if response.status_code == 200:
+                    res = response.json()
+                    data = res.get("data", res) if isinstance(res, dict) else res
+                    if isinstance(data, dict):
+                        status = str(data.get("status") or "created")
+                        last_status = status
+                        if status in ("created", "RUNNING", "COMPLETED", "FINISHED", "SUCCESS"):
+                            return data
+                        if status in ("FAILED", "ERROR"):
+                            raise RuntimeError(f"Simulation failed with status {status}")
+            except (httpx.HTTPError, ValueError):
+                pass
+            time.sleep(interval_seconds)
+        return {"simulation_id": simulation_id, "last_status": last_status, "attempts": attempts}
+
     def list_reports(
         self,
         project_id: str | None = None,
@@ -117,6 +178,29 @@ class MiroFishClient:
         if isinstance(res, dict) and isinstance(res.get("data"), dict):
             return res["data"]
         return res
+
+    def poll_report(
+        self,
+        simulation_id: str,
+        project_id: str | None = None,
+        *,
+        timeout_seconds: float = 30.0,
+        interval_seconds: float = 1.0,
+    ) -> dict[str, Any]:
+        """Polls list_reports until at least one report is available or polling completes."""
+        start_time = time.monotonic()
+        attempts = 0
+        while (time.monotonic() - start_time) < timeout_seconds:
+            attempts += 1
+            try:
+                res = self.list_reports(project_id=project_id, simulation_id=simulation_id)
+                reports = res.get("reports", []) if isinstance(res, dict) else (res if isinstance(res, list) else [])
+                if reports:
+                    return {"reports": reports, "attempts": attempts}
+            except (httpx.HTTPError, ValueError):
+                pass
+            time.sleep(interval_seconds)
+        return {"reports": [], "attempts": attempts, "timed_out": True}
 
     def close(self) -> None:
         self.client.close()

@@ -25,6 +25,7 @@ class ScenarioSeedPackage(BaseModel):
     seed_file_checksum: str = ""
     mime_type: str = "text/markdown"
     source_input_ids: list[str] = Field(default_factory=list)
+    loader_diagnostics: dict[str, Any] = Field(default_factory=dict)
 
     @classmethod
     def compute_seed_id(cls, payload: dict[str, Any]) -> str:
@@ -57,6 +58,13 @@ class MiroFishSimulationRun(BaseModel):
         "SERVICE_OFFLINE",
         "BLOCKED_EMPTY_PIT_SEED",
         "FAILED_INCOMPLETE_SERVICE_RUN",
+        "FAILED_GRAPH_BUILD",
+        "FAILED_SIMULATION_CONFIGURATION",
+        "FAILED_SIMULATION_RUN",
+        "FAILED_REPORT_GENERATION",
+        "TIMEOUT_GRAPH_BUILD",
+        "TIMEOUT_SIMULATION",
+        "TIMEOUT_REPORT",
         "FAILED",
     ] = "SUCCESS"
     raw_report_ids: list[str] = Field(default_factory=list)

@@ -21,6 +21,7 @@ def mock_store():
     store.get_macro_regime_snapshots_pit.return_value = []
     store.get_macro_event_candidates_pit.return_value = []
     store.get_source_documents_pit.return_value = []
+    store.get_loader_diagnostics.return_value = {}
     return store
 
 
@@ -103,6 +104,12 @@ def test_online_service_success(mock_client, mock_store, tmp_path: Path) -> None
     mock_store.get_macro_releases_pit.return_value = [
         {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
     ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "claim_type": "INFLATION", "source_excerpt": "IPCA 0.45%", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "source_type": "CVM", "available_at": cutoff.isoformat()}
+    ]
 
     with patch("macro_b3_bot.application.mirofish_scenario_engine.Path") as MockPath:
         mock_path_instance = MockPath.return_value
@@ -126,7 +133,6 @@ def test_online_service_success(mock_client, mock_store, tmp_path: Path) -> None
             mock_client.healthcheck.assert_called_once()
             mock_client.generate_ontology.assert_called_once()
             mock_client.create_simulation.assert_called_once_with("test_proj_123", "test_graph_456", config={})
-            mock_client.list_reports.assert_called_once_with(project_id="test_proj_123", simulation_id="test_sim_789")
 
 
 def test_online_service_incomplete_ontology_fail(mock_client, mock_store, tmp_path: Path) -> None:
@@ -135,6 +141,12 @@ def test_online_service_incomplete_ontology_fail(mock_client, mock_store, tmp_pa
 
     mock_store.get_macro_releases_pit.return_value = [
         {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
+    ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "available_at": cutoff.isoformat()}
     ]
     mock_client.generate_ontology.return_value = {"project_id": "test_proj_123"}
 
@@ -156,6 +168,12 @@ def test_online_service_incomplete_simulation_fail(mock_client, mock_store, tmp_
     mock_store.get_macro_releases_pit.return_value = [
         {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
     ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "available_at": cutoff.isoformat()}
+    ]
     mock_client.create_simulation.return_value = {}
 
     with patch("macro_b3_bot.application.mirofish_scenario_engine.Path") as MockPath:
@@ -176,7 +194,14 @@ def test_online_service_no_reports_fail(mock_client, mock_store, tmp_path: Path)
     mock_store.get_macro_releases_pit.return_value = [
         {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
     ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "available_at": cutoff.isoformat()}
+    ]
     mock_client.list_reports.return_value = {"reports": []}
+    mock_client.poll_report.return_value = {"reports": []}
 
     with patch("macro_b3_bot.application.mirofish_scenario_engine.Path") as MockPath:
         mock_path_instance = MockPath.return_value
@@ -187,6 +212,61 @@ def test_online_service_no_reports_fail(mock_client, mock_store, tmp_path: Path)
 
             assert run.status == "FAILED_INCOMPLETE_SERVICE_RUN"
             assert len(hyp_list) == 0
+
+
+def test_altering_report_content_changes_hypothesis_ids() -> None:
+    report1 = {
+        "report_id": "rep_001",
+        "scenarios": [
+            {
+                "type": "BULL",
+                "trigger": "Selic cut by 50bps",
+                "actors": ["BCB"],
+                "confidence": 0.80,
+                "excerpt": "Selic interest rate cut expected to boost credit",
+            }
+        ],
+    }
+    report2 = {
+        "report_id": "rep_001",
+        "scenarios": [
+            {
+                "type": "BEAR",
+                "trigger": "Selic hike by 50bps",
+                "actors": ["BCB"],
+                "confidence": 0.60,
+                "excerpt": "Selic interest rate hike expected to contract credit",
+            }
+        ],
+    }
+    engine = MiroFishScenarioEngine()
+    hyp1 = engine._parse_mirofish_report_to_hypotheses(report1, run_id="run_001")
+    hyp2 = engine._parse_mirofish_report_to_hypotheses(report2, run_id="run_001")
+
+    assert len(hyp1) == 1
+    assert len(hyp2) == 1
+    assert hyp1[0].hypothesis_id != hyp2[0].hypothesis_id
+    assert hyp1[0].trigger != hyp2[0].trigger
+
+
+def test_idempotent_report_re_run() -> None:
+    report = {
+        "report_id": "rep_001",
+        "scenarios": [
+            {
+                "type": "BULL",
+                "trigger": "Selic cut by 50bps",
+                "actors": ["BCB"],
+                "confidence": 0.80,
+                "excerpt": "Selic interest rate cut expected to boost credit",
+            }
+        ],
+    }
+    engine = MiroFishScenarioEngine()
+    hyp1 = engine._parse_mirofish_report_to_hypotheses(report, run_id="run_001")
+    hyp2 = engine._parse_mirofish_report_to_hypotheses(report, run_id="run_001")
+
+    assert hyp1[0].hypothesis_id == hyp2[0].hypothesis_id
 
 
 def test_healthcheck_rejects_unhealthy_statuses() -> None:

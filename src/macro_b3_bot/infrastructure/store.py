@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from hashlib import sha256
 import json
 from pathlib import Path
 from datetime import datetime, timezone, date
@@ -1269,15 +1270,129 @@ class DatabaseStore:
 
         return cvm_docs + downloaded_docs
 
-    def get_causal_graph_version_pit(self, cutoff_dt: datetime) -> str:
+    def get_loader_diagnostics(self, cutoff_dt: datetime, event_id: str | None = None) -> dict[str, Any]:
         """
-        Retorna a versão mais recente do grafo causal disponível no momento do cutoff.
-        Por enquanto, retorna uma versão estática, pois não há tabela dedicada para versionamento de grafo.
+        Generates mandatory audit breakdown of data loaders for PIT seed generation.
         """
-        # TODO: Implementar lógica real para recuperar a versão do grafo causal do DB
-        # Por exemplo, de uma tabela 'causal_graph_versions' se existir
-        # Ou derivado de uma sequência de eventos ou commits
-        return "1.0.0"
+        iso_cutoff = cutoff_dt.isoformat()
+
+        # 1. Macro releases
+        scanned_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases").fetchone()[0]
+        valid_id_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases WHERE release_id IS NOT NULL AND release_id != ''").fetchone()[0]
+        pit_eligible_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases WHERE available_at <= ?", [cutoff_dt]).fetchone()[0]
+        future_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases WHERE available_at > ?", [cutoff_dt]).fetchone()[0]
+        missing_avail_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases WHERE available_at IS NULL").fetchone()[0]
+        non_material_macro = self.connection.execute("SELECT COUNT(*) FROM macro_releases WHERE available_at <= ? AND (indicator IS NULL OR indicator = '')", [cutoff_dt]).fetchone()[0]
+
+        pit_releases = self.get_macro_releases_pit(cutoff_dt)
+        if event_id:
+            selected_releases = [m for m in pit_releases if m.get("release_id") == event_id]
+        else:
+            selected_releases = pit_releases
+
+        rel_ids_sorted = sorted([str(m["release_id"]) for m in selected_releases if "release_id" in m])
+        rel_checksum = sha256(json.dumps(rel_ids_sorted).encode("utf-8")).hexdigest()
+
+        # 2. Evidence claims
+        scanned_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims").fetchone()[0]
+        valid_id_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims WHERE claim_id IS NOT NULL AND claim_id != ''").fetchone()[0]
+        pit_eligible_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims WHERE created_at <= ?", [cutoff_dt]).fetchone()[0]
+        future_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims WHERE created_at > ?", [cutoff_dt]).fetchone()[0]
+        missing_avail_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims WHERE created_at IS NULL").fetchone()[0]
+        missing_ev_claims = self.connection.execute("SELECT COUNT(*) FROM evidence_claims WHERE created_at <= ? AND (source_excerpt IS NULL OR source_excerpt = '')", [cutoff_dt]).fetchone()[0]
+
+        pit_claims = self.get_evidence_claims_pit(cutoff_dt)
+        if event_id:
+            target_doc_ids = {m.get("document_id") for m in selected_releases if m.get("document_id")}
+            selected_claims = [c for c in pit_claims if c.get("claim_id") == event_id or c.get("document_id") in target_doc_ids or event_id in str(c.get("subject", ""))]
+            if not selected_claims:
+                selected_claims = pit_claims
+        else:
+            selected_claims = pit_claims
+
+        claim_ids_sorted = sorted([str(c["claim_id"]) for c in selected_claims if "claim_id" in c])
+        claim_checksum = sha256(json.dumps(claim_ids_sorted).encode("utf-8")).hexdigest()
+
+        # 3. Sector state snapshots
+        scanned_sec = self.connection.execute("SELECT COUNT(*) FROM sector_state_snapshots").fetchone()[0]
+        valid_id_sec = self.connection.execute("SELECT COUNT(*) FROM sector_state_snapshots WHERE snapshot_id IS NOT NULL AND snapshot_id != ''").fetchone()[0]
+        pit_eligible_sec = self.connection.execute("SELECT COUNT(*) FROM sector_state_snapshots WHERE as_of_timestamp <= ?", [cutoff_dt]).fetchone()[0]
+        future_sec = self.connection.execute("SELECT COUNT(*) FROM sector_state_snapshots WHERE as_of_timestamp > ?", [cutoff_dt]).fetchone()[0]
+        missing_avail_sec = self.connection.execute("SELECT COUNT(*) FROM sector_state_snapshots WHERE as_of_timestamp IS NULL").fetchone()[0]
+
+        pit_sec = self.get_sector_state_snapshots_pit(cutoff_dt)
+        sec_ids_sorted = sorted([str(s["snapshot_id"]) for s in pit_sec if "snapshot_id" in s])
+        sec_checksum = sha256(json.dumps(sec_ids_sorted).encode("utf-8")).hexdigest()
+
+        # 4. Source documents
+        scanned_docs = self.connection.execute("SELECT COUNT(*) FROM cvm_documents").fetchone()[0]
+        valid_id_docs = self.connection.execute("SELECT COUNT(*) FROM cvm_documents WHERE document_id IS NOT NULL AND document_id != ''").fetchone()[0]
+        pit_eligible_docs = self.connection.execute("SELECT COUNT(*) FROM cvm_documents WHERE filing_available_at <= ? OR (filing_available_at IS NULL AND received_at <= ?)", [cutoff_dt, cutoff_dt]).fetchone()[0]
+        future_docs = self.connection.execute("SELECT COUNT(*) FROM cvm_documents WHERE filing_available_at > ?", [cutoff_dt]).fetchone()[0]
+        missing_avail_docs = self.connection.execute("SELECT COUNT(*) FROM cvm_documents WHERE filing_available_at IS NULL AND received_at IS NULL").fetchone()[0]
+
+        pit_docs = self.get_source_documents_pit(cutoff_dt)
+        if event_id:
+            target_doc_ids = {m.get("document_id") for m in selected_releases if m.get("document_id")} | {c.get("document_id") for c in selected_claims if c.get("document_id")}
+            selected_docs = [d for d in pit_docs if d.get("document_id") in target_doc_ids] if target_doc_ids else pit_docs
+        else:
+            selected_docs = pit_docs
+
+        doc_ids_sorted = sorted([str(d["document_id"]) for d in selected_docs if "document_id" in d])
+        doc_checksum = sha256(json.dumps(doc_ids_sorted).encode("utf-8")).hexdigest()
+
+        return {
+            "cutoff_timestamp": iso_cutoff,
+            "filter_event_id": event_id,
+            "macro_events": {
+                "source_table_or_artifact": "macro_releases",
+                "records_scanned": scanned_macro,
+                "records_with_valid_id": valid_id_macro,
+                "records_pit_eligible": pit_eligible_macro,
+                "records_rejected_future": future_macro,
+                "records_rejected_missing_available_at": missing_avail_macro,
+                "records_rejected_missing_evidence": 0,
+                "records_rejected_non_material": non_material_macro,
+                "records_selected": len(selected_releases),
+                "source_checksum": rel_checksum,
+            },
+            "evidence_claims": {
+                "source_table_or_artifact": "evidence_claims",
+                "records_scanned": scanned_claims,
+                "records_with_valid_id": valid_id_claims,
+                "records_pit_eligible": pit_eligible_claims,
+                "records_rejected_future": future_claims,
+                "records_rejected_missing_available_at": missing_avail_claims,
+                "records_rejected_missing_evidence": missing_ev_claims,
+                "records_rejected_non_material": 0,
+                "records_selected": len(selected_claims),
+                "source_checksum": claim_checksum,
+            },
+            "sector_state_snapshots": {
+                "source_table_or_artifact": "sector_state_snapshots",
+                "records_scanned": scanned_sec,
+                "records_with_valid_id": valid_id_sec,
+                "records_pit_eligible": pit_eligible_sec,
+                "records_rejected_future": future_sec,
+                "records_rejected_missing_available_at": missing_avail_sec,
+                "records_rejected_missing_evidence": 0,
+                "records_rejected_non_material": 0,
+                "records_selected": len(pit_sec),
+                "source_checksum": sec_checksum,
+            },
+            "source_documents": {
+                "source_table_or_artifact": "cvm_documents",
+                "records_scanned": scanned_docs,
+                "records_with_valid_id": valid_id_docs,
+                "records_pit_eligible": pit_eligible_docs,
+                "records_rejected_future": future_docs,
+                "records_rejected_missing_available_at": missing_avail_docs,
+                "records_rejected_missing_evidence": 0,
+                "records_rejected_non_material": 0,
+                "records_selected": len(selected_docs),
+                "source_checksum": doc_checksum,
+            },
+        }
 
     def start_ingestion_run(self, run_id: str, source: str) -> None:
         self.connection.execute(

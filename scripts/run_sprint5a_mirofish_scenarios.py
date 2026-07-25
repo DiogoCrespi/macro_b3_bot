@@ -31,28 +31,34 @@ from macro_b3_bot.adapters.mirofish import MiroFishClient
 from macro_b3_bot.application.mirofish_scenario_engine import MiroFishScenarioEngine
 
 
-def parse_cli_args() -> datetime:
+def parse_cli_args() -> tuple[datetime, str]:
     as_of_str = None
+    event_id = None
     for i, arg in enumerate(sys.argv[1:], 1):
         if arg.startswith("--as-of="):
             as_of_str = arg.split("=", 1)[1]
         elif arg == "--as-of" and i < len(sys.argv) - 1:
             as_of_str = sys.argv[i + 1]
+        elif arg.startswith("--event-id="):
+            event_id = arg.split("=", 1)[1]
+        elif arg == "--event-id" and i < len(sys.argv) - 1:
+            event_id = sys.argv[i + 1]
 
-    if as_of_str is None:
-        print("Erro: O argumento --as-of é obrigatório.")
-        print("Uso: python run_sprint5a_mirofish_scenarios.py --as-of=YYYY-MM-DDTHH:MM:SSZ")
+    if as_of_str is None or event_id is None:
+        print("Erro: Os argumentos --event-id e --as-of sao OBRIGATORIOS.")
+        print("Uso: python run_sprint5a_mirofish_scenarios.py --event-id=<EVENT_ID> --as-of=YYYY-MM-DDTHH:MM:SSZ")
         sys.exit(1)
 
     dt = datetime.fromisoformat(as_of_str.replace("Z", "+00:00"))
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    return dt
+    return dt, event_id
 
 
 def main() -> None:
     print("=== Sprint 5A: MiroFish Scenario Engine Integration ===")
-    as_of_dt = parse_cli_args()
+    as_of_dt, target_event_id = parse_cli_args()
+    print(f"Target Event ID:        {target_event_id}")
     print(f"Scenario Cutoff (as-of): {as_of_dt.isoformat()}")
 
     settings = Settings()
@@ -71,7 +77,8 @@ def main() -> None:
 
     print("\nGenerating Point-In-Time scenario hypotheses...")
     seed_pkg, sim_run, scenario_set, hypotheses = engine.generate_scenarios_for_cutoff(
-        cutoff_dt=as_of_dt
+        cutoff_dt=as_of_dt,
+        event_id=target_event_id,
     )
 
     # Persist to DuckDB idempotently
