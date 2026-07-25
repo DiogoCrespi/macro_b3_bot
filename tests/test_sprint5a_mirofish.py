@@ -433,6 +433,61 @@ def test_native_report_contract_is_strict_and_versioned() -> None:
     assert MiroFishClient.validate_structured_report({"scenarios": []})[0] is False
 
 
+def test_llm_extraction_valid_response_is_checksum_tracked(monkeypatch) -> None:
+    body = {
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Inflation accelerates.",
+        "scenarios": [{
+            "scenario_type": "BASE",
+            "trigger": "Inflation accelerates.",
+            "actors": [],
+            "actions": [],
+            "macro_factors": ["INFLATION"],
+            "sector_effects": [],
+            "second_order_effects": [],
+            "expected_horizon": "SHORT_TERM",
+            "report_excerpt": "Inflation accelerates.",
+            "confidence": None,
+        }],
+    }
+    response = MagicMock()
+    response.json.return_value = {"choices": [{"message": {"content": json.dumps(body)}}]}
+    monkeypatch.setattr("macro_b3_bot.adapters.mirofish.httpx.post", lambda *args, **kwargs: response)
+
+    result = MiroFishClient("http://localhost:11434").extract_structured_report("Inflation accelerates.")
+
+    assert MiroFishClient.validate_structured_report(result)[0] is True
+    metadata = result["_extraction_metadata"]
+    assert metadata["extraction_response_checksum"]
+    assert metadata["extraction_prompt_hash"]
+    assert result["scenarios"][0]["confidence"] is None
+
+
+def test_llm_extraction_invalid_json_is_rejected(monkeypatch) -> None:
+    response = MagicMock()
+    response.json.return_value = {"choices": [{"message": {"content": "not-json"}}]}
+    monkeypatch.setattr("macro_b3_bot.adapters.mirofish.httpx.post", lambda *args, **kwargs: response)
+
+    with pytest.raises(json.JSONDecodeError):
+        MiroFishClient("http://localhost:11434").extract_structured_report("Report")
+
+
+@pytest.mark.parametrize(
+    ("payload", "reason"),
+    [
+        ({"schema_version": MIROFISH_REPORT_SCHEMA_VERSION, "scenarios": []}, "REPORT_TEXT_MISSING"),
+        ({"schema_version": MIROFISH_REPORT_SCHEMA_VERSION, "report_text": "x"}, "SCENARIOS_NOT_ARRAY"),
+        ({
+            "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+            "report_text": "x",
+            "scenarios": [{"trigger": "x", "report_excerpt": "x", "macro_factors": "INFLATION"}],
+        }, "SCENARIO_0_MACRO_FACTORS_NOT_ARRAY"),
+    ],
+)
+def test_extracted_schema_rejects_missing_fields_and_wrong_arrays(payload, reason) -> None:
+    assert MiroFishClient.validate_structured_report(payload) == (False, reason)
+
+
 def test_null_confidence_parsing() -> None:
     raw_report = {
         "report_id": "rep_999",

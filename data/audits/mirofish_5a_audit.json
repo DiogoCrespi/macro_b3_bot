@@ -84,13 +84,13 @@
     }
   },
   "simulation_run": {
-    "simulation_run_id": "f2b3d716b5a84638fada422c426f0931dced28b360c12bcb7daaea86ca019665",
+    "simulation_run_id": "7d84029f9b95c011ef351dca79026f0cb4a828bf69ed83c216c5d75cf71fdb1a",
     "seed_package_id": "143db83f16a607470dc801dd47eae0a047bca5d97774629b9c0f5ca94e37d674",
-    "mirofish_project_id": "proj_337ec50c70a3",
-    "mirofish_graph_id": "proj_337ec50c70a3",
-    "mirofish_simulation_id": "sim_0c533434ccc8",
-    "requested_at": "2026-07-25T01:56:09.116105+00:00",
-    "completed_at": "2026-07-25T01:58:19.497758+00:00",
+    "mirofish_project_id": "proj_290d063a5282",
+    "mirofish_graph_id": "mirofish_2b4091b5ce19471e",
+    "mirofish_simulation_id": "sim_813a88378323",
+    "requested_at": "2026-07-25T20:45:39.937106+00:00",
+    "completed_at": "2026-07-25T21:00:23.682043+00:00",
     "service_version": "NOT_EXPOSED_BY_SERVICE",
     "model_information": "NOT_EXPOSED_BY_SERVICE",
     "configuration": {
@@ -145,16 +145,107 @@
           "records_selected": 1,
           "source_checksum": "e39c74a4244762d806df57f0b2d7ca63e6ab3dd4ce98e77f9d99b81509e1c695"
         }
+      },
+      "structured_report_contract": {
+        "report_format": "json",
+        "report_schema_version": "5A.3-mirofish-scenario-report-v1",
+        "report_schema_hash": "9e63e45d730987acb2b94d7f0d6650016e8bd5574f9e294e6c35e7c71db188d8",
+        "report_schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "title": "MacroB3 MiroFish Scenario Report",
+          "type": "object",
+          "required": [
+            "schema_version",
+            "report_text",
+            "scenarios"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "schema_version": {
+              "const": "5A.3-mirofish-scenario-report-v1"
+            },
+            "report_text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scenarios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "scenario_type",
+                  "trigger",
+                  "report_excerpt"
+                ],
+                "properties": {
+                  "scenario_type": {
+                    "type": "string"
+                  },
+                  "trigger": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "actors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "macro_factors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "sector_effects": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "second_order_effects": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "expected_horizon": {
+                    "type": "string"
+                  },
+                  "report_excerpt": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "confidence": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "require_structured_report": true
       }
     },
     "random_seed": "NOT_EXPOSED_BY_SERVICE",
-    "prompt_hash": "f6a29ae4d979dec9576dfbe7ded012417ed2f48e19bd7a4eadfa64061699403b",
+    "prompt_hash": "2711b2881506f4eecf9943a97e085dbb84591c55efe941015db95cffd92e7200",
     "input_checksum": "06f8c376fbde1043bd8a70c1d877153c1c1e8c12a8f09ea03b948a927258cc77",
     "status": "FAILED_UNSUPPORTED_REPORT_SCHEMA",
     "raw_report_ids": [
-      "rep_sim_0c533434ccc8"
+      "report_0529b7bfd5fc"
     ],
-    "raw_response_checksum": "ee36df09442285702de105911e8eabc5850614cf623c7cfea17e8ead2b6e93a4",
+    "raw_response_checksum": "ccf99affc29f1a06d612067067b4fb37bf170d26d5ce99cbf4714533704b47c4",
     "methodology_version": "5A.3-mirofish-engine-v3"
   },
   "scenario_set": {
@@ -168,7 +259,7 @@
       "UNSUPPORTED_REPORT_SCHEMA"
     ],
     "methodology_version": "5A.3-scenario-set-v3",
-    "created_at": "2026-07-25T01:58:19.498150+00:00"
+    "created_at": "2026-07-25T21:00:33.252096+00:00"
   },
   "total_hypotheses": 0,
   "unverified_count": 0,
