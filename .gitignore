@@ -8,5 +8,6 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 data/raw/
+data/mirofish_seeds/
 data/*.duckdb*
 data/market_info_cache.json

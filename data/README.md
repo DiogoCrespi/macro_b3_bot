@@ -5,12 +5,14 @@ misturadas em uma análise sem indicar a proveniência.
 
 | Classe | Local | Uso |
 |---|---|---|
-| Auditoria/fixture controlada | `data/audits/`, `data/mirofish_seeds/` | Testes, homologação e reprodução; não é evidência upstream de produção |
+| Auditoria/fixture controlada | `data/audits/` e seeds selecionados | Testes, homologação e reprodução; não é evidência upstream de produção |
 | Aquisição upstream | `data/raw/` e manifests de aquisição | Dados externos; exigem fonte, `collected_at`, `available_at`, versão e checksum |
 | Snapshots locais | `data/*.duckdb*` | Estado local não versionado; deve ser reconstruído ou restaurado por backup |
 | Cache | `data/market_info_cache.json` | Não é fonte primária nem evidência point-in-time |
 
-O manifesto [baseline_reproducible.json](audits/baseline_reproducible.json) registra o
+Seeds gerados automaticamente em `data/mirofish_seeds/` são ignorados por padrão. Um seed
+somente deve ser versionado quando for explicitamente promovido a fixture nomeada e
+referenciado por uma auditoria. O manifesto [baseline_reproducible.json](audits/baseline_reproducible.json) registra o
 hash dos arquivos versionados e sua classe. Fixtures controladas não podem ser
 apresentadas como execução upstream real.
 
