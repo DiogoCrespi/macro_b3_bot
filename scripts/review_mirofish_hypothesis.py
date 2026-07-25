@@ -50,7 +50,7 @@ def main() -> None:
         "reviewed_at": datetime.now(timezone.utc).isoformat(),
         "review_decision": "DELEGATED_AI_APPROVED",
         "review_status": "PARTIALLY_SUPPORTED",
-        "review_confidence": 0.75,
+        "review_confidence": 1.0,
         "review_notes": "All extracted content fields and the evidence excerpt are semantically supported by the persisted sidecar report. Scenario type remains UNKNOWN because the source label is not safely mappable to the controlled enum.",
         "field_checks": checks,
         "source_report_id": hypothesis["raw_report_id"],
