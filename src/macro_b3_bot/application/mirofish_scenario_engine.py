@@ -40,6 +40,7 @@ class MiroFishScenarioEngine:
     def __init__(self, client: MiroFishClient | None = None, store: DatabaseStore | None = None):
         self.client = client
         self.store = store
+        self._last_extraction_record: dict[str, Any] = {}
 
     def generate_scenarios_for_cutoff(
         self,
@@ -292,6 +293,7 @@ class MiroFishScenarioEngine:
         # Online HTTP execution
         assert self.client is not None
         try:
+            self._last_extraction_record = {}
             # 1. Generate ontology / graph
             report_config = MiroFishClient.structured_report_config()
             ontology_context = (
@@ -447,6 +449,8 @@ class MiroFishScenarioEngine:
 
             # 4. Parse hypotheses from report
             hypotheses = self._parse_mirofish_report_to_hypotheses(raw_report, run_id, seed_package=seed_package)
+            if self._last_extraction_record:
+                prelim_run_payload["configuration"]["structured_extraction"] = self._last_extraction_record
 
             if not hypotheses:
                 # Zero hypotheses parsed -> mark status as FAILED_UNSUPPORTED_REPORT_SCHEMA
@@ -617,6 +621,29 @@ class MiroFishScenarioEngine:
             if not valid_report:
                 return []
             raw_report = {**raw_report, **extracted}
+            extraction_checksum = extraction_meta.get("extraction_response_checksum")
+            if extraction_checksum:
+                extraction_payload = {
+                    "report_id": raw_report_id,
+                    "raw_report_checksum": raw_report_checksum,
+                    "extracted_report": extracted,
+                    "extraction_metadata": extraction_meta,
+                }
+                extraction_path = Path(f"data/raw/mirofish/extractions/{extraction_checksum}.json")
+                extraction_path.parent.mkdir(parents=True, exist_ok=True)
+                extraction_path.write_text(
+                    json.dumps(extraction_payload, sort_keys=True, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+                self._last_extraction_record = {
+                    "extraction_response_checksum": extraction_checksum,
+                    "extraction_path": str(extraction_path),
+                    "extraction_mode": extraction_meta.get("extraction_mode"),
+                    "extraction_model": extraction_meta.get("extraction_model"),
+                    "extraction_prompt_hash": extraction_meta.get("extraction_prompt_hash"),
+                    "extraction_schema_version": extraction_meta.get("extraction_schema_version"),
+                    "raw_report_checksum": raw_report_checksum,
+                }
         scenarios_from_report = raw_report["scenarios"]
         extraction_meta = {
             **extraction_meta,

@@ -1,5 +1,6 @@
 import pytest
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 import httpx
@@ -78,6 +79,52 @@ def test_canonical_content_hashing_determinism() -> None:
     h2 = ScenarioSeedPackage.compute_seed_id(payload)
     assert h1 == h2
     assert len(h1) == 64
+
+
+def test_narrative_report_extraction_is_persisted_and_linked(tmp_path, monkeypatch, mock_client) -> None:
+    monkeypatch.chdir(tmp_path)
+    extracted = {
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "",
+        "scenarios": [{
+            "scenario_type": "BASE",
+            "trigger": "Inflation accelerates",
+            "actors": [],
+            "actions": [],
+            "macro_factors": ["INFLATION"],
+            "sector_effects": ["Retail pressure"],
+            "second_order_effects": [],
+            "expected_horizon": "SHORT_TERM",
+            "report_excerpt": "Inflation accelerates",
+            "confidence": None,
+        }],
+        "_extraction_metadata": {
+            "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+            "extraction_model": "test-model",
+            "extraction_prompt_hash": "prompt-hash",
+            "extraction_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+            "raw_extraction_response": '{"scenarios":[]}',
+            "extraction_response_checksum": "response-checksum",
+        },
+    }
+    mock_client.extract_structured_report.return_value = extracted
+    engine = MiroFishScenarioEngine(client=mock_client)
+    seed = ScenarioSeedPackage(
+        seed_package_id="seed",
+        as_of_timestamp="2026-07-24T00:00:00+00:00",
+        material_event_ids=["event"],
+    )
+    report = {"report_id": "report", "markdown_content": "Inflation accelerates"}
+
+    hypotheses = engine._parse_mirofish_report_to_hypotheses(report, "run", seed)
+
+    assert len(hypotheses) == 1
+    extraction_path = tmp_path / "data/raw/mirofish/extractions/response-checksum.json"
+    assert extraction_path.exists()
+    persisted = json.loads(extraction_path.read_text(encoding="utf-8"))
+    assert persisted["report_id"] == "report"
+    assert persisted["extraction_metadata"]["extraction_model"] == "test-model"
+    assert engine._last_extraction_record["extraction_path"].endswith("response-checksum.json")
 
 
 def test_blocked_empty_pit_seed(mock_store, mock_client) -> None:
