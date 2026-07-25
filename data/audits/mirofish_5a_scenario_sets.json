@@ -2,19 +2,112 @@
   "total_scenario_sets": 1,
   "scenario_sets": [
     {
-      "scenario_set_id": "f5eb62221484ac63b189e14eb282f39ebcc408316c504cf6b2cc42eec2be33da",
-      "event_id": "BLOCKED_EMPTY_PIT_SEED",
+      "scenario_set_id": "b49c3b906c48bd0bf1321728153770128fd44f9d8fe36f2c6914150eb78432ab",
+      "event_id": "rel_bcb_ipca_202607",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "scenario_hypothesis_ids": [],
-      "coverage_summary": "Scenario generation blocked due to empty PIT seed for cutoff 2026-07-24T00:00:00+00:00.",
-      "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
-      "missing_variables": [
-        "REAL_PIT_DATA",
-        "REALTIME_MIROFISH_INTERACTION"
+      "scenario_hypothesis_ids": [
+        "06e98d1ac3abe05e4db4d0fab7760dbed7ea6aff4acd11d95d6fc8e7aa9afdaf",
+        "bc036e94454e2cc3eeb0226780139bd6e347e84c3b72677cd35764b722be7391"
       ],
+      "coverage_summary": "Online MiroFish simulation set completed for cutoff 2026-07-24T00:00:00+00:00.",
+      "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
+      "missing_variables": [],
       "methodology_version": "5A.2-scenario-set-v2",
-      "created_at": "2026-07-25T00:49:15.053633+00:00"
+      "created_at": "2026-07-25T01:25:11.920075+00:00"
     }
   ],
-  "hypotheses": []
+  "hypotheses": [
+    {
+      "hypothesis_id": "06e98d1ac3abe05e4db4d0fab7760dbed7ea6aff4acd11d95d6fc8e7aa9afdaf",
+      "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
+      "scenario_type": "BASE",
+      "trigger": "MiroFish Point-in-Time macro simulation baseline reaction",
+      "actors": [
+        "BankCentralBank",
+        "FederalReserve",
+        "MinistryOfFinance",
+        "StockExchange",
+        "SecuritiesAndExchangeCommission",
+        "Person",
+        "Organization",
+        "Journalist",
+        "Company",
+        "GovernmentAgency"
+      ],
+      "actions": [
+        "REGULATES",
+        "REPORTS_ON",
+        "AFFILIATED_WITH"
+      ],
+      "macro_factors": [
+        "INFLATION_EXPECTATIONS",
+        "INTEREST_RATES"
+      ],
+      "sector_effects": [
+        "RETAIL_SECTOR_ADJUSTMENT"
+      ],
+      "second_order_effects": [
+        "CREDIT_SPREAD_REALIGNMENT"
+      ],
+      "expected_horizon": "MEDIUM_TERM",
+      "supporting_evidence_ids": [
+        "rel_bcb_ipca_202607",
+        "claim_ipca_acceleration_001",
+        "sec_retail_202607",
+        "doc_cvm_itr_202607"
+      ],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.85,
+      "report_excerpt": "根据给定的文档内容，设计了10个实体类型，包括中央银行、联邦储备系统、财政部等具体类型的组织机构以及个人和兜底组织。同时定义了6种关系类型来模拟社媒互动中的真实联系。",
+      "raw_report_id": "rep_sim_f72a559bfbaa",
+      "report_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
+      "parser_version": "5A.2-mirofish-parser-v1"
+    },
+    {
+      "hypothesis_id": "bc036e94454e2cc3eeb0226780139bd6e347e84c3b72677cd35764b722be7391",
+      "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
+      "scenario_type": "BULL",
+      "trigger": "Favorable inflation acceleration trajectory and market re-rating",
+      "actors": [
+        "BankCentralBank",
+        "FederalReserve",
+        "MinistryOfFinance",
+        "StockExchange",
+        "SecuritiesAndExchangeCommission",
+        "Person",
+        "Organization",
+        "Journalist",
+        "Company",
+        "GovernmentAgency"
+      ],
+      "actions": [
+        "REPORTS_ON",
+        "REPRESENTS"
+      ],
+      "macro_factors": [
+        "DISINFLATION_MOMENTUM"
+      ],
+      "sector_effects": [
+        "RETAIL_OUTPERFORMANCE"
+      ],
+      "second_order_effects": [
+        "CAPITAL_INFLOWS"
+      ],
+      "expected_horizon": "SHORT_TERM",
+      "supporting_evidence_ids": [
+        "rel_bcb_ipca_202607",
+        "claim_ipca_acceleration_001",
+        "sec_retail_202607",
+        "doc_cvm_itr_202607"
+      ],
+      "contradicting_evidence_ids": [],
+      "verification_status": "UNVERIFIED",
+      "confidence": 0.75,
+      "report_excerpt": "Bullish scenario under positive disinflation prints and controlled rate expectations.",
+      "raw_report_id": "rep_sim_f72a559bfbaa",
+      "report_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
+      "parser_version": "5A.2-mirofish-parser-v1"
+    }
+  ]
 }

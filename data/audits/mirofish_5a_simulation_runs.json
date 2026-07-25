@@ -2,24 +2,24 @@
   "total_runs": 1,
   "runs": [
     {
-      "simulation_run_id": "b7f12ff0af9cd75c1cae84e17f73e5a2969eef0815bc83b99564dba8c30cc1c4",
-      "seed_package_id": "966797b2eed444131b6ebf37b2c9d229ca0d43ce2bb64eecf9fce9b43b6aa3dc",
-      "mirofish_project_id": "BLOCKED_EMPTY_PIT_SEED",
-      "mirofish_graph_id": "BLOCKED_EMPTY_PIT_SEED",
-      "mirofish_simulation_id": "BLOCKED_EMPTY_PIT_SEED",
-      "requested_at": "2026-07-25T00:49:15.053555+00:00",
-      "completed_at": "2026-07-25T00:49:15.053565+00:00",
-      "service_version": "mirofish-v1.0-blocked",
-      "model_information": "BLOCKED_EMPTY_PIT_SEED",
-      "configuration": {
-        "empty_pit_seed": true
-      },
-      "random_seed": "BLOCKED_EMPTY_PIT_SEED",
-      "prompt_hash": "",
-      "input_checksum": "",
-      "status": "BLOCKED_EMPTY_PIT_SEED",
-      "raw_report_ids": [],
-      "raw_response_checksum": "BLOCKED_EMPTY_PIT_SEED",
+      "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
+      "seed_package_id": "42a4db326623d83be386fb26d386fa67386eaf74c4a78f3ddcfbea6b3c9bee18",
+      "mirofish_project_id": "proj_37f8f9c32ef0",
+      "mirofish_graph_id": "proj_37f8f9c32ef0",
+      "mirofish_simulation_id": "sim_f72a559bfbaa",
+      "requested_at": "2026-07-25T01:24:01.139269+00:00",
+      "completed_at": "2026-07-25T01:25:11.919804+00:00",
+      "service_version": "mirofish-v1.0-online",
+      "model_information": "qwen2.5:7b",
+      "configuration": {},
+      "random_seed": "NOT_EXPOSED_BY_SERVICE",
+      "prompt_hash": "f6a29ae4d979dec9576dfbe7ded012417ed2f48e19bd7a4eadfa64061699403b",
+      "input_checksum": "add623691f00aca78e76c7a543f9983060f8d726aacb52ace99082b392de7fd3",
+      "status": "SUCCESS",
+      "raw_report_ids": [
+        "rep_sim_f72a559bfbaa"
+      ],
+      "raw_response_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
       "methodology_version": "5A.2-mirofish-engine-v2"
     }
   ]

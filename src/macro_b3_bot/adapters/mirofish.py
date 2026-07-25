@@ -68,7 +68,13 @@ class MiroFishClient:
                 },
             )
             response.raise_for_status()
-            return response.json()
+            res = response.json()
+            if isinstance(res, dict) and isinstance(res.get("data"), dict):
+                data = res["data"]
+                if "project_id" in data and "graph_id" not in data:
+                    data["graph_id"] = data["project_id"]
+                return data
+            return res
         finally:
             for handle in opened:
                 handle.close()
@@ -90,7 +96,10 @@ class MiroFishClient:
             payload.update(config)
         response = self.client.post(f"{self.simulation_prefix}/create", json=payload)
         response.raise_for_status()
-        return response.json()
+        res = response.json()
+        if isinstance(res, dict) and isinstance(res.get("data"), dict):
+            return res["data"]
+        return res
 
     def list_reports(
         self,
@@ -104,7 +113,10 @@ class MiroFishClient:
             params["simulation_id"] = simulation_id
         response = self.client.get(f"{self.report_prefix}/list", params=params)
         response.raise_for_status()
-        return response.json()
+        res = response.json()
+        if isinstance(res, dict) and isinstance(res.get("data"), dict):
+            return res["data"]
+        return res
 
     def close(self) -> None:
         self.client.close()
