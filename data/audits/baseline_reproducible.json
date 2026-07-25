@@ -1,7 +1,7 @@
 {
   "manifest_version": "P0.1-reproducibility-v1",
-  "created_at": "2026-07-25T23:42:16.019197+00:00",
-  "git_commit": "f9ed31d1f6377d547207312157d7c0eefc13f1b4",
+  "created_at": "2026-07-25T23:42:29.331489+00:00",
+  "git_commit": "a764961f2c0d71ae56f44b1fa37ca7e4d97742ac",
   "git_branch": "master",
   "python": {
     "version": "3.12.10",
@@ -63,7 +63,7 @@
     },
     {
       "path": "PRODUCTION_READINESS.md",
-      "sha256": "429b319fba42de458d44c58ce523f072ef60d14c63b8c54419e21f7afba32286",
+      "sha256": "e41e48e88bc4d25e706c4674f1d0e76258ca1774db81998e0bfc1c020b5b936a",
       "class": "PROJECT_METADATA"
     },
     {
@@ -393,7 +393,7 @@
     },
     {
       "path": "data/audits/baseline_reproducible.json",
-      "sha256": "343e4a3f4ca9a044fa3ec78a3685a7b6fb0ed00dddc259d6c3a3b2fb0a459c7e",
+      "sha256": "4337721bccffd1b9693f12019dbf7ced15fa7cabb265d29a5df0d50825c1e645",
       "class": "CONTROLLED_FIXTURE_OR_AUDIT"
     },
     {
