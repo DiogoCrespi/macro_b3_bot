@@ -1071,6 +1071,13 @@ class DatabaseStore:
             self.connection.execute("ALTER TABLE research_decision_snapshots ADD COLUMN execution_mode VARCHAR DEFAULT 'BLOCKED_MISSING_UPSTREAM_INPUT'")
         except Exception:
             pass
+        # Older local databases created confidence as NOT NULL.  Structured
+        # MiroFish reports are allowed to omit confidence; preserve that
+        # absence as SQL NULL rather than inventing a numeric value.
+        try:
+            self.connection.execute("ALTER TABLE scenario_hypotheses ALTER COLUMN confidence DROP NOT NULL")
+        except Exception:
+            pass
         for col_def in (
             "ALTER TABLE paper_allocation_events ADD COLUMN open_price DOUBLE",
             "ALTER TABLE paper_allocation_events ADD COLUMN quote_record_id VARCHAR",

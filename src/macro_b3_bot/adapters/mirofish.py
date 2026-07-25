@@ -408,6 +408,22 @@ class MiroFishClient:
         parsed = json.loads(content)
         if not isinstance(parsed, dict):
             raise ValueError("STRUCTURED_EXTRACTION_NOT_OBJECT")
+        # Some OpenAI-compatible backends return the single extracted
+        # scenario as the top-level object even when the prompt requests the
+        # envelope.  Normalize only when every required scenario field is
+        # present; never synthesize a scenario or fill missing values.
+        if "scenarios" not in parsed and {
+            "scenario_type",
+            "trigger",
+            "report_excerpt",
+        }.issubset(parsed):
+            parsed = {
+                "scenarios": [parsed],
+                "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+                "_normalization_applied": "SINGLE_SCENARIO_OBJECT_TO_ARRAY",
+            }
+        elif "scenarios" not in parsed:
+            parsed["_normalization_applied"] = "NONE"
         # The schema version is the extraction contract, not a model claim.
         # Pin it locally so omitted metadata cannot silently pass as another
         # schema; semantic fields remain uncoerced and are validated below.
