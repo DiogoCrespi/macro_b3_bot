@@ -444,6 +444,19 @@ def test_healthcheck_rejects_unhealthy_statuses() -> None:
         assert cli.healthcheck() is False
 
 
+def test_mirofish_circuit_breaker_opens_after_transient_failures() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, json={"detail": "offline"})
+
+    cli = MiroFishClient("http://localhost:20128")
+    cli.client = httpx.Client(base_url="http://localhost:20128", transport=httpx.MockTransport(handler))
+    for _ in range(3):
+        with pytest.raises(httpx.HTTPStatusError):
+            cli.list_reports(project_id="p")
+    with pytest.raises(RuntimeError, match="MIROFISH_CIRCUIT_OPEN"):
+        cli.list_reports(project_id="p")
+
+
 def test_native_report_contract_is_strict_and_versioned() -> None:
     valid = {
         "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,

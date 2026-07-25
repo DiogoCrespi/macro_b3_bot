@@ -1,4 +1,5 @@
 .env
+.env.staging
 .venv*/
 venv*/
 *.egg-info/
@@ -10,4 +11,6 @@ __pycache__/
 data/raw/
 data/mirofish_seeds/
 data/*.duckdb*
+data/backups/
+data/staging_runs/
 data/market_info_cache.json

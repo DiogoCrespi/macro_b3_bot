@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+.secrets
+.venv*
+venv*
+__pycache__
+*.py[cod]
+.pytest_cache
+.ruff_cache
+data/*.duckdb*
+data/raw
+data/mirofish_seeds
+REFERENCES
+tests

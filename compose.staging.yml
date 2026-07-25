@@ -1,0 +1,54 @@
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: macro-b3-bot:${MACRO_B3_TAG:-staging}
+    profiles: ["job"]
+    entrypoint: ["python"]
+    command: ["/app/scripts/staging_worker.py"]
+    env_file:
+      - .env.staging
+    environment:
+      APP_ENV: staging
+      RESEARCH_MODE: "true"
+      ALLOW_BUY_SIGNALS: "false"
+      ALLOW_ORDER_EXECUTION: "false"
+      DATA_DIR: /app/data
+      MIROFISH_BASE_URL: http://mirofish:5001
+    volumes:
+      - macro_b3_data:/app/data
+    secrets:
+      - zep_api_key
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid
+    restart: "no"
+    depends_on:
+      mirofish:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import macro_b3_bot"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  mirofish:
+    image: ${MIROFISH_IMAGE:?Set MIROFISH_IMAGE to an immutable sidecar image}
+    expose:
+      - "5001"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5001/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  macro_b3_data:
+
+secrets:
+  zep_api_key:
+    file: .secrets/zep_api_key

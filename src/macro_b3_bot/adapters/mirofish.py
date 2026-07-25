@@ -66,9 +66,32 @@ class MiroFishClient:
         timeout_seconds: float = 600,
     ):
         self.client = httpx.Client(base_url=base_url.rstrip("/"), timeout=timeout_seconds)
+        self._consecutive_failures = 0
+        self._circuit_open_until = 0.0
+        self._circuit_failure_threshold = 3
+        self._circuit_cooldown_seconds = 30.0
         self.graph_prefix = graph_prefix.rstrip("/")
         self.simulation_prefix = simulation_prefix.rstrip("/")
         self.report_prefix = report_prefix.rstrip("/")
+
+    def _request(self, method: str, path: str, **kwargs: Any) -> httpx.Response:
+        """Perform an HTTP request with a fail-closed circuit breaker."""
+        if time.monotonic() < self._circuit_open_until:
+            raise RuntimeError("MIROFISH_CIRCUIT_OPEN")
+        try:
+            response = self.client.request(method, path, **kwargs)
+            if response.status_code >= 500:
+                self._consecutive_failures += 1
+            else:
+                self._consecutive_failures = 0
+            if self._consecutive_failures >= self._circuit_failure_threshold:
+                self._circuit_open_until = time.monotonic() + self._circuit_cooldown_seconds
+            return response
+        except httpx.HTTPError:
+            self._consecutive_failures += 1
+            if self._consecutive_failures >= self._circuit_failure_threshold:
+                self._circuit_open_until = time.monotonic() + self._circuit_cooldown_seconds
+            raise
 
     def healthcheck(self) -> bool:
         """Validates MiroFish HTTP service health.
@@ -78,7 +101,7 @@ class MiroFishClient:
         """
         for path in (f"{self.graph_prefix}/project/list", "/health"):
             try:
-                response = self.client.get(path)
+                response = self._request("GET", path)
                 if response.status_code == 200:
                     payload = response.json()
                     if isinstance(payload, (dict, list)):
@@ -103,7 +126,7 @@ class MiroFishClient:
                 handle = path.open("rb")
                 opened.append(handle)
                 multipart.append(("files", (path.name, handle, "application/octet-stream")))
-            response = self.client.post(
+            response = self._request("POST",
                 f"{self.graph_prefix}/ontology/generate",
                 files=multipart,
                 data={
@@ -135,7 +158,7 @@ class MiroFishClient:
         while (time.monotonic() - start_time) < timeout_seconds:
             attempts += 1
             try:
-                response = self.client.get(f"{self.graph_prefix}/project/{project_id}")
+                response = self._request("GET", f"{self.graph_prefix}/project/{project_id}")
                 if response.status_code == 200:
                     res = response.json()
                     data = res.get("data", res) if isinstance(res, dict) else res
@@ -156,7 +179,7 @@ class MiroFishClient:
         payload: dict[str, Any] = {"project_id": project_id}
         if graph_name:
             payload["graph_name"] = graph_name
-        response = self.client.post(f"{self.graph_prefix}/build", json=payload)
+        response = self._request("POST", f"{self.graph_prefix}/build", json=payload)
         response.raise_for_status()
         res = response.json()
         return res.get("data", res) if isinstance(res, dict) else res
@@ -176,7 +199,7 @@ class MiroFishClient:
             payload["graph_id"] = graph_id
         if config:
             payload.update(config)
-        response = self.client.post(f"{self.simulation_prefix}/create", json=payload)
+        response = self._request("POST", f"{self.simulation_prefix}/create", json=payload)
         response.raise_for_status()
         res = response.json()
         if isinstance(res, dict) and isinstance(res.get("data"), dict):
@@ -240,7 +263,7 @@ class MiroFishClient:
         while (time.monotonic() - start_time) < timeout_seconds:
             attempts += 1
             try:
-                response = self.client.get(f"{self.simulation_prefix}/{simulation_id}")
+                response = self._request("GET", f"{self.simulation_prefix}/{simulation_id}")
                 if response.status_code == 200:
                     res = response.json()
                     data = res.get("data", res) if isinstance(res, dict) else res
@@ -257,7 +280,7 @@ class MiroFishClient:
         return {"simulation_id": simulation_id, "last_status": last_status, "attempts": attempts}
 
     def prepare_simulation(self, simulation_id: str, *, use_llm_for_profiles: bool = True) -> dict[str, Any]:
-        response = self.client.post(
+        response = self._request("POST",
             f"{self.simulation_prefix}/prepare",
             json={"simulation_id": simulation_id, "use_llm_for_profiles": use_llm_for_profiles},
         )
@@ -275,7 +298,7 @@ class MiroFishClient:
     ) -> dict[str, Any]:
         start_time = time.monotonic()
         while (time.monotonic() - start_time) < timeout_seconds:
-            response = self.client.post(
+            response = self._request("POST",
                 f"{self.simulation_prefix}/prepare/status",
                 json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
             )
@@ -288,7 +311,7 @@ class MiroFishClient:
         return {"simulation_id": simulation_id, "status": "TIMEOUT_PREPARE"}
 
     def start_simulation(self, simulation_id: str, *, max_rounds: int = 5) -> dict[str, Any]:
-        response = self.client.post(
+        response = self._request("POST",
             f"{self.simulation_prefix}/start",
             json={"simulation_id": simulation_id, "platform": "parallel", "max_rounds": max_rounds},
         )
@@ -305,7 +328,7 @@ class MiroFishClient:
     ) -> dict[str, Any]:
         start_time = time.monotonic()
         while (time.monotonic() - start_time) < timeout_seconds:
-            response = self.client.get(f"{self.simulation_prefix}/{simulation_id}/run-status")
+            response = self._request("GET", f"{self.simulation_prefix}/{simulation_id}/run-status")
             response.raise_for_status()
             res = response.json()
             data = res.get("data", res) if isinstance(res, dict) else res
@@ -317,7 +340,7 @@ class MiroFishClient:
         return {"simulation_id": simulation_id, "runner_status": "TIMEOUT_RUN"}
 
     def generate_report(self, simulation_id: str) -> dict[str, Any]:
-        response = self.client.post(f"{self.report_prefix}/generate", json={"simulation_id": simulation_id})
+        response = self._request("POST", f"{self.report_prefix}/generate", json={"simulation_id": simulation_id})
         response.raise_for_status()
         res = response.json()
         return res.get("data", res) if isinstance(res, dict) else res
@@ -332,7 +355,7 @@ class MiroFishClient:
     ) -> dict[str, Any]:
         start_time = time.monotonic()
         while (time.monotonic() - start_time) < timeout_seconds:
-            response = self.client.post(
+            response = self._request("POST",
                 f"{self.report_prefix}/generate/status",
                 json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
             )
@@ -354,7 +377,7 @@ class MiroFishClient:
             params["project_id"] = project_id
         if simulation_id:
             params["simulation_id"] = simulation_id
-        response = self.client.get(f"{self.report_prefix}/list", params=params)
+        response = self._request("GET", f"{self.report_prefix}/list", params=params)
         response.raise_for_status()
         res = response.json()
         if isinstance(res, dict) and isinstance(res.get("data"), dict):

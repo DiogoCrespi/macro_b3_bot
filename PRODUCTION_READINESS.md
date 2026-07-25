@@ -3,7 +3,7 @@
 
 **Data da avaliação:** 25/07/2026
 **Estado avaliado:** commit `a3dc7e1`
-**Última suíte local:** 341 testes aprovados em 78,81 s
+**Última suíte local:** 342 testes aprovados em 84,91 s em Python 3.12
 
 ## Veredito
 
@@ -112,7 +112,7 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 **Status:** `CONCLUÍDA`
 **Objetivo:** garantir que qualquer execução possa ser reproduzida e auditada.
 
-- [x] Suíte local completa executada (`341 passed`).
+- [x] Suíte local completa executada (`342 passed` em Python 3.12).
 - [x] Ruff e `git diff --check` aprovados.
 - [x] Bytecodes rastreados removidos do Git.
 - [x] Fixar dependências Python 3.12 em `requirements-py312.lock` e versão em `.python-version`.
@@ -124,19 +124,26 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 
 ### Fase P1 — Staging operacional seguro
 
-**Status:** `PENDENTE`
+**Status:** `EM ANDAMENTO`
 **Objetivo:** executar o orquestrador e o sidecar como serviço controlado, sem ordens.
 
-- [ ] Containerizar orquestrador e MiroFish com versões imutáveis.
-- [ ] Criar configuração de staging distinta de `.env` de desenvolvimento.
-- [ ] Mover secrets para mecanismo externo e rotacionar a chave Zep exposta.
-- [ ] Implementar health checks, timeout, retry, circuit breaker e cancelamento.
-- [ ] Implementar scheduler com lock, idempotência e status por execução.
-- [ ] Definir volumes, retenção e backup do DuckDB/artefatos.
-- [ ] Testar restauração em ambiente limpo.
+- [x] Containerizar o orquestrador e declarar o sidecar no Compose.
+- [x] Criar configuração de staging distinta de `.env` de desenvolvimento.
+- [ ] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
+- [x] Declarar secrets externos via Compose; rotação da chave Zep ainda pendente.
+- [x] Implementar health checks, timeout, retry básico e circuit breaker.
+- [ ] Implementar cancelamento integral do workflow.
+- [x] Implementar wrapper de scheduler com lock, idempotência e status por execução.
+- [ ] Integrar o wrapper a um scheduler externo com comando e `run_id` point-in-time.
+- [x] Definir volume persistente e backup verificado do DuckDB.
+- [x] Testar cópia restaurável em ambiente temporário.
+- [x] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
 
-**Aceite:** duas execuções idempotentes, falha do sidecar recuperável, backup restaurado
-com checksums iguais e `BUY/ordens` bloqueados.
+**Evidência atual:** `docker build` aprovado, `docker compose config` aprovado, health
+check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
+`STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
+`restore_check=PASS`. O aceite final permanece bloqueado por digest do sidecar, integração
+do scheduler externo, cancelamento integral e rotação de secrets.
 
 ### Fase P2 — Observabilidade e governança
 
