@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `a3dc7e1`
+**Estado avaliado:** commit `0622505`
 **Última suíte local:** 342 testes aprovados em 84,91 s em Python 3.12
 
 ## Veredito
@@ -268,6 +268,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
+| 25/07/2026 | `0622505` | P1 | Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados | Digest do sidecar, scheduler externo, cancelamento e rotação de secrets |
 
 ## Backlog posterior
 
