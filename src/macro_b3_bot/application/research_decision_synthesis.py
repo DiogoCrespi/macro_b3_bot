@@ -53,6 +53,7 @@ class ResearchDecisionSynthesizer:
         historical_multiple_position: dict[str, Any] | None = None,
         price_implied_fundamentals: dict[str, Any] | None = None,
         security_mapping: dict[str, Any] | None = None,
+        hypotheses: list[dict[str, Any]] | None = None,
         execution_mode: str = "BLOCKED_MISSING_UPSTREAM_INPUT",
         input_ids: dict[str, Any] | None = None,
     ) -> ResearchDecisionSnapshot:
@@ -64,6 +65,7 @@ class ResearchDecisionSynthesizer:
         historical_multiple_position = historical_multiple_position or {}
         price_implied_fundamentals = price_implied_fundamentals or {}
         input_ids = input_ids or {}
+        hypotheses = hypotheses or []
 
         if isinstance(as_of_timestamp, datetime):
             if as_of_timestamp.tzinfo is None:
@@ -82,12 +84,33 @@ class ResearchDecisionSynthesizer:
         missing_inputs: list[str] = []
         invalidation_conditions: list[str] = []
 
+        # MiroFish hypotheses are opt-in inputs. When supplied, only a
+        # verified hypothesis with a complete causal/PIT binding may reach the
+        # WATCH/NO_ACTION synthesis. Unverified or partial hypotheses remain
+        # evidence-only and cannot improve a decision.
+        if hypotheses:
+            for hypothesis in hypotheses:
+                status = hypothesis.get("verification_status")
+                if status != "SUPPORTED":
+                    critical_blockers.append("UNVERIFIED_MIROFISH_HYPOTHESIS")
+                    invalidation_conditions.append("MiroFish hypothesis is not SUPPORTED")
+                if hypothesis.get("binding_status") != "BOUND":
+                    critical_blockers.append("HYPOTHESIS_BINDING_INVALID")
+                    invalidation_conditions.append("MiroFish hypothesis lacks complete causal binding")
+                if hypothesis.get("temporal_consistency_status") != "CONSISTENT":
+                    critical_blockers.append("HYPOTHESIS_TEMPORAL_INCONSISTENCY")
+                    invalidation_conditions.append("MiroFish hypothesis fails point-in-time consistency")
+                if hypothesis.get("contradiction_status") not in {None, "NO_CONTRADICTION_DETECTED"}:
+                    critical_blockers.append("HYPOTHESIS_CONTRADICTION")
+                    invalidation_conditions.append("MiroFish hypothesis has unresolved contradiction")
+
         # 1. Macro events & directional conflicts
         macro_event_ids = [
             str(e.get("macro_event_id") or e.get("event_id"))
             for e in macro_events
             if e.get("macro_event_id") or e.get("event_id")
         ]
+        input_ids.setdefault("hypothesis_ids", [str(h.get("hypothesis_id")) for h in hypotheses if h.get("hypothesis_id")])
         active_factors = list({str(e.get("factor")) for e in macro_events if e.get("factor")})
         
         factor_direction_sets: dict[str, set[int]] = {}
