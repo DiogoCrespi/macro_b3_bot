@@ -1074,7 +1074,7 @@ class DatabaseStore:
                 self.connection.execute(col_def)
             except Exception:
                 pass
-        for col in {
+        for col, kind in {
             "assessment_as_of": "TIMESTAMP",
             "price_as_of": "TIMESTAMP",
             "price_available_at": "TIMESTAMP",
@@ -1088,6 +1088,10 @@ class DatabaseStore:
             "share_document_version": "VARCHAR",
             "share_document_checksum": "VARCHAR",
             "share_section": "VARCHAR",
+            "isin": "VARCHAR",
+            "market_capitalization": "DOUBLE",
+            "enterprise_value": "DOUBLE",
+            "pe_observed": "DOUBLE",
         }.items():
             try:
                 self.connection.execute(
