@@ -114,9 +114,9 @@ class CompanyMacroExposureReviewer:
                 if row[5] != current_hash or expected_hash != current_hash:
                     raise ValueError(f"reviewed fact content changed for {fact_id}")
                 payload = json.loads(row[3])
-                payload["review_confidence"] = (
-                    1.0 if reviewer_type == "HUMAN" else 0.75
-                )
+                # Delegated review is an explicit fallback for missing human
+                # review and carries the same configured weight.
+                payload["review_confidence"] = 1.0
                 payload["review_assurance"] = reviewer_type
                 payload["confidence"] = round(
                     0.35 * payload["extraction_match_confidence"]

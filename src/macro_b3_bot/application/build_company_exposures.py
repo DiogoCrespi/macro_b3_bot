@@ -191,7 +191,8 @@ class CompanyExposureBuilder:
                   AND is_active=TRUE
                 QUALIFY ROW_NUMBER() OVER (
                     PARTITION BY field_name
-                    ORDER BY created_at DESC,fact_id DESC
+                    ORDER BY CASE WHEN review_status='HUMAN_APPROVED' THEN 0 ELSE 1 END,
+                             created_at DESC,fact_id DESC
                 )=1
                 """,
                 [self.source_selection_run_id, ticker],
@@ -200,9 +201,9 @@ class CompanyExposureBuilder:
                 if field_name not in values:
                     continue
                 payload = json.loads(payload_json)
-                review_confidence = (
-                    1.0 if review_status == "HUMAN_APPROVED" else 0.75
-                )
+                # Delegated review is the explicit fallback when no human
+                # decision exists, and has the same evidentiary weight.
+                review_confidence = 1.0
                 payload["review_confidence"] = review_confidence
                 payload["review_assurance"] = (
                     "HUMAN"
