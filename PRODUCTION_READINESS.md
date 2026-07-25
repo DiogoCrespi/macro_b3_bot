@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `0622505`
+**Estado avaliado:** alterações locais do P1 em validação
 **Última suíte local:** 342 testes aprovados em 84,91 s em Python 3.12
 
 ## Veredito
@@ -129,7 +129,7 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 
 - [x] Containerizar o orquestrador e declarar o sidecar no Compose.
 - [x] Criar configuração de staging distinta de `.env` de desenvolvimento.
-- [ ] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
+- [x] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
 - [x] Declarar secrets externos via Compose; rotação da chave Zep ainda pendente.
 - [x] Implementar health checks, timeout, retry básico e circuit breaker.
 - [ ] Implementar cancelamento integral do workflow.
@@ -139,11 +139,12 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 - [x] Testar cópia restaurável em ambiente temporário.
 - [x] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
 
-**Evidência atual:** `docker build` aprovado, `docker compose config` aprovado, health
+**Evidência atual:** `docker build` aprovado, imagem MiroFish local fixada por digest e
+proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
-`restore_check=PASS`. O aceite final permanece bloqueado por digest do sidecar, integração
-do scheduler externo, cancelamento integral e rotação de secrets.
+`restore_check=PASS`. O aceite final permanece bloqueado por digest publicado em registry,
+integração do scheduler externo, cancelamento integral e rotação de secrets.
 
 ### Fase P2 — Observabilidade e governança
 

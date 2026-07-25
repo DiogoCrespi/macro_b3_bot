@@ -6,8 +6,13 @@ import os
 import subprocess
 import sys
 
+from scripts.validate_staging_config import validate
+
 
 def main() -> None:
+    errors = validate()
+    if errors:
+        raise SystemExit("invalid staging configuration: " + "; ".join(errors))
     raw = os.environ.get("STAGING_COMMAND_JSON", "")
     run_id = os.environ.get("STAGING_RUN_ID", "")
     if not raw or not run_id:

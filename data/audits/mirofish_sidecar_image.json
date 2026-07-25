@@ -1,0 +1,14 @@
+{
+  "artifact_type": "STAGING_SIDECAR_IMAGE_PROVENANCE",
+  "source_repository": "C:/Nestjs/Advanced_Btc_Bot_TCC/Advanced_Btc_Bot/MiroFish",
+  "source_commit": "0be53e479aa4d03fe535e223057ee791e77e40e0",
+  "dockerfile_sha256": "acf36e3c8a13bd8a2a87ee68a9d52aadd569cc4755daab681b46aa5e9b85d85f",
+  "image_reference": "mirofish-local@sha256:3ef16407aab37eb4933c12fa8f00f6447f4475ce05eb370ef4a12f49f964618e",
+  "image_id": "sha256:3ef16407aab37eb4933c12fa8f00f6447f4475ce05eb370ef4a12f49f964618e",
+  "built_at": "2026-07-25T20:39:17.32280523Z",
+  "status": "LOCAL_STAGING_PIN",
+  "limitations": [
+    "The digest is immutable for this locally built image and is not yet published to a registry.",
+    "A registry digest and signed provenance are required before multi-host production deployment."
+  ]
+}
