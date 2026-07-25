@@ -173,6 +173,33 @@ def test_online_manifest_contains_structured_extraction_reference(tmp_path, monk
     assert Path(reference["extraction_path"]).exists()
 
 
+def test_invalid_narrative_excerpt_is_not_persisted(tmp_path, monkeypatch, mock_client) -> None:
+    monkeypatch.chdir(tmp_path)
+    mock_client.extract_structured_report.return_value = {
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Narrative report",
+        "scenarios": [{
+            "scenario_type": "BASE", "trigger": "Narrative report",
+            "report_excerpt": "translated text not present",
+        }],
+        "_extraction_metadata": {
+            "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+            "extraction_response_checksum": "rejected-response",
+        },
+    }
+    engine = MiroFishScenarioEngine(client=mock_client)
+    seed = ScenarioSeedPackage(seed_package_id="seed", as_of_timestamp="2026-07-24T00:00:00+00:00")
+
+    with pytest.raises(ValueError, match="INVALID_REPORT_EXCERPT"):
+        engine._parse_mirofish_report_to_hypotheses(
+            {"report_id": "report", "markdown_content": "Narrative report"},
+            "run",
+            seed,
+        )
+
+    assert not (tmp_path / "data/raw/mirofish/extractions/rejected-response.json").exists()
+
+
 def test_blocked_empty_pit_seed(mock_store, mock_client) -> None:
     cutoff = datetime.now(timezone.utc)
     engine = MiroFishScenarioEngine(client=mock_client, store=mock_store)

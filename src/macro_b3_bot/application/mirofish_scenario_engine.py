@@ -620,6 +620,10 @@ class MiroFishScenarioEngine:
             valid_report, validation_reason = MiroFishClient.validate_structured_report(extracted)
             if not valid_report:
                 return []
+            for scenario in extracted["scenarios"]:
+                excerpt = str(scenario.get("report_excerpt", ""))
+                if not excerpt or excerpt not in narrative:
+                    raise ValueError("STRUCTURED_EXTRACTION_INVALID_REPORT_EXCERPT")
             raw_report = {**raw_report, **extracted}
             extraction_checksum = extraction_meta.get("extraction_response_checksum")
             if extraction_checksum:
