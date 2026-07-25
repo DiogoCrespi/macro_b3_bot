@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `6e3fefa`
+**Estado avaliado:** commit `a3dc7e1`
 **Última suíte local:** 341 testes aprovados em 78,81 s
 
 ## Veredito
@@ -260,7 +260,7 @@ históricos suficientes.
 | Data | Commit | Fase | Resultado | Próximo bloqueio |
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
-| 25/07/2026 | `c45a2e5` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
+| 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
 
 ## Backlog posterior
 
