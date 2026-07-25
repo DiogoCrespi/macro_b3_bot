@@ -386,7 +386,10 @@ class MiroFishClient:
             "sector_effects/second_order_effects MUST be JSON arrays of strings "
             "(use [] when the report has no items). Derive every field only from the "
             "report; do not invent facts, actors, effects, or confidence. Use null "
-            "when confidence is not explicitly stated.\n\n"
+            "when confidence is not explicitly stated. report_excerpt is an evidence "
+            "anchor: copy a contiguous substring character-for-character from the "
+            "report, preserving the original Unicode language, punctuation and "
+            "whitespace; never translate, summarize or paraphrase it.\n\n"
             + report_text
         )
         response = httpx.post(

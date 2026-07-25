@@ -127,6 +127,52 @@ def test_narrative_report_extraction_is_persisted_and_linked(tmp_path, monkeypat
     assert engine._last_extraction_record["extraction_path"].endswith("response-checksum.json")
 
 
+def test_online_manifest_contains_structured_extraction_reference(tmp_path, monkeypatch, mock_client, mock_store) -> None:
+    monkeypatch.chdir(tmp_path)
+    cutoff = datetime(2026, 7, 24, tzinfo=timezone.utc)
+    mock_store.get_macro_releases_pit.return_value = [{
+        "release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45,
+        "available_at": cutoff.isoformat(),
+    }]
+    mock_store.get_evidence_claims_pit.return_value = [{"claim_id": "clm_101", "created_at": cutoff.isoformat()}]
+    mock_store.get_source_documents_pit.return_value = [{"document_id": "doc_101", "available_at": cutoff.isoformat()}]
+    narrative = "Inflation accelerates and retail faces pressure."
+    mock_client.poll_report.return_value = {"reports": [{
+        "report_id": "report_narrative",
+        "simulation_id": "test_sim_789",
+        "project_id": "test_proj_123",
+        "markdown_content": narrative,
+    }]}
+    mock_client.extract_structured_report.return_value = {
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": narrative,
+        "scenarios": [{
+            "scenario_type": "BASE", "trigger": "Inflation accelerates",
+            "actors": [], "actions": [], "macro_factors": ["INFLATION"],
+            "sector_effects": ["Retail faces pressure"], "second_order_effects": [],
+            "expected_horizon": "SHORT_TERM", "report_excerpt": narrative,
+            "confidence": None,
+        }],
+        "_extraction_metadata": {
+            "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+            "extraction_model": "test-model", "extraction_prompt_hash": "ph",
+            "extraction_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+            "raw_extraction_response": '{"scenarios":[{}]}',
+            "extraction_response_checksum": "manifest-response-checksum",
+        },
+    }
+    engine = MiroFishScenarioEngine(client=mock_client, store=mock_store)
+
+    _, run, scenario_set, hypotheses = engine.generate_scenarios_for_cutoff(cutoff_dt=cutoff)
+
+    assert run.status == "SUCCESS"
+    assert len(hypotheses) == 1
+    assert scenario_set.scenario_hypothesis_ids == [hypotheses[0].hypothesis_id]
+    reference = run.configuration["structured_extraction"]
+    assert reference["extraction_response_checksum"] == "manifest-response-checksum"
+    assert Path(reference["extraction_path"]).exists()
+
+
 def test_blocked_empty_pit_seed(mock_store, mock_client) -> None:
     cutoff = datetime.now(timezone.utc)
     engine = MiroFishScenarioEngine(client=mock_client, store=mock_store)
