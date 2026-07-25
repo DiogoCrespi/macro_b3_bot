@@ -1,9 +1,9 @@
 {
-  "sprint": "5A",
-  "methodology_version": "5A.2-mirofish-engine-v2",
+  "sprint": "5A.3",
+  "methodology_version": "5A.3-mirofish-engine-v3",
   "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
   "seed_package": {
-    "seed_package_id": "5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed",
+    "seed_package_id": "143db83f16a607470dc801dd47eae0a047bca5d97774629b9c0f5ca94e37d674",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
     "material_event_ids": [
       "rel_bcb_ipca_202607"
@@ -15,20 +15,14 @@
     "sector_state_ids": [
       "sec_retail_202607"
     ],
-    "known_actor_ids": [
-      "BCB",
-      "FED",
-      "MINISTRY_OF_FINANCE",
-      "B3_EXCHANGE",
-      "CVM"
-    ],
-    "causal_graph_version": "1.0.0",
+    "known_actor_ids": [],
+    "causal_graph_version": "NOT_EXPOSED",
     "source_document_ids": [
       "doc_cvm_itr_202607"
     ],
-    "prompt_template_version": "5A.2-mirofish-seed-v2",
-    "seed_file_path": "data\\mirofish_seeds\\5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed.md",
-    "seed_file_checksum": "db330e68940fb92ee070026d41e951f2624af5734d1519d0b79016620f1a6580",
+    "prompt_template_version": "5A.3-mirofish-seed-v3",
+    "seed_file_path": "data\\mirofish_seeds\\143db83f16a607470dc801dd47eae0a047bca5d97774629b9c0f5ca94e37d674.md",
+    "seed_file_checksum": "06f8c376fbde1043bd8a70c1d877153c1c1e8c12a8f09ea03b948a927258cc77",
     "mime_type": "text/markdown",
     "source_input_ids": [
       "rel_bcb_ipca_202607",
@@ -90,15 +84,15 @@
     }
   },
   "simulation_run": {
-    "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
-    "seed_package_id": "5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed",
-    "mirofish_project_id": "proj_f0671abef972",
-    "mirofish_graph_id": "proj_f0671abef972",
-    "mirofish_simulation_id": "sim_d1b2b8853e8d",
-    "requested_at": "2026-07-25T01:38:13.503486+00:00",
-    "completed_at": "2026-07-25T01:40:53.169217+00:00",
-    "service_version": "mirofish-v1.0-online",
-    "model_information": "qwen2.5:7b",
+    "simulation_run_id": "f2b3d716b5a84638fada422c426f0931dced28b360c12bcb7daaea86ca019665",
+    "seed_package_id": "143db83f16a607470dc801dd47eae0a047bca5d97774629b9c0f5ca94e37d674",
+    "mirofish_project_id": "proj_337ec50c70a3",
+    "mirofish_graph_id": "proj_337ec50c70a3",
+    "mirofish_simulation_id": "sim_0c533434ccc8",
+    "requested_at": "2026-07-25T01:56:09.116105+00:00",
+    "completed_at": "2026-07-25T01:58:19.497758+00:00",
+    "service_version": "NOT_EXPOSED_BY_SERVICE",
+    "model_information": "NOT_EXPOSED_BY_SERVICE",
     "configuration": {
       "loader_diagnostics": {
         "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
@@ -155,30 +149,29 @@
     },
     "random_seed": "NOT_EXPOSED_BY_SERVICE",
     "prompt_hash": "f6a29ae4d979dec9576dfbe7ded012417ed2f48e19bd7a4eadfa64061699403b",
-    "input_checksum": "db330e68940fb92ee070026d41e951f2624af5734d1519d0b79016620f1a6580",
-    "status": "SUCCESS",
+    "input_checksum": "06f8c376fbde1043bd8a70c1d877153c1c1e8c12a8f09ea03b948a927258cc77",
+    "status": "FAILED_UNSUPPORTED_REPORT_SCHEMA",
     "raw_report_ids": [
-      "rep_sim_d1b2b8853e8d"
+      "rep_sim_0c533434ccc8"
     ],
-    "raw_response_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
-    "methodology_version": "5A.2-mirofish-engine-v2"
+    "raw_response_checksum": "ee36df09442285702de105911e8eabc5850614cf623c7cfea17e8ead2b6e93a4",
+    "methodology_version": "5A.3-mirofish-engine-v3"
   },
   "scenario_set": {
-    "scenario_set_id": "75a9e7cdeecb6274a34371bdbb819dc650c96a7da20949d1549617d143bc4140",
+    "scenario_set_id": "b2000355d0f947aed571e39283fac60c9e1c9543c2a39f3dc549b71d7d9b34fe",
     "event_id": "rel_bcb_ipca_202607",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-    "scenario_hypothesis_ids": [
-      "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
-      "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b"
-    ],
-    "coverage_summary": "Online MiroFish simulation set completed for cutoff 2026-07-24T00:00:00+00:00.",
+    "scenario_hypothesis_ids": [],
+    "coverage_summary": "MiroFish report schema unsupported for cutoff 2026-07-24T00:00:00+00:00. Zero hypotheses generated.",
     "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
-    "missing_variables": [],
-    "methodology_version": "5A.2-scenario-set-v2",
-    "created_at": "2026-07-25T01:40:53.169501+00:00"
+    "missing_variables": [
+      "UNSUPPORTED_REPORT_SCHEMA"
+    ],
+    "methodology_version": "5A.3-scenario-set-v3",
+    "created_at": "2026-07-25T01:58:19.498150+00:00"
   },
-  "total_hypotheses": 2,
-  "unverified_count": 2,
+  "total_hypotheses": 0,
+  "unverified_count": 0,
   "safety_assurances": {
     "dcf_executed": 0,
     "price_targets": 0,

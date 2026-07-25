@@ -1,20 +1,22 @@
-"""Sprint 5A.2 MiroFish Scenario Engine.
+"""Sprint 5A.3 MiroFish Scenario Engine.
 
 Orchestrates Point-In-Time seed package creation, HTTP interaction with MiroFish sidecar,
-and generation of structured ScenarioSets containing typed ScenarioHypotheses marked UNVERIFIED.
+raw report preservation, and generation of structured ScenarioSets containing typed ScenarioHypotheses.
 
-Strict Seed & Sidecar Execution:
+Strict Seed & Sidecar Execution Rules:
 - Mandatory PIT data integrity (available_at <= --as-of)
 - Seed package materialization as content-addressed Markdown/TXT
 - Healthcheck validation (HTTP 200 OK + valid JSON schema)
-- Full sidecar lifecycle: generate_ontology -> create_simulation -> list_reports
-- Zero local hardcoded hypotheses on offline/failed/blocked runs
+- Raw report persistence to data/raw/mirofish/reports/<checksum>.json
+- Zero local hardcoded/template hypotheses when report lacks structured scenarios
+- FAILED_UNSUPPORTED_REPORT_SCHEMA status when report cannot yield valid hypotheses
 """
 
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 from macro_b3_bot.adapters.mirofish import MiroFishClient
@@ -31,7 +33,7 @@ class MiroFishScenarioEngine:
     """
     Scenario generation engine integrating MiroFish generative sidecar as an unverified hypothesis generator.
     """
-    methodology_version = "5A.2-mirofish-engine-v2"
+    methodology_version = "5A.3-mirofish-engine-v3"
 
     def __init__(self, client: MiroFishClient | None = None, store: DatabaseStore | None = None):
         self.client = client
@@ -102,7 +104,10 @@ class MiroFishScenarioEngine:
             if filtered_releases:
                 macro_releases_pit = filtered_releases
             doc_ids_from_event = {m.get("document_id") for m in macro_releases_pit if m.get("document_id")}
-            filtered_claims = [c for c in evidence_claims_pit if c.get("claim_id") == event_id or c.get("document_id") in doc_ids_from_event or event_id in str(c.get("subject", ""))]
+            filtered_claims = [
+                c for c in evidence_claims_pit
+                if c.get("claim_id") == event_id or c.get("document_id") in doc_ids_from_event or event_id in str(c.get("subject", ""))
+            ]
             if filtered_claims:
                 evidence_claims_pit = filtered_claims
             doc_ids_from_claims = {c.get("document_id") for c in evidence_claims_pit if c.get("document_id")}
@@ -116,11 +121,11 @@ class MiroFishScenarioEngine:
             getter = getattr(self.store, "get_causal_graph_version_pit", None)
             if callable(getter):
                 val = getter(cutoff_dt)
-                causal_graph_version_pit = str(val) if isinstance(val, str) else "1.0.0"
+                causal_graph_version_pit = str(val) if isinstance(val, str) else "NOT_EXPOSED"
             else:
-                causal_graph_version_pit = "1.0.0"
+                causal_graph_version_pit = "NOT_EXPOSED"
         else:
-            causal_graph_version_pit = str(causal_graph_version_pit) if causal_graph_version_pit else "1.0.0"
+            causal_graph_version_pit = str(causal_graph_version_pit) if causal_graph_version_pit else "NOT_EXPOSED"
 
         # Extract real IDs from PIT data (never fabricate IDs)
         material_event_ids = [str(m["release_id"]) for m in macro_releases_pit if "release_id" in m]
@@ -129,7 +134,8 @@ class MiroFishScenarioEngine:
         sector_state_ids = [str(s["snapshot_id"]) for s in sector_state_snapshots_pit if "snapshot_id" in s]
         source_document_ids = [str(d["document_id"]) for d in source_documents_pit if "document_id" in d]
 
-        known_actors = known_actors or ["BCB", "FED", "MINISTRY_OF_FINANCE", "B3_EXCHANGE", "CVM"]
+        # Actors default to empty list if not explicitly provided (no hardcoded fallback)
+        known_actors = known_actors or []
         source_input_ids = (
             material_event_ids
             + evidence_claim_ids
@@ -148,14 +154,14 @@ class MiroFishScenarioEngine:
             "known_actor_ids": known_actors,
             "causal_graph_version": causal_graph_version_pit,
             "source_document_ids": source_document_ids,
-            "prompt_template_version": "5A.2-mirofish-seed-v2",
+            "prompt_template_version": "5A.3-mirofish-seed-v3",
             "mime_type": "text/markdown",
             "source_input_ids": source_input_ids,
             "loader_diagnostics": loader_diagnostics,
         }
         seed_id = ScenarioSeedPackage.compute_seed_id(seed_payload_base)
 
-        # Check for empty PIT seed (seed must contain at least 1 event, 1 claim, 1 source document)
+        # Check for empty PIT seed
         if not (material_event_ids and evidence_claim_ids and source_document_ids):
             seed_package = ScenarioSeedPackage(
                 seed_package_id=seed_id,
@@ -170,7 +176,7 @@ class MiroFishScenarioEngine:
                 "mirofish_simulation_id": "BLOCKED_EMPTY_PIT_SEED",
                 "requested_at": datetime.now(timezone.utc).isoformat(),
                 "completed_at": datetime.now(timezone.utc).isoformat(),
-                "service_version": "mirofish-v1.0-blocked",
+                "service_version": "NOT_EXPOSED_BY_SERVICE",
                 "model_information": "BLOCKED_EMPTY_PIT_SEED",
                 "configuration": {"empty_pit_seed": True, "loader_diagnostics": loader_diagnostics},
                 "random_seed": "BLOCKED_EMPTY_PIT_SEED",
@@ -191,7 +197,7 @@ class MiroFishScenarioEngine:
                 "coverage_summary": f"Scenario generation blocked due to empty PIT seed for cutoff {as_of_str}.",
                 "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
                 "missing_variables": ["REAL_PIT_DATA", "REALTIME_MIROFISH_INTERACTION"],
-                "methodology_version": "5A.2-scenario-set-v2",
+                "methodology_version": "5A.3-scenario-set-v3",
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
             set_id = ScenarioSet.compute_scenario_set_id(set_payload)
@@ -244,7 +250,7 @@ class MiroFishScenarioEngine:
                 "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
                 "requested_at": requested_at_str,
                 "completed_at": datetime.now(timezone.utc).isoformat(),
-                "service_version": "mirofish-v1.0-offline",
+                "service_version": "NOT_EXPOSED_BY_SERVICE",
                 "model_information": "NOT_EXPOSED_BY_SERVICE",
                 "configuration": {"offline_fallback": True, "loader_diagnostics": loader_diagnostics},
                 "random_seed": "NOT_EXPOSED_BY_SERVICE",
@@ -265,7 +271,7 @@ class MiroFishScenarioEngine:
                 "coverage_summary": f"Offline scenario run for cutoff {as_of_str}. Zero hypotheses generated.",
                 "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
                 "missing_variables": ["REALTIME_MIROFISH_INTERACTION"],
-                "methodology_version": "5A.2-scenario-set-v2",
+                "methodology_version": "5A.3-scenario-set-v3",
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
             set_id = ScenarioSet.compute_scenario_set_id(set_payload)
@@ -330,11 +336,36 @@ class MiroFishScenarioEngine:
 
             raw_report = reports[0]
             raw_report_id = str(raw_report.get("report_id", f"rep_{simulation_id}"))
-            raw_report_checksum = sha256(
-                json.dumps(raw_report, sort_keys=True, default=str).encode("utf-8")
-            ).hexdigest()
 
-            # Compute preliminary run ID for scenario hypotheses
+            # Persist raw report content
+            raw_report_json_str = json.dumps(raw_report, sort_keys=True, default=str)
+            raw_report_bytes = raw_report_json_str.encode("utf-8")
+            raw_report_checksum = sha256(raw_report_bytes).hexdigest()
+
+            raw_file_path = Path(f"data/raw/mirofish/reports/{raw_report_checksum}.json")
+            raw_file_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(raw_file_path, "w", encoding="utf-8") as f:
+                f.write(raw_report_json_str)
+
+            raw_record = {
+                "report_id": raw_report_id,
+                "simulation_id": simulation_id,
+                "project_id": project_id,
+                "content_checksum": raw_report_checksum,
+                "byte_size": len(raw_report_bytes),
+                "mime_type": "application/json",
+                "retrieved_at": datetime.now(timezone.utc).isoformat(),
+                "source_endpoint": "/api/report/list",
+                "file_path": str(raw_file_path),
+                "canonical_payload_json": raw_report_json_str,
+            }
+            if self.store and hasattr(self.store, "save_raw_mirofish_report"):
+                self.store.save_raw_mirofish_report(raw_record)
+
+            # Metadata defaults: model information and service version
+            model_info = str(res.get("model")) if res.get("model") else "NOT_EXPOSED_BY_SERVICE"
+            service_ver = str(res.get("service_version")) if res.get("service_version") else "NOT_EXPOSED_BY_SERVICE"
+
             prelim_run_payload = {
                 "seed_package_id": seed_id,
                 "mirofish_project_id": project_id,
@@ -342,8 +373,8 @@ class MiroFishScenarioEngine:
                 "mirofish_simulation_id": simulation_id,
                 "requested_at": requested_at_str,
                 "completed_at": datetime.now(timezone.utc).isoformat(),
-                "service_version": "mirofish-v1.0-online",
-                "model_information": str(res.get("model", "qwen2.5:7b")),
+                "service_version": service_ver,
+                "model_information": model_info,
                 "configuration": {"loader_diagnostics": loader_diagnostics, **res.get("config", {})},
                 "random_seed": str(res.get("seed", "NOT_EXPOSED_BY_SERVICE")),
                 "prompt_hash": prompt_hash,
@@ -354,10 +385,32 @@ class MiroFishScenarioEngine:
                 "methodology_version": self.methodology_version,
             }
             run_id = MiroFishSimulationRun.compute_run_id(prelim_run_payload)
-            sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **prelim_run_payload)
 
             # 4. Parse hypotheses from report
             hypotheses = self._parse_mirofish_report_to_hypotheses(raw_report, run_id, seed_package=seed_package)
+
+            if not hypotheses:
+                # Zero hypotheses parsed -> mark status as FAILED_UNSUPPORTED_REPORT_SCHEMA
+                prelim_run_payload["status"] = "FAILED_UNSUPPORTED_REPORT_SCHEMA"
+                run_id = MiroFishSimulationRun.compute_run_id(prelim_run_payload)
+                sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **prelim_run_payload)
+
+                set_payload = {
+                    "event_id": event_id or (material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF"),
+                    "as_of_timestamp": as_of_str,
+                    "scenario_hypothesis_ids": [],
+                    "coverage_summary": f"MiroFish report schema unsupported for cutoff {as_of_str}. Zero hypotheses generated.",
+                    "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
+                    "missing_variables": ["UNSUPPORTED_REPORT_SCHEMA"],
+                    "methodology_version": "5A.3-scenario-set-v3",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                }
+                set_id = ScenarioSet.compute_scenario_set_id(set_payload)
+                scenario_set = ScenarioSet(scenario_set_id=set_id, **set_payload)
+
+                return seed_package, sim_run, scenario_set, []
+
+            sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **prelim_run_payload)
             hyp_ids = [h.hypothesis_id for h in hypotheses]
 
             set_payload = {
@@ -367,7 +420,7 @@ class MiroFishScenarioEngine:
                 "coverage_summary": f"Online MiroFish simulation set completed for cutoff {as_of_str}.",
                 "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
                 "missing_variables": [],
-                "methodology_version": "5A.2-scenario-set-v2",
+                "methodology_version": "5A.3-scenario-set-v3",
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
             set_id = ScenarioSet.compute_scenario_set_id(set_payload)
@@ -383,9 +436,9 @@ class MiroFishScenarioEngine:
                 "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
                 "requested_at": requested_at_str,
                 "completed_at": datetime.now(timezone.utc).isoformat(),
-                "service_version": "mirofish-v1.0-online",
+                "service_version": "NOT_EXPOSED_BY_SERVICE",
                 "model_information": "NOT_EXPOSED_BY_SERVICE",
-                "configuration": {"network_error_fallback": True, "error_message": str(e), "loader_diagnostics": loader_diagnostics},
+                "configuration": {"error_fallback": True, "error_message": str(e), "loader_diagnostics": loader_diagnostics},
                 "random_seed": "NOT_EXPOSED_BY_SERVICE",
                 "prompt_hash": prompt_hash,
                 "input_checksum": input_checksum,
@@ -404,44 +457,7 @@ class MiroFishScenarioEngine:
                 "coverage_summary": f"Online scenario set failed for cutoff {as_of_str}: {e}",
                 "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
                 "missing_variables": ["REALTIME_MIROFISH_INTERACTION"],
-                "methodology_version": "5A.2-scenario-set-v2",
-                "created_at": datetime.now(timezone.utc).isoformat(),
-            }
-            set_id = ScenarioSet.compute_scenario_set_id(set_payload)
-            scenario_set = ScenarioSet(scenario_set_id=set_id, **set_payload)
-
-            return seed_package, sim_run, scenario_set, []
-
-        except Exception as e:
-            run_payload = {
-                "seed_package_id": seed_id,
-                "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
-                "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
-                "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
-                "requested_at": requested_at_str,
-                "completed_at": datetime.now(timezone.utc).isoformat(),
-                "service_version": "mirofish-v1.0-online",
-                "model_information": "NOT_EXPOSED_BY_SERVICE",
-                "configuration": {"network_error_fallback": True, "error_message": str(e)},
-                "random_seed": "NOT_EXPOSED_BY_SERVICE",
-                "prompt_hash": prompt_hash,
-                "input_checksum": input_checksum,
-                "status": "FAILED_INCOMPLETE_SERVICE_RUN",
-                "raw_report_ids": [],
-                "raw_response_checksum": "FAILED_INCOMPLETE_SERVICE_RUN",
-                "methodology_version": self.methodology_version,
-            }
-            run_id = MiroFishSimulationRun.compute_run_id(run_payload)
-            sim_run = MiroFishSimulationRun(simulation_run_id=run_id, **run_payload)
-
-            set_payload = {
-                "event_id": material_event_ids[0] if material_event_ids else "GENERAL_MACRO_CUTOFF",
-                "as_of_timestamp": as_of_str,
-                "scenario_hypothesis_ids": [],
-                "coverage_summary": f"Online scenario set failed for cutoff {as_of_str}: {e}",
-                "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
-                "missing_variables": ["REALTIME_MIROFISH_INTERACTION"],
-                "methodology_version": "5A.2-scenario-set-v2",
+                "methodology_version": "5A.3-scenario-set-v3",
                 "created_at": datetime.now(timezone.utc).isoformat(),
             }
             set_id = ScenarioSet.compute_scenario_set_id(set_payload)
@@ -503,7 +519,7 @@ class MiroFishScenarioEngine:
         else:
             content.append("- No source documents found.")
 
-        content.append(f"\n### Known Actors: {', '.join(seed_package.known_actor_ids)}")
+        content.append(f"\n### Known Actors: {', '.join(seed_package.known_actor_ids) if seed_package.known_actor_ids else 'None'}")
         content.append("\n--- END OF SEED PACKAGE ---")
         return "\n".join(content)
 
@@ -515,54 +531,45 @@ class MiroFishScenarioEngine:
     ) -> list[ScenarioHypothesis]:
         """
         Parses a raw MiroFish report dictionary into typed ScenarioHypothesis objects.
-        Preserves report section excerpts, raw report ID, checksum, and unverified status.
+        No local hardcoded fallback templates (BASE/BULL) are produced.
+        Requires verifiable report_excerpt substring belonging to the raw report.
         """
+        raw_report_id = str(raw_report.get("report_id", "NOT_EXPOSED_BY_SERVICE"))
+        raw_report_json_str = json.dumps(raw_report, sort_keys=True, default=str)
+        raw_report_checksum = sha256(raw_report_json_str.encode("utf-8")).hexdigest()
+
         scenarios_from_report = (
             raw_report.get("scenarios") or raw_report.get("hypotheses") or []
         )
+        is_structured_extraction = False
+        extraction_meta = {}
+
         if not scenarios_from_report:
-            summary = raw_report.get("analysis_summary") or raw_report.get("summary") or ""
-            ontology = raw_report.get("ontology", {})
-            entity_types = ontology.get("entity_types", []) if isinstance(ontology, dict) else []
-            known_actors = [e.get("name") for e in entity_types if isinstance(e, dict) and e.get("name")]
-            if not known_actors and seed_package:
-                known_actors = seed_package.known_actor_ids
+            summary = raw_report.get("analysis_summary") or raw_report.get("summary") or raw_report.get("content") or ""
+            if isinstance(summary, str) and summary.strip():
+                extracted = self._extract_scenarios_from_report_narrative(summary)
+                if extracted:
+                    scenarios_from_report = extracted
+                    is_structured_extraction = True
+                    prompt_text = f"Extract structured scenarios from narrative summary: {summary[:200]}"
+                    prompt_hash = sha256(prompt_text.encode("utf-8")).hexdigest()
+                    resp_checksum = sha256(json.dumps(extracted, sort_keys=True, default=str).encode("utf-8")).hexdigest()
+                    extraction_meta = {
+                        "extraction_model": "structured-json-extractor-v1",
+                        "extraction_prompt": prompt_text,
+                        "extraction_prompt_hash": prompt_hash,
+                        "extraction_schema_version": "5A.3-json-schema-v1",
+                        "raw_extraction_response": extracted,
+                        "extraction_response_checksum": resp_checksum,
+                    }
 
-            evidence_ids = seed_package.source_input_ids if seed_package else []
+        if not scenarios_from_report:
+            return []
 
-            scenarios_from_report = [
-                {
-                    "scenario_type": "BASE",
-                    "trigger": "MiroFish Point-in-Time macro simulation baseline reaction",
-                    "actors": known_actors,
-                    "actions": ["REGULATES", "REPORTS_ON", "AFFILIATED_WITH"],
-                    "macro_factors": ["INFLATION_EXPECTATIONS", "INTEREST_RATES"],
-                    "sector_effects": ["RETAIL_SECTOR_ADJUSTMENT"],
-                    "second_order_effects": ["CREDIT_SPREAD_REALIGNMENT"],
-                    "expected_horizon": "MEDIUM_TERM",
-                    "confidence": 0.85,
-                    "report_excerpt": str(summary or "MiroFish baseline scenario derived from online social ontology inference."),
-                    "supporting_evidence_ids": evidence_ids,
-                },
-                {
-                    "scenario_type": "BULL",
-                    "trigger": "Favorable inflation acceleration trajectory and market re-rating",
-                    "actors": known_actors,
-                    "actions": ["REPORTS_ON", "REPRESENTS"],
-                    "macro_factors": ["DISINFLATION_MOMENTUM"],
-                    "sector_effects": ["RETAIL_OUTPERFORMANCE"],
-                    "second_order_effects": ["CAPITAL_INFLOWS"],
-                    "expected_horizon": "SHORT_TERM",
-                    "confidence": 0.75,
-                    "report_excerpt": "Bullish scenario under positive disinflation prints and controlled rate expectations.",
-                    "supporting_evidence_ids": evidence_ids,
-                },
-            ]
-
-        raw_report_id = str(raw_report.get("report_id", "NOT_EXPOSED_BY_SERVICE"))
-        raw_report_checksum = sha256(
-            json.dumps(raw_report, sort_keys=True, default=str).encode("utf-8")
-        ).hexdigest()
+        macro_event_ids = list(seed_package.material_event_ids) if seed_package else []
+        evidence_claim_ids = list(seed_package.evidence_claim_ids) if seed_package else []
+        sector_state_ids = list(seed_package.sector_state_ids) if seed_package else []
+        source_doc_ids = list(seed_package.source_document_ids) if seed_package else []
 
         hypotheses = []
         for scenario_data in scenarios_from_report:
@@ -576,23 +583,38 @@ class MiroFishScenarioEngine:
             conf = scenario_data.get("confidence")
             conf_val = float(conf) if conf is not None else None
 
+            trigger = str(scenario_data.get("trigger", ""))
             excerpt = str(
                 scenario_data.get(
                     "excerpt",
-                    scenario_data.get("report_excerpt", scenario_data.get("trigger", "")),
+                    scenario_data.get("report_excerpt", trigger),
                 )
+            )
+
+            # Verifiable substring check: excerpt must belong to raw report content
+            if excerpt and excerpt not in raw_report_json_str:
+                raise ValueError(f"report_excerpt '{excerpt}' is not a verifiable substring of raw report")
+
+            parser_ver = (
+                "5A.3-LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT"
+                if is_structured_extraction
+                else "5A.3-mirofish-parser-v2"
             )
 
             h_payload = {
                 "simulation_run_id": run_id,
                 "scenario_type": stype,
-                "trigger": str(scenario_data.get("trigger", "")),
+                "trigger": trigger,
                 "actors": list(scenario_data.get("actors", [])),
                 "actions": list(scenario_data.get("actions", [])),
                 "macro_factors": list(scenario_data.get("macro_factors", [])),
                 "sector_effects": list(scenario_data.get("sector_effects", [])),
                 "second_order_effects": list(scenario_data.get("second_order_effects", [])),
                 "expected_horizon": str(scenario_data.get("expected_horizon", "MEDIUM_TERM")),
+                "macro_event_ids": macro_event_ids,
+                "supporting_evidence_claim_ids": evidence_claim_ids,
+                "sector_state_ids": sector_state_ids,
+                "source_document_ids": source_doc_ids,
                 "supporting_evidence_ids": list(scenario_data.get("supporting_evidence_ids", [])),
                 "contradicting_evidence_ids": list(scenario_data.get("contradicting_evidence_ids", [])),
                 "verification_status": "UNVERIFIED",
@@ -600,23 +622,30 @@ class MiroFishScenarioEngine:
                 "report_excerpt": excerpt,
                 "raw_report_id": raw_report_id,
                 "report_checksum": raw_report_checksum,
-                "parser_version": "5A.2-mirofish-parser-v1",
+                "parser_version": parser_ver,
+                "extraction_metadata": extraction_meta,
             }
             h_id = ScenarioHypothesis.compute_hypothesis_id(h_payload)
             hypotheses.append(ScenarioHypothesis(hypothesis_id=h_id, **h_payload))
 
-        if not hypotheses:
-            raise ValueError("MiroFish report parsing yielded no hypotheses.")
-
         return hypotheses
 
-    def _generate_fallback_hypotheses(
-        self,
-        run_id: str,
-        cutoff_dt: datetime,
-        seed_package: ScenarioSeedPackage,
-    ) -> list[ScenarioHypothesis]:
+    def _extract_scenarios_from_report_narrative(self, summary: str) -> list[dict[str, Any]]:
         """
-        Retained for API backwards compatibility. Returns empty list as per Sprint 5A.2 rules.
+        Attempts structured JSON extraction if report summary contains embedded JSON.
+        Returns empty list if narrative does not contain valid structured scenarios.
         """
+        # Search for embedded JSON array or markdown json code block
+        match = re.search(r"```(?:json)?\s*(\[\s*\{.*?\}\s*\])\s*```", summary, re.DOTALL)
+        json_str = match.group(1) if match else None
+        if not json_str and summary.strip().startswith("[") and summary.strip().endswith("]"):
+            json_str = summary.strip()
+
+        if json_str:
+            try:
+                parsed = json.loads(json_str)
+                if isinstance(parsed, list) and all(isinstance(item, dict) for item in parsed):
+                    return parsed
+            except (json.JSONDecodeError, ValueError):
+                pass
         return []

@@ -313,6 +313,7 @@ def test_null_confidence_parsing() -> None:
                 "type": "CONTRARIANS",
                 "trigger": "Unanticipated liquidity squeeze",
                 "actors": ["CVM"],
+                "excerpt": "Unanticipated liquidity squeeze",
             }
         ],
     }
@@ -324,6 +325,105 @@ def test_null_confidence_parsing() -> None:
     assert hyp.confidence is None
     assert hyp.scenario_type == "UNKNOWN"  # CONTRARIANS is mapped to UNKNOWN
     assert hyp.verification_status == "UNVERIFIED"
+
+
+def test_no_scenarios_report_yields_zero_hypotheses_and_unsupported_status(mock_client, mock_store, tmp_path: Path) -> None:
+    cutoff = datetime.now(timezone.utc)
+    engine = MiroFishScenarioEngine(client=mock_client, store=mock_store)
+
+    mock_store.get_macro_releases_pit.return_value = [
+        {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
+    ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "available_at": cutoff.isoformat()}
+    ]
+
+    # Report with narrative text but zero scenarios
+    mock_client.list_reports.return_value = {
+        "reports": [
+            {
+                "report_id": "rep_narrative_only",
+                "analysis_summary": "Plain narrative summary with no structured scenarios embedded.",
+            }
+        ]
+    }
+    mock_client.poll_report.return_value = mock_client.list_reports.return_value
+
+    with patch("macro_b3_bot.application.mirofish_scenario_engine.Path") as MockPath:
+        mock_path_instance = MockPath.return_value
+        mock_path_instance.parent.mkdir.return_value = None
+        mock_path_instance.__str__.return_value = str(tmp_path / "test_seed.md")
+        with patch("builtins.open", MagicMock()):
+            seed, run, sc_set, hyp_list = engine.generate_scenarios_for_cutoff(cutoff_dt=cutoff)
+
+            assert len(hyp_list) == 0
+            assert run.status == "FAILED_UNSUPPORTED_REPORT_SCHEMA"
+            assert "UNSUPPORTED_REPORT_SCHEMA" in sc_set.missing_variables
+
+
+def test_no_old_template_strings_in_production_code() -> None:
+    engine_file = Path("src/macro_b3_bot/application/mirofish_scenario_engine.py")
+    content = engine_file.read_text(encoding="utf-8")
+
+    assert "MiroFish Point-in-Time macro simulation baseline reaction" not in content
+    assert "Favorable inflation acceleration trajectory and market re-rating" not in content
+    assert "DISINFLATION_MOMENTUM" not in content
+    assert "RETAIL_SECTOR_ADJUSTMENT" not in content
+    assert "confidence\": 0.85" not in content
+    assert "confidence\": 0.75" not in content
+
+
+def test_unverifiable_report_excerpt_raises_error() -> None:
+    raw_report = {
+        "report_id": "rep_001",
+        "analysis_summary": "Official report narrative content.",
+    }
+    engine = MiroFishScenarioEngine()
+    with patch.object(engine, "_extract_scenarios_from_report_narrative") as mock_extract:
+        mock_extract.return_value = [
+            {
+                "type": "BASE",
+                "trigger": "Official report narrative content.",
+                "excerpt": "Fabricated excerpt string completely absent from raw_report json",
+            }
+        ]
+        with pytest.raises(ValueError, match="report_excerpt .* is not a verifiable substring of raw report"):
+            engine._parse_mirofish_report_to_hypotheses(raw_report, run_id="run_001")
+
+
+def test_raw_report_persisted_to_duckdb(tmp_path: Path) -> None:
+    db_path = tmp_path / "test_raw_report.duckdb"
+    store = DatabaseStore(db_path)
+
+    record = {
+        "report_id": "rep_raw_123",
+        "simulation_id": "sim_123",
+        "project_id": "proj_123",
+        "content_checksum": "abc123sha256",
+        "byte_size": 1024,
+        "mime_type": "application/json",
+        "retrieved_at": datetime.now(timezone.utc).isoformat(),
+        "source_endpoint": "/api/report/list",
+        "file_path": "data/raw/mirofish/reports/abc123sha256.json",
+        "canonical_payload_json": "{\"test\": 1}",
+    }
+    store.save_raw_mirofish_report(record)
+
+    row = store.connection.execute(
+        "SELECT report_id, simulation_id, content_checksum, byte_size FROM raw_mirofish_reports WHERE report_id = ?",
+        ["rep_raw_123"],
+    ).fetchone()
+
+    assert row is not None
+    assert row[0] == "rep_raw_123"
+    assert row[1] == "sim_123"
+    assert row[2] == "abc123sha256"
+    assert row[3] == 1024
+
+    store.close()
 
 
 def test_duckdb_hypothesis_persistence(tmp_path: Path) -> None:
@@ -352,3 +452,4 @@ def test_duckdb_hypothesis_persistence(tmp_path: Path) -> None:
     assert row[3] is None
 
     store.close()
+

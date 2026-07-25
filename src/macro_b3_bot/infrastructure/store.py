@@ -302,6 +302,21 @@ class DatabaseStore:
                 PRIMARY KEY (document_id, document_checksum)
             );
         """)
+        # Raw MiroFish Reports
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS raw_mirofish_reports (
+                report_id VARCHAR PRIMARY KEY,
+                simulation_id VARCHAR,
+                project_id VARCHAR,
+                content_checksum VARCHAR NOT NULL,
+                byte_size BIGINT NOT NULL,
+                mime_type VARCHAR NOT NULL,
+                retrieved_at TIMESTAMP NOT NULL,
+                source_endpoint VARCHAR NOT NULL,
+                file_path VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL
+            );
+        """)
         # Extracted Documents
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS extracted_documents (
@@ -3053,13 +3068,53 @@ class DatabaseStore:
             [
                 hyp_id,
                 hypothesis["simulation_run_id"],
-                hypothesis.get("scenario_type", "BASE"),
+                hypothesis.get("scenario_type", "UNKNOWN"),
                 hypothesis.get("verification_status", "UNVERIFIED"),
                 conf_val,
                 json.dumps(hypothesis, default=str),
             ],
         )
 
+    def save_raw_mirofish_report(self, report_record: dict[str, Any]) -> None:
+        """Persists raw MiroFish report metadata into DuckDB idempotently."""
+        report_id = report_record["report_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM raw_mirofish_reports WHERE report_id = ?",
+            [report_id]
+        ).fetchone()
+        if existing:
+            return
+
+        retrieved_at_val = report_record.get("retrieved_at")
+        if isinstance(retrieved_at_val, str):
+            retrieved_ts = datetime.fromisoformat(retrieved_at_val.replace("Z", "+00:00"))
+        elif isinstance(retrieved_at_val, datetime):
+            retrieved_ts = retrieved_at_val
+        else:
+            retrieved_ts = datetime.now(timezone.utc)
+
+        self.connection.execute(
+            """
+            INSERT INTO raw_mirofish_reports
+            (report_id, simulation_id, project_id, content_checksum, byte_size,
+             mime_type, retrieved_at, source_endpoint, file_path, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                report_id,
+                report_record.get("simulation_id", ""),
+                report_record.get("project_id", ""),
+                report_record["content_checksum"],
+                int(report_record["byte_size"]),
+                report_record.get("mime_type", "application/json"),
+                retrieved_ts,
+                report_record.get("source_endpoint", "/api/report/list"),
+                report_record.get("file_path", ""),
+                report_record.get("canonical_payload_json", "{}"),
+            ],
+        )
+
     def close(self) -> None:
         self.connection.close()
+
 

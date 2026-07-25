@@ -112,7 +112,7 @@ def main() -> None:
     # 3. mirofish_5a_audit.json
     audit_file = audits_dir / "mirofish_5a_audit.json"
     audit_payload = {
-        "sprint": "5A",
+        "sprint": "5A.3",
         "methodology_version": engine.methodology_version,
         "cutoff_timestamp": as_of_dt.isoformat(),
         "seed_package": seed_pkg.model_dump(mode="json"),

@@ -2,112 +2,18 @@
   "total_scenario_sets": 1,
   "scenario_sets": [
     {
-      "scenario_set_id": "75a9e7cdeecb6274a34371bdbb819dc650c96a7da20949d1549617d143bc4140",
+      "scenario_set_id": "b2000355d0f947aed571e39283fac60c9e1c9543c2a39f3dc549b71d7d9b34fe",
       "event_id": "rel_bcb_ipca_202607",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "scenario_hypothesis_ids": [
-        "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
-        "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b"
-      ],
-      "coverage_summary": "Online MiroFish simulation set completed for cutoff 2026-07-24T00:00:00+00:00.",
+      "scenario_hypothesis_ids": [],
+      "coverage_summary": "MiroFish report schema unsupported for cutoff 2026-07-24T00:00:00+00:00. Zero hypotheses generated.",
       "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
-      "missing_variables": [],
-      "methodology_version": "5A.2-scenario-set-v2",
-      "created_at": "2026-07-25T01:40:53.169501+00:00"
+      "missing_variables": [
+        "UNSUPPORTED_REPORT_SCHEMA"
+      ],
+      "methodology_version": "5A.3-scenario-set-v3",
+      "created_at": "2026-07-25T01:58:19.498150+00:00"
     }
   ],
-  "hypotheses": [
-    {
-      "hypothesis_id": "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
-      "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
-      "scenario_type": "BASE",
-      "trigger": "MiroFish Point-in-Time macro simulation baseline reaction",
-      "actors": [
-        "BankCentralBank",
-        "FinancialRegulator",
-        "GovernmentDepartment",
-        "StockExchange",
-        "InflationMonitor",
-        "RetailIndustry",
-        "Person",
-        "Organization",
-        "Journalist",
-        "Expert"
-      ],
-      "actions": [
-        "REGULATES",
-        "REPORTS_ON",
-        "AFFILIATED_WITH"
-      ],
-      "macro_factors": [
-        "INFLATION_EXPECTATIONS",
-        "INTEREST_RATES"
-      ],
-      "sector_effects": [
-        "RETAIL_SECTOR_ADJUSTMENT"
-      ],
-      "second_order_effects": [
-        "CREDIT_SPREAD_REALIGNMENT"
-      ],
-      "expected_horizon": "MEDIUM_TERM",
-      "supporting_evidence_ids": [
-        "rel_bcb_ipca_202607",
-        "claim_ipca_acceleration_001",
-        "sec_retail_202607",
-        "doc_cvm_itr_202607"
-      ],
-      "contradicting_evidence_ids": [],
-      "verification_status": "UNVERIFIED",
-      "confidence": 0.85,
-      "report_excerpt": "根据给定的文本内容，设计了10个实体类型以模拟社交媒体上的舆论事件。这些实体涵盖了中央银行、金融监管机构、政府部门、证券交易所等具体类型的组织以及个人和专家角色，并定义了报道、监管、工作于等关系类型来反映社媒互动中的真实联系。",
-      "raw_report_id": "rep_sim_d1b2b8853e8d",
-      "report_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
-      "parser_version": "5A.2-mirofish-parser-v1"
-    },
-    {
-      "hypothesis_id": "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b",
-      "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
-      "scenario_type": "BULL",
-      "trigger": "Favorable inflation acceleration trajectory and market re-rating",
-      "actors": [
-        "BankCentralBank",
-        "FinancialRegulator",
-        "GovernmentDepartment",
-        "StockExchange",
-        "InflationMonitor",
-        "RetailIndustry",
-        "Person",
-        "Organization",
-        "Journalist",
-        "Expert"
-      ],
-      "actions": [
-        "REPORTS_ON",
-        "REPRESENTS"
-      ],
-      "macro_factors": [
-        "DISINFLATION_MOMENTUM"
-      ],
-      "sector_effects": [
-        "RETAIL_OUTPERFORMANCE"
-      ],
-      "second_order_effects": [
-        "CAPITAL_INFLOWS"
-      ],
-      "expected_horizon": "SHORT_TERM",
-      "supporting_evidence_ids": [
-        "rel_bcb_ipca_202607",
-        "claim_ipca_acceleration_001",
-        "sec_retail_202607",
-        "doc_cvm_itr_202607"
-      ],
-      "contradicting_evidence_ids": [],
-      "verification_status": "UNVERIFIED",
-      "confidence": 0.75,
-      "report_excerpt": "Bullish scenario under positive disinflation prints and controlled rate expectations.",
-      "raw_report_id": "rep_sim_d1b2b8853e8d",
-      "report_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
-      "parser_version": "5A.2-mirofish-parser-v1"
-    }
-  ]
+  "hypotheses": []
 }
