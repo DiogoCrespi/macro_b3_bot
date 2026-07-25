@@ -220,5 +220,29 @@
     "source_report_checksum": "be2a620b13c80d7680143028f6498c767b41a09aaf34954ddade3c2014a35670",
     "source_excerpt_hash": "bc058efe2cf7106f5f7e72d3ee42795a28f3a4be4365bdd723888e6469c719f1",
     "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY"
+  },
+  "sprint_5b_binding": {
+    "as_of_timestamp": "2026-07-24T00:00:00+00:00",
+    "results": [
+      {
+        "hypothesis_id": "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733",
+        "macro_event_ids": [
+          "rel_bcb_ipca_202607"
+        ],
+        "sector_state_ids": [
+          "sec_retail_202607"
+        ],
+        "supporting_evidence_claim_ids": [
+          "claim_ipca_acceleration_001"
+        ],
+        "causal_path_ids": [],
+        "causal_edge_ids": [],
+        "contradiction_ids": [],
+        "binding_status": "PARTIAL_MISSING_CAUSAL_PATH",
+        "temporal_consistency_status": "CONSISTENT",
+        "contradiction_status": "SECTOR_CONFLICT_PRESENT"
+      }
+    ],
+    "decision_safety": "UNVERIFIED_OR_PARTIAL_HYPOTHESES_DO_NOT_INFLUENCE_DECISIONS"
   }
 }

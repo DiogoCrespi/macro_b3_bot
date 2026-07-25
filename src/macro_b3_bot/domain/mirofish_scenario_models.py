@@ -100,8 +100,14 @@ class ScenarioHypothesis(BaseModel):
     source_document_ids: list[str] = Field(default_factory=list)
     macro_event_ids: list[str] = Field(default_factory=list)
     sector_state_ids: list[str] = Field(default_factory=list)
+    causal_path_ids: list[str] = Field(default_factory=list)
+    causal_edge_ids: list[str] = Field(default_factory=list)
     supporting_evidence_ids: list[str] = Field(default_factory=list)
     contradicting_evidence_ids: list[str] = Field(default_factory=list)
+    contradiction_ids: list[str] = Field(default_factory=list)
+    binding_status: str = "UNBOUND"
+    temporal_consistency_status: str = "NOT_CHECKED"
+    contradiction_status: str = "NOT_CHECKED"
     verification_status: Literal["UNVERIFIED", "PARTIALLY_SUPPORTED", "SUPPORTED", "CONTRADICTED", "REJECTED"] = "UNVERIFIED"
     confidence: float | None = None
     report_excerpt: str = ""
@@ -136,4 +142,3 @@ class ScenarioSet(BaseModel):
         canonical = {k: v for k, v in payload.items() if k not in ("scenario_set_id", "created_at")}
         sorted_keys = json.dumps(canonical, sort_keys=True, default=str)
         return sha256(sorted_keys.encode("utf-8")).hexdigest()
-

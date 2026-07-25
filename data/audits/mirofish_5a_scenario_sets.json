@@ -52,7 +52,9 @@
         "市场适应性和竞争力提升"
       ],
       "expected_horizon": "未来一段时间内",
-      "supporting_evidence_claim_ids": [],
+      "supporting_evidence_claim_ids": [
+        "claim_ipca_acceleration_001"
+      ],
       "source_document_ids": [],
       "macro_event_ids": [
         "rel_bcb_ipca_202607"
@@ -104,7 +106,13 @@
           "source_excerpt_hash": "bc058efe2cf7106f5f7e72d3ee42795a28f3a4be4365bdd723888e6469c719f1",
           "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY"
         }
-      }
+      },
+      "causal_path_ids": [],
+      "causal_edge_ids": [],
+      "contradiction_ids": [],
+      "binding_status": "PARTIAL_MISSING_CAUSAL_PATH",
+      "temporal_consistency_status": "CONSISTENT",
+      "contradiction_status": "SECTOR_CONFLICT_PRESENT"
     }
   ]
 }
