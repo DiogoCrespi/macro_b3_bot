@@ -109,17 +109,18 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 
 ### Fase P0 — Higiene e baseline reprodutível
 
-**Status:** `EM ANDAMENTO`
+**Status:** `CONCLUÍDA`
 **Objetivo:** garantir que qualquer execução possa ser reproduzida e auditada.
 
 - [x] Suíte local completa executada (`341 passed`).
 - [x] Ruff e `git diff --check` aprovados.
 - [x] Bytecodes rastreados removidos do Git.
-- [ ] Fixar dependências e versão Python em artefato reproduzível.
-- [ ] Definir manifesto de execução com commit, configuração, seed, `as_of` e checksums.
-- [ ] Separar claramente dados de teste, fixtures controladas e dados upstream reais.
+- [x] Fixar dependências Python 3.12 em `requirements-py312.lock` e versão em `.python-version`.
+- [x] Criar `data/audits/baseline_reproducible.json` com commit, configuração e checksums.
+- [x] Separar dados controlados e upstream em `data/README.md` e no manifesto.
 
-**Saída:** `baseline_reproducible.json` e instrução de execução limpa.
+**Saída:** `baseline_reproducible.json`, `requirements-py312.lock`, `.python-version` e
+`data/README.md`.
 
 ### Fase P1 — Staging operacional seguro
 
@@ -259,7 +260,7 @@ históricos suficientes.
 | Data | Commit | Fase | Resultado | Próximo bloqueio |
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
-| 25/07/2026 | `6e3fefa` | P0 | 341 testes, Ruff e diff check aprovados | Baseline reproduzível |
+| 25/07/2026 | `c45a2e5` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
 
 ## Backlog posterior
 
