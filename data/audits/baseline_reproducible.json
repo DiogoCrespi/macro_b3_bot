@@ -1,7 +1,7 @@
 {
   "manifest_version": "P0.1-reproducibility-v1",
-  "created_at": "2026-07-25T23:41:49.130213+00:00",
-  "git_commit": "eaeef0f9dbca9e2d56049031f58ba9fa5396a6a5",
+  "created_at": "2026-07-25T23:42:16.019197+00:00",
+  "git_commit": "f9ed31d1f6377d547207312157d7c0eefc13f1b4",
   "git_branch": "master",
   "python": {
     "version": "3.12.10",
@@ -33,7 +33,7 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "ae73d8fddb5a1fd811658c97e006c2cd837a8b4be48b9e67621fbe300a84cefd",
+      "sha256": "b9683818b11c3a00a44847ec5d216bd0b8bfd4725b204f04c7cdf9c377f82d5d",
       "class": "PROJECT_METADATA"
     },
     {
@@ -378,7 +378,7 @@
     },
     {
       "path": "data/README.md",
-      "sha256": "8e98e77425401c51389b4488178112cc0aafdbbaef0ad96b63551268828f40a8",
+      "sha256": "3bb2ceb7b203bad54f19513479d8eeec21b5309f73036a39c6cf46794ac4c043",
       "class": "PROJECT_METADATA"
     },
     {
@@ -389,6 +389,11 @@
     {
       "path": "data/audits/b3_historical_acquisition_manifest.json",
       "sha256": "6a1916f88df6f2f79e95f05df6a6672812b27ebb31fcff32f32f7bf0e6f438c6",
+      "class": "CONTROLLED_FIXTURE_OR_AUDIT"
+    },
+    {
+      "path": "data/audits/baseline_reproducible.json",
+      "sha256": "343e4a3f4ca9a044fa3ec78a3685a7b6fb0ed00dddc259d6c3a3b2fb0a459c7e",
       "class": "CONTROLLED_FIXTURE_OR_AUDIT"
     },
     {
