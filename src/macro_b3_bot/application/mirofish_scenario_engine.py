@@ -378,21 +378,13 @@ class MiroFishScenarioEngine:
             reports = reports_res.get("reports", []) if isinstance(reports_res, dict) else []
 
             if not reports:
-                analysis_summary = res.get("analysis_summary")
-                ontology = res.get("ontology")
-                if analysis_summary or ontology:
-                    reports = [{
-                        "report_id": f"rep_{simulation_id}",
-                        "project_id": project_id,
-                        "simulation_id": simulation_id,
-                        "analysis_summary": analysis_summary or "",
-                        "ontology": ontology or {},
-                    }]
-                else:
-                    raise ValueError("MiroFish list_reports returned no reports.")
+                raise RuntimeError("FAILED_INCOMPLETE_SERVICE_RUN: MiroFish final report was not exposed")
 
             raw_report = reports[0]
-            raw_report_id = str(raw_report.get("report_id", f"rep_{simulation_id}"))
+            raw_report_id = raw_report.get("report_id")
+            if not raw_report_id:
+                raise RuntimeError("FAILED_INCOMPLETE_SERVICE_RUN: MiroFish report_id was not exposed")
+            raw_report_id = str(raw_report_id)
 
             # Persist raw report content
             raw_report_json_str = json.dumps(raw_report, sort_keys=True, default=str)
@@ -597,7 +589,10 @@ class MiroFishScenarioEngine:
         No local hardcoded fallback templates (BASE/BULL) are produced.
         Requires verifiable report_excerpt substring belonging to the raw report.
         """
-        raw_report_id = str(raw_report.get("report_id", "NOT_EXPOSED_BY_SERVICE"))
+        raw_report_id_value = raw_report.get("report_id")
+        if not raw_report_id_value:
+            return []
+        raw_report_id = str(raw_report_id_value)
         raw_report_json_str = json.dumps(raw_report, sort_keys=True, default=str)
         raw_report_checksum = sha256(raw_report_json_str.encode("utf-8")).hexdigest()
 
@@ -674,12 +669,8 @@ class MiroFishScenarioEngine:
             conf_val = float(conf) if conf is not None else None
 
             trigger = str(scenario_data.get("trigger", ""))
-            excerpt = str(
-                scenario_data.get(
-                    "excerpt",
-                    scenario_data.get("report_excerpt", trigger),
-                )
-            )
+            excerpt_value = scenario_data.get("excerpt", scenario_data.get("report_excerpt"))
+            excerpt = str(excerpt_value) if excerpt_value is not None else ""
 
             # A structured report must carry its own auditable anchor.  Do
             # not turn a bare label, arbitrary JSON object, or missing text
@@ -706,7 +697,11 @@ class MiroFishScenarioEngine:
             if excerpt and excerpt not in report_text:
                 raise ValueError(f"report_excerpt '{excerpt}' is not a verifiable substring of raw report")
 
-            parser_ver = "5A.3-native-mirofish-structured-report-v1"
+            parser_ver = (
+                "5A.3-llm-structured-extraction-v1"
+                if extraction_meta.get("extraction_mode") == "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT"
+                else "5A.3-native-mirofish-structured-report-v1"
+            )
 
             h_payload = {
                 "simulation_run_id": run_id,
@@ -717,7 +712,7 @@ class MiroFishScenarioEngine:
                 "macro_factors": list(scenario_data.get("macro_factors", [])),
                 "sector_effects": list(scenario_data.get("sector_effects", [])),
                 "second_order_effects": list(scenario_data.get("second_order_effects", [])),
-                "expected_horizon": str(scenario_data.get("expected_horizon", "MEDIUM_TERM")),
+                "expected_horizon": scenario_data.get("expected_horizon"),
                 "macro_event_ids": macro_event_ids,
                 "supporting_evidence_claim_ids": evidence_claim_ids,
                 "sector_state_ids": sector_state_ids,

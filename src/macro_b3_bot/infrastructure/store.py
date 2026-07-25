@@ -1059,6 +1059,40 @@ class DatabaseStore:
             );
         """)
         self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_hypothesis_reviews (
+                review_id VARCHAR PRIMARY KEY,
+                hypothesis_id VARCHAR NOT NULL,
+                simulation_run_id VARCHAR NOT NULL,
+                reviewer_type VARCHAR NOT NULL,
+                reviewer_id VARCHAR NOT NULL,
+                review_decision VARCHAR NOT NULL,
+                review_status VARCHAR NOT NULL,
+                review_confidence DOUBLE,
+                fact_review_hash VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_hypothesis_validations (
+                validation_id VARCHAR PRIMARY KEY,
+                hypothesis_id VARCHAR NOT NULL,
+                validation_status VARCHAR NOT NULL,
+                validator_type VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS scenario_hypothesis_bindings (
+                binding_id VARCHAR PRIMARY KEY,
+                hypothesis_id VARCHAR NOT NULL,
+                binding_status VARCHAR NOT NULL,
+                canonical_payload_json VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
             CREATE TABLE IF NOT EXISTS scenario_sets (
                 scenario_set_id VARCHAR PRIMARY KEY,
                 event_id VARCHAR NOT NULL,
@@ -3100,6 +3134,56 @@ class DatabaseStore:
                 hypothesis.get("verification_status", "UNVERIFIED"),
                 conf_val,
                 json.dumps(hypothesis, default=str),
+            ],
+        )
+
+    def save_scenario_hypothesis_review(self, review: dict[str, Any]) -> None:
+        """Append a review without mutating the immutable hypothesis payload."""
+        self.connection.execute(
+            """
+            INSERT INTO scenario_hypothesis_reviews
+            (review_id, hypothesis_id, simulation_run_id, reviewer_type, reviewer_id,
+             review_decision, review_status, review_confidence, fact_review_hash,
+             canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (review_id) DO NOTHING
+            """,
+            [
+                review["review_id"], review["hypothesis_id"], review["simulation_run_id"],
+                review["reviewer_type"], review.get("reviewed_by", "NOT_EXPOSED"),
+                review["review_decision"], review["review_status"],
+                review.get("review_confidence"), review["fact_review_hash"],
+                json.dumps(review, ensure_ascii=False, sort_keys=True, default=str),
+            ],
+        )
+
+    def save_scenario_hypothesis_validation(self, validation: dict[str, Any]) -> None:
+        self.connection.execute(
+            """
+            INSERT INTO scenario_hypothesis_validations
+            (validation_id, hypothesis_id, validation_status, validator_type, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT (validation_id) DO NOTHING
+            """,
+            [
+                validation["validation_id"], validation["hypothesis_id"],
+                validation["validation_status"], validation["validator_type"],
+                json.dumps(validation, ensure_ascii=False, sort_keys=True, default=str),
+            ],
+        )
+
+    def save_scenario_hypothesis_binding(self, binding: dict[str, Any]) -> None:
+        self.connection.execute(
+            """
+            INSERT INTO scenario_hypothesis_bindings
+            (binding_id, hypothesis_id, binding_status, canonical_payload_json)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT (binding_id) DO NOTHING
+            """,
+            [
+                binding["binding_id"], binding["hypothesis_id"],
+                binding["binding_status"],
+                json.dumps(binding, ensure_ascii=False, sort_keys=True, default=str),
             ],
         )
 

@@ -1,8 +1,9 @@
+
 # Avaliação de prontidão para produção
 
-**Data da avaliação:** 25/07/2026  
-**Estado avaliado:** commit `2b7931f`  
-**Última suíte local:** 338 testes aprovados em 85,31 s
+**Data da avaliação:** 25/07/2026
+**Estado avaliado:** commit `2b7931f`
+**Última suíte local:** 339 testes aprovados em 80,65 s
 
 ## Veredito
 
@@ -69,13 +70,13 @@ produção.
 
 ## Classificação por ambiente
 
-| Ambiente | Permitido | Condição |
-|---|---|---|
-| Desenvolvimento | Sim | Dados e credenciais locais, sem decisão operacional |
-| Staging/piloto interno | Sim | Dados PIT, logs, backup e `BUY` desabilitado |
+| Ambiente               | Permitido  | Condição                                             |
+| ---------------------- | ---------- | ------------------------------------------------------ |
+| Desenvolvimento        | Sim        | Dados e credenciais locais, sem decisão operacional   |
+| Staging/piloto interno | Sim        | Dados PIT, logs, backup e`BUY` desabilitado          |
 | Produção de pesquisa | Ainda não | Requer operação, segurança e monitoramento mínimos |
-| Produção decisória | Não | Requer validação estatística e financeira |
-| Execução de ordens | Não | Requer governança, aprovação e controles de risco |
+| Produção decisória  | Não       | Requer validação estatística e financeira           |
+| Execução de ordens   | Não       | Requer governança, aprovação e controles de risco   |
 
 ## Critérios para liberar produção de pesquisa
 
@@ -106,3 +107,18 @@ produção.
 
 Até que esses critérios sejam atendidos, o comportamento correto do sistema é bloquear
 ou retornar `NO_ACTION`, nunca fabricar uma tese, valuation ou ordem.
+
+---
+
+Implementações:
+
+validação semântica perfeita do MiroFish
+ablação histórica completa com/sem MiroFish
+replay diário integral de 2024–2026
+generalização para centenas de empresas
+eliminação de toda regra específica por ticker
+autenticação e hardening do sidecar
+otimização de pesos
+produção de WATCH obrigatória
+integração com corretora
+BUY ou execução real

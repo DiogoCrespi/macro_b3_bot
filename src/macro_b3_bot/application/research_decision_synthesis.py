@@ -84,25 +84,21 @@ class ResearchDecisionSynthesizer:
         missing_inputs: list[str] = []
         invalidation_conditions: list[str] = []
 
-        # MiroFish hypotheses are opt-in inputs. When supplied, only a
-        # verified hypothesis with a complete causal/PIT binding may reach the
-        # WATCH/NO_ACTION synthesis. Unverified or partial hypotheses remain
-        # evidence-only and cannot improve a decision.
+        # MiroFish is an optional hypothesis layer. Unverified/partial
+        # hypotheses are warnings only and must not veto an otherwise valid
+        # deterministic decision. Only SUPPORTED + BOUND + CONSISTENT data may
+        # add context or invalidators.
         if hypotheses:
             for hypothesis in hypotheses:
                 status = hypothesis.get("verification_status")
                 if status != "SUPPORTED":
-                    critical_blockers.append("UNVERIFIED_MIROFISH_HYPOTHESIS")
-                    invalidation_conditions.append("MiroFish hypothesis is not SUPPORTED")
+                    noncritical_warnings.append("UNVERIFIED_MIROFISH_HYPOTHESIS")
                 if hypothesis.get("binding_status") != "BOUND":
-                    critical_blockers.append("HYPOTHESIS_BINDING_INVALID")
-                    invalidation_conditions.append("MiroFish hypothesis lacks complete causal binding")
+                    noncritical_warnings.append("HYPOTHESIS_BINDING_INVALID")
                 if hypothesis.get("temporal_consistency_status") != "CONSISTENT":
-                    critical_blockers.append("HYPOTHESIS_TEMPORAL_INCONSISTENCY")
-                    invalidation_conditions.append("MiroFish hypothesis fails point-in-time consistency")
+                    noncritical_warnings.append("HYPOTHESIS_TEMPORAL_INCONSISTENCY")
                 if hypothesis.get("contradiction_status") not in {None, "NO_CONTRADICTION_DETECTED"}:
-                    critical_blockers.append("HYPOTHESIS_CONTRADICTION")
-                    invalidation_conditions.append("MiroFish hypothesis has unresolved contradiction")
+                    noncritical_warnings.append("HYPOTHESIS_CONTRADICTION")
 
         # 1. Macro events & directional conflicts
         macro_event_ids = [

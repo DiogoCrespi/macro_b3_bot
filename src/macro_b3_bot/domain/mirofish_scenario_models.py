@@ -95,7 +95,7 @@ class ScenarioHypothesis(BaseModel):
     macro_factors: list[str] = Field(default_factory=list)
     sector_effects: list[str] = Field(default_factory=list)
     second_order_effects: list[str] = Field(default_factory=list)
-    expected_horizon: str = "MEDIUM_TERM"
+    expected_horizon: str | None = None
     supporting_evidence_claim_ids: list[str] = Field(default_factory=list)
     source_document_ids: list[str] = Field(default_factory=list)
     macro_event_ids: list[str] = Field(default_factory=list)
@@ -108,7 +108,14 @@ class ScenarioHypothesis(BaseModel):
     binding_status: str = "UNBOUND"
     temporal_consistency_status: str = "NOT_CHECKED"
     contradiction_status: str = "NOT_CHECKED"
-    verification_status: Literal["UNVERIFIED", "PARTIALLY_SUPPORTED", "SUPPORTED", "CONTRADICTED", "REJECTED"] = "UNVERIFIED"
+    verification_status: Literal[
+        "UNVERIFIED",
+        "PARTIALLY_SUPPORTED",
+        "SUPPORTED",
+        "CONTRADICTED",
+        "REJECTED",
+        "REJECTED_SEMANTIC_SOURCE_MISMATCH",
+    ] = "UNVERIFIED"
     confidence: float | None = None
     report_excerpt: str = ""
     raw_report_id: str = ""

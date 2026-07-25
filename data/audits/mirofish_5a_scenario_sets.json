@@ -112,7 +112,13 @@
       "contradiction_ids": [],
       "binding_status": "REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE",
       "temporal_consistency_status": "CONSISTENT",
-      "contradiction_status": "SECTOR_CONFLICT_PRESENT"
+      "contradiction_status": "SECTOR_CONFLICT_PRESENT",
+      "missing_claim_ids": [],
+      "resolved_event_ids": [
+        "0c0e7a1f8b0035011ae94d28",
+        "rel_bcb_ipca_202607"
+      ],
+      "binding_reason": "EXACT_BINDING_REQUIREMENTS_NOT_MET"
     }
   ]
 }

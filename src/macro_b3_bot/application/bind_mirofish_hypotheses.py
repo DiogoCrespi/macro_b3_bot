@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -41,17 +40,16 @@ class MiroFishHypothesisBinder:
             [list(sector_ids)],
         ).fetchall() if sector_ids else []
 
-        # Claims are linked only when their textual content overlaps a trigger
-        # or macro factor and they were available at the PIT cutoff.
-        terms = [str(hypothesis.get("trigger", ""))] + [str(x) for x in hypothesis.get("macro_factors", [])]
-        numeric_terms = re.findall(r"\d+(?:[.,]\d+)?", " ".join(terms))
-        claims = []
-        for claim in self.store.get_evidence_claims_pit(as_of):
-            haystack = " ".join(str(claim.get(key, "")) for key in ("subject", "predicate", "object_text", "source_excerpt"))
-            if any(term and (term in haystack or term in str(claim.get("subject", ""))) for term in terms) \
-                    or any(number.replace(",", ".") in haystack.replace(",", ".") for number in numeric_terms):
-                claims.append(claim)
+        # Claims must be explicitly declared by the seed/hypothesis.  Text or
+        # numeric overlap is not evidence of semantic identity (e.g. 0.45 can
+        # occur in unrelated indicators).
+        declared_claim_ids = {str(x) for x in hypothesis.get("supporting_evidence_claim_ids", []) if x}
+        claims = [
+            claim for claim in self.store.get_evidence_claims_pit(as_of)
+            if str(claim.get("claim_id")) in declared_claim_ids
+        ]
         claim_ids = sorted({str(c["claim_id"]) for c in claims if c.get("claim_id")})
+        missing_claim_ids = sorted(declared_claim_ids - set(claim_ids))
 
         path_ids: set[str] = set()
         edge_ids: set[str] = set()
@@ -103,7 +101,7 @@ class MiroFishHypothesisBinder:
             contradiction_status = "SECTOR_CONFLICT_PRESENT"
         else:
             contradiction_status = "NO_CONTRADICTION_DETECTED"
-        if path_ids:
+        if path_ids and not rejected_event and not contradiction_ids and not missing_claim_ids and event_rows and sector_rows:
             binding_status = "BOUND"
         elif rejected_event:
             binding_status = "REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE"
@@ -115,10 +113,17 @@ class MiroFishHypothesisBinder:
             "macro_event_ids": sorted(event_ids),
             "sector_state_ids": sorted(sector_ids),
             "supporting_evidence_claim_ids": claim_ids,
+            "missing_claim_ids": missing_claim_ids,
+            "resolved_event_ids": sorted(resolved_event_ids),
             "causal_path_ids": sorted(path_ids),
             "causal_edge_ids": sorted(edge_ids),
             "contradiction_ids": sorted(contradiction_ids),
             "binding_status": binding_status,
             "temporal_consistency_status": temporal_status,
             "contradiction_status": contradiction_status,
+            "binding_reason": (
+                "EXACT_PIT_EVENT_CLAIM_SECTOR_PATH"
+                if path_ids and not missing_claim_ids and not rejected_event and not contradiction_ids
+                else "EXACT_BINDING_REQUIREMENTS_NOT_MET"
+            ),
         }

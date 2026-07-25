@@ -1,5 +1,6 @@
 """Run Sprint 5B PIT binding and contradiction/temporal checks."""
 from datetime import datetime
+from hashlib import sha256
 import json
 from pathlib import Path
 import sys
@@ -23,12 +24,18 @@ def main() -> None:
     results = []
     for hypothesis in sets["hypotheses"]:
         binding = binder.bind(hypothesis, as_of)
+        binding_record = {
+            "hypothesis_id": hypothesis["hypothesis_id"],
+            **binding,
+        }
+        binding_record["binding_id"] = sha256(
+            json.dumps(binding_record, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        ).hexdigest()
+        store.save_scenario_hypothesis_binding(binding_record)
+        # Keep the historical audit projection convenient, but never mutate
+        # scenario_hypotheses.canonical_payload_json or its content hash.
         hypothesis.update(binding)
-        results.append({"hypothesis_id": hypothesis["hypothesis_id"], **binding})
-        store.connection.execute(
-            "UPDATE scenario_hypotheses SET canonical_payload_json=? WHERE hypothesis_id=?",
-            [json.dumps(hypothesis, ensure_ascii=False, sort_keys=True), hypothesis["hypothesis_id"]],
-        )
+        results.append({"hypothesis_id": hypothesis["hypothesis_id"], **binding, "binding_id": binding_record["binding_id"]})
     store.connection.commit()
     store.close()
     sets["hypotheses"] = sets["hypotheses"]

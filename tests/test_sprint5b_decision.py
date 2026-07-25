@@ -19,7 +19,8 @@ def test_unverified_hypothesis_cannot_reach_decision() -> None:
         }],
     )
     assert result.decision == "NO_ACTION"
-    assert "UNVERIFIED_MIROFISH_HYPOTHESIS" in result.critical_blockers
+    assert "UNVERIFIED_MIROFISH_HYPOTHESIS" in result.noncritical_warnings
+    assert "UNVERIFIED_MIROFISH_HYPOTHESIS" not in result.critical_blockers
 
 
 def test_verified_bound_hypothesis_does_not_add_hypothesis_blocker() -> None:
