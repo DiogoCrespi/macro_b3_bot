@@ -2,37 +2,37 @@
   "total_scenario_sets": 1,
   "scenario_sets": [
     {
-      "scenario_set_id": "b49c3b906c48bd0bf1321728153770128fd44f9d8fe36f2c6914150eb78432ab",
+      "scenario_set_id": "75a9e7cdeecb6274a34371bdbb819dc650c96a7da20949d1549617d143bc4140",
       "event_id": "rel_bcb_ipca_202607",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "scenario_hypothesis_ids": [
-        "06e98d1ac3abe05e4db4d0fab7760dbed7ea6aff4acd11d95d6fc8e7aa9afdaf",
-        "bc036e94454e2cc3eeb0226780139bd6e347e84c3b72677cd35764b722be7391"
+        "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
+        "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b"
       ],
       "coverage_summary": "Online MiroFish simulation set completed for cutoff 2026-07-24T00:00:00+00:00.",
       "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
       "missing_variables": [],
       "methodology_version": "5A.2-scenario-set-v2",
-      "created_at": "2026-07-25T01:25:11.920075+00:00"
+      "created_at": "2026-07-25T01:40:53.169501+00:00"
     }
   ],
   "hypotheses": [
     {
-      "hypothesis_id": "06e98d1ac3abe05e4db4d0fab7760dbed7ea6aff4acd11d95d6fc8e7aa9afdaf",
-      "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
+      "hypothesis_id": "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
+      "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
       "scenario_type": "BASE",
       "trigger": "MiroFish Point-in-Time macro simulation baseline reaction",
       "actors": [
         "BankCentralBank",
-        "FederalReserve",
-        "MinistryOfFinance",
+        "FinancialRegulator",
+        "GovernmentDepartment",
         "StockExchange",
-        "SecuritiesAndExchangeCommission",
+        "InflationMonitor",
+        "RetailIndustry",
         "Person",
         "Organization",
         "Journalist",
-        "Company",
-        "GovernmentAgency"
+        "Expert"
       ],
       "actions": [
         "REGULATES",
@@ -59,27 +59,27 @@
       "contradicting_evidence_ids": [],
       "verification_status": "UNVERIFIED",
       "confidence": 0.85,
-      "report_excerpt": "根据给定的文档内容，设计了10个实体类型，包括中央银行、联邦储备系统、财政部等具体类型的组织机构以及个人和兜底组织。同时定义了6种关系类型来模拟社媒互动中的真实联系。",
-      "raw_report_id": "rep_sim_f72a559bfbaa",
-      "report_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
+      "report_excerpt": "根据给定的文本内容，设计了10个实体类型以模拟社交媒体上的舆论事件。这些实体涵盖了中央银行、金融监管机构、政府部门、证券交易所等具体类型的组织以及个人和专家角色，并定义了报道、监管、工作于等关系类型来反映社媒互动中的真实联系。",
+      "raw_report_id": "rep_sim_d1b2b8853e8d",
+      "report_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
       "parser_version": "5A.2-mirofish-parser-v1"
     },
     {
-      "hypothesis_id": "bc036e94454e2cc3eeb0226780139bd6e347e84c3b72677cd35764b722be7391",
-      "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
+      "hypothesis_id": "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b",
+      "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
       "scenario_type": "BULL",
       "trigger": "Favorable inflation acceleration trajectory and market re-rating",
       "actors": [
         "BankCentralBank",
-        "FederalReserve",
-        "MinistryOfFinance",
+        "FinancialRegulator",
+        "GovernmentDepartment",
         "StockExchange",
-        "SecuritiesAndExchangeCommission",
+        "InflationMonitor",
+        "RetailIndustry",
         "Person",
         "Organization",
         "Journalist",
-        "Company",
-        "GovernmentAgency"
+        "Expert"
       ],
       "actions": [
         "REPORTS_ON",
@@ -105,8 +105,8 @@
       "verification_status": "UNVERIFIED",
       "confidence": 0.75,
       "report_excerpt": "Bullish scenario under positive disinflation prints and controlled rate expectations.",
-      "raw_report_id": "rep_sim_f72a559bfbaa",
-      "report_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
+      "raw_report_id": "rep_sim_d1b2b8853e8d",
+      "report_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
       "parser_version": "5A.2-mirofish-parser-v1"
     }
   ]

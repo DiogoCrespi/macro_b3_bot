@@ -3,7 +3,7 @@
   "methodology_version": "5A.2-mirofish-engine-v2",
   "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
   "seed_package": {
-    "seed_package_id": "42a4db326623d83be386fb26d386fa67386eaf74c4a78f3ddcfbea6b3c9bee18",
+    "seed_package_id": "5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
     "material_event_ids": [
       "rel_bcb_ipca_202607"
@@ -27,50 +27,155 @@
       "doc_cvm_itr_202607"
     ],
     "prompt_template_version": "5A.2-mirofish-seed-v2",
-    "seed_file_path": "data\\mirofish_seeds\\42a4db326623d83be386fb26d386fa67386eaf74c4a78f3ddcfbea6b3c9bee18.md",
-    "seed_file_checksum": "add623691f00aca78e76c7a543f9983060f8d726aacb52ace99082b392de7fd3",
+    "seed_file_path": "data\\mirofish_seeds\\5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed.md",
+    "seed_file_checksum": "db330e68940fb92ee070026d41e951f2624af5734d1519d0b79016620f1a6580",
     "mime_type": "text/markdown",
     "source_input_ids": [
       "rel_bcb_ipca_202607",
       "claim_ipca_acceleration_001",
       "sec_retail_202607",
       "doc_cvm_itr_202607"
-    ]
+    ],
+    "loader_diagnostics": {
+      "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
+      "filter_event_id": "rel_bcb_ipca_202607",
+      "macro_events": {
+        "source_table_or_artifact": "macro_releases",
+        "records_scanned": 1,
+        "records_with_valid_id": 1,
+        "records_pit_eligible": 1,
+        "records_rejected_future": 0,
+        "records_rejected_missing_available_at": 0,
+        "records_rejected_missing_evidence": 0,
+        "records_rejected_non_material": 0,
+        "records_selected": 1,
+        "source_checksum": "4f93212527d3182e61cd5e043a175efdc3494592b8e29ef15f66b6a2d29428b3"
+      },
+      "evidence_claims": {
+        "source_table_or_artifact": "evidence_claims",
+        "records_scanned": 1,
+        "records_with_valid_id": 1,
+        "records_pit_eligible": 1,
+        "records_rejected_future": 0,
+        "records_rejected_missing_available_at": 0,
+        "records_rejected_missing_evidence": 0,
+        "records_rejected_non_material": 0,
+        "records_selected": 1,
+        "source_checksum": "13e9e05e6b00a80c2263a3fc36cf2e4a7a4acf1b59aa8a423d0689aef0e99470"
+      },
+      "sector_state_snapshots": {
+        "source_table_or_artifact": "sector_state_snapshots",
+        "records_scanned": 1,
+        "records_with_valid_id": 1,
+        "records_pit_eligible": 1,
+        "records_rejected_future": 0,
+        "records_rejected_missing_available_at": 0,
+        "records_rejected_missing_evidence": 0,
+        "records_rejected_non_material": 0,
+        "records_selected": 1,
+        "source_checksum": "a381399e637ee088d82c60b22528cb8e513652ec2a7cd6d090a12d7ecfe4b766"
+      },
+      "source_documents": {
+        "source_table_or_artifact": "cvm_documents",
+        "records_scanned": 1,
+        "records_with_valid_id": 1,
+        "records_pit_eligible": 1,
+        "records_rejected_future": 0,
+        "records_rejected_missing_available_at": 0,
+        "records_rejected_missing_evidence": 0,
+        "records_rejected_non_material": 0,
+        "records_selected": 1,
+        "source_checksum": "e39c74a4244762d806df57f0b2d7ca63e6ab3dd4ce98e77f9d99b81509e1c695"
+      }
+    }
   },
   "simulation_run": {
-    "simulation_run_id": "8dae77b6265f0e2c42b6a9be6187d667975f9da50ab1ed797c05e717ee453296",
-    "seed_package_id": "42a4db326623d83be386fb26d386fa67386eaf74c4a78f3ddcfbea6b3c9bee18",
-    "mirofish_project_id": "proj_37f8f9c32ef0",
-    "mirofish_graph_id": "proj_37f8f9c32ef0",
-    "mirofish_simulation_id": "sim_f72a559bfbaa",
-    "requested_at": "2026-07-25T01:24:01.139269+00:00",
-    "completed_at": "2026-07-25T01:25:11.919804+00:00",
+    "simulation_run_id": "5f73deb3cef60bc94257c9a5862b2ad1b6afa0153f31c05f4ae86c317f5a586b",
+    "seed_package_id": "5913959ca0e2e76f99cc3e76b81b58a6b94b6e48b20d12f5792903ae6d60e3ed",
+    "mirofish_project_id": "proj_f0671abef972",
+    "mirofish_graph_id": "proj_f0671abef972",
+    "mirofish_simulation_id": "sim_d1b2b8853e8d",
+    "requested_at": "2026-07-25T01:38:13.503486+00:00",
+    "completed_at": "2026-07-25T01:40:53.169217+00:00",
     "service_version": "mirofish-v1.0-online",
     "model_information": "qwen2.5:7b",
-    "configuration": {},
+    "configuration": {
+      "loader_diagnostics": {
+        "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
+        "filter_event_id": "rel_bcb_ipca_202607",
+        "macro_events": {
+          "source_table_or_artifact": "macro_releases",
+          "records_scanned": 1,
+          "records_with_valid_id": 1,
+          "records_pit_eligible": 1,
+          "records_rejected_future": 0,
+          "records_rejected_missing_available_at": 0,
+          "records_rejected_missing_evidence": 0,
+          "records_rejected_non_material": 0,
+          "records_selected": 1,
+          "source_checksum": "4f93212527d3182e61cd5e043a175efdc3494592b8e29ef15f66b6a2d29428b3"
+        },
+        "evidence_claims": {
+          "source_table_or_artifact": "evidence_claims",
+          "records_scanned": 1,
+          "records_with_valid_id": 1,
+          "records_pit_eligible": 1,
+          "records_rejected_future": 0,
+          "records_rejected_missing_available_at": 0,
+          "records_rejected_missing_evidence": 0,
+          "records_rejected_non_material": 0,
+          "records_selected": 1,
+          "source_checksum": "13e9e05e6b00a80c2263a3fc36cf2e4a7a4acf1b59aa8a423d0689aef0e99470"
+        },
+        "sector_state_snapshots": {
+          "source_table_or_artifact": "sector_state_snapshots",
+          "records_scanned": 1,
+          "records_with_valid_id": 1,
+          "records_pit_eligible": 1,
+          "records_rejected_future": 0,
+          "records_rejected_missing_available_at": 0,
+          "records_rejected_missing_evidence": 0,
+          "records_rejected_non_material": 0,
+          "records_selected": 1,
+          "source_checksum": "a381399e637ee088d82c60b22528cb8e513652ec2a7cd6d090a12d7ecfe4b766"
+        },
+        "source_documents": {
+          "source_table_or_artifact": "cvm_documents",
+          "records_scanned": 1,
+          "records_with_valid_id": 1,
+          "records_pit_eligible": 1,
+          "records_rejected_future": 0,
+          "records_rejected_missing_available_at": 0,
+          "records_rejected_missing_evidence": 0,
+          "records_rejected_non_material": 0,
+          "records_selected": 1,
+          "source_checksum": "e39c74a4244762d806df57f0b2d7ca63e6ab3dd4ce98e77f9d99b81509e1c695"
+        }
+      }
+    },
     "random_seed": "NOT_EXPOSED_BY_SERVICE",
     "prompt_hash": "f6a29ae4d979dec9576dfbe7ded012417ed2f48e19bd7a4eadfa64061699403b",
-    "input_checksum": "add623691f00aca78e76c7a543f9983060f8d726aacb52ace99082b392de7fd3",
+    "input_checksum": "db330e68940fb92ee070026d41e951f2624af5734d1519d0b79016620f1a6580",
     "status": "SUCCESS",
     "raw_report_ids": [
-      "rep_sim_f72a559bfbaa"
+      "rep_sim_d1b2b8853e8d"
     ],
-    "raw_response_checksum": "47de3221ff395d241b069f2868a2d135424c33cd43fcb3903982f7b8dbc0d656",
+    "raw_response_checksum": "e751d3b4f93095a7e44f54ae21d8a1966cf460f38ea761876bc9acffcc6e0698",
     "methodology_version": "5A.2-mirofish-engine-v2"
   },
   "scenario_set": {
-    "scenario_set_id": "b49c3b906c48bd0bf1321728153770128fd44f9d8fe36f2c6914150eb78432ab",
+    "scenario_set_id": "75a9e7cdeecb6274a34371bdbb819dc650c96a7da20949d1549617d143bc4140",
     "event_id": "rel_bcb_ipca_202607",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
     "scenario_hypothesis_ids": [
-      "06e98d1ac3abe05e4db4d0fab7760dbed7ea6aff4acd11d95d6fc8e7aa9afdaf",
-      "bc036e94454e2cc3eeb0226780139bd6e347e84c3b72677cd35764b722be7391"
+      "732d340d9a2122b033054094282b235b1bf8e2dced4a846fab495c884eab76fc",
+      "71a6079c371e9a53e5eb0b666d3fcb65ba57fc20f9e4384f1bfd699718368c4b"
     ],
     "coverage_summary": "Online MiroFish simulation set completed for cutoff 2026-07-24T00:00:00+00:00.",
     "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
     "missing_variables": [],
     "methodology_version": "5A.2-scenario-set-v2",
-    "created_at": "2026-07-25T01:25:11.920075+00:00"
+    "created_at": "2026-07-25T01:40:53.169501+00:00"
   },
   "total_hypotheses": 2,
   "unverified_count": 2,

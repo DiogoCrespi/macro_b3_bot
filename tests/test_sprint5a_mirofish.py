@@ -37,7 +37,7 @@ def mock_client():
         "seed": "12345",
     }
     client.create_simulation.return_value = {"simulation_id": "test_sim_789"}
-    client.list_reports.return_value = {
+    reports_payload = {
         "reports": [
             {
                 "report_id": "test_report_789",
@@ -53,6 +53,10 @@ def mock_client():
             }
         ]
     }
+    client.list_reports.return_value = reports_payload
+    client.poll_project_ontology.return_value = {"status": "ONTOLOGY_GENERATED"}
+    client.poll_simulation.return_value = {"status": "created"}
+    client.poll_report.return_value = reports_payload
     return client
 
 
@@ -87,6 +91,12 @@ def test_offline_service_fallback(mock_store) -> None:
 
     mock_store.get_macro_releases_pit.return_value = [
         {"release_id": "evt_101", "indicator": "IPCA", "actual_value": 0.45, "available_at": cutoff.isoformat()}
+    ]
+    mock_store.get_evidence_claims_pit.return_value = [
+        {"claim_id": "clm_101", "created_at": cutoff.isoformat()}
+    ]
+    mock_store.get_source_documents_pit.return_value = [
+        {"document_id": "doc_101", "available_at": cutoff.isoformat()}
     ]
 
     seed, run, sc_set, hyp_list = engine.generate_scenarios_for_cutoff(cutoff_dt=cutoff)
