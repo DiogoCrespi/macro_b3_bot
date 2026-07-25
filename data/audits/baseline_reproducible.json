@@ -1,7 +1,7 @@
 {
   "manifest_version": "P0.1-reproducibility-v1",
-  "created_at": "2026-07-25T23:42:29.331489+00:00",
-  "git_commit": "a764961f2c0d71ae56f44b1fa37ca7e4d97742ac",
+  "created_at": "2026-07-25T23:54:18.408743+00:00",
+  "git_commit": "c7b462416921c93df35b123407c7f3faddb999fb",
   "git_branch": "master",
   "python": {
     "version": "3.12.10",
@@ -11,7 +11,7 @@
   },
   "configuration": {
     "pyproject_sha256": "1be77d53827fba1ff4bc98684b0d16e2b26a0bd540f921a713dd0ec9a660c1ed",
-    "lock_sha256": "e00b13920eda8a9ede5a024aedbc23da681b963f0e0810e06786b5f0bd572618",
+    "lock_sha256": "6139ccb770e11d50961825e1fda05edf2a6fd8981b58d105204b94c8dab20115",
     "python_version_file_sha256": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d",
     "env_example_sha256": "5a9b189366ca706dadaed92082e6667a5c288c0362fb1ff4390b04a21d439aca"
   },
@@ -22,8 +22,18 @@
   },
   "files": [
     {
+      "path": ".dockerignore",
+      "sha256": "dc533d6b94bb716a9d64276edab034f45ef94bf62e53e671832de3fcf38c55e7",
+      "class": "PROJECT_METADATA"
+    },
+    {
       "path": ".env.example",
       "sha256": "5a9b189366ca706dadaed92082e6667a5c288c0362fb1ff4390b04a21d439aca",
+      "class": "PROJECT_METADATA"
+    },
+    {
+      "path": ".env.staging.example",
+      "sha256": "86cecdf3e86c100ed2da369a8fa1fcfdc940568733e0c290a8d63f6b1d827d13",
       "class": "PROJECT_METADATA"
     },
     {
@@ -33,7 +43,7 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "b9683818b11c3a00a44847ec5d216bd0b8bfd4725b204f04c7cdf9c377f82d5d",
+      "sha256": "026352a28a2dd9764c07130d2eebfb2e5c695912512daf93961a08c54a14d78d",
       "class": "PROJECT_METADATA"
     },
     {
@@ -57,13 +67,18 @@
       "class": "PROJECT_METADATA"
     },
     {
+      "path": "Dockerfile",
+      "sha256": "5e79724fa99f7f7e1c85fed80d49b30d4a8d53e6737a4837dbc24927f348a029",
+      "class": "PROJECT_METADATA"
+    },
+    {
       "path": "MIGRATION_CHECKLIST.md",
       "sha256": "316048465fb1af5f0c1d4a59307eb1b0692d7ac1876ce495b7648a1398ce02a8",
       "class": "PROJECT_METADATA"
     },
     {
       "path": "PRODUCTION_READINESS.md",
-      "sha256": "e41e48e88bc4d25e706c4674f1d0e76258ca1774db81998e0bfc1c020b5b936a",
+      "sha256": "e5e7216ffa34076073dbe4103ce4f25d5b29f5918fc5b07f280527cb3e108694",
       "class": "PROJECT_METADATA"
     },
     {
@@ -267,6 +282,11 @@
       "class": "PROJECT_METADATA"
     },
     {
+      "path": "compose.staging.yml",
+      "sha256": "a6d59abdcd940b089123ff89e41215cd450f7b9f7f71416dc56f468f285dd9f2",
+      "class": "PROJECT_METADATA"
+    },
+    {
       "path": "config/agent_roles.yaml",
       "sha256": "d8c7f5f775f68aa9a0e2ca5d9c9e3021c6e8ef5ec4154ec02a694171476148b0",
       "class": "SOURCE_OR_TEST"
@@ -393,7 +413,7 @@
     },
     {
       "path": "data/audits/baseline_reproducible.json",
-      "sha256": "4337721bccffd1b9693f12019dbf7ced15fa7cabb265d29a5df0d50825c1e645",
+      "sha256": "0a6ddef6537a38d78ccb741cd5a5bf903ed31c2afb68d9d7b55bcd8817fe90c1",
       "class": "CONTROLLED_FIXTURE_OR_AUDIT"
     },
     {
@@ -973,7 +993,7 @@
     },
     {
       "path": "requirements-py312.lock",
-      "sha256": "e00b13920eda8a9ede5a024aedbc23da681b963f0e0810e06786b5f0bd572618",
+      "sha256": "6139ccb770e11d50961825e1fda05edf2a6fd8981b58d105204b94c8dab20115",
       "class": "PROJECT_METADATA"
     },
     {
@@ -999,6 +1019,11 @@
     {
       "path": "scripts/b3_export_contract.example.js",
       "sha256": "9c292b154f3ad608ca02f74d5f73064beb20927fda6812da38690f568539c632",
+      "class": "SOURCE_OR_TEST"
+    },
+    {
+      "path": "scripts/backup_duckdb.py",
+      "sha256": "f4085da07e7a9f9d9851378a7fe0085be7e85e56a13719fb22381deced84fe4a",
       "class": "SOURCE_OR_TEST"
     },
     {
@@ -1129,6 +1154,21 @@
     {
       "path": "scripts/run_sprint5b_binding.py",
       "sha256": "08e4d6c79f17c7acf4c10f20cff1ee2d6ab128f8faffadf297ffdacb2a8cc610",
+      "class": "SOURCE_OR_TEST"
+    },
+    {
+      "path": "scripts/run_staging_once.py",
+      "sha256": "5da290db9868f096ed1489499bab5e63cf58310ca054908ca811ecf3ec5ca469",
+      "class": "SOURCE_OR_TEST"
+    },
+    {
+      "path": "scripts/staging_healthcheck.py",
+      "sha256": "02b9c9d666d70d0e374b7ea554e46c59c098d70c24c2bbcc3515f6ae54e18797",
+      "class": "SOURCE_OR_TEST"
+    },
+    {
+      "path": "scripts/staging_worker.py",
+      "sha256": "41529769ad7d4b9f3933a47a391a101721cbe9e34150d8aea42d62c320232124",
       "class": "SOURCE_OR_TEST"
     },
     {
@@ -1273,7 +1313,7 @@
     },
     {
       "path": "src/macro_b3_bot/adapters/mirofish.py",
-      "sha256": "1a42f4c9a6d7814d37faf0d757e96e278b9e8ed6c8bc446cd2d9ef9cbfbdcea9",
+      "sha256": "64e2839cffcd990f00f34f67dde5118cd41c7aba41483b633d22275efffcce76",
       "class": "SOURCE_OR_TEST"
     },
     {
@@ -1863,7 +1903,7 @@
     },
     {
       "path": "tests/test_sprint5a_mirofish.py",
-      "sha256": "247ccace7d0626694a535390b9352c06602d29a3f57e7276c71ebcaef28897be",
+      "sha256": "14b5ce65e9bbe899f5dc4f4636046b7f85176bd515a38e76707df78e0121c6c2",
       "class": "SOURCE_OR_TEST"
     },
     {
