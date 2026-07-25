@@ -3107,10 +3107,10 @@ class DatabaseStore:
         """Persists raw MiroFish report metadata into DuckDB idempotently."""
         report_id = report_record["report_id"]
         existing = self.connection.execute(
-            "SELECT 1 FROM raw_mirofish_reports WHERE report_id = ?",
+            "SELECT content_checksum FROM raw_mirofish_reports WHERE report_id = ?",
             [report_id]
         ).fetchone()
-        if existing:
+        if existing and existing[0] == report_record["content_checksum"]:
             return
 
         retrieved_at_val = report_record.get("retrieved_at")
@@ -3121,6 +3121,31 @@ class DatabaseStore:
         else:
             retrieved_ts = datetime.now(timezone.utc)
 
+        values = [
+            report_id,
+            report_record.get("simulation_id", ""),
+            report_record.get("project_id", ""),
+            report_record["content_checksum"],
+            int(report_record["byte_size"]),
+            report_record.get("mime_type", "application/json"),
+            retrieved_ts,
+            report_record.get("source_endpoint", "/api/report/list"),
+            report_record.get("file_path", ""),
+            report_record.get("canonical_payload_json", "{}"),
+        ]
+        if existing:
+            self.connection.execute(
+                """
+                UPDATE raw_mirofish_reports
+                SET simulation_id = ?, project_id = ?, content_checksum = ?, byte_size = ?,
+                    mime_type = ?, retrieved_at = ?, source_endpoint = ?, file_path = ?,
+                    canonical_payload_json = ?
+                WHERE report_id = ?
+                """,
+                values[1:] + [report_id],
+            )
+            return
+
         self.connection.execute(
             """
             INSERT INTO raw_mirofish_reports
@@ -3128,18 +3153,7 @@ class DatabaseStore:
              mime_type, retrieved_at, source_endpoint, file_path, canonical_payload_json)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            [
-                report_id,
-                report_record.get("simulation_id", ""),
-                report_record.get("project_id", ""),
-                report_record["content_checksum"],
-                int(report_record["byte_size"]),
-                report_record.get("mime_type", "application/json"),
-                retrieved_ts,
-                report_record.get("source_endpoint", "/api/report/list"),
-                report_record.get("file_path", ""),
-                report_record.get("canonical_payload_json", "{}"),
-            ],
+            values,
         )
 
     def close(self) -> None:
