@@ -435,6 +435,7 @@ class MiroFishScenarioEngine:
                 "status": "SUCCESS",
                 "raw_report_ids": [raw_report_id],
                 "raw_response_checksum": raw_report_checksum,
+                "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
                 "methodology_version": self.methodology_version,
             }
             run_id = MiroFishSimulationRun.compute_run_id(prelim_run_payload)

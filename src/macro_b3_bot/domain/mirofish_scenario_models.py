@@ -70,6 +70,7 @@ class MiroFishSimulationRun(BaseModel):
     ] = "SUCCESS"
     raw_report_ids: list[str] = Field(default_factory=list)
     raw_response_checksum: str = ""
+    execution_classification: str = "CONTROLLED_SIDECAR_HOMOLOGATION"
     methodology_version: str = "5A.3-mirofish-run-v3"
 
     @classmethod

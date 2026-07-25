@@ -115,7 +115,9 @@ def main() -> None:
                            "loader_diagnostics": diagnostics},
         "random_seed": "NOT_EXPOSED_BY_SERVICE", "prompt_hash": sha256(prompt.encode()).hexdigest(),
         "input_checksum": seed_checksum, "status": "SUCCESS", "raw_report_ids": [str(report.get("report_id"))],
-        "raw_response_checksum": checksum, "methodology_version": engine.methodology_version,
+        "raw_response_checksum": checksum,
+        "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
+        "methodology_version": engine.methodology_version,
     }
     run_id = MiroFishSimulationRun.compute_run_id(payload)
     hypotheses = engine._parse_mirofish_report_to_hypotheses(report, run_id, seed_package=seed)
