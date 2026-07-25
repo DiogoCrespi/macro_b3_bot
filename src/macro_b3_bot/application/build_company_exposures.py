@@ -201,9 +201,9 @@ class CompanyExposureBuilder:
                 if field_name not in values:
                     continue
                 payload = json.loads(payload_json)
-                # Delegated review is the explicit fallback when no human
-                # decision exists, and has the same evidentiary weight.
-                review_confidence = 1.0
+                # Delegated review is an explicit fallback, not equivalent to
+                # an independently authenticated human approval.
+                review_confidence = 1.0 if review_status == "HUMAN_APPROVED" else 0.60
                 payload["review_confidence"] = review_confidence
                 payload["review_assurance"] = (
                     "HUMAN"

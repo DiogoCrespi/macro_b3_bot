@@ -3,7 +3,7 @@
 
 **Data da avaliação:** 25/07/2026
 **Estado avaliado:** commit `2b7931f`
-**Última suíte local:** 339 testes aprovados em 80,65 s
+**Última suíte local:** 341 testes aprovados em 78,81 s
 
 ## Veredito
 
@@ -107,6 +107,22 @@ produção.
 
 Até que esses critérios sejam atendidos, o comportamento correto do sistema é bloquear
 ou retornar `NO_ACTION`, nunca fabricar uma tese, valuation ou ordem.
+
+## Estado do Sprint 5B.1
+
+O fechamento de integridade do MiroFish foi implementado e testado:
+
+- grounding controlado rejeita incompatibilidades como IPCA nacional versus inflação global;
+- revisão delegada permanece distinta de revisão humana (`0,60` versus `1,00`);
+- revisão, validação e binding são append-only;
+- o payload canônico da hipótese não é atualizado após revisão;
+- coincidência numérica ou textual não cria binding;
+- evento inexistente, relatório incompleto e timestamps ausentes bloqueiam o binding;
+- hipóteses não verificadas são neutras para o núcleo determinístico e aparecem apenas como warnings.
+
+Isso fecha os defeitos de integridade do 5B. A homologação econômica ainda depende de
+eventos reais com candidato setorial ativo, claims/documentos PIT compatíveis e replays
+históricos suficientes.
 
 ---
 

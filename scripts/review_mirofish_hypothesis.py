@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from macro_b3_bot.config import Settings
+from macro_b3_bot.application.semantic_grounding import validate_hypothesis_grounding
 from macro_b3_bot.infrastructure.store import DatabaseStore
 
 
@@ -41,31 +42,28 @@ def main() -> None:
     # Report fidelity is not upstream truth.  Validate controlled semantics
     # against the PIT macro release before accepting any hypothesis.
     store = DatabaseStore(Settings().data_dir / "macro_b3_bot.duckdb")
-    release = store.connection.execute(
-        "SELECT indicator, unit, geography FROM macro_releases WHERE release_id = ?",
+    release_row = store.connection.execute(
+        "SELECT release_id, indicator, unit, geography FROM macro_releases WHERE release_id = ?",
         [hypothesis["macro_event_ids"][0]],
     ).fetchone() if hypothesis.get("macro_event_ids") else None
-    indicator = str(release[0] if release else "")
-    geography_value = release[2] if release else ""
-    try:
-        geography_items = json.loads(geography_value) if isinstance(geography_value, str) else geography_value
-    except json.JSONDecodeError:
-        geography_items = [geography_value]
-    geography = ",".join(str(item) for item in (geography_items or []))
-    trigger = str(hypothesis.get("trigger", ""))
-    source_mismatch_reasons = []
-    if not hypothesis.get("source_document_ids"):
-        source_mismatch_reasons.append("SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS")
-    if "IPCA" in indicator.upper() and any(token in trigger.lower() for token in ("global", "全球", "global")):
-        source_mismatch_reasons.append("IPCA_NATIONAL_INDEX_MAPPED_TO_GLOBAL_INFLATION")
-    if "ITR" in report_text and any(token in report_text.lower() for token in ("information technology report", "信息技术报告")):
-        source_mismatch_reasons.append("CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT")
-    if release and geography and any(token in trigger.lower() for token in ("global", "全球")) and any(
-        item.upper() in {"BR", "BRAZIL", "BRASIL"} for item in geography.split(",")
-    ):
-        source_mismatch_reasons.append("BRAZILIAN_RELEASE_MAPPED_TO_GLOBAL_GEOGRAPHY")
-
-    status = "REJECTED_SEMANTIC_SOURCE_MISMATCH" if source_mismatch_reasons else "PARTIALLY_SUPPORTED"
+    release = (
+        {"release_id": release_row[0], "indicator": release_row[1], "unit": release_row[2], "geography": release_row[3]}
+        if release_row else None
+    )
+    as_of = datetime.fromisoformat(sets["scenario_sets"][0]["as_of_timestamp"].replace("Z", "+00:00"))
+    claims = store.get_evidence_claims_pit(as_of)
+    documents = store.get_source_documents_pit(as_of)
+    sector_states = store.get_sector_state_snapshots_pit(as_of)
+    grounding = validate_hypothesis_grounding(
+        hypothesis,
+        release=release,
+        claims=claims,
+        documents=documents,
+        sector_states=[s for s in sector_states if str(s.get("snapshot_id")) in set(hypothesis.get("sector_state_ids", []))],
+        report_text=report_text,
+    )
+    source_mismatch_reasons = grounding["reasons"]
+    status = grounding["status"] if source_mismatch_reasons else "PARTIALLY_SUPPORTED"
     decision = "DELEGATED_AI_REJECTED" if source_mismatch_reasons else "DELEGATED_AI_APPROVED"
     review_confidence = 0.60
     review_notes = (
@@ -103,12 +101,7 @@ def main() -> None:
         "source_excerpt_hash": hashlib.sha256(hypothesis["report_excerpt"].encode()).hexdigest(),
         "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY",
         "fact_review_hash": fact_review_hash,
-        "semantic_grounding": {
-            "release_id": hypothesis.get("macro_event_ids", [None])[0],
-            "indicator": indicator,
-            "geography": geography,
-            "source_mismatch_reasons": source_mismatch_reasons,
-        },
+        "semantic_grounding": {"release_id": hypothesis.get("macro_event_ids", [None])[0], **grounding},
     }
 
     # Reviews and validations are append-only projections. The canonical

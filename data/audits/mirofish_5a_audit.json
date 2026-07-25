@@ -196,17 +196,17 @@
     "order_executions": 0
   },
   "semantic_review": {
-    "review_id": "39750bb9f8b8ea5ae87d26ee8cf4a0830f2d4d784216512ff545c6fde06cc6b9",
+    "review_id": "18dc95afdf194b773b6204e1e010a828926af63ea3cdf4f42e1ff08d1490363d",
     "hypothesis_id": "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733",
     "simulation_run_id": "bc541d95a838300c4ad82a9c752a10a5dfdfab2a7a86f92d9ed50dffd141ebe7",
     "reviewer_type": "DELEGATED_AI_SEMANTIC_REVIEW",
     "reviewed_by": "Codex",
-    "reviewed_at": "2026-07-25T23:20:05.352344+00:00",
+    "reviewed_at": "2026-07-25T23:23:25.873367+00:00",
     "review_decision": "DELEGATED_AI_REJECTED",
     "review_status": "REJECTED_SEMANTIC_SOURCE_MISMATCH",
     "review_confidence": 0.6,
     "review_assurance": "DELEGATED_AI_ONLY_NOT_HUMAN_VERIFIED",
-    "review_notes": "SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS; IPCA_NATIONAL_INDEX_MAPPED_TO_GLOBAL_INFLATION; CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT; BRAZILIAN_RELEASE_MAPPED_TO_GLOBAL_GEOGRAPHY",
+    "review_notes": "CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT; IPCA_FACTOR_NOT_EXPLICITLY_PRESERVED; IPCA_NATIONAL_INDEX_MAPPED_TO_GLOBAL_INFLATION; SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS",
     "field_checks": {
       "trigger": true,
       "actors": true,
@@ -221,17 +221,25 @@
     "source_report_checksum": "be2a620b13c80d7680143028f6498c767b41a09aaf34954ddade3c2014a35670",
     "source_excerpt_hash": "bc058efe2cf7106f5f7e72d3ee42795a28f3a4be4365bdd723888e6469c719f1",
     "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY",
-    "fact_review_hash": "4ed130cbaf29851f9358c9a8ae4287832d634956ab5a3577ebe29f12475bcb2a",
+    "fact_review_hash": "be5ffc992c516ebf6c21542910fb67b8c3e402973b051bbaa1ba9fb6ebf37fcd",
     "semantic_grounding": {
       "release_id": "rel_bcb_ipca_202607",
-      "indicator": "IPCA",
-      "geography": "BR",
-      "source_mismatch_reasons": [
-        "SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS",
-        "IPCA_NATIONAL_INDEX_MAPPED_TO_GLOBAL_INFLATION",
+      "status": "REJECTED_SEMANTIC_SOURCE_MISMATCH",
+      "reasons": [
         "CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT",
-        "BRAZILIAN_RELEASE_MAPPED_TO_GLOBAL_GEOGRAPHY"
-      ]
+        "IPCA_FACTOR_NOT_EXPLICITLY_PRESERVED",
+        "IPCA_NATIONAL_INDEX_MAPPED_TO_GLOBAL_INFLATION",
+        "SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS"
+      ],
+      "indicator": "IPCA",
+      "unit": "%",
+      "geography": [
+        "br"
+      ],
+      "claim_ids_checked": [
+        "claim_ipca_acceleration_001"
+      ],
+      "document_ids_checked": []
     }
   },
   "sprint_5b_binding": {
@@ -260,7 +268,8 @@
         "temporal_consistency_status": "CONSISTENT",
         "contradiction_status": "SECTOR_CONFLICT_PRESENT",
         "binding_reason": "EXACT_BINDING_REQUIREMENTS_NOT_MET",
-        "binding_id": "5b051bf9221fdaab729a64f1141cbc3de9e56d7757e46998c81b7c1d387ef278"
+        "pit_inputs_complete": true,
+        "binding_id": "3bcf0dd90ed3d8a5240f22ce4cc0d3cf8093f46377d50b400d59dacfc4e60cda"
       }
     ],
     "decision_safety": "UNVERIFIED_OR_PARTIAL_HYPOTHESES_DO_NOT_INFLUENCE_DECISIONS"

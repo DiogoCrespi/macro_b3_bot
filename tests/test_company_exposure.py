@@ -337,7 +337,7 @@ def test_review_hash_covers_semantics_and_manifest_application_is_atomic(
          LIMIT 1
         """
     ).fetchone()
-    assert delegated_confidence == (1.0, "DELEGATED_AI")
+    assert delegated_confidence == (0.6, "DELEGATED_AI")
 
     original = reviewer.fact_review_hash(
         "FACT-A", "TEST3", "export_revenue_pct", "0.4", base, "test-v1"

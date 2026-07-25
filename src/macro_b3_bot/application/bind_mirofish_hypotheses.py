@@ -35,7 +35,7 @@ class MiroFishHypothesisBinder:
             [list(event_ids)],
         ).fetchall() if event_ids else []
         sector_rows = self.store.connection.execute(
-            "SELECT snapshot_id, as_of_timestamp, conflict_ratio, supporting_event_ids, opposing_event_ids "
+            "SELECT snapshot_id, sector, as_of_timestamp, conflict_ratio, supporting_event_ids, opposing_event_ids "
             "FROM sector_state_snapshots WHERE snapshot_id IN (SELECT UNNEST(?))",
             [list(sector_ids)],
         ).fetchall() if sector_ids else []
@@ -55,6 +55,8 @@ class MiroFishHypothesisBinder:
         edge_ids: set[str] = set()
         contradiction_ids: set[str] = set()
         candidate_rows = []
+        declared_factors = {str(value).casefold() for value in hypothesis.get("macro_factors", []) if value}
+        declared_sector_names = {str(row[1]).casefold() for row in sector_rows if row[1]}
         rejected_event = bool(self.store.connection.execute(
             "SELECT 1 FROM macro_event_candidates WHERE event_id IN (SELECT UNNEST(?)) "
             "AND status='MACRO_EVENT_REJECTED' LIMIT 1",
@@ -74,6 +76,16 @@ class MiroFishHypothesisBinder:
                 paths = []
             for path in paths:
                 if isinstance(path, dict):
+                    path_factor = str(path.get("factor", "")).casefold()
+                    path_sector = str(path.get("sector", path.get("final_sector", ""))).casefold()
+                    if path_factor and declared_factors and not any(
+                        path_factor in factor or factor in path_factor for factor in declared_factors
+                    ):
+                        continue
+                    if path_sector and declared_sector_names and not any(
+                        path_sector in sector or sector in path_sector for sector in declared_sector_names
+                    ):
+                        continue
                     if path.get("path_id"):
                         path_ids.add(str(path["path_id"]))
                     edge_ids.update(str(x) for x in path.get("causal_edge_ids", []) if x)
@@ -81,11 +93,14 @@ class MiroFishHypothesisBinder:
                 contradiction_ids.add(str(candidate_id))
 
         temporal_ok = bool(event_rows and sector_rows)
+        pit_inputs_complete = bool(event_rows and sector_rows)
         for _, available_at in event_rows:
             temporal_ok = temporal_ok and self._aware(available_at) is not None and self._aware(available_at) <= self._aware(as_of)
-        for _, snapshot_as_of, *_ in sector_rows:
+        for _, _, snapshot_as_of, *_ in sector_rows:
             temporal_ok = temporal_ok and self._aware(snapshot_as_of) is not None and self._aware(snapshot_as_of) <= self._aware(as_of)
         for _, _, _, event_available, candidate_as_of, _ in candidate_rows:
+            if event_available is None or candidate_as_of is None:
+                pit_inputs_complete = False
             if event_available and self._aware(event_available) > self._aware(as_of):
                 temporal_ok = False
             if candidate_as_of and self._aware(candidate_as_of) > self._aware(as_of):
@@ -97,12 +112,14 @@ class MiroFishHypothesisBinder:
             temporal_status = "CONSISTENT" if temporal_ok else "INCONSISTENT"
         if contradiction_ids:
             contradiction_status = "CONTRADICTION_DETECTED"
-        elif sector_rows and any(float(row[2] or 0) > 0 for row in sector_rows):
+        elif sector_rows and any(float(row[3] or 0) > 0 for row in sector_rows):
             contradiction_status = "SECTOR_CONFLICT_PRESENT"
         else:
             contradiction_status = "NO_CONTRADICTION_DETECTED"
-        if path_ids and not rejected_event and not contradiction_ids and not missing_claim_ids and event_rows and sector_rows:
+        if path_ids and not rejected_event and not contradiction_ids and not missing_claim_ids and pit_inputs_complete and temporal_ok:
             binding_status = "BOUND"
+        elif event_ids and not event_rows:
+            binding_status = "BLOCKED_EVENT_NOT_FOUND"
         elif rejected_event:
             binding_status = "REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE"
         elif event_rows and sector_rows:
@@ -123,7 +140,8 @@ class MiroFishHypothesisBinder:
             "contradiction_status": contradiction_status,
             "binding_reason": (
                 "EXACT_PIT_EVENT_CLAIM_SECTOR_PATH"
-                if path_ids and not missing_claim_ids and not rejected_event and not contradiction_ids
+                if path_ids and not missing_claim_ids and not rejected_event and not contradiction_ids and pit_inputs_complete and temporal_ok
                 else "EXACT_BINDING_REQUIREMENTS_NOT_MET"
             ),
+            "pit_inputs_complete": pit_inputs_complete,
         }

@@ -118,7 +118,8 @@
         "0c0e7a1f8b0035011ae94d28",
         "rel_bcb_ipca_202607"
       ],
-      "binding_reason": "EXACT_BINDING_REQUIREMENTS_NOT_MET"
+      "binding_reason": "EXACT_BINDING_REQUIREMENTS_NOT_MET",
+      "pit_inputs_complete": true
     }
   ]
 }
