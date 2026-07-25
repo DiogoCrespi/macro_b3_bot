@@ -20,7 +20,11 @@ class ScenarioSeedPackage(BaseModel):
     known_actor_ids: list[str] = Field(default_factory=list)
     causal_graph_version: str = "1.0.0"
     source_document_ids: list[str] = Field(default_factory=list)
-    prompt_template_version: str = "5A.1-mirofish-seed-v1"
+    prompt_template_version: str = "5A.2-mirofish-seed-v2"
+    seed_file_path: str = ""
+    seed_file_checksum: str = ""
+    mime_type: str = "text/markdown"
+    source_input_ids: list[str] = Field(default_factory=list)
 
     @classmethod
     def compute_seed_id(cls, payload: dict[str, Any]) -> str:
@@ -48,10 +52,16 @@ class MiroFishSimulationRun(BaseModel):
     random_seed: str = "NOT_EXPOSED_BY_SERVICE"
     prompt_hash: str = ""
     input_checksum: str = ""
-    status: Literal["SUCCESS", "SERVICE_OFFLINE_DETERMINISTIC_FALLBACK", "FAILED"] = "SUCCESS"
+    status: Literal[
+        "SUCCESS",
+        "SERVICE_OFFLINE",
+        "BLOCKED_EMPTY_PIT_SEED",
+        "FAILED_INCOMPLETE_SERVICE_RUN",
+        "FAILED",
+    ] = "SUCCESS"
     raw_report_ids: list[str] = Field(default_factory=list)
     raw_response_checksum: str = ""
-    methodology_version: str = "5A.1-mirofish-run-v1"
+    methodology_version: str = "5A.2-mirofish-run-v2"
 
     @classmethod
     def compute_run_id(cls, payload: dict[str, Any]) -> str:
@@ -68,7 +78,7 @@ class ScenarioHypothesis(BaseModel):
     """
     hypothesis_id: str
     simulation_run_id: str
-    scenario_type: Literal["BASE", "BULL", "BEAR", "CONTRARIAN", "TAIL"] = "BASE"
+    scenario_type: Literal["BASE", "BULL", "BEAR", "CONTRARIAN", "TAIL", "UNKNOWN"] = "BASE"
     trigger: str = ""
     actors: list[str] = Field(default_factory=list)
     actions: list[str] = Field(default_factory=list)
@@ -79,7 +89,11 @@ class ScenarioHypothesis(BaseModel):
     supporting_evidence_ids: list[str] = Field(default_factory=list)
     contradicting_evidence_ids: list[str] = Field(default_factory=list)
     verification_status: Literal["UNVERIFIED", "PARTIALLY_SUPPORTED", "SUPPORTED", "CONTRADICTED", "REJECTED"] = "UNVERIFIED"
-    confidence: float = 0.50
+    confidence: float | None = None
+    report_excerpt: str = ""
+    raw_report_id: str = ""
+    report_checksum: str = ""
+    parser_version: str = "5A.2-mirofish-parser-v1"
 
     @classmethod
     def compute_hypothesis_id(cls, payload: dict[str, Any]) -> str:
@@ -97,9 +111,9 @@ class ScenarioSet(BaseModel):
     as_of_timestamp: str
     scenario_hypothesis_ids: list[str] = Field(default_factory=list)
     coverage_summary: str = ""
-    contradiction_summary: str = ""
+    contradiction_summary: str = "CONTRADICTION_ANALYSIS_NOT_EXECUTED"
     missing_variables: list[str] = Field(default_factory=list)
-    methodology_version: str = "5A.1-scenario-set-v1"
+    methodology_version: str = "5A.2-scenario-set-v2"
     created_at: str = ""
 
     @classmethod
@@ -107,3 +121,4 @@ class ScenarioSet(BaseModel):
         canonical = {k: v for k, v in payload.items() if k not in ("scenario_set_id", "created_at")}
         sorted_keys = json.dumps(canonical, sort_keys=True, default=str)
         return sha256(sorted_keys.encode("utf-8")).hexdigest()
+

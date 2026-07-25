@@ -1021,7 +1021,7 @@ class DatabaseStore:
                 simulation_run_id VARCHAR NOT NULL,
                 scenario_type VARCHAR NOT NULL,
                 verification_status VARCHAR NOT NULL,
-                confidence DOUBLE NOT NULL,
+                confidence DOUBLE,
                 canonical_payload_json VARCHAR NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
@@ -1083,6 +1083,201 @@ class DatabaseStore:
                 ORDER BY version DESC, received_at DESC
             ) = 1;
         """)
+
+    def get_macro_releases_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todas as macro_releases disponíveis no momento do cutoff (available_at <= cutoff_dt).
+        """
+        rows = self.connection.execute(
+            """
+            SELECT release_id, source, series_code, indicator, geography, frequency, unit,
+                   reference_date, published_at, available_at, collected_at, vintage_date,
+                   realtime_start, realtime_end, availability_precision, revision_number, is_initial_release,
+                   actual_value, previous_value, revised_previous_value, consensus_value,
+                   raw_checksum, record_checksum, ingestion_run_id, created_at
+            FROM macro_releases
+            WHERE available_at <= ?
+            ORDER BY available_at DESC, reference_date DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cols = [
+            "release_id", "source", "series_code", "indicator", "geography", "frequency", "unit",
+            "reference_date", "published_at", "available_at", "collected_at", "vintage_date",
+            "realtime_start", "realtime_end", "availability_precision", "revision_number", "is_initial_release",
+            "actual_value", "previous_value", "revised_previous_value", "consensus_value",
+            "raw_checksum", "record_checksum", "ingestion_run_id", "created_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_evidence_claims_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todos os evidence_claims disponíveis no momento do cutoff (created_at <= cutoff_dt).
+        """
+        rows = self.connection.execute(
+            """
+            SELECT claim_id, document_id, cvm_code, ticker, claim_type, subject, predicate,
+                   object_text, numeric_value, unit, currency, effective_date, horizon_end,
+                   source_page, source_start, source_end, source_excerpt, extraction_method,
+                   confidence, created_at
+            FROM evidence_claims
+            WHERE created_at <= ?
+            ORDER BY created_at DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cols = [
+            "claim_id", "document_id", "cvm_code", "ticker", "claim_type", "subject", "predicate",
+            "object_text", "numeric_value", "unit", "currency", "effective_date", "horizon_end",
+            "source_page", "source_start", "source_end", "source_excerpt", "extraction_method",
+            "confidence", "created_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_sector_state_snapshots_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todos os sector_state_snapshots disponíveis no momento do cutoff (as_of_timestamp <= cutoff_dt).
+        Prioriza o mais recente por setor.
+        """
+        rows = self.connection.execute(
+            """
+            WITH ranked_snapshots AS (
+                SELECT *,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY sector
+                           ORDER BY as_of_timestamp DESC, created_at DESC
+                       ) as rn
+                FROM sector_state_snapshots
+                WHERE as_of_timestamp <= ?
+            )
+            SELECT snapshot_id, sector, as_of_timestamp, net_impact, bullish_impact,
+                   bearish_impact, conflict_ratio, supporting_event_ids, opposing_event_ids,
+                   confidence, status, run_id, graph_version, created_at
+            FROM ranked_snapshots
+            WHERE rn = 1
+            ORDER BY sector ASC, as_of_timestamp DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cols = [
+            "snapshot_id", "sector", "as_of_timestamp", "net_impact", "bullish_impact",
+            "bearish_impact", "conflict_ratio", "supporting_event_ids", "opposing_event_ids",
+            "confidence", "status", "run_id", "graph_version", "created_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_macro_regime_snapshots_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todos os macro_regime_snapshots disponíveis no momento do cutoff (snapshot_date <= cutoff_dt).
+        Prioriza o mais recente.
+        """
+        rows = self.connection.execute(
+            """
+            WITH ranked_snapshots AS (
+                SELECT *,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY 'global' -- Assumindo que o regime macro é "global" e não por setor
+                           ORDER BY snapshot_date DESC, captured_at DESC
+                       ) as rn
+                FROM macro_regime_snapshots
+                WHERE snapshot_date <= ?
+            )
+            SELECT snapshot_id, snapshot_date, captured_at, growth_direction, inflation_direction,
+                   liquidity_stance, oil_regime, enso_phase, regime_label, confidence,
+                   evidence_release_ids, ingestion_run_id, created_at
+            FROM ranked_snapshots
+            WHERE rn = 1
+            ORDER BY snapshot_date DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cols = [
+            "snapshot_id", "snapshot_date", "captured_at", "growth_direction", "inflation_direction",
+            "liquidity_stance", "oil_regime", "enso_phase", "regime_label", "confidence",
+            "evidence_release_ids", "ingestion_run_id", "created_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_macro_event_candidates_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todos os macro_event_candidates disponíveis no momento do cutoff (detected_at <= cutoff_dt).
+        """
+        rows = self.connection.execute(
+            """
+            SELECT event_id, event_type, indicator, geography, affected_variables,
+                   reference_date, detected_at, horizon_months, actual_value, expected_value,
+                   surprise_value, surprise_score, novelty_score, persistence_score,
+                   regime_shift_score, data_quality_score, direction, current_regime,
+                   evidence_ids, status, score_breakdown, source, series_code,
+                   ingestion_run_id, created_at
+            FROM macro_event_candidates
+            WHERE detected_at <= ?
+            ORDER BY detected_at DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cols = [
+            "event_id", "event_type", "indicator", "geography", "affected_variables",
+            "reference_date", "detected_at", "horizon_months", "actual_value", "expected_value",
+            "surprise_value", "surprise_score", "novelty_score", "persistence_score",
+            "regime_shift_score", "data_quality_score", "direction", "current_regime",
+            "evidence_ids", "status", "score_breakdown", "source", "series_code",
+            "ingestion_run_id", "created_at"
+        ]
+        return [dict(zip(cols, r)) for r in rows]
+
+    def get_source_documents_pit(self, cutoff_dt: datetime) -> list[dict]:
+        """
+        Retorna todos os documentos da CVM (cvm_documents) e documentos baixados (downloaded_documents)
+        disponíveis no momento do cutoff (filing_available_at/downloaded_at <= cutoff_dt).
+        """
+        cvm_docs_rows = self.connection.execute(
+            """
+            SELECT document_id, document_type, cvm_code, cnpj, reference_date,
+                   received_at, filing_available_at as available_at, version, raw_zip_checksum as checksum,
+                   ingestion_run_id, 'CVM' as source_type
+            FROM cvm_documents
+            WHERE filing_available_at <= ?
+            ORDER BY filing_available_at DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        cvm_docs_cols = [
+            "document_id", "document_type", "cvm_code", "cnpj", "reference_date",
+            "received_at", "available_at", "version", "checksum",
+            "ingestion_run_id", "source_type"
+        ]
+        cvm_docs = [dict(zip(cvm_docs_cols, r)) for r in cvm_docs_rows]
+
+        downloaded_docs_rows = self.connection.execute(
+            """
+            SELECT document_id, source_url, http_status, mime_type, file_extension,
+                   file_size_bytes, raw_path, document_checksum as checksum, downloaded_at as available_at,
+                   ingestion_run_id, 'DOWNLOADED' as source_type
+            FROM downloaded_documents
+            WHERE downloaded_at <= ?
+            ORDER BY downloaded_at DESC
+            """,
+            [cutoff_dt]
+        ).fetchall()
+        downloaded_docs_cols = [
+            "document_id", "source_url", "http_status", "mime_type", "file_extension",
+            "file_size_bytes", "raw_path", "checksum", "available_at",
+            "ingestion_run_id", "source_type"
+        ]
+        downloaded_docs = [dict(zip(downloaded_docs_cols, r)) for r in downloaded_docs_rows]
+
+        return cvm_docs + downloaded_docs
+
+    def get_causal_graph_version_pit(self, cutoff_dt: datetime) -> str:
+        """
+        Retorna a versão mais recente do grafo causal disponível no momento do cutoff.
+        Por enquanto, retorna uma versão estática, pois não há tabela dedicada para versionamento de grafo.
+        """
+        # TODO: Implementar lógica real para recuperar a versão do grafo causal do DB
+        # Por exemplo, de uma tabela 'causal_graph_versions' se existir
+        # Ou derivado de uma sequência de eventos ou commits
+        return "1.0.0"
 
     def start_ingestion_run(self, run_id: str, source: str) -> None:
         self.connection.execute(
@@ -2721,5 +2916,35 @@ class DatabaseStore:
             ],
         )
 
+    def save_scenario_hypothesis(self, hypothesis: dict[str, Any]) -> None:
+        """Persists a ScenarioHypothesis into DuckDB idempotently."""
+        hyp_id = hypothesis["hypothesis_id"]
+        existing = self.connection.execute(
+            "SELECT 1 FROM scenario_hypotheses WHERE hypothesis_id = ?",
+            [hyp_id]
+        ).fetchone()
+        if existing:
+            return
+
+        conf = hypothesis.get("confidence")
+        conf_val = float(conf) if conf is not None else None
+
+        self.connection.execute(
+            """
+            INSERT INTO scenario_hypotheses
+            (hypothesis_id, simulation_run_id, scenario_type, verification_status, confidence, canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            [
+                hyp_id,
+                hypothesis["simulation_run_id"],
+                hypothesis.get("scenario_type", "BASE"),
+                hypothesis.get("verification_status", "UNVERIFIED"),
+                conf_val,
+                json.dumps(hypothesis, default=str),
+            ],
+        )
+
     def close(self) -> None:
         self.connection.close()
+

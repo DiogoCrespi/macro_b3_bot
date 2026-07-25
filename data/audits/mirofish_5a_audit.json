@@ -1,15 +1,13 @@
 {
   "sprint": "5A",
-  "methodology_version": "5A.1-mirofish-engine-v1",
+  "methodology_version": "5A.2-mirofish-engine-v2",
   "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
   "seed_package": {
-    "seed_package_id": "92839d719ef81513286d7da0f78dea3970c127b2c05e3656fc3f98183b8a24b6",
+    "seed_package_id": "966797b2eed444131b6ebf37b2c9d229ca0d43ce2bb64eecf9fce9b43b6aa3dc",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
     "material_event_ids": [],
     "evidence_claim_ids": [],
-    "macro_state_ids": [
-      "macro_st_20260724"
-    ],
+    "macro_state_ids": [],
     "sector_state_ids": [],
     "known_actor_ids": [
       "BCB",
@@ -20,50 +18,49 @@
     ],
     "causal_graph_version": "1.0.0",
     "source_document_ids": [],
-    "prompt_template_version": "5A.1-mirofish-seed-v1"
+    "prompt_template_version": "5A.2-mirofish-seed-v2",
+    "seed_file_path": "BLOCKED_EMPTY_PIT_SEED",
+    "seed_file_checksum": "BLOCKED_EMPTY_PIT_SEED",
+    "mime_type": "text/markdown",
+    "source_input_ids": []
   },
   "simulation_run": {
-    "simulation_run_id": "c7c9e038e67ebfef85e20f9828ebcb780a51b9f74a2f3851ce00c01015fe9da6",
-    "seed_package_id": "92839d719ef81513286d7da0f78dea3970c127b2c05e3656fc3f98183b8a24b6",
-    "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
-    "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
-    "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
-    "requested_at": "2026-07-24T13:46:19.381911+00:00",
-    "completed_at": "2026-07-24T13:46:19.381932+00:00",
-    "service_version": "mirofish-v1.0-offline",
-    "model_information": "NOT_EXPOSED_BY_SERVICE",
+    "simulation_run_id": "b7f12ff0af9cd75c1cae84e17f73e5a2969eef0815bc83b99564dba8c30cc1c4",
+    "seed_package_id": "966797b2eed444131b6ebf37b2c9d229ca0d43ce2bb64eecf9fce9b43b6aa3dc",
+    "mirofish_project_id": "BLOCKED_EMPTY_PIT_SEED",
+    "mirofish_graph_id": "BLOCKED_EMPTY_PIT_SEED",
+    "mirofish_simulation_id": "BLOCKED_EMPTY_PIT_SEED",
+    "requested_at": "2026-07-25T00:49:15.053555+00:00",
+    "completed_at": "2026-07-25T00:49:15.053565+00:00",
+    "service_version": "mirofish-v1.0-blocked",
+    "model_information": "BLOCKED_EMPTY_PIT_SEED",
     "configuration": {
-      "offline_fallback": true
+      "empty_pit_seed": true
     },
-    "random_seed": "NOT_EXPOSED_BY_SERVICE",
-    "prompt_hash": "d1932ed2184d57f5666fd20af71585ba42f162a18bc2faefa59e8ca7b75c7d56",
-    "input_checksum": "92839d719ef81513286d7da0f78dea3970c127b2c05e3656fc3f98183b8a24b6",
-    "status": "SERVICE_OFFLINE_DETERMINISTIC_FALLBACK",
+    "random_seed": "BLOCKED_EMPTY_PIT_SEED",
+    "prompt_hash": "",
+    "input_checksum": "",
+    "status": "BLOCKED_EMPTY_PIT_SEED",
     "raw_report_ids": [],
-    "raw_response_checksum": "SERVICE_OFFLINE_NO_RESPONSE",
-    "methodology_version": "5A.1-mirofish-engine-v1"
+    "raw_response_checksum": "BLOCKED_EMPTY_PIT_SEED",
+    "methodology_version": "5A.2-mirofish-engine-v2"
   },
   "scenario_set": {
-    "scenario_set_id": "975b0973255c7cfb4b8055fefc9e6499dc0d45c2696cadb3cacb87d0c15dd342",
-    "event_id": "GENERAL_MACRO_CUTOFF",
+    "scenario_set_id": "f5eb62221484ac63b189e14eb282f39ebcc408316c504cf6b2cc42eec2be33da",
+    "event_id": "BLOCKED_EMPTY_PIT_SEED",
     "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-    "scenario_hypothesis_ids": [
-      "5d13cb1596e2fa3d97eb88ac778bc6c4193ebea87cdb3c1655c5ae74aec8e6b8",
-      "338a8bee8b7af3cf9a48b04914ae34348b2fd6e904b32263b47c1c22d70b5d9a",
-      "ad2d37a766031133219f19bc8505f7bc2ba9baba294c4f568e7a72230255bdc0",
-      "afc38165a143da3bd95362ec1e6b88d3be3d5407291aa167fb5240628b007e92",
-      "a5335d01c8f7b570f7fd84af0760945b9fe421e5463de4f7b900339bb21ab03f"
-    ],
-    "coverage_summary": "Offline fallback scenario set generated for cutoff 2026-07-24T00:00:00+00:00 across 5 scenario types.",
-    "contradiction_summary": "Zero material contradictions detected in offline mode.",
+    "scenario_hypothesis_ids": [],
+    "coverage_summary": "Scenario generation blocked due to empty PIT seed for cutoff 2026-07-24T00:00:00+00:00.",
+    "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
     "missing_variables": [
+      "REAL_PIT_DATA",
       "REALTIME_MIROFISH_INTERACTION"
     ],
-    "methodology_version": "5A.1-scenario-set-v1",
-    "created_at": "2026-07-24T13:46:19.382186+00:00"
+    "methodology_version": "5A.2-scenario-set-v2",
+    "created_at": "2026-07-25T00:49:15.053633+00:00"
   },
-  "total_hypotheses": 5,
-  "unverified_count": 5,
+  "total_hypotheses": 0,
+  "unverified_count": 0,
   "safety_assurances": {
     "dcf_executed": 0,
     "price_targets": 0,

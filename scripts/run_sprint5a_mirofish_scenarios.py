@@ -32,12 +32,17 @@ from macro_b3_bot.application.mirofish_scenario_engine import MiroFishScenarioEn
 
 
 def parse_cli_args() -> datetime:
-    as_of_str = "2026-07-24T00:00:00Z"
+    as_of_str = None
     for i, arg in enumerate(sys.argv[1:], 1):
         if arg.startswith("--as-of="):
             as_of_str = arg.split("=", 1)[1]
         elif arg == "--as-of" and i < len(sys.argv) - 1:
             as_of_str = sys.argv[i + 1]
+
+    if as_of_str is None:
+        print("Erro: O argumento --as-of é obrigatório.")
+        print("Uso: python run_sprint5a_mirofish_scenarios.py --as-of=YYYY-MM-DDTHH:MM:SSZ")
+        sys.exit(1)
 
     dt = datetime.fromisoformat(as_of_str.replace("Z", "+00:00"))
     if dt.tzinfo is None:
@@ -62,7 +67,7 @@ def main() -> None:
         except Exception:
             client = None
 
-    engine = MiroFishScenarioEngine(client=client)
+    engine = MiroFishScenarioEngine(client=client, store=store)
 
     print("\nGenerating Point-In-Time scenario hypotheses...")
     seed_pkg, sim_run, scenario_set, hypotheses = engine.generate_scenarios_for_cutoff(
@@ -73,6 +78,8 @@ def main() -> None:
     store.save_scenario_seed_package(seed_pkg.model_dump(mode="json"))
     store.save_mirofish_simulation_run(sim_run.model_dump(mode="json"))
     store.save_scenario_set(scenario_set.model_dump(mode="json"))
+    for h in hypotheses:
+        store.save_scenario_hypothesis(h.model_dump(mode="json"))
 
     # Save 3 audit manifests
     audits_dir = Path("data/audits")

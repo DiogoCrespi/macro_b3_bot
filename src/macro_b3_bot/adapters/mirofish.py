@@ -26,18 +26,25 @@ class MiroFishClient:
         self.report_prefix = report_prefix.rstrip("/")
 
     def healthcheck(self) -> bool:
-        for path in ("/", "/health", f"{self.graph_prefix}/project/list"):
+        """Validates MiroFish HTTP service health.
+
+        Requires HTTP 200 OK from a known endpoint and a valid JSON object.
+        Rejects 401, 403, 404, 429, or 5xx responses.
+        """
+        for path in (f"{self.graph_prefix}/project/list", "/health"):
             try:
                 response = self.client.get(path)
-                if response.status_code < 500:
-                    return True
-            except httpx.HTTPError:
+                if response.status_code == 200:
+                    payload = response.json()
+                    if isinstance(payload, (dict, list)):
+                        return True
+            except (httpx.HTTPError, ValueError):
                 continue
         return False
 
     def generate_ontology(
         self,
-        seed_files: list[Path],
+        seed_files: list[Path | str],
         simulation_requirement: str,
         *,
         project_name: str,
@@ -46,7 +53,8 @@ class MiroFishClient:
         opened = []
         try:
             multipart = []
-            for path in seed_files:
+            for item in seed_files:
+                path = Path(item)
                 handle = path.open("rb")
                 opened.append(handle)
                 multipart.append(("files", (path.name, handle, "application/octet-stream")))
@@ -65,18 +73,39 @@ class MiroFishClient:
             for handle in opened:
                 handle.close()
 
-    def create_simulation(self, project_id: str, graph_id: str | None = None) -> dict[str, Any]:
-        payload: dict[str, Any] = {"project_id": project_id, "enable_twitter": True, "enable_reddit": True}
+    def create_simulation(
+        self,
+        project_id: str,
+        graph_id: str | None = None,
+        config: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "project_id": project_id,
+            "enable_twitter": True,
+            "enable_reddit": True,
+        }
         if graph_id:
             payload["graph_id"] = graph_id
+        if config:
+            payload.update(config)
         response = self.client.post(f"{self.simulation_prefix}/create", json=payload)
         response.raise_for_status()
         return response.json()
 
-    def list_reports(self, simulation_id: str) -> dict[str, Any]:
-        response = self.client.get(f"{self.report_prefix}/list", params={"simulation_id": simulation_id})
+    def list_reports(
+        self,
+        project_id: str | None = None,
+        simulation_id: str | None = None,
+    ) -> dict[str, Any]:
+        params: dict[str, Any] = {}
+        if project_id:
+            params["project_id"] = project_id
+        if simulation_id:
+            params["simulation_id"] = simulation_id
+        response = self.client.get(f"{self.report_prefix}/list", params=params)
         response.raise_for_status()
         return response.json()
 
     def close(self) -> None:
         self.client.close()
+
