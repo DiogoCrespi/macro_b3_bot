@@ -16,10 +16,12 @@ from datetime import datetime, timezone
 from hashlib import sha256
 import json
 from pathlib import Path
-import re
 from typing import Any
 
-from macro_b3_bot.adapters.mirofish import MiroFishClient
+from macro_b3_bot.adapters.mirofish import (
+    MIROFISH_REPORT_SCHEMA_VERSION,
+    MiroFishClient,
+)
 from macro_b3_bot.domain.mirofish_scenario_models import (
     MiroFishSimulationRun,
     ScenarioHypothesis,
@@ -228,7 +230,15 @@ class MiroFishScenarioEngine:
             **seed_payload_base,
         )
 
-        prompt_str = f"Simulate macro and sector scenarios as of {as_of_str} with {len(material_event_ids)} macro events, {len(evidence_claim_ids)} evidence claims, and {len(sector_state_snapshots_pit)} sector states."
+        prompt_str = (
+            f"Simulate macro and sector scenarios as of {as_of_str} with "
+            f"{len(material_event_ids)} macro events, {len(evidence_claim_ids)} "
+            f"evidence claims, and {len(sector_state_snapshots_pit)} sector states. "
+            f"The final report MUST be native JSON matching schema "
+            f"{MIROFISH_REPORT_SCHEMA_VERSION}; return no narrative-only report. "
+            "Each scenario requires scenario_type, trigger and report_excerpt "
+            "copied verbatim from the report."
+        )
         prompt_hash = sha256(prompt_str.encode("utf-8")).hexdigest()
         input_checksum = seed_file_checksum
 
@@ -283,10 +293,20 @@ class MiroFishScenarioEngine:
         assert self.client is not None
         try:
             # 1. Generate ontology / graph
+            report_config = MiroFishClient.structured_report_config()
+            ontology_context = (
+                "The downstream report must be emitted as native structured JSON. "
+                f"Use schema version {MIROFISH_REPORT_SCHEMA_VERSION}. "
+                "Do not substitute ontology JSON or narrative prose for the report. "
+                "The report object must contain report_text and scenarios, and each "
+                "scenario must contain scenario_type, trigger and report_excerpt. "
+                f"Schema hash: {report_config['report_schema_hash']}."
+            )
             res = self.client.generate_ontology(
                 [str(seed_file_path)],
                 prompt_str,
                 project_name=f"proj_{int(cutoff_dt.timestamp())}",
+                additional_context=ontology_context,
             )
             project_id = res.get("project_id")
             graph_id = res.get("graph_id")
@@ -300,7 +320,7 @@ class MiroFishScenarioEngine:
                 poll_proj(project_id)
 
             # 2. Create simulation
-            sim_res = self.client.create_simulation(project_id, graph_id, config={})
+            sim_res = self.client.create_simulation(project_id, graph_id, config=report_config)
             simulation_id = sim_res.get("simulation_id")
 
             if not simulation_id:
@@ -375,7 +395,11 @@ class MiroFishScenarioEngine:
                 "completed_at": datetime.now(timezone.utc).isoformat(),
                 "service_version": service_ver,
                 "model_information": model_info,
-                "configuration": {"loader_diagnostics": loader_diagnostics, **res.get("config", {})},
+                "configuration": {
+                    "loader_diagnostics": loader_diagnostics,
+                    "structured_report_contract": report_config,
+                    **res.get("config", {}),
+                },
                 "random_seed": str(res.get("seed", "NOT_EXPOSED_BY_SERVICE")),
                 "prompt_hash": prompt_hash,
                 "input_checksum": input_checksum,
@@ -538,33 +562,15 @@ class MiroFishScenarioEngine:
         raw_report_json_str = json.dumps(raw_report, sort_keys=True, default=str)
         raw_report_checksum = sha256(raw_report_json_str.encode("utf-8")).hexdigest()
 
-        scenarios_from_report = (
-            raw_report.get("scenarios") or raw_report.get("hypotheses") or []
-        )
-        is_structured_extraction = False
-        extraction_meta = {}
-
-        if not scenarios_from_report:
-            summary = raw_report.get("analysis_summary") or raw_report.get("summary") or raw_report.get("content") or ""
-            if isinstance(summary, str) and summary.strip():
-                extracted = self._extract_scenarios_from_report_narrative(summary)
-                if extracted:
-                    scenarios_from_report = extracted
-                    is_structured_extraction = True
-                    prompt_text = f"Extract structured scenarios from narrative summary: {summary[:200]}"
-                    prompt_hash = sha256(prompt_text.encode("utf-8")).hexdigest()
-                    resp_checksum = sha256(json.dumps(extracted, sort_keys=True, default=str).encode("utf-8")).hexdigest()
-                    extraction_meta = {
-                        "extraction_model": "structured-json-extractor-v1",
-                        "extraction_prompt": prompt_text,
-                        "extraction_prompt_hash": prompt_hash,
-                        "extraction_schema_version": "5A.3-json-schema-v1",
-                        "raw_extraction_response": extracted,
-                        "extraction_response_checksum": resp_checksum,
-                    }
-
-        if not scenarios_from_report:
+        valid_report, validation_reason = MiroFishClient.validate_structured_report(raw_report)
+        if not valid_report:
             return []
+        scenarios_from_report = raw_report["scenarios"]
+        extraction_meta = {
+            "report_schema_version": raw_report["schema_version"],
+            "report_schema_validation": validation_reason,
+            "extraction_mode": "NATIVE_SIDEcar_STRUCTURED_REPORT",
+        }
 
         macro_event_ids = list(seed_package.material_event_ids) if seed_package else []
         evidence_claim_ids = list(seed_package.evidence_claim_ids) if seed_package else []
@@ -610,15 +616,13 @@ class MiroFishScenarioEngine:
             ):
                 continue
 
-            # Verifiable substring check: excerpt must belong to raw report content
-            if excerpt and excerpt not in raw_report_json_str:
+            # The excerpt must be present in the sidecar's report body, not
+            # merely echoed in the scenario object itself.
+            report_text = str(raw_report.get("report_text", ""))
+            if excerpt and excerpt not in report_text:
                 raise ValueError(f"report_excerpt '{excerpt}' is not a verifiable substring of raw report")
 
-            parser_ver = (
-                "5A.3-LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT"
-                if is_structured_extraction
-                else "5A.3-mirofish-parser-v2"
-            )
+            parser_ver = "5A.3-native-mirofish-structured-report-v1"
 
             h_payload = {
                 "simulation_run_id": run_id,
@@ -648,32 +652,3 @@ class MiroFishScenarioEngine:
             hypotheses.append(ScenarioHypothesis(hypothesis_id=h_id, **h_payload))
 
         return hypotheses
-
-    def _extract_scenarios_from_report_narrative(self, summary: str) -> list[dict[str, Any]]:
-        """
-        Attempts structured JSON extraction if report summary contains embedded JSON.
-        Returns empty list if narrative does not contain valid structured scenarios.
-        """
-        # Search for embedded JSON array or markdown json code block
-        match = re.search(r"```(?:json)?\s*(\[\s*\{.*?\}\s*\])\s*```", summary, re.DOTALL)
-        json_str = match.group(1) if match else None
-        if not json_str and summary.strip().startswith("[") and summary.strip().endswith("]"):
-            json_str = summary.strip()
-
-        if json_str:
-            try:
-                parsed = json.loads(json_str)
-                if isinstance(parsed, list) and all(isinstance(item, dict) for item in parsed):
-                    required = ("trigger",)
-                    if all(
-                        all(str(item.get(field, "")).strip() for field in required)
-                        and any(
-                            str(item.get(field, "")).strip()
-                            for field in ("excerpt", "report_excerpt", "trigger")
-                        )
-                        for item in parsed
-                    ):
-                        return parsed
-            except (json.JSONDecodeError, ValueError):
-                pass
-        return []

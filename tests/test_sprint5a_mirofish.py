@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 import httpx
 
-from macro_b3_bot.adapters.mirofish import MiroFishClient
+from macro_b3_bot.adapters.mirofish import MiroFishClient, MIROFISH_REPORT_SCHEMA_VERSION
 from macro_b3_bot.application.mirofish_scenario_engine import MiroFishScenarioEngine
 from macro_b3_bot.domain.mirofish_scenario_models import (
     ScenarioSeedPackage,
@@ -41,13 +41,15 @@ def mock_client():
         "reports": [
             {
                 "report_id": "test_report_789",
+                "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+                "report_text": "Commodity export prices surge",
                 "scenarios": [
                     {
-                        "type": "BULL",
+                        "scenario_type": "BULL",
                         "trigger": "Commodity rally",
                         "actors": ["BCB"],
                         "confidence": 0.75,
-                        "excerpt": "Commodity export prices surge",
+                        "report_excerpt": "Commodity export prices surge",
                     }
                 ],
             }
@@ -142,7 +144,9 @@ def test_online_service_success(mock_client, mock_store, tmp_path: Path) -> None
 
             mock_client.healthcheck.assert_called_once()
             mock_client.generate_ontology.assert_called_once()
-            mock_client.create_simulation.assert_called_once_with("test_proj_123", "test_graph_456", config={})
+            config = mock_client.create_simulation.call_args.kwargs["config"]
+            assert config["report_schema_version"] == MIROFISH_REPORT_SCHEMA_VERSION
+            assert config["require_structured_report"] is True
 
 
 def test_online_service_incomplete_ontology_fail(mock_client, mock_store, tmp_path: Path) -> None:
@@ -227,25 +231,29 @@ def test_online_service_no_reports_fail(mock_client, mock_store, tmp_path: Path)
 def test_altering_report_content_changes_hypothesis_ids() -> None:
     report1 = {
         "report_id": "rep_001",
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Selic interest rate cut expected to boost credit",
         "scenarios": [
             {
-                "type": "BULL",
+                "scenario_type": "BULL",
                 "trigger": "Selic cut by 50bps",
                 "actors": ["BCB"],
                 "confidence": 0.80,
-                "excerpt": "Selic interest rate cut expected to boost credit",
+                "report_excerpt": "Selic interest rate cut expected to boost credit",
             }
         ],
     }
     report2 = {
         "report_id": "rep_001",
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Selic interest rate hike expected to contract credit",
         "scenarios": [
             {
-                "type": "BEAR",
+                "scenario_type": "BEAR",
                 "trigger": "Selic hike by 50bps",
                 "actors": ["BCB"],
                 "confidence": 0.60,
-                "excerpt": "Selic interest rate hike expected to contract credit",
+                "report_excerpt": "Selic interest rate hike expected to contract credit",
             }
         ],
     }
@@ -262,13 +270,15 @@ def test_altering_report_content_changes_hypothesis_ids() -> None:
 def test_idempotent_report_re_run() -> None:
     report = {
         "report_id": "rep_001",
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Selic interest rate cut expected to boost credit",
         "scenarios": [
             {
-                "type": "BULL",
+                "scenario_type": "BULL",
                 "trigger": "Selic cut by 50bps",
                 "actors": ["BCB"],
                 "confidence": 0.80,
-                "excerpt": "Selic interest rate cut expected to boost credit",
+                "report_excerpt": "Selic interest rate cut expected to boost credit",
             }
         ],
     }
@@ -305,15 +315,33 @@ def test_healthcheck_rejects_unhealthy_statuses() -> None:
         assert cli.healthcheck() is False
 
 
+def test_native_report_contract_is_strict_and_versioned() -> None:
+    valid = {
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "A native report excerpt.",
+        "scenarios": [{
+            "scenario_type": "BASE",
+            "trigger": "A trigger",
+            "report_excerpt": "A native report excerpt.",
+        }],
+    }
+    assert MiroFishClient.validate_structured_report(valid) == (True, "VALID")
+    invalid = {**valid, "schema_version": "unknown"}
+    assert MiroFishClient.validate_structured_report(invalid)[0] is False
+    assert MiroFishClient.validate_structured_report({"scenarios": []})[0] is False
+
+
 def test_null_confidence_parsing() -> None:
     raw_report = {
         "report_id": "rep_999",
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Unanticipated liquidity squeeze",
         "scenarios": [
             {
-                "type": "CONTRARIANS",
+                "scenario_type": "CONTRARIANS",
                 "trigger": "Unanticipated liquidity squeeze",
                 "actors": ["CVM"],
-                "excerpt": "Unanticipated liquidity squeeze",
+                "report_excerpt": "Unanticipated liquidity squeeze",
             }
         ],
     }
@@ -379,26 +407,25 @@ def test_no_old_template_strings_in_production_code() -> None:
 def test_unverifiable_report_excerpt_raises_error() -> None:
     raw_report = {
         "report_id": "rep_001",
-        "analysis_summary": "Official report narrative content.",
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "report_text": "Official report narrative content.",
+        "scenarios": [{
+            "scenario_type": "BASE",
+            "trigger": "Official report narrative content.",
+            "report_excerpt": "Fabricated excerpt string completely absent from raw_report json",
+        }],
     }
     engine = MiroFishScenarioEngine()
-    with patch.object(engine, "_extract_scenarios_from_report_narrative") as mock_extract:
-        mock_extract.return_value = [
-            {
-                "type": "BASE",
-                "trigger": "Official report narrative content.",
-                "excerpt": "Fabricated excerpt string completely absent from raw_report json",
-            }
-        ]
-        with pytest.raises(ValueError, match="report_excerpt .* is not a verifiable substring of raw report"):
-            engine._parse_mirofish_report_to_hypotheses(raw_report, run_id="run_001")
+    with pytest.raises(ValueError, match="report_excerpt .* is not a verifiable substring of raw report"):
+        engine._parse_mirofish_report_to_hypotheses(raw_report, run_id="run_001")
 
 
 def test_malformed_structured_scenario_is_not_promoted_to_hypothesis() -> None:
     engine = MiroFishScenarioEngine()
     raw_report = {
         "report_id": "rep_malformed",
-        "scenarios": [{"scenario_type": "BASE", "macro_factors": "not-a-list"}],
+        "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+        "scenarios": [{"scenario_type": "BASE", "trigger": "x", "report_excerpt": "x", "macro_factors": "not-a-list"}],
     }
 
     assert engine._parse_mirofish_report_to_hypotheses(

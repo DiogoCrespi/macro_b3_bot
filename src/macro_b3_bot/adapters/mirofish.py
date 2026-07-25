@@ -3,7 +3,47 @@ from __future__ import annotations
 from pathlib import Path
 import time
 from typing import Any
+from hashlib import sha256
+import json
 import httpx
+
+
+MIROFISH_REPORT_SCHEMA_VERSION = "5A.3-mirofish-scenario-report-v1"
+MIROFISH_REPORT_SCHEMA: dict[str, Any] = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "MacroB3 MiroFish Scenario Report",
+    "type": "object",
+    "required": ["schema_version", "report_text", "scenarios"],
+    "additionalProperties": True,
+    "properties": {
+        "schema_version": {"const": MIROFISH_REPORT_SCHEMA_VERSION},
+        "report_text": {"type": "string", "minLength": 1},
+        "scenarios": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["scenario_type", "trigger", "report_excerpt"],
+                "properties": {
+                    "scenario_type": {"type": "string"},
+                    "trigger": {"type": "string", "minLength": 1},
+                    "actors": {"type": "array", "items": {"type": "string"}},
+                    "actions": {"type": "array", "items": {"type": "string"}},
+                    "macro_factors": {"type": "array", "items": {"type": "string"}},
+                    "sector_effects": {"type": "array", "items": {"type": "string"}},
+                    "second_order_effects": {"type": "array", "items": {"type": "string"}},
+                    "expected_horizon": {"type": "string"},
+                    "report_excerpt": {"type": "string", "minLength": 1},
+                    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+                },
+            },
+        },
+    },
+}
+
+
+def mirofish_report_schema_hash() -> str:
+    canonical = json.dumps(MIROFISH_REPORT_SCHEMA, sort_keys=True, separators=(",", ":"))
+    return sha256(canonical.encode("utf-8")).hexdigest()
 
 
 class MiroFishClient:
@@ -132,6 +172,49 @@ class MiroFishClient:
             return res["data"]
         return res
 
+    @staticmethod
+    def structured_report_config() -> dict[str, Any]:
+        """Return the explicit sidecar contract for native structured reports.
+
+        The schema is sent to MiroFish as part of the simulation request.  The
+        engine never synthesizes a report when the sidecar does not honor it.
+        """
+        return {
+            "report_format": "json",
+            "report_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+            "report_schema_hash": mirofish_report_schema_hash(),
+            "report_schema": MIROFISH_REPORT_SCHEMA,
+            "require_structured_report": True,
+        }
+
+    @staticmethod
+    def validate_structured_report(report: Any) -> tuple[bool, str]:
+        """Validate the minimum native report contract without coercion."""
+        if not isinstance(report, dict):
+            return False, "REPORT_NOT_OBJECT"
+        if report.get("schema_version") != MIROFISH_REPORT_SCHEMA_VERSION:
+            return False, "REPORT_SCHEMA_VERSION_MISMATCH"
+        scenarios = report.get("scenarios")
+        if not isinstance(report.get("report_text"), str) or not report["report_text"].strip():
+            return False, "REPORT_TEXT_MISSING"
+        if not isinstance(scenarios, list):
+            return False, "SCENARIOS_NOT_ARRAY"
+        list_fields = ("actors", "actions", "macro_factors", "sector_effects", "second_order_effects")
+        for index, scenario in enumerate(scenarios):
+            if not isinstance(scenario, dict):
+                return False, f"SCENARIO_{index}_NOT_OBJECT"
+            if not str(scenario.get("trigger", "")).strip():
+                return False, f"SCENARIO_{index}_MISSING_TRIGGER"
+            if not str(scenario.get("report_excerpt", "")).strip():
+                return False, f"SCENARIO_{index}_MISSING_REPORT_EXCERPT"
+            for field in list_fields:
+                if field in scenario and not isinstance(scenario[field], list):
+                    return False, f"SCENARIO_{index}_{field.upper()}_NOT_ARRAY"
+            confidence = scenario.get("confidence")
+            if confidence is not None and (not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1):
+                return False, f"SCENARIO_{index}_INVALID_CONFIDENCE"
+        return True, "VALID"
+
     def poll_simulation(
         self,
         simulation_id: str,
@@ -204,4 +287,3 @@ class MiroFishClient:
 
     def close(self) -> None:
         self.client.close()
-
