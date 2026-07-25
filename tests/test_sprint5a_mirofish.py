@@ -37,6 +37,12 @@ def mock_client():
         "seed": "12345",
     }
     client.create_simulation.return_value = {"simulation_id": "test_sim_789"}
+    client.prepare_simulation.return_value = {"simulation_id": "test_sim_789", "status": "ready"}
+    client.poll_prepare.return_value = {"simulation_id": "test_sim_789", "status": "ready"}
+    client.start_simulation.return_value = {"simulation_id": "test_sim_789", "runner_status": "running"}
+    client.poll_run_status.return_value = {"simulation_id": "test_sim_789", "runner_status": "completed"}
+    client.generate_report.return_value = {"simulation_id": "test_sim_789", "status": "generating", "task_id": "task_report"}
+    client.poll_generate_report.return_value = {"simulation_id": "test_sim_789", "status": "completed"}
     reports_payload = {
         "reports": [
             {

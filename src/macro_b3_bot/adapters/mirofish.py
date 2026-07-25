@@ -236,7 +236,7 @@ class MiroFishClient:
                     if isinstance(data, dict):
                         status = str(data.get("status") or "created")
                         last_status = status
-                        if status in ("created", "RUNNING", "COMPLETED", "FINISHED", "SUCCESS"):
+                        if status in ("COMPLETED", "FINISHED", "SUCCESS", "completed", "finished"):
                             return data
                         if status in ("FAILED", "ERROR"):
                             raise RuntimeError(f"Simulation failed with status {status}")
@@ -244,6 +244,94 @@ class MiroFishClient:
                 pass
             time.sleep(interval_seconds)
         return {"simulation_id": simulation_id, "last_status": last_status, "attempts": attempts}
+
+    def prepare_simulation(self, simulation_id: str, *, use_llm_for_profiles: bool = True) -> dict[str, Any]:
+        response = self.client.post(
+            f"{self.simulation_prefix}/prepare",
+            json={"simulation_id": simulation_id, "use_llm_for_profiles": use_llm_for_profiles},
+        )
+        response.raise_for_status()
+        res = response.json()
+        return res.get("data", res) if isinstance(res, dict) else res
+
+    def poll_prepare(
+        self,
+        simulation_id: str,
+        task_id: str | None = None,
+        *,
+        timeout_seconds: float = 600.0,
+        interval_seconds: float = 2.0,
+    ) -> dict[str, Any]:
+        start_time = time.monotonic()
+        while (time.monotonic() - start_time) < timeout_seconds:
+            response = self.client.post(
+                f"{self.simulation_prefix}/prepare/status",
+                json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
+            )
+            response.raise_for_status()
+            res = response.json()
+            data = res.get("data", res) if isinstance(res, dict) else res
+            if isinstance(data, dict) and str(data.get("status", "")).lower() in {"ready", "completed", "success", "failed", "error"}:
+                return data
+            time.sleep(interval_seconds)
+        return {"simulation_id": simulation_id, "status": "TIMEOUT_PREPARE"}
+
+    def start_simulation(self, simulation_id: str, *, max_rounds: int = 5) -> dict[str, Any]:
+        response = self.client.post(
+            f"{self.simulation_prefix}/start",
+            json={"simulation_id": simulation_id, "platform": "parallel", "max_rounds": max_rounds},
+        )
+        response.raise_for_status()
+        res = response.json()
+        return res.get("data", res) if isinstance(res, dict) else res
+
+    def poll_run_status(
+        self,
+        simulation_id: str,
+        *,
+        timeout_seconds: float = 900.0,
+        interval_seconds: float = 5.0,
+    ) -> dict[str, Any]:
+        start_time = time.monotonic()
+        while (time.monotonic() - start_time) < timeout_seconds:
+            response = self.client.get(f"{self.simulation_prefix}/{simulation_id}/run-status")
+            response.raise_for_status()
+            res = response.json()
+            data = res.get("data", res) if isinstance(res, dict) else res
+            if isinstance(data, dict):
+                status = str(data.get("runner_status", data.get("status", ""))).lower()
+                if status in {"completed", "finished", "success", "failed", "error", "stopped"}:
+                    return data
+            time.sleep(interval_seconds)
+        return {"simulation_id": simulation_id, "runner_status": "TIMEOUT_RUN"}
+
+    def generate_report(self, simulation_id: str) -> dict[str, Any]:
+        response = self.client.post(f"{self.report_prefix}/generate", json={"simulation_id": simulation_id})
+        response.raise_for_status()
+        res = response.json()
+        return res.get("data", res) if isinstance(res, dict) else res
+
+    def poll_generate_report(
+        self,
+        simulation_id: str,
+        task_id: str | None = None,
+        *,
+        timeout_seconds: float = 900.0,
+        interval_seconds: float = 5.0,
+    ) -> dict[str, Any]:
+        start_time = time.monotonic()
+        while (time.monotonic() - start_time) < timeout_seconds:
+            response = self.client.post(
+                f"{self.report_prefix}/generate/status",
+                json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
+            )
+            response.raise_for_status()
+            res = response.json()
+            data = res.get("data", res) if isinstance(res, dict) else res
+            if isinstance(data, dict) and str(data.get("status", "")).lower() in {"completed", "success", "failed", "error"}:
+                return data
+            time.sleep(interval_seconds)
+        return {"simulation_id": simulation_id, "status": "TIMEOUT_REPORT"}
 
     def list_reports(
         self,

@@ -326,10 +326,34 @@ class MiroFishScenarioEngine:
             if not simulation_id:
                 raise ValueError("MiroFish create_simulation response missing simulation_id.")
 
-            # Poll simulation status
-            poll_sim = getattr(self.client, "poll_simulation", None)
-            if callable(poll_sim):
-                poll_sim(simulation_id)
+            # MiroFish requires the official prepare -> start -> run workflow
+            # before a report can exist.  Creating a simulation alone leaves
+            # it in status=created and produces no report.
+            prepare = getattr(self.client, "prepare_simulation", None)
+            poll_prepare = getattr(self.client, "poll_prepare", None)
+            start_simulation = getattr(self.client, "start_simulation", None)
+            poll_run_status = getattr(self.client, "poll_run_status", None)
+            generate_report = getattr(self.client, "generate_report", None)
+            poll_generate_report = getattr(self.client, "poll_generate_report", None)
+            if all(callable(item) for item in (prepare, poll_prepare, start_simulation, poll_run_status, generate_report, poll_generate_report)):
+                prep_res = prepare(simulation_id)
+                prep_status = str(prep_res.get("status", "")).lower() if isinstance(prep_res, dict) else ""
+                if prep_status not in {"ready", "completed", "success"}:
+                    prep_res = poll_prepare(simulation_id, task_id=prep_res.get("task_id") if isinstance(prep_res, dict) else None)
+                if str(prep_res.get("status", "")).lower() not in {"ready", "completed", "success"}:
+                    raise RuntimeError(f"MiroFish preparation failed: {prep_res}")
+                start_simulation(simulation_id, max_rounds=5)
+                run_status = poll_run_status(simulation_id)
+                if str(run_status.get("runner_status", run_status.get("status", ""))).lower() not in {"completed", "finished", "success", "stopped"}:
+                    raise RuntimeError(f"MiroFish simulation did not complete: {run_status}")
+                report_task = generate_report(simulation_id)
+                report_status = str(report_task.get("status", "")).lower() if isinstance(report_task, dict) else ""
+                if report_status not in {"completed", "success"}:
+                    poll_generate_report(simulation_id, task_id=report_task.get("task_id") if isinstance(report_task, dict) else None)
+            else:
+                poll_sim = getattr(self.client, "poll_simulation", None)
+                if callable(poll_sim):
+                    poll_sim(simulation_id)
 
             # 3. Retrieve reports
             poll_rep = getattr(self.client, "poll_report", None)
