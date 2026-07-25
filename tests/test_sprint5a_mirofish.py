@@ -394,6 +394,18 @@ def test_unverifiable_report_excerpt_raises_error() -> None:
             engine._parse_mirofish_report_to_hypotheses(raw_report, run_id="run_001")
 
 
+def test_malformed_structured_scenario_is_not_promoted_to_hypothesis() -> None:
+    engine = MiroFishScenarioEngine()
+    raw_report = {
+        "report_id": "rep_malformed",
+        "scenarios": [{"scenario_type": "BASE", "macro_factors": "not-a-list"}],
+    }
+
+    assert engine._parse_mirofish_report_to_hypotheses(
+        raw_report, run_id="run_malformed"
+    ) == []
+
+
 def test_raw_report_persisted_to_duckdb(tmp_path: Path) -> None:
     db_path = tmp_path / "test_raw_report.duckdb"
     store = DatabaseStore(db_path)
@@ -452,4 +464,3 @@ def test_duckdb_hypothesis_persistence(tmp_path: Path) -> None:
     assert row[3] is None
 
     store.close()
-

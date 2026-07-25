@@ -591,6 +591,25 @@ class MiroFishScenarioEngine:
                 )
             )
 
+            # A structured report must carry its own auditable anchor.  Do
+            # not turn a bare label, arbitrary JSON object, or missing text
+            # into a hypothesis merely because it appears under `scenarios`.
+            if not trigger.strip() or not excerpt.strip():
+                continue
+            list_fields = (
+                "actors",
+                "actions",
+                "macro_factors",
+                "sector_effects",
+                "second_order_effects",
+            )
+            if any(
+                field in scenario_data
+                and not isinstance(scenario_data[field], list)
+                for field in list_fields
+            ):
+                continue
+
             # Verifiable substring check: excerpt must belong to raw report content
             if excerpt and excerpt not in raw_report_json_str:
                 raise ValueError(f"report_excerpt '{excerpt}' is not a verifiable substring of raw report")
@@ -645,7 +664,16 @@ class MiroFishScenarioEngine:
             try:
                 parsed = json.loads(json_str)
                 if isinstance(parsed, list) and all(isinstance(item, dict) for item in parsed):
-                    return parsed
+                    required = ("trigger",)
+                    if all(
+                        all(str(item.get(field, "")).strip() for field in required)
+                        and any(
+                            str(item.get(field, "")).strip()
+                            for field in ("excerpt", "report_excerpt", "trigger")
+                        )
+                        for item in parsed
+                    ):
+                        return parsed
             except (json.JSONDecodeError, ValueError):
                 pass
         return []
