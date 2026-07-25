@@ -870,11 +870,18 @@ class DatabaseStore:
                 share_document_version VARCHAR,
                 share_document_checksum VARCHAR,
                 share_section VARCHAR,
-                snapshot_payload VARCHAR NOT NULL,
+                isin VARCHAR,
+                pit_assurance VARCHAR,
+                market_capitalization DOUBLE,
+                enterprise_value DOUBLE,
+                pe_observed DOUBLE,
+                snapshot_payload VARCHAR,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         """)
         for col, kind in {
+            "isin": "VARCHAR",
+            "pit_assurance": "VARCHAR",
             "market_capitalization": "DOUBLE",
             "enterprise_value": "DOUBLE",
             "pe_observed": "DOUBLE",
@@ -1089,6 +1096,7 @@ class DatabaseStore:
             "share_document_checksum": "VARCHAR",
             "share_section": "VARCHAR",
             "isin": "VARCHAR",
+            "pit_assurance": "VARCHAR",
             "market_capitalization": "DOUBLE",
             "enterprise_value": "DOUBLE",
             "pe_observed": "DOUBLE",
