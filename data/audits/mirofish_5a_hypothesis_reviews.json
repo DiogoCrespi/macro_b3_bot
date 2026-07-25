@@ -1,0 +1,30 @@
+{
+  "reviews": [
+    {
+      "review_id": "317656564261e3c4998ac4499f39ba0abb8fc982491859870d73bd82490fc504",
+      "hypothesis_id": "e171414b835705fe21d7466cf02d13778e8010dfd3e85d56ba7b986f34463733",
+      "simulation_run_id": "bc541d95a838300c4ad82a9c752a10a5dfdfab2a7a86f92d9ed50dffd141ebe7",
+      "reviewer_type": "DELEGATED_AI",
+      "reviewed_by": "Codex",
+      "reviewed_at": "2026-07-25T22:24:09.990750+00:00",
+      "review_decision": "DELEGATED_AI_APPROVED",
+      "review_status": "PARTIALLY_SUPPORTED",
+      "review_confidence": 0.75,
+      "review_notes": "All extracted content fields and the evidence excerpt are semantically supported by the persisted sidecar report. Scenario type remains UNKNOWN because the source label is not safely mappable to the controlled enum.",
+      "field_checks": {
+        "trigger": true,
+        "actors": true,
+        "actions": true,
+        "macro_factors": true,
+        "sector_effects": true,
+        "second_order_effects": true,
+        "report_excerpt": true,
+        "raw_checksum": true
+      },
+      "source_report_id": "report_06da834bee25",
+      "source_report_checksum": "be2a620b13c80d7680143028f6498c767b41a09aaf34954ddade3c2014a35670",
+      "source_excerpt_hash": "bc058efe2cf7106f5f7e72d3ee42795a28f3a4be4365bdd723888e6469c719f1",
+      "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY"
+    }
+  ]
+}
