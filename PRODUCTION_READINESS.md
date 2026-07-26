@@ -329,7 +329,7 @@ a política decisória.
 `scripts/run_valuation_readiness_pilot.py`. Foram avaliadas MGLU3, SUZB3, KLBN11,
 RAIL3 e SLCE3. O resultado atual é fail-closed: as três primeiras têm calibração
 legada incompatível com o schema atual e FCF estatístico; RAIL3 e SLCE3 não possuem
-snapshot de FCF normalizado. Após a recalibração `financial_4d3b_integrity`, os
+ snapshot de FCF normalizado. Após a recalibração `financial_4d3b_integrity`, os
 payloads atuais são lidos sem erro de schema, mas continuam bloqueados por baixa
 confiança, validação OOS insuficiente e/ou conflito macro. Portanto,
 `valuation_eligible=false` e `dcf_eligible=false`
@@ -348,6 +348,15 @@ uma reconciliação de itens não recorrentes. O artefato registra
 `MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED` e
 `CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED`; o valor estatístico não é promovido a
 `VALUATION_READY`.
+
+**Evidência externa incorporada:** `scripts/ingest_issuer_adjusted_fcf.py` persistiu
+`data/audits/issuer_adjusted_fcf_20260726.json` com checksums dos documentos primários.
+SUZB3 possui maintenance capex de R$ 7,880 bilhões e fluxo de caixa operacional
+ajustado de R$ 13,856 bilhões no release de 4T25; KLBN11 possui capex de manutenção
+de R$ 3,197 bilhões e FCF ajustado LTM de R$ 1,152 bilhão no ITR 1T26. Esses valores
+foram registrados como `ISSUER_DISCLOSED_ADJUSTED_FCF`, com fórmula, componentes,
+documento e localização de origem. MGLU3 permanece bloqueada porque o pacote PIT
+disponível não separa maintenance capex de capex total nem reconcilia CFO não recorrente.
 
 **Aceite:** cada bloqueio informa código e evidência; nenhum preço-alvo é produzido para
 empresa sem FCF e calibração aptos.
@@ -468,6 +477,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `financial_p4_walk_forward` | P4 | Replay PIT atualizado após ingestão BCB SGS 12/433: SUZB3 e KLBN11 FX, CDI/SOFR e IPCA com 7–8 janelas OOS; MGLU3 estrutural; nenhum bridge promovido | Determinar exposição efetiva, repricing/derivativos e completar RMSE/ablação com outcomes avaliáveis |
 | 26/07/2026 | `P5-valuation-readiness-pilot-v1` | P5 | Gate formal executado para 5 empresas; 5/5 bloqueadas; múltiplos somente descritivos; zero DCF, fair value, preço-alvo, BUY ou ordens; artefato PIT persistido | Promover calibração P4 e FCF normalizado antes de qualquer valuation |
 | 26/07/2026 | `financial_4d3b_integrity` | P4/P5 | Calibrações reconstruídas no schema atual e persistidas; MGLU3 estrutural, SUZB3/KLBN11 não promovidas; FCF permanece proxy por ausência de manutenção de capex explicitamente evidenciada | Obter divulgação auditável de manutenção de capex e drivers financeiros antes de liberar DCF |
+| 26/07/2026 | `issuer_adjusted_fcf_20260726` | P5 | Evidência primária incorporada: FCF ajustado com maintenance capex explícito para SUZB3 e KLBN11; MGLU3 permanece bloqueada por ausência do split | Calibrar bridges e obter mercado PIT válido antes de DCF |
 
 ## Backlog posterior
 

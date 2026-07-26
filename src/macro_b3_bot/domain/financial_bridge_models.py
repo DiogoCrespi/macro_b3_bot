@@ -257,13 +257,19 @@ class NormalizedCashFlowSnapshot(BaseModel):
     maintenance_capex: float
     normalized_levered_fcf: float
     statistical_normalized_fcf_proxy: float
-    normalization_type: Literal["STATISTICAL_NORMALIZATION_PROXY"]
-    normalization_status: Literal["NOT_VALUATION_READY"]
-    dcf_eligible: Literal[False] = False
+    normalization_type: Literal[
+        "STATISTICAL_NORMALIZATION_PROXY",
+        "ISSUER_DISCLOSED_ADJUSTED_FCF",
+    ]
+    normalization_status: Literal["NOT_VALUATION_READY", "VALUATION_READY"]
+    dcf_eligible: bool = False
     adjustments: list[CashFlowNormalizationAdjustment] = Field(min_length=1)
     methodology_version: str
     confidence: float = Field(ge=0, le=1)
     run_id: str
+    normalization_formula: str | None = None
+    normalization_components: dict[str, float | str | bool | None] = Field(default_factory=dict)
+    source_document_ids: list[str] = Field(default_factory=list)
 
 
 class DescriptiveMarketMetric(BaseModel):

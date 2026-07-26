@@ -1,0 +1,154 @@
+{
+  "run_id": "issuer_adjusted_fcf_20260726",
+  "as_of_timestamp": "2026-07-26T23:59:59+00:00",
+  "outputs": [
+    {
+      "ticker": "SUZB3",
+      "snapshot": {
+        "snapshot_id": "e246264d52372207d86e3f05",
+        "ticker": "SUZB3",
+        "as_of_timestamp": "2026-07-26T23:59:59Z",
+        "reported_operating_cash_flow": 16635252000.0,
+        "reported_capex": -4583848000.0,
+        "levered_fcf_proxy": 12051404000.0,
+        "normalized_operating_cash_flow": 13856000000.0,
+        "maintenance_capex": 7880000000.0,
+        "normalized_levered_fcf": 10647000000.0,
+        "statistical_normalized_fcf_proxy": 10647000000.0,
+        "normalization_type": "ISSUER_DISCLOSED_ADJUSTED_FCF",
+        "normalization_status": "VALUATION_READY",
+        "dcf_eligible": true,
+        "adjustments": [
+          {
+            "adjustment_id": "6797b7636365ff95d30fb55b",
+            "field_name": "maintenance_capex",
+            "value": 7880000000.0,
+            "sign": -1,
+            "period_end": "2026-03-31",
+            "source_ids": [
+              "SUZANO_4Q25_EARNINGS_RELEASE",
+              "C95B51BC5BADC605A9B64FAF714A203024DCB7BB0EC75FAFE7E314F8FAAE77BB"
+            ],
+            "rationale": "Issuer explicitly labels the amount as maintenance capex.",
+            "recurrence": "RECURRING",
+            "confidence": 0.96,
+            "formula": "issuer_disclosed_maintenance_capex"
+          },
+          {
+            "adjustment_id": "3a80f01df28da7f6b8bee26c",
+            "field_name": "non_recurring_items_excluded",
+            "value": 0.0,
+            "sign": 1,
+            "period_end": "2026-03-31",
+            "source_ids": [
+              "SUZANO_4Q25_EARNINGS_RELEASE",
+              "C95B51BC5BADC605A9B64FAF714A203024DCB7BB0EC75FAFE7E314F8FAAE77BB"
+            ],
+            "rationale": "Issuer adjusted cash-flow/EBITDA presentation explicitly excludes non-recurring or discretionary items listed in the bridge.",
+            "recurrence": "NON_RECURRING",
+            "confidence": 0.9,
+            "formula": "issuer_disclosed_adjusted_fcf_bridge"
+          }
+        ],
+        "methodology_version": "P5-issuer-disclosed-adjusted-fcf-v1",
+        "confidence": 0.9,
+        "run_id": "issuer_adjusted_fcf_20260726",
+        "normalization_formula": "issuer_reported_free_cash_flow_adjusted_2025",
+        "normalization_components": {
+          "adjusted_ebitda": 21736000000.0,
+          "total_capex": -12584000000.0,
+          "leases_ifrs16": -1448000000.0,
+          "working_capital_change": 1572000000.0,
+          "net_interest": -4714000000.0,
+          "income_taxes": -290000000.0,
+          "capex_ex_maintenance": 5844000000.0,
+          "dividends_added_back": 2400000000.0,
+          "non_recurring_items_excluded_from_adjusted_ebitda": true
+        },
+        "source_document_ids": [
+          "SUZANO_4Q25_EARNINGS_RELEASE"
+        ]
+      },
+      "source_url": "https://www.sec.gov/Archives/edgar/data/909327/000090932726000025/earningsrelease_4t25xen.htm",
+      "document_checksum": "C95B51BC5BADC605A9B64FAF714A203024DCB7BB0EC75FAFE7E314F8FAAE77BB"
+    },
+    {
+      "ticker": "KLBN11",
+      "snapshot": {
+        "snapshot_id": "542e45db92f1953d1c37c4c5",
+        "ticker": "KLBN11",
+        "as_of_timestamp": "2026-07-26T23:59:59Z",
+        "reported_operating_cash_flow": 5793062000.0,
+        "reported_capex": -1755544000.0,
+        "levered_fcf_proxy": 4037518000.0,
+        "normalized_operating_cash_flow": 4224000000.0,
+        "maintenance_capex": 3197000000.0,
+        "normalized_levered_fcf": 1152000000.0,
+        "statistical_normalized_fcf_proxy": 1152000000.0,
+        "normalization_type": "ISSUER_DISCLOSED_ADJUSTED_FCF",
+        "normalization_status": "VALUATION_READY",
+        "dcf_eligible": true,
+        "adjustments": [
+          {
+            "adjustment_id": "47daf424e7a2b6a3c2a808da",
+            "field_name": "maintenance_capex",
+            "value": 3197000000.0,
+            "sign": -1,
+            "period_end": "2026-03-31",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1",
+              "144E384BC541A14088E47F3026CF62EF9137895686472A8F5B8B47B746BA3717"
+            ],
+            "rationale": "Issuer explicitly labels the amount as maintenance capex.",
+            "recurrence": "RECURRING",
+            "confidence": 0.96,
+            "formula": "issuer_disclosed_maintenance_capex"
+          },
+          {
+            "adjustment_id": "a315a2baf2a93a29b96c8874",
+            "field_name": "non_recurring_items_excluded",
+            "value": 0.0,
+            "sign": 1,
+            "period_end": "2026-03-31",
+            "source_ids": [
+              "ITR_12653_2026-03-31_v1",
+              "144E384BC541A14088E47F3026CF62EF9137895686472A8F5B8B47B746BA3717"
+            ],
+            "rationale": "Issuer adjusted cash-flow/EBITDA presentation explicitly excludes non-recurring or discretionary items listed in the bridge.",
+            "recurrence": "NON_RECURRING",
+            "confidence": 0.9,
+            "formula": "issuer_disclosed_adjusted_fcf_bridge"
+          }
+        ],
+        "methodology_version": "P5-issuer-disclosed-adjusted-fcf-v1",
+        "confidence": 0.9,
+        "run_id": "issuer_adjusted_fcf_20260726",
+        "normalization_formula": "issuer_reported_free_cash_flow_adjusted_ltm_1Q26",
+        "normalization_components": {
+          "adjusted_ebitda_ltm": 7658000000.0,
+          "capex_ltm": -3066000000.0,
+          "leases_ifrs16_ltm": -327000000.0,
+          "interest_paid_received_ltm": -1955000000.0,
+          "income_taxes_ltm": -237000000.0,
+          "working_capital_change_ltm": -1050000000.0,
+          "dividends_jcp_ltm": -1181000000.0,
+          "special_and_expansion_projects_excluded": 788000000.0,
+          "dividends_added_back": 1181000000.0,
+          "non_recurring_projects_excluded": true
+        },
+        "source_document_ids": [
+          "ITR_12653_2026-03-31_v1"
+        ]
+      },
+      "source_url": "https://api.mziq.com/mzfilemanager/v2/d/1c41fa99-efe7-4e72-81dd-5b571f5aa376/301af57c-2352-5293-7ddb-044da693a4c5?origin=2",
+      "document_checksum": "144E384BC541A14088E47F3026CF62EF9137895686472A8F5B8B47B746BA3717"
+    }
+  ],
+  "blocked": {
+    "MGLU3": [
+      "ISSUER_MAINTENANCE_CAPEX_SPLIT_NOT_FOUND",
+      "NON_RECURRING_CFO_RECONCILIATION_NOT_FOUND"
+    ]
+  },
+  "valuation": "DCF remains gated by calibration/market gates"
+}

@@ -153,9 +153,12 @@ def main() -> None:
                     "buy_signals": False, "orders": False},
         "acceptance_checks": {
             "formal_gate_present": all("status" in item for item in results),
-            "fcf_proxy_blocked": all("FCF_NOT_READY" in item.get("blockers", [])
-                                      or "MISSING_NORMALIZED_FCF" in item.get("blockers", [])
-                                      for item in results),
+            "fcf_proxy_blocked": all(
+                item.get("dcf_eligible") is False
+                or item.get("fcf_readiness", {}).get("normalization_type")
+                == "ISSUER_DISCLOSED_ADJUSTED_FCF"
+                for item in results
+            ),
             "no_fair_value_or_price_target": all(item.get("fair_value") is None
                                                   and item.get("price_target") is None for item in results),
             "pit_cutoff": all(_is_pit_timestamp(item.get("as_of_timestamp"), as_of)

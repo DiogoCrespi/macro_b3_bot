@@ -202,12 +202,21 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
+      "fcf_readiness": {
+        "status": "NOT_VALUATION_READY",
+        "dcf_eligible": false,
+        "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+        "blocked_reasons": [
+          "MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED",
+          "CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED"
+        ]
+      },
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
     },
     {
-      "assessment_id": "4e1-3bd1a6e98130e733",
+      "assessment_id": "4e1-e4598acce09731fc",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-26T23:59:59Z",
       "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
@@ -215,13 +224,11 @@
       "dcf_eligible": false,
       "blockers": [
         "LOW_CALIBRATION_CONFIDENCE",
-        "EMPIRICAL_VALIDATION",
-        "FCF_NOT_READY"
+        "EMPIRICAL_VALIDATION"
       ],
       "reasons": [
         "4D calibration gate did not establish company-calibrated parameters",
-        "empirical validation is insufficient for valuation use",
-        "normalized cash flow is a statistical proxy and is not DCF eligible"
+        "empirical validation is insufficient for valuation use"
       ],
       "evidence_ids": [
         "DFP_13986_2025-12-31_v1",
@@ -284,7 +291,7 @@
         "calibration_ids": [
           "c1dcded0ad8dbdcc060df9d2"
         ],
-        "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
+        "normalized_cash_flow_id": "e246264d52372207d86e3f05",
         "diagnostic_ids": [],
         "scenario_outcome_ids": [],
         "market_data_fields": [
@@ -330,7 +337,7 @@
           "calibration_ids": [
             "c1dcded0ad8dbdcc060df9d2"
           ],
-          "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
+          "normalized_cash_flow_id": "e246264d52372207d86e3f05",
           "diagnostic_ids": [],
           "scenario_outcome_ids": [],
           "market_data_version": "COTAHIST-A",
@@ -403,12 +410,21 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
+      "fcf_readiness": {
+        "status": "VALUATION_READY",
+        "dcf_eligible": true,
+        "normalization_type": "ISSUER_DISCLOSED_ADJUSTED_FCF",
+        "blocked_reasons": [
+          "MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED",
+          "CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED"
+        ]
+      },
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
     },
     {
-      "assessment_id": "4e1-5908e652a912cc1a",
+      "assessment_id": "4e1-1c8f7f85e85a15c0",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-26T23:59:59Z",
       "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
@@ -417,13 +433,11 @@
       "blockers": [
         "LOW_CALIBRATION_CONFIDENCE",
         "EMPIRICAL_VALIDATION",
-        "FCF_NOT_READY",
         "MISSING_MARKET_DATA"
       ],
       "reasons": [
         "4D calibration gate did not establish company-calibrated parameters",
         "empirical validation is insufficient for valuation use",
-        "normalized cash flow is a statistical proxy and is not DCF eligible",
         "PIT market data requires positive price and shares_outstanding"
       ],
       "evidence_ids": [
@@ -497,7 +511,7 @@
         "calibration_ids": [
           "3b27ad4e145f7857280f84a6"
         ],
-        "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
+        "normalized_cash_flow_id": "542e45db92f1953d1c37c4c5",
         "diagnostic_ids": [],
         "scenario_outcome_ids": [],
         "market_data_fields": [],
@@ -513,7 +527,7 @@
           "calibration_ids": [
             "3b27ad4e145f7857280f84a6"
           ],
-          "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
+          "normalized_cash_flow_id": "542e45db92f1953d1c37c4c5",
           "diagnostic_ids": [],
           "scenario_outcome_ids": [],
           "market_data_version": null,
@@ -556,6 +570,15 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
+      "fcf_readiness": {
+        "status": "VALUATION_READY",
+        "dcf_eligible": true,
+        "normalization_type": "ISSUER_DISCLOSED_ADJUSTED_FCF",
+        "blocked_reasons": [
+          "MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED",
+          "CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED"
+        ]
+      },
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
