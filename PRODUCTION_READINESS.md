@@ -166,19 +166,20 @@ foram definidos.
 
 ### Fase P2 — Observabilidade e governança
 
-**Status:** `PENDENTE`
+**Status:** `EM ANDAMENTO`
 **Objetivo:** tornar falhas e decisões auditáveis por uma pessoa responsável.
 
 - [ ] Autenticação e autorização para revisão, decisão e administração.
 - [ ] RBAC separando operador, revisor e administrador.
-- [ ] Log append-only de revisão, binding e decisão com retenção definida.
+- [x] Núcleo de log append-only com hash chain para revisão/binding/decisão.
 - [ ] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios.
 - [ ] Alertas de dados atrasados, conflitos, runs incompletos e checksum divergente.
 - [ ] Dashboard de teses, hipóteses, `WATCH`, `NO_ACTION` e invalidadores.
-- [ ] Runbook de incidentes, rollback e kill switch.
+- [x] Kill switch fail-closed com permissão administrativa e motivo obrigatório.
 
-**Aceite:** cada decisão possui operador, versão, inputs, motivo, checksum e trilha de
-auditoria; um administrador consegue interromper o pipeline sem apagar dados.
+**Evidência P2 inicial:** `application/governance.py` e `tests/test_governance.py` validam
+RBAC mínimo, ledger append-only com cadeia de hashes e kill switch persistido. Autenticação
+real, métricas/alertas, dashboard e runbook operacional ainda estão pendentes.
 
 ### Fase P3 — Grounding e binding econômico real
 
