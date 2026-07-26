@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `27401f3`
+**Estado avaliado:** commit `e0bc775`
 **Última suíte local:** 345 testes aprovados em 79,45 s em Python 3.12
 
 ## Veredito
@@ -139,8 +139,9 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 - [x] Testar cópia restaurável em ambiente temporário.
 - [x] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
 
-**Evidência atual:** `docker build` aprovado, imagem MiroFish publicada no GHCR e fixada
-por digest multi-arquitetura, proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
+**Evidência atual:** `docker build` aprovado, workflow GHCR concluído com sucesso, imagem
+MiroFish publicada e fixada por digest multi-arquitetura (`docker buildx imagetools inspect`),
+proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
 `restore_check=PASS`; o worker foi executado localmente e dentro da imagem Docker com
@@ -148,6 +149,9 @@ check do container aprovado, backup com `restore_check=PASS` e segunda execuçã
 e rotação de secrets. O cancelamento cooperativo foi
 implementado para falhas/timeouts; cancelamento iniciado por operador ainda requer comando
 operacional autenticado.
+
+O `docker pull` local do sidecar excedeu o timeout de 3 minutos por tamanho da imagem;
+isso não invalida o manifesto publicado, mas o smoke test pós-pull ainda não foi aprovado.
 
 **Scheduler:** adaptadores reais estão em `scripts/register_staging_task.ps1` e
 `scripts/invoke_staging_job.ps1`. O registro foi validado com `-WhatIf` e o invocador
@@ -278,7 +282,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `27401f3` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler e rotação de secrets |
+| 25/07/2026 | `e0bc775` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull |
 
 ## Backlog posterior
 
