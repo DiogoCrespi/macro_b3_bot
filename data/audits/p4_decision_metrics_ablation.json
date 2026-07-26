@@ -1,7 +1,7 @@
 {
   "sprint": "P4",
   "methodology_version": "P4-decision-metrics-ablation-v1",
-  "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+  "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
   "metrics": {
     "precision_at_k": null,
     "hit_rate": null,
@@ -12,18 +12,18 @@
     "gross_traded_brl": 0.0,
     "transaction_and_slippage_costs_brl": 0.0,
     "return_pct": 0.0,
-    "steps": 33
+    "steps": 34
   },
   "ablation": {
     "DETERMINISTIC_ONLY": {
-      "MGLU3": "NO_ACTION",
+      "MGLU3": "WATCH",
       "SUZB3": "NO_ACTION",
       "KLBN11": "NO_ACTION",
       "RAIL3": "NO_ACTION",
       "SLCE3": "NO_ACTION"
     },
     "DETERMINISTIC_PLUS_MIROFISH": {
-      "MGLU3": "NO_ACTION",
+      "MGLU3": "WATCH",
       "SUZB3": "NO_ACTION",
       "KLBN11": "NO_ACTION",
       "RAIL3": "NO_ACTION",
@@ -40,5 +40,5 @@
     "data/audits/paper_portfolio_4g_ledger.json",
     "data/audits/research_4e3_decisions.json"
   ],
-  "report_id": "b0ce8fe66fea81d02c7a1e1640e1ae749cbc576def9b5bc08988b5ce15d714b3"
+  "report_id": "5cc14b8762952d8d3cceb2c966ab47c37c7a1a8a20724cecb22c86c630ecf10f"
 }

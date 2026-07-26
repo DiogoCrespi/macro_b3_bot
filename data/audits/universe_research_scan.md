@@ -1,6 +1,6 @@
 # Full B3 universe research scan
 
-As of: `2026-07-26T20:31:31.331704+00:00`
+As of: `2026-07-26T21:18:14.162057+00:00`
 
 Assets scanned: **234**
 Causal candidates available: **3**
