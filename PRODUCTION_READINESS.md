@@ -65,6 +65,14 @@ restrições:
 - Estado atual: relatório semanticamente compatível **PASS**; `SUPPORTED + BOUND`
   **PENDENTE por ausência de candidato causal upstream**. Suíte completa: **353
   testes aprovados**; Ruff: **PASS**.
+- Correção adicional: os scripts MiroFish e binding agora usam
+  `data/audit.duckdb`, o banco PIT canônico; `data/macro_b3_bot.duckdb` ficou
+  explicitamente tratado como fixture legado. A avaliação setorial real no run
+  `sector_p3_real_20260726` persistiu **469 `SectorImpactCandidate`**, 132 eventos,
+  7 setores e 15 snapshots. Todos os 469 foram `SECTOR_IMPACT_REJECTED` por
+  evidência causal ausente/hipotética, conforme a política de segurança; nenhum
+  caminho foi inventado. Os dois eventos `MACRO_EVENT_WATCH` desse run não têm
+  caminho ativo dentro do horizonte e, corretamente, não geraram candidato.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.

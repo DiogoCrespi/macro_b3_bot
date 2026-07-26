@@ -19,7 +19,7 @@ def main() -> None:
     sets = json.loads(sets_path.read_text(encoding="utf-8"))
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     as_of = datetime.fromisoformat(sets["scenario_sets"][0]["as_of_timestamp"])
-    store = DatabaseStore(Settings().data_dir / "macro_b3_bot.duckdb")
+    store = DatabaseStore(Settings().data_dir / "audit.duckdb")
     binder = MiroFishHypothesisBinder(store)
     results = []
     for hypothesis in sets["hypotheses"]:

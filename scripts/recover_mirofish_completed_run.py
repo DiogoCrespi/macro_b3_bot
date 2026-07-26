@@ -95,7 +95,7 @@ def main() -> None:
         **set_payload,
     )
 
-    store = DatabaseStore(settings.data_dir / "macro_b3_bot.duckdb")
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
     store.save_scenario_seed_package(seed.model_dump(mode="json"))
     store.save_raw_mirofish_report({
         "report_id": str(report_id), "simulation_id": simulation_id,

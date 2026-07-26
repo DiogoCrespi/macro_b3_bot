@@ -47,7 +47,7 @@ def main() -> None:
 
     # Report fidelity is not upstream truth.  Validate controlled semantics
     # against the PIT macro release before accepting any hypothesis.
-    store = DatabaseStore(Settings().data_dir / "macro_b3_bot.duckdb")
+    store = DatabaseStore(Settings().data_dir / "audit.duckdb")
     release_row = store.connection.execute(
         "SELECT release_id, indicator, unit, geography FROM macro_releases WHERE release_id = ?",
         [hypothesis["macro_event_ids"][0]],

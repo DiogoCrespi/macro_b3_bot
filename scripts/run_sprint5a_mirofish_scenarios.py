@@ -62,7 +62,10 @@ def main() -> None:
     print(f"Scenario Cutoff (as-of): {as_of_dt.isoformat()}")
 
     settings = Settings()
-    db_path = settings.data_dir / "macro_b3_bot.duckdb"
+    # All production macro/sector inputs live in the canonical audit store.
+    # A separate macro_b3_bot.duckdb is only a legacy local fixture and must
+    # never be used for PIT MiroFish seeds or causal binding.
+    db_path = settings.data_dir / "audit.duckdb"
     store = DatabaseStore(db_path)
 
     # Instantiate MiroFish HTTP Client if configured
