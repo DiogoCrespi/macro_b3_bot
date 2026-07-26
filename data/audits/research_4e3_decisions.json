@@ -21,7 +21,7 @@
   ],
   "decisions": [
     {
-      "decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
+      "decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -259,11 +259,12 @@
           "cab69cc0b518bd8e55d9d7a5",
           "2dcb974b59b48e9463bf5f8d",
           "6f117cc79bf099cb77f82942"
-        ]
+        ],
+        "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
+      "decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -579,11 +580,12 @@
           "ebb3e062d89a0b62b9fc542d",
           "ef99bc0c1f04cb0c39899247",
           "f5efe20a281d55a4b6ac20cf"
-        ]
+        ],
+        "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
+      "decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -705,11 +707,12 @@
           "ebb3e062d89a0b62b9fc542d",
           "ef99bc0c1f04cb0c39899247",
           "f5efe20a281d55a4b6ac20cf"
-        ]
+        ],
+        "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
+      "decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
       "ticker": "RAIL3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -753,11 +756,12 @@
       "input_ids": {
         "valuation_observation_ids": [],
         "market_snapshot_ids": [],
-        "financial_baseline_ids": []
+        "financial_baseline_ids": [],
+        "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
+      "decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
       "ticker": "SLCE3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -801,7 +805,8 @@
       "input_ids": {
         "valuation_observation_ids": [],
         "market_snapshot_ids": [],
-        "financial_baseline_ids": []
+        "financial_baseline_ids": [],
+        "hypothesis_ids": []
       }
     }
   ]

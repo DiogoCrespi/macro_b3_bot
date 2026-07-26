@@ -251,7 +251,11 @@ def main() -> None:
     print(f"Assessment Cutoff (as_of_timestamp): {as_of.isoformat()}")
 
     settings = Settings()
-    db_path = settings.data_dir / "macro_b3_bot.duckdb"
+    # Decision synthesis must read the same canonical PIT store as ingestion,
+    # sector evaluation and the paper replay.  A second database would make
+    # missing inputs look like valid decisions and could never authorize a
+    # legitimate paper allocation.
+    db_path = settings.data_dir / "audit.duckdb"
     store = DatabaseStore(db_path)
 
     audits_dir = Path("data/audits")

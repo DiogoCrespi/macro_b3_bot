@@ -1,0 +1,144 @@
+{
+  "phase": "P6",
+  "status": "NO_APPROVED_DECISIONS",
+  "decision_source": "data/audits/research_4e3_decisions.json",
+  "timing_source": "data/audits/research_4f_timing_risk.json",
+  "total_decisions": 5,
+  "eligible_for_paper_allocation": 0,
+  "blocker_counts": {
+    "BLOCKED_MISSING_UPSTREAM_INPUT": 5,
+    "DECISION_NO_ACTION": 5,
+    "MODE_BLOCKED_MISSING_UPSTREAM_INPUT": 5,
+    "NO_ACTIVE_SECTOR_SIGNAL": 5,
+    "NO_APPROVED_COMPANY_EXPOSURE": 5,
+    "RISK_HIGH_RISK": 5,
+    "TIMING_WAIT_FOR_CONFIRMATION": 5,
+    "CONFLICTING_MACRO_DIRECTION": 2
+  },
+  "decisions": [
+    {
+      "ticker": "MGLU3",
+      "decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+      "decision": "NO_ACTION",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "critical_blockers": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "eligible_for_paper_allocation": false,
+      "reasons": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "DECISION_NO_ACTION",
+        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
+        "RISK_HIGH_RISK",
+        "TIMING_WAIT_FOR_CONFIRMATION"
+      ]
+    },
+    {
+      "ticker": "SUZB3",
+      "decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+      "decision": "NO_ACTION",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "critical_blockers": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "CONFLICTING_MACRO_DIRECTION",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "eligible_for_paper_allocation": false,
+      "reasons": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "CONFLICTING_MACRO_DIRECTION",
+        "DECISION_NO_ACTION",
+        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
+        "RISK_HIGH_RISK",
+        "TIMING_WAIT_FOR_CONFIRMATION"
+      ]
+    },
+    {
+      "ticker": "KLBN11",
+      "decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+      "decision": "NO_ACTION",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "critical_blockers": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "CONFLICTING_MACRO_DIRECTION",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "eligible_for_paper_allocation": false,
+      "reasons": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "CONFLICTING_MACRO_DIRECTION",
+        "DECISION_NO_ACTION",
+        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
+        "RISK_HIGH_RISK",
+        "TIMING_WAIT_FOR_CONFIRMATION"
+      ]
+    },
+    {
+      "ticker": "RAIL3",
+      "decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+      "decision": "NO_ACTION",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "critical_blockers": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "eligible_for_paper_allocation": false,
+      "reasons": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "DECISION_NO_ACTION",
+        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
+        "RISK_HIGH_RISK",
+        "TIMING_WAIT_FOR_CONFIRMATION"
+      ]
+    },
+    {
+      "ticker": "SLCE3",
+      "decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+      "decision": "NO_ACTION",
+      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "critical_blockers": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE"
+      ],
+      "timing_classification": "WAIT_FOR_CONFIRMATION",
+      "risk_classification": "HIGH_RISK",
+      "eligible_for_paper_allocation": false,
+      "reasons": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
+        "DECISION_NO_ACTION",
+        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
+        "NO_ACTIVE_SECTOR_SIGNAL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
+        "RISK_HIGH_RISK",
+        "TIMING_WAIT_FOR_CONFIRMATION"
+      ]
+    }
+  ],
+  "safety": {
+    "approvals_created": 0,
+    "buy_signals_created": 0,
+    "orders_created": 0
+  }
+}

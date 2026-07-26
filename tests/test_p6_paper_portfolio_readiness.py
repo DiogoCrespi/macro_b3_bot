@@ -32,3 +32,16 @@ def test_p6_does_not_claim_performance_without_allocations():
     artifact = _artifact()
     assert artifact["allocation_events_generated"] >= artifact["evaluations"]
     assert "NO_APPROVED_DECISIONS_FOR_ALLOCATION" in artifact["blockers"]
+
+
+def test_p6_allocation_eligibility_does_not_fabricate_approvals():
+    path = Path(__file__).parents[1] / "data" / "audits" / "p6_allocation_eligibility.json"
+    eligibility = json.loads(path.read_text(encoding="utf-8"))
+    assert eligibility["status"] == "NO_APPROVED_DECISIONS"
+    assert eligibility["total_decisions"] == 5
+    assert eligibility["eligible_for_paper_allocation"] == 0
+    assert eligibility["safety"] == {
+        "approvals_created": 0,
+        "buy_signals_created": 0,
+        "orders_created": 0,
+    }
