@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `d38cda5`
+**Estado avaliado:** commit `07ec392`
 **Última suíte local:** 352 testes aprovados em 80,68 s em Python 3.12
 
 ## Veredito
