@@ -446,59 +446,77 @@ class MiroFishClient:
             "expected_horizon and report_excerpt. actors/actions/macro_factors/"
             "sector_effects/second_order_effects MUST be JSON arrays of strings "
             "(use [] when the report has no items). Derive every field only from the "
-            "report; do not invent facts, actors, effects, or confidence. Use null "
+            "report; sector_effects MUST explicitly name the affected sector when "
+            "the report names it (for example retail/varejo). "
+            "report; do not invent facts, actors, effects, or confidence. The trigger "
+            "field MUST be a string, never an array. Every scenario object MUST have "
+            "its own report_excerpt field; a top-level excerpt is invalid. Use null "
             "when confidence is not explicitly stated. report_excerpt is an evidence "
             "anchor: copy a contiguous substring character-for-character from the "
             "report, preserving the original Unicode language, punctuation and "
             "whitespace; never translate, summarize or paraphrase it.\n\n"
             + report_text
         )
-        response = httpx.post(
-            f"{llm_url}/chat/completions",
-            json={
-                "model": model,
-                "temperature": 0,
-                "messages": [{"role": "user", "content": prompt}],
-                "response_format": {"type": "json_object"},
-            },
-            timeout=600,
-        )
-        response.raise_for_status()
-        body = response.json()
-        content = body["choices"][0]["message"]["content"]
-        parsed = json.loads(content)
-        if not isinstance(parsed, dict):
-            raise ValueError("STRUCTURED_EXTRACTION_NOT_OBJECT")
-        # Some OpenAI-compatible backends return the single extracted
-        # scenario as the top-level object even when the prompt requests the
-        # envelope.  Normalize only when every required scenario field is
-        # present; never synthesize a scenario or fill missing values.
-        if "scenarios" not in parsed and {
-            "scenario_type",
-            "trigger",
-            "report_excerpt",
-        }.issubset(parsed):
-            parsed = {
-                "scenarios": [parsed],
-                "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
-                "_normalization_applied": "SINGLE_SCENARIO_OBJECT_TO_ARRAY",
+        current_prompt = prompt
+        last_parsed: dict[str, Any] | None = None
+        last_reason = "UNKNOWN"
+        for attempt in range(2):
+            response = httpx.post(
+                f"{llm_url}/chat/completions",
+                json={
+                    "model": model,
+                    "temperature": 0,
+                    "messages": [{"role": "user", "content": current_prompt}],
+                    "response_format": {"type": "json_object"},
+                },
+                timeout=600,
+            )
+            response.raise_for_status()
+            body = response.json()
+            content = body["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+            if not isinstance(parsed, dict):
+                raise ValueError("STRUCTURED_EXTRACTION_NOT_OBJECT")
+            if "scenarios" not in parsed and {
+                "scenario_type", "trigger", "report_excerpt"
+            }.issubset(parsed):
+                parsed = {
+                    "scenarios": [parsed],
+                    "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+                    "_normalization_applied": "SINGLE_SCENARIO_OBJECT_TO_ARRAY",
+                }
+            elif "scenarios" not in parsed:
+                parsed["_normalization_applied"] = "NONE"
+            parsed["schema_version"] = MIROFISH_REPORT_SCHEMA_VERSION
+            parsed["_extraction_metadata"] = {
+                "extraction_model": model,
+                "extraction_prompt": current_prompt,
+                "extraction_prompt_hash": sha256(current_prompt.encode("utf-8")).hexdigest(),
+                "extraction_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
+                "raw_extraction_response": content,
+                "extraction_response_checksum": sha256(content.encode("utf-8")).hexdigest(),
+                "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+                "extraction_attempt": attempt + 1,
             }
-        elif "scenarios" not in parsed:
-            parsed["_normalization_applied"] = "NONE"
-        # The schema version is the extraction contract, not a model claim.
-        # Pin it locally so omitted metadata cannot silently pass as another
-        # schema; semantic fields remain uncoerced and are validated below.
-        parsed["schema_version"] = MIROFISH_REPORT_SCHEMA_VERSION
-        parsed["_extraction_metadata"] = {
-            "extraction_model": model,
-            "extraction_prompt": prompt,
-            "extraction_prompt_hash": sha256(prompt.encode("utf-8")).hexdigest(),
-            "extraction_schema_version": MIROFISH_REPORT_SCHEMA_VERSION,
-            "raw_extraction_response": content,
-            "extraction_response_checksum": sha256(content.encode("utf-8")).hexdigest(),
-            "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
-        }
-        return parsed
+            last_parsed = parsed
+            valid, reason = MiroFishClient.validate_structured_report(
+                {**parsed, "report_text": report_text}
+            )
+            if valid:
+                return parsed
+            last_reason = reason
+            current_prompt = (
+                prompt
+                + "\n\nREPAIR REQUIRED: previous JSON failed strict validation with "
+                + reason
+                + ". Return corrected JSON. Each scenario MUST include a string "
+                + "trigger and a report_excerpt copied exactly from report_text; "
+                + "do not put report_excerpt only at the top level."
+            )
+        if last_parsed is not None:
+            last_parsed["_extraction_metadata"]["final_validation_error"] = last_reason
+            return last_parsed
+        raise ValueError("STRUCTURED_EXTRACTION_NO_RESPONSE")
 
     def poll_report(
         self,

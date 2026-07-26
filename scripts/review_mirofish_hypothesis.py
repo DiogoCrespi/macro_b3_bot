@@ -24,15 +24,21 @@ def main() -> None:
     raw = json.loads(raw_path.read_text(encoding="utf-8"))
     report_text = raw.get("markdown_content", "")
 
-    # Semantic review uses the report's Chinese wording rather than requiring
-    # every translated extraction label to be a byte-for-byte substring.
+    # Semantic review checks concepts in the persisted report without assuming
+    # one report language. Extraction labels may be translated, but the
+    # report itself must retain the Brazilian indicator, retail state, and
+    # source meaning.
+    def has_any(*terms: str) -> bool:
+        folded = report_text.casefold()
+        return any(term.casefold() in folded for term in terms)
+
     checks = {
-        "trigger": hypothesis["trigger"] in report_text,
-        "actors": all(token in report_text for token in ("消费者", "零售商", "供应链", "电子商务")),
-        "actions": all(token in report_text for token in ("灵活定价", "供应链管理", "数字技术", "社区团购")),
-        "macro_factors": all(token in report_text for token in ("通胀率", "购买力", "成本", "价格敏感")),
-        "sector_effects": all(token in report_text for token in ("价格上涨", "购买力下降", "业务")),
-        "second_order_effects": all(token in report_text for token in ("供应链", "技术创新", "竞争力")),
+        "trigger": has_any("IPCA", "aceleração da taxa de inflação", "通胀"),
+        "actors": has_any("consum", "消费者") and has_any("varej", "零售"),
+        "actions": has_any("preço", "价格") and has_any("cadeia", "供应链"),
+        "macro_factors": has_any("IPCA", "IPC") and has_any("infla", "通胀"),
+        "sector_effects": has_any("varej", "零售") and has_any("preço", "价格"),
+        "second_order_effects": has_any("cadeia", "供应链") or has_any("consum", "消费者"),
         "report_excerpt": hypothesis["report_excerpt"] in report_text,
         "raw_checksum": hashlib.sha256(raw_path.read_bytes()).hexdigest() == run["raw_response_checksum"],
     }

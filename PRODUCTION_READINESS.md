@@ -46,6 +46,26 @@ restrições:
   real concluir e o relatório respeitar o glossário. A falha atual é operacional
   do sidecar/status, não autorização para relaxar o grounding semântico.
 
+### P3 — recuperação e extração compatível (25/07/2026)
+
+- O sidecar concluiu posteriormente a simulação `sim_7896f408497b` e expôs o
+  relatório `report_a2e86c0545f5` em `/api/report/list`. O comando
+  `scripts/recover_mirofish_completed_run.py` recuperou somente esse relatório
+  `COMPLETED`, persistiu bytes/checksum e gravou uma execução `SUCCESS` no DuckDB.
+- A extração LLM estrita passou após uma segunda tentativa auditável: `trigger`
+  é string, cada cenário possui `report_excerpt` literal e o schema foi validado.
+  Não houve cenário local nem preenchimento de confiança.
+- A revisão delegada passou o grounding de fonte para `PARTIALLY_SUPPORTED` com
+  IPCA/BR, claim e documento PIT preservados. Isso ainda não equivale a revisão
+  humana nem a `SUPPORTED` operacional.
+- O binding real foi executado e persistido: `temporal_consistency_status=CONSISTENT`,
+  mas `binding_status=REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE`, pois o único
+  candidato macro disponível (`0c0e7a1f8b0035011ae94d28`) está rejeitado e não há
+  `sector_impact_candidate` ativo para o evento. Nenhum caminho causal foi criado.
+- Estado atual: relatório semanticamente compatível **PASS**; `SUPPORTED + BOUND`
+  **PENDENTE por ausência de candidato causal upstream**. Suíte completa: **353
+  testes aprovados**; Ruff: **PASS**.
+
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.
 

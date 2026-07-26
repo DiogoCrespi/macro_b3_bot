@@ -2,78 +2,27 @@
   "total_runs": 1,
   "runs": [
     {
-      "simulation_run_id": "639abc3fa1f4c7c714c2e2ad6d06e17a13a5eabe2af5d6a5a6849471b177573a",
+      "simulation_run_id": "a5bcd39ea23f32dd99278ea60c7f673657ed882853ce5d0ddd8e142b59f99d20",
       "seed_package_id": "9f9b765a898d8f23952e5d1b80a6db07a09c42025bd1da270b8dded50bf0934f",
       "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
-      "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
-      "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
-      "requested_at": "2026-07-26T01:13:04.841737+00:00",
-      "completed_at": "2026-07-26T01:24:15.119233+00:00",
+      "mirofish_graph_id": "mirofish_66a9e48e893d4485",
+      "mirofish_simulation_id": "sim_7896f408497b",
+      "requested_at": "2026-07-26T01:54:30.584916",
+      "completed_at": "2026-07-26T02:09:08.091151",
       "service_version": "NOT_EXPOSED_BY_SERVICE",
       "model_information": "NOT_EXPOSED_BY_SERVICE",
       "configuration": {
-        "error_fallback": true,
-        "error_message": "Server error '500 INTERNAL SERVER ERROR' for url 'http://localhost:5001/api/report/generate/status'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500",
-        "cancellation": "FAILED:Client error '400 BAD REQUEST' for url 'http://localhost:5001/api/simulation/stop'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "loader_diagnostics": {
-          "cutoff_timestamp": "2026-07-22T23:59:59+00:00",
-          "filter_event_id": "rel_bcb_ipca_202607",
-          "macro_events": {
-            "source_table_or_artifact": "macro_releases",
-            "records_scanned": 1,
-            "records_with_valid_id": 1,
-            "records_pit_eligible": 1,
-            "records_rejected_future": 0,
-            "records_rejected_missing_available_at": 0,
-            "records_rejected_missing_evidence": 0,
-            "records_rejected_non_material": 0,
-            "records_selected": 1,
-            "source_checksum": "4f93212527d3182e61cd5e043a175efdc3494592b8e29ef15f66b6a2d29428b3"
-          },
-          "evidence_claims": {
-            "source_table_or_artifact": "evidence_claims",
-            "records_scanned": 1,
-            "records_with_valid_id": 1,
-            "records_pit_eligible": 1,
-            "records_rejected_future": 0,
-            "records_rejected_missing_available_at": 0,
-            "records_rejected_missing_evidence": 0,
-            "records_rejected_non_material": 0,
-            "records_selected": 1,
-            "source_checksum": "13e9e05e6b00a80c2263a3fc36cf2e4a7a4acf1b59aa8a423d0689aef0e99470"
-          },
-          "sector_state_snapshots": {
-            "source_table_or_artifact": "sector_state_snapshots",
-            "records_scanned": 1,
-            "records_with_valid_id": 1,
-            "records_pit_eligible": 1,
-            "records_rejected_future": 0,
-            "records_rejected_missing_available_at": 0,
-            "records_rejected_missing_evidence": 0,
-            "records_rejected_non_material": 0,
-            "records_selected": 1,
-            "source_checksum": "a381399e637ee088d82c60b22528cb8e513652ec2a7cd6d090a12d7ecfe4b766"
-          },
-          "source_documents": {
-            "source_table_or_artifact": "cvm_documents",
-            "records_scanned": 1,
-            "records_with_valid_id": 1,
-            "records_pit_eligible": 1,
-            "records_rejected_future": 0,
-            "records_rejected_missing_available_at": 0,
-            "records_rejected_missing_evidence": 0,
-            "records_rejected_non_material": 0,
-            "records_selected": 1,
-            "source_checksum": "e39c74a4244762d806df57f0b2d7ca63e6ab3dd4ce98e77f9d99b81509e1c695"
-          }
-        }
+        "recovery": "COMPLETED_REPORT_LIST",
+        "source_report_id": "report_a2e86c0545f5"
       },
       "random_seed": "NOT_EXPOSED_BY_SERVICE",
-      "prompt_hash": "af11a60185fe325055172d704534ebc12c884d924cc908a0aaba7e163094b6be",
+      "prompt_hash": "fb181702e0a9ceecf349d97f6e9d905f749adfde133635f1a79eff275dcccedc",
       "input_checksum": "dc7db70cf1b9461d293941c2f5c29671f39acef111c918c98101c7121b28d558",
-      "status": "FAILED_INCOMPLETE_SERVICE_RUN",
-      "raw_report_ids": [],
-      "raw_response_checksum": "FAILED_INCOMPLETE_SERVICE_RUN",
+      "status": "SUCCESS",
+      "raw_report_ids": [
+        "report_a2e86c0545f5"
+      ],
+      "raw_response_checksum": "9f563c6412760256c1e4821731f578e3d9281e2683a92139cac3eefcf2ec4cad",
       "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
       "methodology_version": "5A.3-mirofish-engine-v3"
     }

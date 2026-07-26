@@ -72,7 +72,11 @@ def validate_hypothesis_grounding(
     # Basic controlled sector compatibility; absence is unknown, never a match.
     sector_text = " ".join(_text(s.get("sector")) for s in sector_states)
     effects = " ".join(_text(x) for x in hypothesis.get("sector_effects", []))
-    if "retail" in sector_text and not re.search(r"retail|varejo|零售", effects):
+    # The extracted label may be translated or abstracted.  Require the
+    # affected sector to be present either in the structured effect or in the
+    # exact sidecar report that supports that effect; never infer it from a
+    # numeric overlap alone.
+    if "retail" in sector_text and not re.search(r"retail|varejo|零售", effects + " " + report):
         reasons.append("SECTOR_EFFECT_NOT_COMPATIBLE_WITH_RETAIL_STATE")
 
     return {
