@@ -1024,6 +1024,31 @@ def run_financial_calibration_pilot(
     console.print_json(rendered)
 
 
+@app.command("run-historical-bridge-validation")
+def run_historical_bridge_validation(
+    as_of: str = typer.Option(..., "--as-of"),
+    output: Optional[str] = typer.Option(None, "--output"),
+) -> None:
+    """Run P4 PIT expanding-window validation without valuation promotion."""
+    from pathlib import Path
+
+    from macro_b3_bot.application.run_historical_bridge_validation import (
+        HistoricalBridgeValidator,
+    )
+    from macro_b3_bot.infrastructure.store import DatabaseStore
+
+    settings = Settings()
+    store = DatabaseStore(settings.data_dir / "audit.duckdb")
+    result = HistoricalBridgeValidator(store, "financial_p4_walk_forward").run(
+        as_of_timestamp=datetime.fromisoformat(as_of),
+    )
+    store.close()
+    rendered = json.dumps(result, ensure_ascii=False, indent=2, default=str)
+    if output:
+        Path(output).write_text(rendered, encoding="utf-8")
+    console.print_json(rendered)
+
+
 @app.command("reconcile-company-mappings")
 def reconcile_company_mappings() -> None:
     """Validate and persist the 15-company pilot mapping against the CVM registry."""

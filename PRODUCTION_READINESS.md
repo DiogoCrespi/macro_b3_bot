@@ -260,11 +260,11 @@ explicitamente configurada, mas permanece distinguido de uma assinatura humana i
 
 ### Fase P4 — Validação histórica dos bridges
 
-**Status:** `PENDENTE`
+**Status:** `EM ANDAMENTO — PRIMEIRO REPLAY PERSISTIDO`
 **Objetivo:** medir se os impactos financeiros têm poder explicativo fora da amostra.
 
-- [ ] Replays walk-forward por data de disponibilidade.
-- [ ] Mínimo de cinco janelas por bridge; preferir oito a doze trimestres.
+- [X] Replays walk-forward por data de disponibilidade para os bridges com séries PIT.
+- [X] Mínimo de cinco janelas para os bridges calculáveis; bridges sem série ficam explicitamente bloqueados.
 - [ ] MGLU3: juros líquidos, caixa sensível, repricing e derivativos.
 - [ ] SUZB3: FX, celulose, volume, custos cambiais e margem incremental.
 - [ ] KLBN11: FX, CDI/SOFR e IPCA em bridges separados.
@@ -274,6 +274,23 @@ explicitamente configurada, mas permanece distinguido de uma assinatura humana i
 
 **Aceite:** resultados persistidos com premissas, erro observado e intervalos; nenhum
 coeficiente in-sample é promovido automaticamente a calibração validada.
+
+**Primeiro replay P4:** `data/audits/financial_p4_historical_validation.json`,
+run `financial_p4_walk_forward`, corte `2026-07-22T23:59:59+00:00`.
+
+```text
+MGLU3 NET_INTEREST_CASH_EFFECT: 12 observações; estrutural; sem OOS
+SUZB3 FX_OPERATING_REVENUE:     8 janelas OOS; MAE OOS 0,1545; não promovido
+KLBN11 FX_OPERATING_REVENUE:     7 janelas OOS; MAE OOS 0,0593; sinal instável; não promovido
+KLBN11 CDI_SOFR_DEBT:            BLOCKED_MISSING_MACRO_SERIES
+KLBN11 IPCA_DEBT:                BLOCKED_MISSING_MACRO_SERIES
+```
+
+Os resultados estão também na tabela DuckDB `historical_bridge_validation_runs`, com
+`validation_id`, corte PIT, parâmetros, MAE in/out-of-sample, estabilidade de sinal,
+drivers ausentes e `promotion_status=NOT_PROMOTED_TO_VALUATION`. Nenhum valor sintético
+foi criado para séries ausentes. P4 permanece aberto até haver exposição efetiva de juros
+da MGLU3 e séries PIT suficientes para os bridges de dívida da KLBN11.
 
 ### Fase P5 — Valuation readiness
 
@@ -403,6 +420,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 25/07/2026 | `a9ae27a`        | P2   | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes                                                                                                                                                                         | SSO/RBAC corporativo, entrega de alertas e monitoramento externo                 |
 | 26/07/2026 | `P3-RUN-39b8886` | P3   | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding                                                                                                                                                             | Relatório nativo semanticamente compatível e`SUPPORTED + BOUND + CONSISTENT` |
 | 26/07/2026 | `P3-RUN-d7c115b` | P3   | Replay real com Selic brasileira: relatório terminal persistido, 2 hipóteses, candidato setorial WATCH no mesmo corte e primeira hipótese `SUPPORTED + BOUND + CONSISTENT`; segunda hipótese permanece UNVERIFIED | Versionar sidecar, executar 5C e manter decisão conservadora |
+| 26/07/2026 | `financial_p4_walk_forward` | P4 | Primeiro replay PIT persistido: SUZB3 e KLBN11 FX com 7–8 janelas OOS; MGLU3 estrutural; KLBN11 dívida bloqueada por séries macro ausentes | Determinar exposição efetiva de juros e ingerir séries PIT CDI/IPCA |
 
 ## Backlog posterior
 

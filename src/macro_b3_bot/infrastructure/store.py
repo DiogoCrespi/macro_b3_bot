@@ -1059,6 +1059,18 @@ class DatabaseStore:
             );
         """)
         self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS historical_bridge_validation_runs (
+                validation_id VARCHAR PRIMARY KEY,
+                ticker VARCHAR NOT NULL,
+                bridge VARCHAR NOT NULL,
+                as_of_timestamp TIMESTAMP NOT NULL,
+                validation_payload VARCHAR NOT NULL,
+                status VARCHAR NOT NULL,
+                run_id VARCHAR NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        self.connection.execute("""
             CREATE TABLE IF NOT EXISTS scenario_hypothesis_reviews (
                 review_id VARCHAR PRIMARY KEY,
                 hypothesis_id VARCHAR NOT NULL,
@@ -3154,6 +3166,21 @@ class DatabaseStore:
                 review["review_decision"], review["review_status"],
                 review.get("review_confidence"), review["fact_review_hash"],
                 json.dumps(review, ensure_ascii=False, sort_keys=True, default=str),
+            ],
+        )
+
+    def save_historical_bridge_validation(self, item: dict) -> None:
+        """Persist an immutable walk-forward validation result."""
+        self.connection.execute(
+            """
+            INSERT OR REPLACE INTO historical_bridge_validation_runs
+            (validation_id,ticker,bridge,as_of_timestamp,validation_payload,status,run_id)
+            VALUES (?,?,?,?,?,?,?)
+            """,
+            [
+                item["validation_id"], item["ticker"], item["bridge"],
+                item["as_of_timestamp"], json.dumps(item, default=str),
+                item["status"], item["run_id"],
             ],
         )
 

@@ -1,0 +1,139 @@
+{
+  "run_id": "financial_p4_walk_forward",
+  "methodology_version": "P4-walk-forward-bridge-validation-v1",
+  "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+  "mode": "CALIBRATION_MODE",
+  "results": [
+    {
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "methodology_version": "P4-walk-forward-bridge-validation-v1",
+      "status": "STRUCTURAL_SENSITIVITY",
+      "walk_forward_window_count": 12,
+      "observation_count": 12,
+      "out_of_sample_observations": 0,
+      "in_sample_mae": null,
+      "out_of_sample_mae": null,
+      "parameters": {},
+      "coefficient_sign_stability": {},
+      "missing_drivers": [
+        "EFFECTIVE_FLOATING_DEBT_SHARE",
+        "RATE_SENSITIVE_CASH_SHARE",
+        "REPRICING_LAG",
+        "DERIVATIVE_RATE_EFFECT"
+      ],
+      "notes": "Structural proxy; no empirical effective-rate exposure was inferred.",
+      "promotion_status": "NOT_PROMOTED_TO_VALUATION",
+      "run_id": "financial_p4_walk_forward",
+      "validation_id": "6a2118cad0ac87597a519f1c09a2dbc1"
+    },
+    {
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "methodology_version": "P4-walk-forward-bridge-validation-v1",
+      "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
+      "walk_forward_window_count": 8,
+      "observation_count": 12,
+      "out_of_sample_observations": 8,
+      "in_sample_mae": 0.09443951960078212,
+      "out_of_sample_mae": 0.1545368147763769,
+      "parameters": {
+        "intercept": 0.017823933180850283,
+        "fx_slope": 1.7221259829655708,
+        "pulp_slope": 0.6736018740988081
+      },
+      "coefficient_sign_stability": {
+        "fx_slope": 1.0,
+        "pulp_slope": 0.75
+      },
+      "missing_drivers": [
+        "DISCLOSED_VOLUME_HISTORY"
+      ],
+      "notes": "Expanding-window validation with intercept and FX/PPI controls.",
+      "promotion_status": "NOT_PROMOTED_TO_VALUATION",
+      "run_id": "financial_p4_walk_forward",
+      "validation_id": "32cf53f51064319700f8b96b60632b9f"
+    },
+    {
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "methodology_version": "P4-walk-forward-bridge-validation-v1",
+      "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
+      "walk_forward_window_count": 7,
+      "observation_count": 11,
+      "out_of_sample_observations": 7,
+      "in_sample_mae": 0.033943574906436465,
+      "out_of_sample_mae": 0.05929977426201945,
+      "parameters": {
+        "intercept": 0.016848276336299442,
+        "fx_slope": 0.030864385698540442,
+        "pulp_slope": 0.625079123875711
+      },
+      "coefficient_sign_stability": {
+        "fx_slope": 0.5714285714285714,
+        "pulp_slope": 0.7142857142857143
+      },
+      "missing_drivers": [
+        "DISCLOSED_VOLUME_HISTORY"
+      ],
+      "notes": "Expanding-window validation with intercept and FX/PPI controls.",
+      "promotion_status": "NOT_PROMOTED_TO_VALUATION",
+      "run_id": "financial_p4_walk_forward",
+      "validation_id": "6422e13530fc2a2aa9d687892d4868d9"
+    },
+    {
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "methodology_version": "P4-walk-forward-bridge-validation-v1",
+      "status": "BLOCKED_MISSING_MACRO_SERIES",
+      "walk_forward_window_count": 0,
+      "observation_count": 0,
+      "out_of_sample_observations": 0,
+      "in_sample_mae": null,
+      "out_of_sample_mae": null,
+      "parameters": {},
+      "coefficient_sign_stability": {},
+      "missing_drivers": [
+        "PIT_MACRO_SERIES_NOT_AVAILABLE"
+      ],
+      "notes": "No canonical PIT macro series; no synthetic values were generated.",
+      "promotion_status": "NOT_PROMOTED_TO_VALUATION",
+      "run_id": "financial_p4_walk_forward",
+      "validation_id": "bd0a274e60ac6d3e64694b2d3bab1fee"
+    },
+    {
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
+      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "methodology_version": "P4-walk-forward-bridge-validation-v1",
+      "status": "BLOCKED_MISSING_MACRO_SERIES",
+      "walk_forward_window_count": 0,
+      "observation_count": 0,
+      "out_of_sample_observations": 0,
+      "in_sample_mae": null,
+      "out_of_sample_mae": null,
+      "parameters": {},
+      "coefficient_sign_stability": {},
+      "missing_drivers": [
+        "PIT_MACRO_SERIES_NOT_AVAILABLE"
+      ],
+      "notes": "No canonical PIT macro series; no synthetic values were generated.",
+      "promotion_status": "NOT_PROMOTED_TO_VALUATION",
+      "run_id": "financial_p4_walk_forward",
+      "validation_id": "557334261c11889ad318960ef981e92b"
+    }
+  ],
+  "acceptance_checks": {
+    "minimum_five_windows_or_explicit_block": true,
+    "oos_metrics_persisted": true,
+    "no_automatic_promotion": true,
+    "pit_cutoff_applied": true
+  },
+  "valuation": "BLOCKED",
+  "buy": "BLOCKED",
+  "orders": "BLOCKED"
+}
