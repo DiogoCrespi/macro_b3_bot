@@ -3,7 +3,7 @@
 
 **Data da avaliação:** 25/07/2026
 **Estado avaliado:** working tree após correção de recuperação de relatório e glossário de domínio (P3)
-**Última suíte local:** 352 testes aprovados em 80,68 s em Python 3.12
+**Última suíte local:** 353 testes aprovados em 86,12 s em Python 3.13
 
 ## Veredito
 
@@ -27,7 +27,7 @@ restrições:
   `REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE` e não criou `SectorImpactCandidate` inexistente.
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
-- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 345 testes.
+- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 353 testes.
 
 ### P3 — última execução real (25/07/2026)
 
