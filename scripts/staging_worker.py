@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 
-from scripts.validate_staging_config import validate
+from validate_staging_config import validate
 
 
 def main() -> None:
