@@ -3,7 +3,7 @@
 
 **Data da avaliação:** 25/07/2026
 **Estado avaliado:** commit `bc06eec`
-**Última suíte local:** 344 testes aprovados em 81,37 s em Python 3.12
+**Última suíte local:** 345 testes aprovados em 79,45 s em Python 3.12
 
 ## Veredito
 
@@ -27,7 +27,7 @@ restrições:
   `REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE` e não criou `SectorImpactCandidate` inexistente.
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
-- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 344 testes.
+- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 345 testes.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.
@@ -271,7 +271,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `bc06eec` | P1 | Digest local do sidecar, validador fail-closed, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 344 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
+| 25/07/2026 | `bc06eec` | P1 | Digest local do sidecar, validador fail-closed, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
 
 ## Backlog posterior
 
