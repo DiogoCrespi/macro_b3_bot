@@ -334,9 +334,9 @@ O fechamento de integridade do MiroFish foi implementado e testado:
 - evento inexistente, relatório incompleto e timestamps ausentes bloqueiam o binding;
 - hipóteses não verificadas são neutras para o núcleo determinístico e aparecem apenas como warnings.
 
-Isso fecha os defeitos de integridade do 5B. A homologação econômica ainda depende de
-eventos reais com candidato setorial ativo, claims/documentos PIT compatíveis e replays
-históricos suficientes.
+Isso fecha os defeitos de integridade do 5B para o caminho exercitado. A homologação
+econômica ampla ainda depende de mais eventos, claims/documentos PIT compatíveis e replays
+históricos suficientes; o piloto compatível abaixo já comprova o primeiro caso aceito.
 
 ### Replay P3 compatível — 26/07/2026
 
