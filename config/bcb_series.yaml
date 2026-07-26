@@ -9,6 +9,16 @@ series:
     unit: percent_annual
     frequency: daily
 
+  - code: "12"
+    name: cdi_daily
+    unit: percent_daily
+    frequency: daily
+
+  - code: "433"
+    name: ipca_monthly
+    unit: percent_monthly
+    frequency: monthly
+
   - code: "1"
     name: usdbrl_sell
     unit: brl_per_usd

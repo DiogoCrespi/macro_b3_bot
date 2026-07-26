@@ -1,13 +1,13 @@
 {
   "run_id": "financial_p4_walk_forward",
   "methodology_version": "P4-walk-forward-bridge-validation-v1",
-  "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+  "as_of_timestamp": "2026-07-26T23:59:59+00:00",
   "mode": "CALIBRATION_MODE",
   "results": [
     {
       "ticker": "MGLU3",
       "bridge": "NET_INTEREST_CASH_EFFECT",
-      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "as_of_timestamp": "2026-07-26T23:59:59+00:00",
       "methodology_version": "P4-walk-forward-bridge-validation-v1",
       "status": "STRUCTURAL_SENSITIVITY",
       "walk_forward_window_count": 12,
@@ -15,7 +15,12 @@
       "out_of_sample_observations": 0,
       "in_sample_mae": null,
       "out_of_sample_mae": null,
-      "parameters": {},
+      "out_of_sample_rmse": null,
+      "parameters": {
+        "average_gross_debt_observed": 5947933000.0,
+        "average_cash_observed": 1784888000.0,
+        "gross_interest_effect_formula": "-effective_floating_debt * delta_rate * repricing_factor"
+      },
       "coefficient_sign_stability": {},
       "missing_drivers": [
         "EFFECTIVE_FLOATING_DEBT_SHARE",
@@ -23,15 +28,15 @@
         "REPRICING_LAG",
         "DERIVATIVE_RATE_EFFECT"
       ],
-      "notes": "Structural proxy; no empirical effective-rate exposure was inferred.",
+      "notes": "Structural proxy; gross debt and cash are observed balances, but cash sensitivity, repricing lag and derivatives are not inferred.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "6a2118cad0ac87597a519f1c09a2dbc1"
+      "validation_id": "45aa17618da67037f427c6b84090dedb"
     },
     {
       "ticker": "SUZB3",
       "bridge": "FX_OPERATING_REVENUE",
-      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "as_of_timestamp": "2026-07-26T23:59:59+00:00",
       "methodology_version": "P4-walk-forward-bridge-validation-v1",
       "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
       "walk_forward_window_count": 8,
@@ -39,6 +44,7 @@
       "out_of_sample_observations": 8,
       "in_sample_mae": 0.09443951960078212,
       "out_of_sample_mae": 0.1545368147763769,
+      "out_of_sample_rmse": 0.17746011417458052,
       "parameters": {
         "intercept": 0.017823933180850283,
         "fx_slope": 1.7221259829655708,
@@ -54,12 +60,12 @@
       "notes": "Expanding-window validation with intercept and FX/PPI controls.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "32cf53f51064319700f8b96b60632b9f"
+      "validation_id": "29478633ae7e1708850f7ee19360b077"
     },
     {
       "ticker": "KLBN11",
       "bridge": "FX_OPERATING_REVENUE",
-      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "as_of_timestamp": "2026-07-26T23:59:59+00:00",
       "methodology_version": "P4-walk-forward-bridge-validation-v1",
       "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
       "walk_forward_window_count": 7,
@@ -67,6 +73,7 @@
       "out_of_sample_observations": 7,
       "in_sample_mae": 0.033943574906436465,
       "out_of_sample_mae": 0.05929977426201945,
+      "out_of_sample_rmse": 0.07918410324113181,
       "parameters": {
         "intercept": 0.016848276336299442,
         "fx_slope": 0.030864385698540442,
@@ -82,49 +89,55 @@
       "notes": "Expanding-window validation with intercept and FX/PPI controls.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "6422e13530fc2a2aa9d687892d4868d9"
+      "validation_id": "1f690a2a6a7890d535a0826e9f8a5354"
     },
     {
       "ticker": "KLBN11",
       "bridge": "CDI_SOFR_DEBT",
-      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "as_of_timestamp": "2026-07-26T23:59:59+00:00",
       "methodology_version": "P4-walk-forward-bridge-validation-v1",
-      "status": "BLOCKED_MISSING_MACRO_SERIES",
-      "walk_forward_window_count": 0,
-      "observation_count": 0,
-      "out_of_sample_observations": 0,
+      "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
+      "walk_forward_window_count": 8,
+      "observation_count": 11,
+      "out_of_sample_observations": 8,
       "in_sample_mae": null,
-      "out_of_sample_mae": null,
+      "out_of_sample_mae": 166091611.2925135,
+      "out_of_sample_rmse": 237354946.479377,
       "parameters": {},
       "coefficient_sign_stability": {},
       "missing_drivers": [
-        "PIT_MACRO_SERIES_NOT_AVAILABLE"
+        "RATE_SENSITIVE_DEBT_SHARE",
+        "REPRICING_LAG",
+        "DERIVATIVE_RATE_EFFECT"
       ],
-      "notes": "No canonical PIT macro series; no synthetic values were generated.",
+      "notes": "Expanding-window diagnostic using PIT cdi_daily; financial result has confounders.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "bd0a274e60ac6d3e64694b2d3bab1fee"
+      "validation_id": "08327c5a305df46f038cfa69a36c862d"
     },
     {
       "ticker": "KLBN11",
       "bridge": "IPCA_DEBT",
-      "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+      "as_of_timestamp": "2026-07-26T23:59:59+00:00",
       "methodology_version": "P4-walk-forward-bridge-validation-v1",
-      "status": "BLOCKED_MISSING_MACRO_SERIES",
-      "walk_forward_window_count": 0,
-      "observation_count": 0,
-      "out_of_sample_observations": 0,
+      "status": "EMPIRICAL_OUT_OF_SAMPLE_REVIEW",
+      "walk_forward_window_count": 8,
+      "observation_count": 11,
+      "out_of_sample_observations": 8,
       "in_sample_mae": null,
-      "out_of_sample_mae": null,
+      "out_of_sample_mae": 163883158.46794724,
+      "out_of_sample_rmse": 219262794.02023616,
       "parameters": {},
       "coefficient_sign_stability": {},
       "missing_drivers": [
-        "PIT_MACRO_SERIES_NOT_AVAILABLE"
+        "RATE_SENSITIVE_DEBT_SHARE",
+        "REPRICING_LAG",
+        "DERIVATIVE_RATE_EFFECT"
       ],
-      "notes": "No canonical PIT macro series; no synthetic values were generated.",
+      "notes": "Expanding-window diagnostic using PIT ipca_monthly; financial result has confounders.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "557334261c11889ad318960ef981e92b"
+      "validation_id": "cbb1552db93915fd94ad56d7b8801395"
     }
   ],
   "acceptance_checks": {

@@ -1,0 +1,44 @@
+{
+  "sprint": "P4",
+  "methodology_version": "P4-decision-metrics-ablation-v1",
+  "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+  "metrics": {
+    "precision_at_k": null,
+    "hit_rate": null,
+    "metric_status": "NOT_EVALUABLE_NO_ALLOCATED_OUTCOMES",
+    "outcome_count": 0,
+    "max_drawdown": 0.0,
+    "turnover_ratio": 0.0,
+    "gross_traded_brl": 0.0,
+    "transaction_and_slippage_costs_brl": 0.0,
+    "return_pct": 0.0,
+    "steps": 33
+  },
+  "ablation": {
+    "DETERMINISTIC_ONLY": {
+      "MGLU3": "NO_ACTION",
+      "SUZB3": "NO_ACTION",
+      "KLBN11": "NO_ACTION",
+      "RAIL3": "NO_ACTION",
+      "SLCE3": "NO_ACTION"
+    },
+    "DETERMINISTIC_PLUS_MIROFISH": {
+      "MGLU3": "NO_ACTION",
+      "SUZB3": "NO_ACTION",
+      "KLBN11": "NO_ACTION",
+      "RAIL3": "NO_ACTION",
+      "SLCE3": "NO_ACTION"
+    },
+    "difference_count": 0,
+    "status": "NO_MIROFISH_SUPPORTED_AT_HISTORICAL_CUTOFFS"
+  },
+  "precision_hit_rate_status": "BLOCKED_NO_EVALUABLE_ALLOCATIONS",
+  "drawdown_turnover_costs_status": "CALCULATED_FROM_REPLAY",
+  "promotion_status": "NOT_PROMOTED_TO_DECISION_POLICY",
+  "source_manifests": [
+    "data/audits/replay_4g_end_to_end.json",
+    "data/audits/paper_portfolio_4g_ledger.json",
+    "data/audits/research_4e3_decisions.json"
+  ],
+  "report_id": "b0ce8fe66fea81d02c7a1e1640e1ae749cbc576def9b5bc08988b5ce15d714b3"
+}

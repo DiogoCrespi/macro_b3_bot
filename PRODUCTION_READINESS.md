@@ -265,12 +265,18 @@ explicitamente configurada, mas permanece distinguido de uma assinatura humana i
 
 - [X] Replays walk-forward por data de disponibilidade para os bridges com séries PIT.
 - [X] Mínimo de cinco janelas para os bridges calculáveis; bridges sem série ficam explicitamente bloqueados.
-- [ ] MGLU3: juros líquidos, caixa sensível, repricing e derivativos.
-- [ ] SUZB3: FX, celulose, volume, custos cambiais e margem incremental.
-- [ ] KLBN11: FX, CDI/SOFR e IPCA em bridges separados.
-- [ ] MAE/RMSE fora da amostra e estabilidade de sinal.
-- [ ] Precision@k, hit rate, drawdown, turnover e custos.
-- [ ] Ablação `DETERMINISTIC_ONLY` versus `DETERMINISTIC_PLUS_MIROFISH`.
+- [~] MGLU3: juros líquidos, caixa sensível, repricing e derivativos — saldo bruto/caixa
+  observados; parcela sensível, repricing e derivativos continuam explicitamente ausentes.
+- [~] SUZB3: FX e celulose com 8 janelas OOS; volume, custos cambiais e margem incremental
+  continuam drivers ausentes e não são inferidos.
+- [~] KLBN11: FX com 7 janelas OOS; CDI/SOFR e IPCA separados com 8 janelas OOS cada,
+  mas parcela efetivamente exposta e repricing ainda não calibrados.
+- [X] MAE/RMSE fora da amostra e estabilidade de sinal persistidos; bridges continuam
+  não promovidos quando faltam drivers econômicos ou estabilidade.
+- [X] Precision@k, hit rate, drawdown, turnover e custos calculados ou marcados como
+  `NOT_EVALUABLE_NO_ALLOCATED_OUTCOMES` quando não há alocações avaliáveis.
+- [X] Ablação `DETERMINISTIC_ONLY` versus `DETERMINISTIC_PLUS_MIROFISH` executada; braços
+  idênticos porque não havia hipótese MiroFish `SUPPORTED+BOUND` nos cortes históricos.
 
 **Aceite:** resultados persistidos com premissas, erro observado e intervalos; nenhum
 coeficiente in-sample é promovido automaticamente a calibração validada.
@@ -291,6 +297,14 @@ Os resultados estão também na tabela DuckDB `historical_bridge_validation_runs
 drivers ausentes e `promotion_status=NOT_PROMOTED_TO_VALUATION`. Nenhum valor sintético
 foi criado para séries ausentes. P4 permanece aberto até haver exposição efetiva de juros
 da MGLU3 e séries PIT suficientes para os bridges de dívida da KLBN11.
+
+**Métricas de decisão P4:** `data/audits/p4_decision_metrics_ablation.json` calcula
+precision@k, hit rate, drawdown, turnover e custos a partir do replay 4G. Como os cinco
+eventos históricos foram `NO_ALLOCATION`, precision@k e hit rate são `null` com status
+`NOT_EVALUABLE_NO_ALLOCATED_OUTCOMES`; não são convertidos artificialmente em zero.
+Drawdown, turnover e custos observados são zero. A ablação possui diferença zero e status
+`NO_MIROFISH_SUPPORTED_AT_HISTORICAL_CUTOFFS`, portanto não promove o MiroFish nem altera
+a política decisória.
 
 ### Fase P5 — Valuation readiness
 
@@ -420,7 +434,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 25/07/2026 | `a9ae27a`        | P2   | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes                                                                                                                                                                         | SSO/RBAC corporativo, entrega de alertas e monitoramento externo                 |
 | 26/07/2026 | `P3-RUN-39b8886` | P3   | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding                                                                                                                                                             | Relatório nativo semanticamente compatível e`SUPPORTED + BOUND + CONSISTENT` |
 | 26/07/2026 | `P3-RUN-d7c115b` | P3   | Replay real com Selic brasileira: relatório terminal persistido, 2 hipóteses, candidato setorial WATCH no mesmo corte e primeira hipótese `SUPPORTED + BOUND + CONSISTENT`; segunda hipótese permanece UNVERIFIED | Versionar sidecar, executar 5C e manter decisão conservadora |
-| 26/07/2026 | `financial_p4_walk_forward` | P4 | Primeiro replay PIT persistido: SUZB3 e KLBN11 FX com 7–8 janelas OOS; MGLU3 estrutural; KLBN11 dívida bloqueada por séries macro ausentes | Determinar exposição efetiva de juros e ingerir séries PIT CDI/IPCA |
+| 26/07/2026 | `financial_p4_walk_forward` | P4 | Replay PIT atualizado após ingestão BCB SGS 12/433: SUZB3 e KLBN11 FX, CDI/SOFR e IPCA com 7–8 janelas OOS; MGLU3 estrutural; nenhum bridge promovido | Determinar exposição efetiva, repricing/derivativos e completar RMSE/ablação com outcomes avaliáveis |
 
 ## Backlog posterior
 

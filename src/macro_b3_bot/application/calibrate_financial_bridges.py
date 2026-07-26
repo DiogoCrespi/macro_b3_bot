@@ -247,7 +247,8 @@ class FinancialBridgeCalibrator:
             SELECT reference_date,indicator,CAST(value AS DOUBLE) AS value
             FROM macro_observations
             WHERE indicator IN (
-                'usdbrl_sell','selic_annualized_252','wood_pulp_ppi'
+                'usdbrl_sell','selic_annualized_252','wood_pulp_ppi',
+                'cdi_daily','ipca_monthly'
             )
             {pit_clause}
             """,
