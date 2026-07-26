@@ -436,6 +436,12 @@ só aparece quando existir evento upstream real; nesta execução os eventos reg
 foram política monetária, câmbio e crescimento. Todos os resultados permanecem
 `RESEARCH_WATCHLIST_ONLY`, sem valuation, BUY ou ordens.
 
+Na atualização integrada, o relatório também cruza cada ticker com o último
+`company_impact_candidate` persistido, preservando `macro_score`, fatores, status e
+exposições ausentes. Nesta base, apenas SUZB3, MGLU3 e KLBN11 possuem candidato causal
+persistido; os demais ativos aparecem honestamente como `NO_CAUSAL_COVERAGE`, não como
+se tivessem uma tese macro fabricada.
+
 ## Estado do Sprint 5B.1
 
 O fechamento de integridade do MiroFish foi implementado e testado:

@@ -40,7 +40,7 @@ def _higher_is_better(value: float | None, bad: float, good: float) -> float | N
     return _clamp((value - bad) / (good - bad))
 
 
-def score_asset(record: dict[str, Any]) -> dict[str, Any]:
+def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None) -> dict[str, Any]:
     metrics = record.get("metrics", {})
     components = {
         "valuation_pe": _lower_is_better(_metric(metrics, "pe"), 8, 30),
@@ -66,6 +66,18 @@ def score_asset(record: dict[str, Any]) -> dict[str, Any]:
     usable_groups = [value for value in group_scores.values() if value is not None]
     score = sum(usable_groups) / len(usable_groups) if usable_groups else 0.0
     completeness = len(known) / len(components)
+    macro = macro or {}
+    macro_impact = macro.get("net_company_impact")
+    macro_confidence = macro.get("confidence")
+    macro_score = None
+    if isinstance(macro_impact, (int, float)) and isinstance(macro_confidence, (int, float)):
+        # The causal score remains a directional/context score, never a return
+        # forecast.  Evidence confidence attenuates it and opposing paths are
+        # surfaced rather than averaged away.
+        macro_score = _clamp((0.5 + 0.5 * float(macro_impact)) * float(macro_confidence))
+    integrated_score = score if macro_score is None else (0.65 * score + 0.35 * macro_score)
+    if macro_score is None:
+        integrated_score *= 0.75  # unknown causal coverage is visible as a penalty
     return {
         "ticker": record["ticker"],
         "asset_class": record.get("asset_class"),
@@ -73,6 +85,12 @@ def score_asset(record: dict[str, Any]) -> dict[str, Any]:
         "price": record.get("price"),
         "as_of": record.get("as_of"),
         "research_score": round(score, 4),
+        "macro_score": None if macro_score is None else round(macro_score, 4),
+        "integrated_score": round(integrated_score, 4),
+        "macro_status": macro.get("status", "NO_CAUSAL_COVERAGE"),
+        "macro_factors": macro.get("factors", []),
+        "macro_missing_exposures": macro.get("missing_exposures", []),
+        "macro_conflict_ratio": macro.get("conflict_ratio"),
         "data_completeness": round(completeness, 4),
         "group_scores": {key: None if value is None else round(value, 4) for key, value in group_scores.items()},
         "metrics": metrics,
@@ -81,8 +99,9 @@ def score_asset(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str, int], as_of: str) -> dict[str, Any]:
-    ranked = sorted((score_asset(item) for item in records), key=lambda x: (x["research_score"] * x["data_completeness"], x["research_score"]), reverse=True)
+def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str, int], as_of: str, macro_by_ticker: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    macro_by_ticker = macro_by_ticker or {}
+    ranked = sorted((score_asset(item, macro_by_ticker.get(item["ticker"])) for item in records), key=lambda x: (x["integrated_score"] * x["data_completeness"], x["integrated_score"]), reverse=True)
     total_factor_events = sum(factor_counts.values())
     factor_summary = [
         {"factor": factor, "event_count": count, "share": round(count / total_factor_events, 4) if total_factor_events else 0}
@@ -93,6 +112,7 @@ def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str
         "as_of_timestamp": as_of,
         "assets_scanned": len(records),
         "assets_ranked": len(ranked),
+        "assets_with_causal_candidate": sum(1 for item in ranked if item["macro_score"] is not None),
         "ranking_policy": "equal_weighted_groups; macro factors are context only",
         "macro_factor_summary": factor_summary,
         "factor_dominance_guard": {"max_single_factor_weight": 1.0, "enso_is_not_special_cased": True},
@@ -112,15 +132,35 @@ def main() -> None:
     ).fetchall()
     records = [{"ticker": r[0], "asset_class": r[1], "as_of": r[2].isoformat(), "price": r[3], "avg_daily_volume_brl": r[4], "sector": r[5], "metrics": json.loads(r[6] or "{}")} for r in rows]
     factors = db.connection.execute("SELECT event_type, COUNT(*) FROM macro_event_candidates WHERE detected_at <= ? GROUP BY event_type", [cutoff]).fetchall()
-    report = build_universe_report(records, {str(row[0]): int(row[1]) for row in factors}, cutoff.isoformat())
+    macro_by_ticker: dict[str, dict[str, Any]] = {}
+    candidate_rows = db.connection.execute("""SELECT ticker, impact_payload, confidence, conflict_ratio, missing_exposures, status
+        FROM company_impact_candidates
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY ticker ORDER BY
+            CASE WHEN status = 'WATCH' THEN 0 ELSE 1 END,
+            as_of_timestamp DESC, created_at DESC) = 1""").fetchall()
+    for ticker, payload, confidence, conflict_ratio, missing, status in candidate_rows:
+        item = json.loads(payload or "{}")
+        contributions = item.get("factor_contributions", [])
+        macro_by_ticker[str(ticker)] = {
+            "net_company_impact": item.get("net_company_impact"),
+            "confidence": confidence,
+            "conflict_ratio": conflict_ratio,
+            "missing_exposures": json.loads(missing or "[]"),
+            "status": str(status),
+            "factors": sorted({str(c.get("factor")) for c in contributions if c.get("factor")}),
+        }
+    report = build_universe_report(records, {str(row[0]): int(row[1]) for row in factors}, cutoff.isoformat(), macro_by_ticker)
     out_json = settings.data_dir / "audits" / "universe_research_scan.json"
     out_md = settings.data_dir / "audits" / "universe_research_scan.md"
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    lines = ["# Full B3 universe research scan\n", f"As of: `{report['as_of_timestamp']}`", f"\nAssets scanned: **{report['assets_scanned']}**", "\n## Macro context (not a single-factor ranking)\n"]
+    lines = ["# Full B3 universe research scan\n", f"As of: `{report['as_of_timestamp']}`", f"\nAssets scanned: **{report['assets_scanned']}**", f"Causal candidates available: **{report['assets_with_causal_candidate']}**", "\n## Macro context (not a single-factor ranking)\n"]
     lines += [f"- `{item['factor']}`: {item['event_count']} events ({item['share']:.1%})" for item in report["macro_factor_summary"]]
-    lines += ["\n## Top 25 research watchlist\n", "| Rank | Ticker | Score | Completeness | Decision |", "|---:|---|---:|---:|---|"]
-    lines += [f"| {idx} | {item['ticker']} | {item['research_score']:.4f} | {item['data_completeness']:.1%} | RESEARCH_WATCHLIST_ONLY |" for idx, item in enumerate(report["results"][:25], 1)]
+    lines += ["\n## Top 25 integrated research watchlist\n", "| Rank | Ticker | Integrated | Fundamental | Macro | Macro status | Completeness |", "|---:|---|---:|---:|---:|---|---:|"]
+    lines += [f"| {idx} | {item['ticker']} | {item['integrated_score']:.4f} | {item['research_score']:.4f} | {item['macro_score'] if item['macro_score'] is not None else 'UNKNOWN'} | {item['macro_status']} | {item['data_completeness']:.1%} |" for idx, item in enumerate(report["results"][:25], 1)]
+    lines += ["\n## Assets with persisted causal coverage\n", "| Ticker | Macro score | Status | Factors | Missing exposures |", "|---|---:|---|---|---|"]
+    covered = [item for item in report["results"] if item["macro_score"] is not None]
+    lines += [f"| {item['ticker']} | {item['macro_score']:.4f} | {item['macro_status']} | {', '.join(item['macro_factors']) or 'UNKNOWN'} | {', '.join(item['macro_missing_exposures']) or 'none'} |" for item in covered]
     lines += ["\nThis is a comparative research report, not BUY advice, valuation or order execution."]
     out_md.write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps({"assets_scanned": report["assets_scanned"], "json": str(out_json), "markdown": str(out_md)}))

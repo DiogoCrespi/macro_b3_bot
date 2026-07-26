@@ -18,8 +18,9 @@ def test_score_is_research_only_and_has_completeness() -> None:
 
 
 def test_universe_report_scans_all_and_keeps_macro_context_separate() -> None:
-    report = build_universe_report([_asset("AAA3", 8, .2), _asset("BBB3", 30, .01)], {"FX": 4, "ENSO": 1}, "2026-07-26T00:00:00+00:00")
+    report = build_universe_report([_asset("AAA3", 8, .2), _asset("BBB3", 30, .01)], {"FX": 4, "ENSO": 1}, "2026-07-26T00:00:00+00:00", {"AAA3": {"net_company_impact": .4, "confidence": .8, "status": "WATCH", "factors": ["FX"]}})
     assert report["assets_scanned"] == 2
     assert report["macro_factor_summary"][0]["factor"] == "FX"
     assert report["safety"]["buy_signals"] == 0
     assert all(item["decision"] == "RESEARCH_WATCHLIST_ONLY" for item in report["results"])
+    assert next(item for item in report["results"] if item["ticker"] == "AAA3")["macro_factors"] == ["FX"]
