@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `bc06eec`
+**Estado avaliado:** commit `96b8524`
 **Última suíte local:** 345 testes aprovados em 79,45 s em Python 3.12
 
 ## Veredito
@@ -143,7 +143,8 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
-`restore_check=PASS`. O aceite final permanece bloqueado por digest publicado em registry,
+`restore_check=PASS`; o worker foi executado localmente e dentro da imagem Docker com
+`worker-ok`. O aceite final permanece bloqueado por digest publicado em registry,
 integração do scheduler externo e rotação de secrets. O cancelamento cooperativo foi
 implementado para falhas/timeouts; cancelamento iniciado por operador ainda requer comando
 operacional autenticado.
@@ -271,7 +272,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `bc06eec` | P1 | Digest local do sidecar, validador fail-closed, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
+| 25/07/2026 | `96b8524` | P1 | Digest local do sidecar, validador fail-closed, worker local/Docker, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
 
 ## Backlog posterior
 
