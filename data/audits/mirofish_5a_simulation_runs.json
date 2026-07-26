@@ -2,27 +2,177 @@
   "total_runs": 1,
   "runs": [
     {
-      "simulation_run_id": "d7c115bea0e25be54b9d1e813ee770843b114e86c0e88561cff942683f9a7521",
-      "seed_package_id": "4753900179618bae9d134750a788624ba33f6fa2e324b5d2d6f11c44e46a2c93",
-      "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
-      "mirofish_graph_id": "mirofish_e960d8d31c1b4f57",
-      "mirofish_simulation_id": "sim_63426c666f17",
-      "requested_at": "2026-07-26T17:14:33.129674",
-      "completed_at": "2026-07-26T17:22:03.716682",
+      "simulation_run_id": "093092479189ba8bc9612db5f5dbecad4ba75c13e980b548fcd7330f3fc00db1",
+      "seed_package_id": "c3821db6d275dc1c179034bce1f07c03f96dd5e34b0663a002b360e6e5e2319c",
+      "mirofish_project_id": "proj_cbfb1dcf8f08",
+      "mirofish_graph_id": "mirofish_e3e75c1f9a514871",
+      "mirofish_simulation_id": "sim_8146114ff21b",
+      "requested_at": "2026-07-26T21:03:37.677588+00:00",
+      "completed_at": "2026-07-26T21:09:12.479566+00:00",
       "service_version": "NOT_EXPOSED_BY_SERVICE",
       "model_information": "NOT_EXPOSED_BY_SERVICE",
       "configuration": {
-        "recovery": "COMPLETED_REPORT_LIST",
-        "source_report_id": "report_fe4b2e5e8c25"
+        "loader_diagnostics": {
+          "cutoff_timestamp": "2026-07-22T23:59:59+00:00",
+          "filter_event_id": "4d88669bc470e36aba8d5c1a",
+          "macro_events": {
+            "source_table_or_artifact": "macro_releases",
+            "records_scanned": 1067,
+            "records_with_valid_id": 1067,
+            "records_pit_eligible": 1067,
+            "records_rejected_future": 0,
+            "records_rejected_missing_available_at": 0,
+            "records_rejected_missing_evidence": 0,
+            "records_rejected_non_material": 0,
+            "records_selected": 0,
+            "source_checksum": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "evidence_claims": {
+            "source_table_or_artifact": "evidence_claims",
+            "records_scanned": 43,
+            "records_with_valid_id": 43,
+            "records_pit_eligible": 43,
+            "records_rejected_future": 0,
+            "records_rejected_missing_available_at": 0,
+            "records_rejected_missing_evidence": 0,
+            "records_rejected_non_material": 0,
+            "records_selected": 43,
+            "source_checksum": "1f7c915d689d4df60409694e620fc570d69a4df2d74c88e971fc0c8d0cc97b12"
+          },
+          "sector_state_snapshots": {
+            "source_table_or_artifact": "sector_state_snapshots",
+            "records_scanned": 81,
+            "records_with_valid_id": 81,
+            "records_pit_eligible": 81,
+            "records_rejected_future": 0,
+            "records_rejected_missing_available_at": 0,
+            "records_rejected_missing_evidence": 0,
+            "records_rejected_non_material": 0,
+            "records_selected": 15,
+            "source_checksum": "4b2f6168785979475c4173b81f4d0586299158eba588bbdf9d85c0c1e96344fa"
+          },
+          "source_documents": {
+            "source_table_or_artifact": "cvm_documents",
+            "records_scanned": 722,
+            "records_with_valid_id": 722,
+            "records_pit_eligible": 722,
+            "records_rejected_future": 0,
+            "records_rejected_missing_available_at": 0,
+            "records_rejected_missing_evidence": 0,
+            "records_rejected_non_material": 0,
+            "records_selected": 28,
+            "source_checksum": "718c1bb7c9fdeafe4766cca376dc7d006e94c5a07e7c32bc1bf3c1d04f357511"
+          }
+        },
+        "structured_report_contract": {
+          "report_format": "json",
+          "report_schema_version": "5A.3-mirofish-scenario-report-v1",
+          "report_schema_hash": "9e63e45d730987acb2b94d7f0d6650016e8bd5574f9e294e6c35e7c71db188d8",
+          "report_schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "MacroB3 MiroFish Scenario Report",
+            "type": "object",
+            "required": [
+              "schema_version",
+              "report_text",
+              "scenarios"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "schema_version": {
+                "const": "5A.3-mirofish-scenario-report-v1"
+              },
+              "report_text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scenarios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "scenario_type",
+                    "trigger",
+                    "report_excerpt"
+                  ],
+                  "properties": {
+                    "scenario_type": {
+                      "type": "string"
+                    },
+                    "trigger": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "actors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "actions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "macro_factors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "sector_effects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "second_order_effects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "expected_horizon": {
+                      "type": "string"
+                    },
+                    "report_excerpt": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "confidence": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "require_structured_report": true
+        },
+        "structured_extraction": {
+          "extraction_response_checksum": "1c2ba5dc7153d47909e8dba0f27db171712c106b9c3980ff5d7218acab164914",
+          "extraction_path": "data\\raw\\mirofish\\extractions\\1c2ba5dc7153d47909e8dba0f27db171712c106b9c3980ff5d7218acab164914.json",
+          "extraction_mode": "LLM_STRUCTURED_EXTRACTION_FROM_MIROFISH_REPORT",
+          "extraction_model": "qwen2.5:7b",
+          "extraction_prompt_hash": "a17448aea3e5a1c4fd91d6c9be871501648e8b2cd3cdca58835f4fb911a950d6",
+          "extraction_schema_version": "5A.3-mirofish-scenario-report-v1",
+          "raw_report_checksum": "f57e36cea2f8ec49b76e4049113493dd9f5fd69e4b70bb8694f9d325952d5b57"
+        }
       },
       "random_seed": "NOT_EXPOSED_BY_SERVICE",
-      "prompt_hash": "1f013d1d065ed2e84553e9823b216b8f2972342f72a71695c66f0c7f4a71dad6",
-      "input_checksum": "ba97266464ddc35c57d4c276f2de7a86193b5add8d8414e5e6a427f55e1c56a7",
+      "prompt_hash": "ebcd27ee0df5a856475ef7b7eef78fd39b2001d0b462a7a2f9e0183937de3a4a",
+      "input_checksum": "973c2866bbebdb9af1c4e1bf6f5269d77fe61f0bb7748df1ac5b86e067d934fc",
       "status": "SUCCESS",
       "raw_report_ids": [
-        "report_fe4b2e5e8c25"
+        "report_4638845f6a43"
       ],
-      "raw_response_checksum": "7278bf53b2fa6c6248cc92240203cde6d43f0c07cd34d419b4cdac61632f92c9",
+      "raw_response_checksum": "f57e36cea2f8ec49b76e4049113493dd9f5fd69e4b70bb8694f9d325952d5b57",
       "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
       "methodology_version": "5A.3-mirofish-engine-v3"
     }
