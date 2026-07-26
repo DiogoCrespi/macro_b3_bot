@@ -1,0 +1,28 @@
+{
+  "phase": "P7",
+  "status": "BLOCKED",
+  "environment": "development",
+  "checks": {
+    "order_execution_disabled": true,
+    "buy_signals_disabled": true,
+    "research_mode_enabled": true,
+    "governance_rejects_unauthenticated_operator": true,
+    "kill_switch_control_exists": true,
+    "real_broker_integration": false,
+    "sandbox_order_reconciliation": false,
+    "segregated_human_approval": false,
+    "external_alert_delivery": false
+  },
+  "blockers": [
+    "real_broker_integration",
+    "sandbox_order_reconciliation",
+    "segregated_human_approval",
+    "external_alert_delivery"
+  ],
+  "safety": {
+    "buy_signals": 0,
+    "orders": 0,
+    "broker_calls": 0
+  },
+  "policy": "P7 audit cannot enable orders; production requires a separate approval and broker sandbox."
+}
