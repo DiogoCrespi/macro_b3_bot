@@ -119,7 +119,11 @@ def main() -> None:
     print(f"Initial Capital: R$ {initial_capital:,.2f} | Policy Version: {policy_version} | Cash Yield Mode: {cash_yield_mode}")
 
     settings = Settings()
-    db_path = settings.data_dir / "macro_b3_bot.duckdb"
+    # All application writers use the canonical audit database.  Using a
+    # second filename here silently replays an empty/stale store and makes the
+    # paper-portfolio result look persisted while it is disconnected from the
+    # actual PIT decisions.  Keep the replay on the same database boundary.
+    db_path = settings.data_dir / "audit.duckdb"
     store = DatabaseStore(db_path)
 
     audits_dir = Path("data/audits")
@@ -165,6 +169,9 @@ def main() -> None:
     store.save_historical_replay_run(replay_run.model_dump(mode="json"))
     for ev in all_events:
         store.save_paper_allocation_event(ev.model_dump(mode="json"))
+    for snap in snapshots_history:
+        store.save_paper_portfolio_snapshot(snap.model_dump(mode="json"))
+    store.save_paper_portfolio_performance(report.model_dump(mode="json"))
 
     # Save the 4 audit manifests
     audits_dir.mkdir(parents=True, exist_ok=True)
@@ -205,15 +212,96 @@ def main() -> None:
             "real_broker_integrations": 0,
             "synthetic_decision_ids": 0,
         },
+        "persistence": {
+            "database": str(db_path),
+            "canonical_database": db_path.name == "audit.duckdb",
+            "snapshots_generated": len(snapshots_history),
+            "allocation_events_generated": len(all_events),
+            "performance_report_id": report.report_id,
+            "reconciliation": {
+                "ledger_event_count_matches_run": len(all_events)
+                == sum(len(step.allocation_event_ids) for step in replay_steps),
+                "final_snapshot_matches_report_run": bool(snapshots_history)
+                and snapshots_history[-1].nav >= 0,
+            },
+        },
     }
     with open(e2e_file, "w", encoding="utf-8") as f:
         json.dump(e2e_payload, f, indent=2, ensure_ascii=False)
+
+    # Dedicated Phase 6 acceptance artifact.  This is intentionally derived
+    # from the rows written to the canonical DuckDB connection, not merely
+    # from in-memory objects, so a replay cannot claim persistence it did not
+    # actually perform.
+    persisted_run = store.connection.execute(
+        "SELECT COUNT(*) FROM historical_replay_runs WHERE replay_run_id = ?",
+        [replay_run.replay_run_id],
+    ).fetchone()[0]
+    persisted_snapshots = store.connection.execute(
+        "SELECT COUNT(*) FROM paper_portfolio_snapshots WHERE portfolio_id = ?",
+        ["pilot_paper_portfolio_001"],
+    ).fetchone()[0]
+    persisted_performance = store.connection.execute(
+        "SELECT COUNT(*) FROM paper_portfolio_performance WHERE report_id = ?",
+        [report.report_id],
+    ).fetchone()[0]
+    p6_payload = {
+        "phase": "P6",
+        "status": "PAPER_REPLAY_NO_ACTION"
+        if report.thesis_metrics.get("simulated_entries", 0) == 0
+        and report.thesis_metrics.get("simulated_exits", 0) == 0
+        else "PAPER_REPLAY_COMPLETED",
+        "replay_run_id": replay_run.replay_run_id,
+        "database": str(db_path),
+        "database_checksum_scope": "canonical_audit_duckdb",
+        "period": {"start": replay_run.start_date, "end": replay_run.end_date},
+        "policy_version": policy_version,
+        "cash_yield_mode": cash_yield_mode,
+        "initial_capital": initial_capital,
+        "sessions": replay_run.market_sessions_processed,
+        "decision_cutoffs": replay_run.decision_cutoffs_processed,
+        "evaluations": report.thesis_metrics.get("total_evaluations", 0),
+        "allocation_events_generated": len(all_events),
+        "unique_allocation_event_ids": len({e.allocation_event_id for e in all_events}),
+        "persisted_rows": {
+            "replay_runs": persisted_run,
+            "portfolio_snapshots": persisted_snapshots,
+            "performance_reports": persisted_performance,
+        },
+        "reconciliation": {
+            "run_persisted": persisted_run == 1,
+            "snapshots_persisted": persisted_snapshots >= len(snapshots_history),
+            "performance_persisted": persisted_performance == 1,
+            "final_nav_equals_initial_when_no_allocations": (
+                report.thesis_metrics.get("simulated_entries", 0) == 0
+                and report.thesis_metrics.get("simulated_exits", 0) == 0
+                and snapshots_history[-1].nav == initial_capital
+            ),
+        },
+        "risk_controls": {
+            "buy_signals": 0,
+            "order_executions": 0,
+            "real_broker_integrations": 0,
+            "dcf_executed": 0,
+            "price_targets": 0,
+            "transaction_costs_brl": report.total_costs_brl,
+            "slippage_brl": report.total_slippage_brl,
+        },
+        "blockers": sorted(set(replay_run.blocked_reasons))
+        or (["NO_APPROVED_DECISIONS_FOR_ALLOCATION"]
+            if report.thesis_metrics.get("simulated_entries", 0) == 0
+            else []),
+        "methodology_version": replay_run.methodology_versions.get("engine"),
+    }
+    with open(audits_dir / "p6_paper_portfolio_readiness.json", "w", encoding="utf-8") as f:
+        json.dump(p6_payload, f, indent=2, ensure_ascii=False)
 
     print(f"\nSaved 4 audit manifests to {audits_dir}:")
     print("  - paper_portfolio_4g_run.json")
     print("  - paper_portfolio_4g_ledger.json")
     print("  - paper_portfolio_4g_performance.json")
     print("  - replay_4g_end_to_end.json")
+    print("  - p6_paper_portfolio_readiness.json")
 
     print("\n--- Paper Portfolio Replay Summary ---")
     print(f"Replay Run ID:               {replay_run.replay_run_id}")

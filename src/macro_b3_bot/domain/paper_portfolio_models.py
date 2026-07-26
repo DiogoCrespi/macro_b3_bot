@@ -72,7 +72,10 @@ class PaperAllocationEvent(BaseModel):
 
     @classmethod
     def compute_event_id(cls, payload: dict[str, Any]) -> str:
-        canonical = {k: v for k, v in payload.items() if k not in ("allocation_event_id", "created_at")}
+        # ``created_at`` is the deterministic replay cutoff, not wall-clock
+        # metadata.  Including it prevents two identical NO_ALLOCATION
+        # decisions at different cutoffs from collapsing into one ledger row.
+        canonical = {k: v for k, v in payload.items() if k != "allocation_event_id"}
         sorted_keys = json.dumps(canonical, sort_keys=True, default=str)
         return sha256(sorted_keys.encode("utf-8")).hexdigest()
 

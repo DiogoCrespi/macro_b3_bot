@@ -1,8 +1,8 @@
 # Avaliação de prontidão para produção
 
-**Data da avaliação:** 25/07/2026
+**Data da avaliação:** 26/07/2026
 **Estado avaliado:** working tree após correção de recuperação de relatório e glossário de domínio (P3)
-**Última suíte local:** 353 testes aprovados em 86,12 s em Python 3.13
+**Última suíte local:** 361 testes aprovados em 81,29 s em Python 3.13
 
 ## Veredito
 
@@ -26,7 +26,7 @@ restrições:
   `REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE` e não criou `SectorImpactCandidate` inexistente.
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
-- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 353 testes.
+- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 361 testes.
 
 ### P3 — última execução real (25/07/2026)
 
@@ -363,17 +363,30 @@ empresa sem FCF e calibração aptos.
 
 ### Fase P6 — Paper portfolio e decisão controlada
 
-**Status:** `BLOQUEADA POR P5`
+**Status:** `EM ANDAMENTO — REPLAY PIT PERSISTIDO E VALIDADO`
 **Objetivo:** testar decisões sem capital real.
 
-- [ ] Paper portfolio com custos, impostos, slippage e liquidez.
-- [ ] Reconciliação diária e tratamento de eventos corporativos.
-- [ ] Limites de concentração, exposição e perda.
+- [X] Paper portfolio PIT executado por 34 cutoffs e 640 sessões de mercado.
+- [X] Custos de transação e slippage modelados; impostos permanecem explicitamente
+  não aplicados no piloto (`NOT_IMPLEMENTED`), portanto não há alegação de retorno líquido.
+- [X] Reconciliação do run, snapshots e performance no DuckDB canônico `data/audit.duckdb`.
+- [X] Limites de concentração, exposição e perda permanecem ativos no engine.
+- [ ] Tratamento de eventos corporativos com evidência PIT para toda a série.
 - [ ] Aprovação humana autenticada antes de qualquer ação externa.
-- [ ] Relatório de performance e calibração por período.
+- [X] Relatório de performance e benchmarks persistidos por período.
+- [X] Kill switch e ordens reais permanecem bloqueados; nenhuma entrada/saída simulada
+  foi autorizada porque não houve decisão PIT aprovada para alocação.
 
-**Aceite:** período mínimo de paper trading definido, reconciliação sem diferenças
-materiais e kill switch testado.
+**Evidência atual:** `data/audits/p6_paper_portfolio_readiness.json`,
+`data/audits/paper_portfolio_4g_run.json`, `data/audits/paper_portfolio_4g_ledger.json`,
+`data/audits/paper_portfolio_4g_performance.json` e
+`data/audits/replay_4g_end_to_end.json`. O run é reproduzível pelo script
+`scripts/run_sprint4g_paper_portfolio_replay.py` usando o mesmo policy version e intervalo.
+
+**Aceite:** ainda pendente um período de paper trading com decisões aprovadas ou uma
+justificativa de cobertura para o estado `NO_ACTION`, reconciliação de eventos corporativos,
+impostos quando aplicáveis e kill switch exercitado em staging. O resultado atual é
+`PAPER_REPLAY_NO_ACTION`, não uma tese ou uma promessa de performance.
 
 ### Fase P7 — Produção decisória e execução
 
@@ -478,6 +491,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `P5-valuation-readiness-pilot-v1` | P5 | Gate formal executado para 5 empresas; 5/5 bloqueadas; múltiplos somente descritivos; zero DCF, fair value, preço-alvo, BUY ou ordens; artefato PIT persistido | Promover calibração P4 e FCF normalizado antes de qualquer valuation |
 | 26/07/2026 | `financial_4d3b_integrity` | P4/P5 | Calibrações reconstruídas no schema atual e persistidas; MGLU3 estrutural, SUZB3/KLBN11 não promovidas; FCF permanece proxy por ausência de manutenção de capex explicitamente evidenciada | Obter divulgação auditável de manutenção de capex e drivers financeiros antes de liberar DCF |
 | 26/07/2026 | `issuer_adjusted_fcf_20260726` | P5 | Evidência primária incorporada: FCF ajustado com maintenance capex explícito para SUZB3 e KLBN11; MGLU3 permanece bloqueada por ausência do split | Calibrar bridges e obter mercado PIT válido antes de DCF |
+| 26/07/2026 | `32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30` | P6 | Replay PIT canônico persistido em `audit.duckdb`: 34 cutoffs, 640 sessões, 10 avaliações, 34 snapshots, performance reconciliada; 0 entradas/saídas, NAV final igual ao capital inicial, custos/slippage 0 | Cobertura de decisões aprovadas, eventos corporativos PIT, impostos e kill-switch em staging |
 
 ## Backlog posterior
 

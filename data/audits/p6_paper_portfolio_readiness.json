@@ -1,0 +1,43 @@
+{
+  "phase": "P6",
+  "status": "PAPER_REPLAY_NO_ACTION",
+  "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
+  "database": "data\\audit.duckdb",
+  "database_checksum_scope": "canonical_audit_duckdb",
+  "period": {
+    "start": "2024-01-01T00:00:00+00:00",
+    "end": "2026-07-26T00:00:00+00:00"
+  },
+  "policy_version": "4G.2-paper-policy-v2",
+  "cash_yield_mode": "CDI",
+  "initial_capital": 100000.0,
+  "sessions": 640,
+  "decision_cutoffs": 34,
+  "evaluations": 10,
+  "allocation_events_generated": 10,
+  "unique_allocation_event_ids": 10,
+  "persisted_rows": {
+    "replay_runs": 1,
+    "portfolio_snapshots": 34,
+    "performance_reports": 1
+  },
+  "reconciliation": {
+    "run_persisted": true,
+    "snapshots_persisted": true,
+    "performance_persisted": true,
+    "final_nav_equals_initial_when_no_allocations": true
+  },
+  "risk_controls": {
+    "buy_signals": 0,
+    "order_executions": 0,
+    "real_broker_integrations": 0,
+    "dcf_executed": 0,
+    "price_targets": 0,
+    "transaction_costs_brl": 0.0,
+    "slippage_brl": 0.0
+  },
+  "blockers": [
+    "NO_APPROVED_DECISIONS_FOR_ALLOCATION"
+  ],
+  "methodology_version": "4G.2-replay-engine-v2"
+}

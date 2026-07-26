@@ -3169,6 +3169,47 @@ class DatabaseStore:
             ],
         )
 
+    def save_paper_portfolio_snapshot(self, snapshot: dict[str, Any]) -> None:
+        """Persist a mark-to-market snapshot in the canonical audit store."""
+        payload = json.dumps(snapshot, ensure_ascii=False, sort_keys=True, default=str)
+        self.connection.execute(
+            """
+            INSERT INTO paper_portfolio_snapshots
+            (portfolio_snapshot_id, portfolio_id, as_of_timestamp, cash_balance,
+             positions_value, nav, daily_pnl, total_realized_pnl,
+             canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (portfolio_snapshot_id) DO NOTHING
+            """,
+            [
+                snapshot["portfolio_snapshot_id"], snapshot["portfolio_id"],
+                datetime.fromisoformat(snapshot["as_of_timestamp"].replace("Z", "+00:00")),
+                float(snapshot["cash_balance"]), float(snapshot["positions_value"]),
+                float(snapshot["nav"]), float(snapshot["daily_pnl"]),
+                float(snapshot["total_realized_pnl"]), payload,
+            ],
+        )
+
+    def save_paper_portfolio_performance(self, report: dict[str, Any]) -> None:
+        """Persist the complete performance report, including its audit payload."""
+        payload = json.dumps(report, ensure_ascii=False, sort_keys=True, default=str)
+        self.connection.execute(
+            """
+            INSERT INTO paper_portfolio_performance
+            (report_id, replay_run_id, total_return_pct, annualized_return_pct,
+             max_drawdown_pct, total_costs_brl, total_slippage_brl,
+             canonical_payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (report_id) DO NOTHING
+            """,
+            [
+                report["report_id"], report["replay_run_id"],
+                float(report["total_return_pct"]), float(report["annualized_return_pct"]),
+                float(report["max_drawdown_pct"]), float(report["total_costs_brl"]),
+                float(report["total_slippage_brl"]), payload,
+            ],
+        )
+
     def save_historical_bridge_validation(self, item: dict) -> None:
         """Persist an immutable walk-forward validation result."""
         self.connection.execute(

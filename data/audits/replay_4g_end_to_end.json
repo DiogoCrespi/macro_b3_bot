@@ -2,9 +2,9 @@
   "sprint": "4G.2",
   "methodology_version": "4G.2-replay-engine-v2",
   "replay_run": {
-    "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+    "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
     "start_date": "2024-01-01T00:00:00+00:00",
-    "end_date": "2026-07-24T00:00:00+00:00",
+    "end_date": "2026-07-26T00:00:00+00:00",
     "universe": [
       "MGLU3",
       "SUZB3",
@@ -13,8 +13,8 @@
       "SLCE3"
     ],
     "initial_capital": 100000.0,
-    "portfolio_policy_id": "86ab9fff6779729e013f6f96fcdd1025df9b2ab704bbe7a89c1d82eb8a0a4277",
-    "cash_yield_mode": "UNREMUNERATED",
+    "portfolio_policy_id": "931e55b92885d8fd4777d8ca3e2c8cbd22414a313c647eee68dee76cc4cdeeff",
+    "cash_yield_mode": "CDI",
     "methodology_versions": {
       "engine": "4G.2-replay-engine-v2",
       "policy": "4G.2-paper-policy-v2"
@@ -25,16 +25,16 @@
       "data/audits/valuation_4e2_historical_reverse.json",
       "data/audits/cvm_historical_acquisition_manifest.json"
     ],
-    "decision_cutoffs_processed": 33,
-    "market_sessions_processed": 33,
+    "decision_cutoffs_processed": 34,
+    "market_sessions_processed": 640,
     "status": "COMPLETED",
     "blocked_reasons": [],
-    "created_at": "2026-07-24T13:42:04.003893+00:00"
+    "created_at": "2026-07-26T19:17:11.382837+00:00"
   },
   "steps": [
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1704067200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1704067200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-01-01T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -46,8 +46,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1706659200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1706659200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-01-31T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -59,8 +59,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1709251200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1709251200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-03-01T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -72,8 +72,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1711843200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1711843200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-03-31T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -85,8 +85,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1714435200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1714435200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-04-30T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -98,8 +98,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1717027200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1717027200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-05-30T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -111,8 +111,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1719619200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1719619200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-06-29T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -124,8 +124,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1722211200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1722211200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-07-29T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -137,8 +137,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1724803200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1724803200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-08-28T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -150,8 +150,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1727395200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1727395200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-09-27T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -163,8 +163,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1729987200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1729987200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-10-27T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -176,8 +176,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1732579200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1732579200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-11-26T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -189,8 +189,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1735171200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1735171200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2024-12-26T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -202,8 +202,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1737763200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1737763200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-01-25T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -215,8 +215,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1740355200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1740355200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-02-24T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -228,8 +228,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1742947200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1742947200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-03-26T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -241,8 +241,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1745539200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1745539200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-04-25T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -254,8 +254,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1748131200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1748131200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-05-25T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -267,8 +267,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1750723200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1750723200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-06-24T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -280,8 +280,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1753315200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1753315200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-07-24T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -293,8 +293,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1755907200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1755907200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-08-23T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -306,8 +306,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1758499200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1758499200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-09-22T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -319,8 +319,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1761091200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1761091200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-10-22T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -332,8 +332,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1763683200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1763683200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-11-21T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -345,8 +345,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1766275200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1766275200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2025-12-21T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -358,8 +358,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1768867200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1768867200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-01-20T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -371,8 +371,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1771459200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1771459200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-02-19T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -384,8 +384,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1774051200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1774051200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-03-21T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -397,8 +397,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1776643200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1776643200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-04-20T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -410,8 +410,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1779235200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1779235200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-05-20T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -423,8 +423,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1781827200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1781827200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-06-19T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -436,8 +436,8 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1784419200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1784419200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-07-19T00:00:00+00:00",
       "decision_ids": {},
       "timing_risk_ids": {},
@@ -449,29 +449,60 @@
       "block_reason": "NO_PIT_DECISION_AVAILABLE_FOR_SLCE3"
     },
     {
-      "step_id": "step_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f_1784851200",
-      "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1784851200",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
       "cutoff_timestamp": "2026-07-24T00:00:00+00:00",
       "decision_ids": {
-        "MGLU3": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
-        "SUZB3": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
-        "KLBN11": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
-        "RAIL3": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
-        "SLCE3": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d"
+        "MGLU3": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
+        "SUZB3": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
+        "KLBN11": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
+        "RAIL3": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
+        "SLCE3": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14"
       },
       "timing_risk_ids": {
-        "MGLU3": "707b481e01ddaa472c6e081baabd1d6b0eeace3cedcde31b0330a85609413192",
-        "SUZB3": "2d8f5d70de235296da40b1aa8caca2ef8b671fa381b7f3e37a60e383f60a87ff",
-        "KLBN11": "b00980de7fbcb735ce583eacda4ea6f767d69b2873a54cc519c183d19ec566a2",
-        "RAIL3": "2050f2705b0dc3a36549193a3c852c500717472ffa8323da75260a97e7f4a31f",
-        "SLCE3": "89452741c5756fe8960a62f6cf915213847d4aa3308ff7d857a5f050272c21c8"
+        "MGLU3": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+        "SUZB3": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+        "KLBN11": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+        "RAIL3": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+        "SLCE3": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664"
       },
       "allocation_event_ids": [
-        "3fceaf6ae1623ebe61c2142594558f7f874da2774651bfbbadd207902f88b441",
-        "92ef7a92245c82ab17f24324ee12dd614e6c5776e5cdb72b9046b09d5f3be3f6",
-        "7a370a5a54533bdc0bd8904f633513dbf5041da2766f611ed57932f74decc2f9",
-        "fa9fff0b025733e921902966b83b019b1f4abfdc5646aaa0ee0ac82fad7f3b08",
-        "bf56334ccf9b1a1e1e491aca94a4ed198356d117b0e03cc02ca7cbe062907014"
+        "86c7284d9c159ded4bfe61afd856a4bfb66fae14c3eca672b98522c262290fbd",
+        "f4f5412a65ff17057823efe32d7756d85a8901dd0691a77e3ab8c7cc262f96bc",
+        "984f8f7e5b1eddda819d8da118c9706818f10f0d488f82d4f569659c81da2ac4",
+        "aaacd54717d7a9c27307d926990d5cd27004ebed2015b0f2fe31a4b21f356a3b",
+        "7a6f9ba1668076df00ccad07e0e9aaf95e7095e2dedca26144b1ddda732e345b"
+      ],
+      "nav": 100000.0,
+      "cash_balance": 100000.0,
+      "open_positions_count": 0,
+      "is_blocked_step": false,
+      "block_reason": ""
+    },
+    {
+      "step_id": "step_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30_1785024000",
+      "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
+      "cutoff_timestamp": "2026-07-26T00:00:00+00:00",
+      "decision_ids": {
+        "MGLU3": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
+        "SUZB3": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
+        "KLBN11": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
+        "RAIL3": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
+        "SLCE3": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14"
+      },
+      "timing_risk_ids": {
+        "MGLU3": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+        "SUZB3": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+        "KLBN11": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+        "RAIL3": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+        "SLCE3": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664"
+      },
+      "allocation_event_ids": [
+        "a5259d5f6740f2fbb9c484dfbdbc7e773fdab470c75d06c466180dd2685a192a",
+        "57861db0ecf68757d6f15a9da346bdbc540ed2881e362ce9f315485531e6b74b",
+        "60f5d78c84b728d845f2f946e4d5124b92d3b4cadcbcf27fff15bfdf3500325d",
+        "57c71d8b3c7dc28969df5fbe6824923c3a048a3740863caea6c37569903f3f1e",
+        "42b5438e1990e2624d904b2eff6b76d01363fea4073ba893afe191052eb96e56"
       ],
       "nav": 100000.0,
       "cash_balance": 100000.0,
@@ -481,8 +512,8 @@
     }
   ],
   "performance": {
-    "report_id": "report_b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
-    "replay_run_id": "b03ff2b9261a62085e3175de73b3c723c32a17fb31c8cb02ed4d47d8b1192a5f",
+    "report_id": "report_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
+    "replay_run_id": "32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
     "total_return_pct": 0.0,
     "annualized_return_pct": 0.0,
     "annualized_volatility": 0.0,
@@ -496,27 +527,27 @@
     "avg_cash_weight": 1.0,
     "avg_exposure_weight": 0.0,
     "benchmark_returns": {
-      "CDI_COMPOUNDED_ACCUMULATED_PCT": 29.15,
+      "CDI_COMPOUNDED_ACCUMULATED_PCT": 29.22,
       "IBOV_REAL_ACCUMULATED_PCT": -2.5,
       "EQUAL_WEIGHT_PILOT_ACCUMULATED_PCT": -4.2
     },
     "thesis_metrics": {
-      "total_evaluations": 5,
+      "total_evaluations": 10,
       "simulated_entries": 0,
       "simulated_exits": 0,
-      "no_allocations": 5
+      "no_allocations": 10
     },
     "confidence_tier_metrics": {
       "LOW": {
-        "count": 5,
+        "count": 10,
         "allocated": 0
       }
     },
     "blocker_metrics": {
       "losses_avoided_count": 0,
       "missed_opportunities_count": 0,
-      "outcomes_not_evaluable_count": 5,
-      "summary": "All 5 evaluated allocation events strictly preserved capital under OUTCOME_NOT_EVALUABLE classification without synthetic loss avoidance claims."
+      "outcomes_not_evaluable_count": 10,
+      "summary": "All 10 evaluated allocation events strictly preserved capital under OUTCOME_NOT_EVALUABLE classification without synthetic loss avoidance claims."
     },
     "methodology_version": "4G.2-replay-engine-v2"
   },
@@ -527,5 +558,16 @@
     "order_executions": 0,
     "real_broker_integrations": 0,
     "synthetic_decision_ids": 0
+  },
+  "persistence": {
+    "database": "data\\audit.duckdb",
+    "canonical_database": true,
+    "snapshots_generated": 34,
+    "allocation_events_generated": 10,
+    "performance_report_id": "report_32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30",
+    "reconciliation": {
+      "ledger_event_count_matches_run": true,
+      "final_snapshot_matches_report_run": true
+    }
   }
 }
