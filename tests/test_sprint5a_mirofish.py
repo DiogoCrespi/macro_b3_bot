@@ -457,6 +457,18 @@ def test_mirofish_circuit_breaker_opens_after_transient_failures() -> None:
         cli.list_reports(project_id="p")
 
 
+def test_stop_simulation_calls_sidecar_endpoint() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        assert request.url.path == "/api/simulation/stop"
+        assert json.loads(request.content) == {"simulation_id": "sim-1"}
+        return httpx.Response(200, json={"data": {"simulation_id": "sim-1", "runner_status": "stopped"}})
+
+    cli = MiroFishClient("http://localhost:20128")
+    cli.client = httpx.Client(base_url="http://localhost:20128", transport=httpx.MockTransport(handler))
+    assert cli.stop_simulation("sim-1")["runner_status"] == "stopped"
+
+
 def test_native_report_contract_is_strict_and_versioned() -> None:
     valid = {
         "schema_version": MIROFISH_REPORT_SCHEMA_VERSION,

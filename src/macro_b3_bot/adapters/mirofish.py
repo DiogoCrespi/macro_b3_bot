@@ -319,6 +319,19 @@ class MiroFishClient:
         res = response.json()
         return res.get("data", res) if isinstance(res, dict) else res
 
+    def stop_simulation(self, simulation_id: str) -> dict[str, Any]:
+        """Request cooperative cancellation of a running sidecar simulation."""
+        if not simulation_id:
+            raise ValueError("simulation_id is required")
+        response = self._request(
+            "POST",
+            f"{self.simulation_prefix}/stop",
+            json={"simulation_id": simulation_id},
+        )
+        response.raise_for_status()
+        res = response.json()
+        return res.get("data", res) if isinstance(res, dict) else res
+
     def poll_run_status(
         self,
         simulation_id: str,

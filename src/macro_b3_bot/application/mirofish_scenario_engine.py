@@ -244,6 +244,7 @@ class MiroFishScenarioEngine:
         input_checksum = seed_file_checksum
 
         requested_at_str = datetime.now(timezone.utc).isoformat()
+        simulation_id: str | None = None
 
         # Check service health
         is_online = False
@@ -485,6 +486,15 @@ class MiroFishScenarioEngine:
             return seed_package, sim_run, scenario_set, hypotheses
 
         except Exception as e:
+            cancellation = "NOT_ATTEMPTED_NO_SIMULATION_ID"
+            if simulation_id:
+                stop_simulation = getattr(self.client, "stop_simulation", None)
+                if callable(stop_simulation):
+                    try:
+                        stop_simulation(simulation_id)
+                        cancellation = "REQUESTED"
+                    except Exception as cancel_error:
+                        cancellation = f"FAILED:{cancel_error}"
             run_payload = {
                 "seed_package_id": seed_id,
                 "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
@@ -494,7 +504,12 @@ class MiroFishScenarioEngine:
                 "completed_at": datetime.now(timezone.utc).isoformat(),
                 "service_version": "NOT_EXPOSED_BY_SERVICE",
                 "model_information": "NOT_EXPOSED_BY_SERVICE",
-                "configuration": {"error_fallback": True, "error_message": str(e), "loader_diagnostics": loader_diagnostics},
+                "configuration": {
+                    "error_fallback": True,
+                    "error_message": str(e),
+                    "cancellation": cancellation,
+                    "loader_diagnostics": loader_diagnostics,
+                },
                 "random_seed": "NOT_EXPOSED_BY_SERVICE",
                 "prompt_hash": prompt_hash,
                 "input_checksum": input_checksum,

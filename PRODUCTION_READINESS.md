@@ -132,7 +132,7 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 - [x] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
 - [x] Declarar secrets externos via Compose; rotação da chave Zep ainda pendente.
 - [x] Implementar health checks, timeout, retry básico e circuit breaker.
-- [ ] Implementar cancelamento integral do workflow.
+- [x] Implementar cancelamento cooperativo do workflow após falha/timeout, via `/api/simulation/stop`.
 - [x] Implementar wrapper de scheduler com lock, idempotência e status por execução.
 - [ ] Integrar o wrapper a um scheduler externo com comando e `run_id` point-in-time.
 - [x] Definir volume persistente e backup verificado do DuckDB.
@@ -144,7 +144,7 @@ proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker c
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
 `restore_check=PASS`. O aceite final permanece bloqueado por digest publicado em registry,
-integração do scheduler externo, cancelamento integral e rotação de secrets.
+integração do scheduler externo, cancelamento iniciado pelo operador e rotação de secrets.
 
 ### Fase P2 — Observabilidade e governança
 
