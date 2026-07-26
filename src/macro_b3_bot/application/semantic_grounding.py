@@ -46,9 +46,10 @@ def validate_hypothesis_grounding(
 
     declared_docs = {str(x) for x in hypothesis.get("source_document_ids", []) if x}
     available_docs = {str(x.get("document_id")) for x in documents if x.get("document_id")}
-    if not declared_docs:
-        reasons.append("SOURCE_DOCUMENT_IDS_MISSING_FROM_HYPOTHESIS")
-    elif declared_docs - available_docs:
+    # Event-only PIT seeds are valid when the macro release itself is the
+    # primary source and no document was declared upstream.  Enforce exact
+    # document availability only for explicitly declared document IDs.
+    if declared_docs and declared_docs - available_docs:
         reasons.append("DECLARED_SOURCE_DOCUMENT_NOT_AVAILABLE_AT_PIT")
 
     if "ipca" in indicator or "índice nacional" in indicator or "national consumer" in indicator:

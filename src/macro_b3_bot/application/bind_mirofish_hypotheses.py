@@ -63,13 +63,29 @@ class MiroFishHypothesisBinder:
             [list(resolved_event_ids)],
         ).fetchone()) if resolved_event_ids else False
         if resolved_event_ids:
+            latest_sector_run = self.store.connection.execute(
+                "SELECT run_id FROM sector_impact_candidates "
+                "WHERE run_id IS NOT NULL AND as_of_timestamp <= ? "
+                "ORDER BY created_at DESC LIMIT 1",
+                [self._aware(as_of).replace(tzinfo=None) if self._aware(as_of) else as_of],
+            ).fetchone()
+            run_filter = " AND run_id = ?" if latest_sector_run else ""
+            params = [list(resolved_event_ids)] + ([latest_sector_run[0]] if latest_sector_run else [])
             candidate_rows = self.store.connection.execute(
                 "SELECT candidate_id, causal_paths, conflict_detected, event_available_at, as_of_timestamp, status "
-                "FROM sector_impact_candidates WHERE event_id IN (SELECT UNNEST(?))",
-                [list(resolved_event_ids)],
+                "FROM sector_impact_candidates WHERE event_id IN (SELECT UNNEST(?))" + run_filter,
+                params,
             ).fetchall()
+        active_candidate_seen = False
         for candidate_id, paths_json, conflict, event_available, candidate_as_of, candidate_status in candidate_rows:
-            rejected_event = rejected_event or candidate_status == "SECTOR_IMPACT_REJECTED"
+            # A rejected path for the same macro event must not poison an
+            # otherwise active sector candidate.  The binder requires at
+            # least one active WATCH/APPROVED candidate and evaluates only
+            # those paths; rejection is not evidence of a rejected macro
+            # event.
+            if candidate_status not in {"SECTOR_IMPACT_APPROVED", "SECTOR_IMPACT_WATCH"}:
+                continue
+            active_candidate_seen = True
             try:
                 paths = json.loads(paths_json or "[]")
             except json.JSONDecodeError:
@@ -116,7 +132,7 @@ class MiroFishHypothesisBinder:
             contradiction_status = "SECTOR_CONFLICT_PRESENT"
         else:
             contradiction_status = "NO_CONTRADICTION_DETECTED"
-        if path_ids and not rejected_event and not contradiction_ids and not missing_claim_ids and pit_inputs_complete and temporal_ok:
+        if active_candidate_seen and path_ids and not rejected_event and not contradiction_ids and not missing_claim_ids and pit_inputs_complete and temporal_ok:
             binding_status = "BOUND"
         elif event_ids and not event_rows:
             binding_status = "BLOCKED_EVENT_NOT_FOUND"
@@ -140,7 +156,7 @@ class MiroFishHypothesisBinder:
             "contradiction_status": contradiction_status,
             "binding_reason": (
                 "EXACT_PIT_EVENT_CLAIM_SECTOR_PATH"
-                if path_ids and not missing_claim_ids and not rejected_event and not contradiction_ids and pit_inputs_complete and temporal_ok
+                if active_candidate_seen and path_ids and not missing_claim_ids and not rejected_event and not contradiction_ids and pit_inputs_complete and temporal_ok
                 else "EXACT_BINDING_REQUIREMENTS_NOT_MET"
             ),
             "pit_inputs_complete": pit_inputs_complete,

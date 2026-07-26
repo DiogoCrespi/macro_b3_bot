@@ -244,6 +244,8 @@ class MiroFishClient:
             for field in list_fields:
                 if field in scenario and not isinstance(scenario[field], list):
                     return False, f"SCENARIO_{index}_{field.upper()}_NOT_ARRAY"
+                if field in scenario and any(not isinstance(item, str) for item in scenario[field]):
+                    return False, f"SCENARIO_{index}_{field.upper()}_ITEM_NOT_STRING"
             confidence = scenario.get("confidence")
             if confidence is not None and (not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1):
                 return False, f"SCENARIO_{index}_INVALID_CONFIDENCE"
@@ -460,7 +462,11 @@ class MiroFishClient:
         current_prompt = prompt
         last_parsed: dict[str, Any] | None = None
         last_reason = "UNKNOWN"
-        for attempt in range(2):
+        # Local models occasionally return object-valued sector_effects even
+        # after the first repair.  Give the strict contract a few bounded
+        # attempts; malformed output still fails closed and never gets
+        # coerced into a hypothesis.
+        for attempt in range(4):
             response = httpx.post(
                 f"{llm_url}/chat/completions",
                 json={
@@ -511,7 +517,11 @@ class MiroFishClient:
                 + reason
                 + ". Return corrected JSON. Each scenario MUST include a string "
                 + "trigger and a report_excerpt copied exactly from report_text; "
-                + "do not put report_excerpt only at the top level."
+                + "do not put report_excerpt only at the top level. Every item in "
+                + "actors, actions, macro_factors, sector_effects and "
+                + "second_order_effects MUST be a plain JSON string, never an object "
+                + "or nested array. For sector_effects write strings such as "
+                + "'VAREJO: custos maiores pressionam margens'."
             )
         if last_parsed is not None:
             last_parsed["_extraction_metadata"]["final_validation_error"] = last_reason
@@ -526,7 +536,14 @@ class MiroFishClient:
         timeout_seconds: float = 30.0,
         interval_seconds: float = 1.0,
     ) -> dict[str, Any]:
-        """Polls list_reports until at least one report is available or polling completes."""
+        """Poll until the sidecar exposes a *completed* report.
+
+        ``/api/report/list`` exposes a report row as soon as planning starts.
+        Returning that row caused the engine to persist incomplete reports and
+        then (correctly) reject them as unsupported.  A report is usable only
+        when its status is terminal and it contains the generated markdown (or
+        the section endpoint reports completion).
+        """
         start_time = time.monotonic()
         attempts = 0
         while (time.monotonic() - start_time) < timeout_seconds:
@@ -534,8 +551,45 @@ class MiroFishClient:
             try:
                 res = self.list_reports(project_id=project_id, simulation_id=simulation_id)
                 reports = res.get("reports", []) if isinstance(res, dict) else (res if isinstance(res, list) else [])
-                if reports:
-                    return {"reports": reports, "attempts": attempts}
+                completed = []
+                for report in reports:
+                    if not isinstance(report, dict):
+                        continue
+                    status = str(report.get("status", "")).lower()
+                    if status not in {"completed", "success", "finished"}:
+                        continue
+                    if str(report.get("markdown_content", "")).strip():
+                        completed.append(report)
+                        continue
+                    report_id = report.get("report_id")
+                    if not report_id:
+                        continue
+                    try:
+                        sections_response = self._request(
+                            "GET", f"{self.report_prefix}/{report_id}/sections"
+                        )
+                        sections_payload = sections_response.json()
+                        sections_data = (
+                            sections_payload.get("data", sections_payload)
+                            if isinstance(sections_payload, dict)
+                            else {}
+                        )
+                        sections = sections_data.get("sections", []) if isinstance(sections_data, dict) else []
+                        if sections_data.get("is_complete") and any(
+                            isinstance(section, dict) and str(section.get("content", "")).strip()
+                            for section in sections
+                        ):
+                            merged = dict(report)
+                            merged["markdown_content"] = "\n\n".join(
+                                str(section.get("content", ""))
+                                for section in sections
+                                if isinstance(section, dict)
+                            )
+                            completed.append(merged)
+                    except (httpx.HTTPError, ValueError, TypeError):
+                        continue
+                if completed:
+                    return {"reports": completed, "attempts": attempts}
             except (httpx.HTTPError, ValueError):
                 pass
             time.sleep(interval_seconds)

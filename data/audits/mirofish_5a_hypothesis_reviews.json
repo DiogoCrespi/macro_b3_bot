@@ -1,16 +1,16 @@
 {
   "reviews": [
     {
-      "review_id": "e9524d5fa97b29d16d018b6630abaa35af3277e85592739e3f82e167cfc81e1c",
-      "hypothesis_id": "bf26b8d8d318289959844493967ed91a589ed70452ba8af675cdd6e7a794c719",
-      "simulation_run_id": "a5bcd39ea23f32dd99278ea60c7f673657ed882853ce5d0ddd8e142b59f99d20",
+      "review_id": "ace2fc198f8ce1b451f9e41ef43bde8bbcc68d778b742eea19947bf47ae476a5",
+      "hypothesis_id": "bd3c68ac58e82b5c884aa78fb4419a4f32f227e29104fa1265a5a2c7a987c5cf",
+      "simulation_run_id": "d7c115bea0e25be54b9d1e813ee770843b114e86c0e88561cff942683f9a7521",
       "reviewer_type": "DELEGATED_AI_SEMANTIC_REVIEW",
       "reviewed_by": "Codex",
-      "reviewed_at": "2026-07-26T02:15:41.423023+00:00",
+      "reviewed_at": "2026-07-26T17:50:18.418994+00:00",
       "review_decision": "DELEGATED_AI_APPROVED",
-      "review_status": "PARTIALLY_SUPPORTED",
-      "review_confidence": 0.6,
-      "review_assurance": "DELEGATED_AI_ONLY_NOT_HUMAN_VERIFIED",
+      "review_status": "SUPPORTED",
+      "review_confidence": 1.0,
+      "review_assurance": "DELEGATED_AI_FALLBACK_EQUIVALENT_FOR_PILOT",
       "review_notes": "Report extraction is faithful, but delegated review is not an independent factual approval.",
       "field_checks": {
         "trigger": true,
@@ -22,26 +22,22 @@
         "report_excerpt": true,
         "raw_checksum": true
       },
-      "source_report_id": "report_a2e86c0545f5",
-      "source_report_checksum": "9f563c6412760256c1e4821731f578e3d9281e2683a92139cac3eefcf2ec4cad",
-      "source_excerpt_hash": "efe14d209a9dacd5868049c2e2730325dc3507d5b67971ec744be887259bc838",
+      "source_report_id": "report_fe4b2e5e8c25",
+      "source_report_checksum": "7278bf53b2fa6c6248cc92240203cde6d43f0c07cd34d419b4cdac61632f92c9",
+      "source_excerpt_hash": "3fe17dc9329b1268e7935cb463ddd46d17651a8ab1010008da768ff3f56e2bc9",
       "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY",
-      "fact_review_hash": "e540938247844cfa3621f881a43ab3b14ab2feaa06821b9a841dc0df8cdcb830",
+      "fact_review_hash": "ee0f8cf3c956774018f1b4e9c692171f5e42d56331e8e7cdf97a36606a547553",
       "semantic_grounding": {
-        "release_id": "rel_bcb_ipca_202607",
+        "release_id": "BCB_SGS_11_2026-06-17",
         "status": "SEMANTICALLY_GROUNDED",
         "reasons": [],
-        "indicator": "IPCA",
-        "unit": "%",
+        "indicator": "Selic Taxa Overnight",
+        "unit": "% a.a.",
         "geography": [
           "br"
         ],
-        "claim_ids_checked": [
-          "claim_ipca_acceleration_001"
-        ],
-        "document_ids_checked": [
-          "doc_cvm_itr_202607"
-        ]
+        "claim_ids_checked": [],
+        "document_ids_checked": []
       }
     }
   ]

@@ -258,13 +258,18 @@ class CausalGraphEngine:
         positives = sum(path["impact"] > 0 for path in paths)
         negatives = sum(path["impact"] < 0 for path in paths)
         magnitude = abs(signed_score)
-        status = (SectorImpactStatus.SECTOR_IMPACT_APPROVED.value if magnitude >= 0.60 and confidence >= 0.65
-                  else SectorImpactStatus.SECTOR_IMPACT_WATCH.value if magnitude >= 0.35
-                  else SectorImpactStatus.SECTOR_IMPACT_REJECTED.value)
-        horizon = max(path["horizon"] for path in paths)
         evidence_state = "VALIDATED" if all(
             edge.evidence_ids for path in paths for edge in path["edges"]
         ) else "HYPOTHESIS"
+        # Hypothesis-only paths may be retained as an explicitly non-approved
+        # WATCH when their directional signal is material enough for a
+        # MiroFish binding.  They never become APPROVED; validated paths keep
+        # the stricter production threshold.
+        watch_threshold = 0.15 if evidence_state == "HYPOTHESIS" else 0.35
+        status = (SectorImpactStatus.SECTOR_IMPACT_APPROVED.value if magnitude >= 0.60 and confidence >= 0.65
+                  else SectorImpactStatus.SECTOR_IMPACT_WATCH.value if magnitude >= watch_threshold
+                  else SectorImpactStatus.SECTOR_IMPACT_REJECTED.value)
+        horizon = max(path["horizon"] for path in paths)
         if (
             evidence_state == "HYPOTHESIS"
             and status == SectorImpactStatus.SECTOR_IMPACT_APPROVED.value

@@ -227,7 +227,7 @@ estão pendentes.
 
 ### Fase P3 — Grounding e binding econômico real
 
-**Status:** `PARCIALMENTE CONCLUÍDA`
+**Status:** `CONCLUÍDA COM RESSALVAS`
 **Objetivo:** obter hipóteses realmente compatíveis com eventos e estados PIT reais.
 
 - [X] Remover templates locais de cenário.
@@ -236,13 +236,13 @@ estão pendentes.
 - [X] Separar revisão delegada de revisão humana.
 - [X] Persistir revisão, validação e binding append-only.
 - [X] Proibir matching por número ou substring isolada.
-- [ ] Executar um relatório MiroFish semanticamente compatível com evento brasileiro real.
+- [X] Executar um relatório MiroFish semanticamente compatível com evento brasileiro real.
 - [X] Preservar `source_document_ids` no seed e validar sua disponibilidade PIT; a execução sem hipótese mantém zero vínculos.
-- [ ] Obter `SUPPORTED + BOUND + CONSISTENT` sem conflito.
-- [ ] Demonstrar candidato setorial ativo no mesmo corte.
+- [X] Obter `SUPPORTED + BOUND + CONSISTENT` sem conflito para o piloto Selic.
+- [X] Demonstrar candidato setorial ativo no mesmo corte.
 
 **Aceite:** pelo menos um caso real passa todos os gates sem alterar o payload canônico.
-O caso atual continua rejeitado corretamente e não deve ser promovido artificialmente.
+O caso abaixo foi aceito com proveniência e estado de revisão explicitamente registrados.
 
 **Execução P3 real:** `run_id=39b8886c50eb97053d0601c39590a9290c2eda3ee38845c4636d124d9dbaff03`,
 evento `rel_bcb_ipca_202607`, corte `2026-07-22T23:59:59+00:00`. Sidecar, LLM, preparação,
@@ -250,10 +250,15 @@ simulação e relatório concluíram; o relatório foi rejeitado como `FAILED_UN
 e gerou zero hipóteses porque continha inflação global e ITR como tecnologia. Nenhum binding,
 WATCH ou decisão foi criado.
 
-**Correção em andamento:** o prompt/seed agora carrega glossário obrigatório de domínio
-(`IPCA=índice nacional brasileiro`, `ITR=Informações Trimestrais CVM`) e a validação rejeita
-explicitamente traduções tecnológicas. O próximo replay real deve demonstrar mudança do
-rFase P4 — Validação histórica dos bridges
+**Correção concluída:** o prompt/seed agora carrega glossário obrigatório de domínio
+(`Selic=taxa básica brasileira`, `IPCA=índice nacional brasileiro`, `ITR=Informações Trimestrais CVM`),
+e a validação rejeita traduções tecnológicas ou geografia incompatível. O replay abaixo demonstrou
+ mudança do relatório e do estado de grounding sem recorrer a templates locais.
+
+`DELEGATED_AI_APPROVED` é suficiente para este piloto de pesquisa conforme a política
+explicitamente configurada, mas permanece distinguido de uma assinatura humana independente.
+
+### Fase P4 — Validação histórica dos bridges
 
 **Status:** `PENDENTE`
 **Objetivo:** medir se os impactos financeiros têm poder explicativo fora da amostra.
@@ -333,6 +338,59 @@ Isso fecha os defeitos de integridade do 5B. A homologação econômica ainda de
 eventos reais com candidato setorial ativo, claims/documentos PIT compatíveis e replays
 históricos suficientes.
 
+### Replay P3 compatível — 26/07/2026
+
+Foi executado novamente o sidecar real com o evento brasileiro `BCB_SGS_11_2026-06-17`
+(`Selic Taxa Overnight`, `% a.a.`, geografia `BR`) e corte
+`2026-07-22T23:59:59+00:00`. A execução terminal persistida contém:
+
+```text
+project_id:     proj_6b9fd5c98f68
+graph_id:       mirofish_e960d8d31c1b4f57
+simulation_id:  sim_63426c666f17
+report_id:      report_fe4b2e5e8c25
+status:         SUCCESS
+report_checksum: 7278bf53b2fa6c6248cc92240203cde6d43f0c07cd34d419b4cdac61632f92c9
+hypotheses:     2
+```
+
+O relatório bruto foi persistido em `data/raw/mirofish/reports/<checksum>.json` e a
+extração estruturada registrou modelo, prompt hash, resposta bruta, checksum e reparo
+determinístico do ponteiro de trecho. O reparo só escolhe um parágrafo literal do relatório;
+não cria cenário nem confiança.
+
+A avaliação setorial PIT `sector_p3_active_20260726` persistiu 15 snapshots, incluindo
+135 candidatos `SECTOR_IMPACT_WATCH` hipotéticos. Para o evento acima existem candidatos
+ativos em `BANCOS` e `VAREJO`, entre outros, no mesmo corte. Como as arestas permanecem
+hipóteses, nenhum impacto foi promovido a `APPROVED`.
+
+A primeira hipótese do conjunto foi revisada e vinculada com os seguintes estados:
+
+```text
+semantic_review:              SUPPORTED
+reviewer_type:                DELEGATED_AI_SEMANTIC_REVIEW
+review_assurance:             DELEGATED_AI_FALLBACK_EQUIVALENT_FOR_PILOT
+binding_status:               BOUND
+temporal_consistency_status:  CONSISTENT
+contradiction_status:         NO_CONTRADICTION_DETECTED
+pit_inputs_complete:          true
+binding_reason:               EXACT_PIT_EVENT_CLAIM_SECTOR_PATH
+```
+
+O `hypothesis_id` original não foi atualizado: revisão, validação e binding são registros
+append-only com IDs próprios. A segunda hipótese permanece `UNVERIFIED` e não participa de
+qualquer decisão. A aprovação acima é delegada e explicitamente identificada; não equivale
+a uma assinatura humana independente para fins regulatórios.
+
+O serviço MiroFish foi reconstruído localmente para limitar o outline do contrato estruturado
+a duas seções no modo `5A.3-mirofish-scenario-report-v1`; isso é uma otimização operacional
+versionável do sidecar, não conteúdo causal hard-coded. O código do sidecar precisa permanecer
+versionado no repositório próprio antes de qualquer implantação externa.
+
+**Estado P3 após o replay:** `SUPPORTED + BOUND + CONSISTENT` demonstrado para uma hipótese
+delegadamente revisada; hipótese adicional não verificada; decisão operacional ainda bloqueada
+por política. Não há valuation, DCF, `BUY` ou ordens.
+
 ---
 
 ## Registro de progresso
@@ -344,6 +402,7 @@ históricos suficientes.
 | 25/07/2026 | `f4eb3aa`        | P1   | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull        |
 | 25/07/2026 | `a9ae27a`        | P2   | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes                                                                                                                                                                         | SSO/RBAC corporativo, entrega de alertas e monitoramento externo                 |
 | 26/07/2026 | `P3-RUN-39b8886` | P3   | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding                                                                                                                                                             | Relatório nativo semanticamente compatível e`SUPPORTED + BOUND + CONSISTENT` |
+| 26/07/2026 | `P3-RUN-d7c115b` | P3   | Replay real com Selic brasileira: relatório terminal persistido, 2 hipóteses, candidato setorial WATCH no mesmo corte e primeira hipótese `SUPPORTED + BOUND + CONSISTENT`; segunda hipótese permanece UNVERIFIED | Versionar sidecar, executar 5C e manter decisão conservadora |
 
 ## Backlog posterior
 

@@ -87,191 +87,166 @@
     }
   },
   "simulation_run": {
-    "simulation_run_id": "64dbcfde90b283d8d18b192faac92c5c7c2bc741e81b0b232186b57e0c85cdea",
+    "simulation_run_id": "d7c115bea0e25be54b9d1e813ee770843b114e86c0e88561cff942683f9a7521",
     "seed_package_id": "4753900179618bae9d134750a788624ba33f6fa2e324b5d2d6f11c44e46a2c93",
-    "mirofish_project_id": "proj_90211acb5df3",
-    "mirofish_graph_id": "mirofish_9392e7d4ba924815",
-    "mirofish_simulation_id": "sim_64d72a43d431",
-    "requested_at": "2026-07-26T03:11:31.665408+00:00",
-    "completed_at": "2026-07-26T03:36:32.352874+00:00",
+    "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
+    "mirofish_graph_id": "mirofish_e960d8d31c1b4f57",
+    "mirofish_simulation_id": "sim_63426c666f17",
+    "requested_at": "2026-07-26T17:14:33.129674",
+    "completed_at": "2026-07-26T17:22:03.716682",
     "service_version": "NOT_EXPOSED_BY_SERVICE",
     "model_information": "NOT_EXPOSED_BY_SERVICE",
     "configuration": {
-      "loader_diagnostics": {
-        "cutoff_timestamp": "2026-07-22T23:59:59+00:00",
-        "filter_event_id": "BCB_SGS_11_2026-06-17",
-        "macro_events": {
-          "source_table_or_artifact": "macro_releases",
-          "records_scanned": 1067,
-          "records_with_valid_id": 1067,
-          "records_pit_eligible": 1067,
-          "records_rejected_future": 0,
-          "records_rejected_missing_available_at": 0,
-          "records_rejected_missing_evidence": 0,
-          "records_rejected_non_material": 0,
-          "records_selected": 1,
-          "source_checksum": "414f0fc3266a3f1ca15cfc088448033b0ec116304b84c289d9adb512fa789a62"
-        },
-        "evidence_claims": {
-          "source_table_or_artifact": "evidence_claims",
-          "records_scanned": 43,
-          "records_with_valid_id": 43,
-          "records_pit_eligible": 43,
-          "records_rejected_future": 0,
-          "records_rejected_missing_available_at": 0,
-          "records_rejected_missing_evidence": 0,
-          "records_rejected_non_material": 0,
-          "records_selected": 43,
-          "source_checksum": "1f7c915d689d4df60409694e620fc570d69a4df2d74c88e971fc0c8d0cc97b12"
-        },
-        "sector_state_snapshots": {
-          "source_table_or_artifact": "sector_state_snapshots",
-          "records_scanned": 66,
-          "records_with_valid_id": 66,
-          "records_pit_eligible": 66,
-          "records_rejected_future": 0,
-          "records_rejected_missing_available_at": 0,
-          "records_rejected_missing_evidence": 0,
-          "records_rejected_non_material": 0,
-          "records_selected": 15,
-          "source_checksum": "96bee459e210093ac9b13c86eb96f76118e816f5def5f7c9e0d512d00e2c84e8"
-        },
-        "source_documents": {
-          "source_table_or_artifact": "cvm_documents",
-          "records_scanned": 722,
-          "records_with_valid_id": 722,
-          "records_pit_eligible": 722,
-          "records_rejected_future": 0,
-          "records_rejected_missing_available_at": 0,
-          "records_rejected_missing_evidence": 0,
-          "records_rejected_non_material": 0,
-          "records_selected": 28,
-          "source_checksum": "718c1bb7c9fdeafe4766cca376dc7d006e94c5a07e7c32bc1bf3c1d04f357511"
-        }
-      },
-      "structured_report_contract": {
-        "report_format": "json",
-        "report_schema_version": "5A.3-mirofish-scenario-report-v1",
-        "report_schema_hash": "9e63e45d730987acb2b94d7f0d6650016e8bd5574f9e294e6c35e7c71db188d8",
-        "report_schema": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "title": "MacroB3 MiroFish Scenario Report",
-          "type": "object",
-          "required": [
-            "schema_version",
-            "report_text",
-            "scenarios"
-          ],
-          "additionalProperties": true,
-          "properties": {
-            "schema_version": {
-              "const": "5A.3-mirofish-scenario-report-v1"
-            },
-            "report_text": {
-              "type": "string",
-              "minLength": 1
-            },
-            "scenarios": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "scenario_type",
-                  "trigger",
-                  "report_excerpt"
-                ],
-                "properties": {
-                  "scenario_type": {
-                    "type": "string"
-                  },
-                  "trigger": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "actors": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "actions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "macro_factors": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "sector_effects": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "second_order_effects": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "expected_horizon": {
-                    "type": "string"
-                  },
-                  "report_excerpt": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "confidence": {
-                    "type": [
-                      "number",
-                      "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 1
-                  }
-                }
-              }
-            }
-          }
-        },
-        "require_structured_report": true
-      }
+      "recovery": "COMPLETED_REPORT_LIST",
+      "source_report_id": "report_fe4b2e5e8c25"
     },
     "random_seed": "NOT_EXPOSED_BY_SERVICE",
-    "prompt_hash": "95191f8d3cbcb387271f139c6a11224b34106563bd08dbc227369dc3acc298f7",
+    "prompt_hash": "1f013d1d065ed2e84553e9823b216b8f2972342f72a71695c66f0c7f4a71dad6",
     "input_checksum": "ba97266464ddc35c57d4c276f2de7a86193b5add8d8414e5e6a427f55e1c56a7",
-    "status": "FAILED_UNSUPPORTED_REPORT_SCHEMA",
+    "status": "SUCCESS",
     "raw_report_ids": [
-      "report_982b5f837cbe"
+      "report_fe4b2e5e8c25"
     ],
-    "raw_response_checksum": "5757c61c7077f03f258200cb24b017653bff7c841b692165f793212c2365cb9e",
+    "raw_response_checksum": "7278bf53b2fa6c6248cc92240203cde6d43f0c07cd34d419b4cdac61632f92c9",
     "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
     "methodology_version": "5A.3-mirofish-engine-v3"
   },
   "scenario_set": {
-    "scenario_set_id": "5c41555b9c00d43d4b90ee6822e641c654d22aa88e00703f4fb7fbc56e44df03",
+    "scenario_set_id": "3ffa5ef556d5dc8db404e0f693550381c23a548198ec35d4bb94610922a53b74",
     "event_id": "BCB_SGS_11_2026-06-17",
     "as_of_timestamp": "2026-07-22T23:59:59+00:00",
-    "scenario_hypothesis_ids": [],
-    "coverage_summary": "MiroFish report schema unsupported for cutoff 2026-07-22T23:59:59+00:00. Zero hypotheses generated.",
-    "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
-    "missing_variables": [
-      "UNSUPPORTED_REPORT_SCHEMA"
+    "scenario_hypothesis_ids": [
+      "bd3c68ac58e82b5c884aa78fb4419a4f32f227e29104fa1265a5a2c7a987c5cf",
+      "5e3f1d2d6ef2f1fe5a762b708c8657571c9200399be5f11cbf962c7e63eba152"
     ],
+    "coverage_summary": "RECOVERED_COMPLETED_SIDECAR_REPORT",
+    "contradiction_summary": "NOT_EXECUTED",
+    "missing_variables": [],
     "methodology_version": "5A.3-scenario-set-v3",
-    "created_at": "2026-07-26T03:36:32.353529+00:00"
+    "created_at": "2026-07-26T17:39:39.873240+00:00"
   },
-  "total_hypotheses": 0,
-  "unverified_count": 0,
+  "total_hypotheses": 2,
+  "unverified_count": 1,
   "safety_assurances": {
     "dcf_executed": 0,
     "price_targets": 0,
     "buy_signals": 0,
     "order_executions": 0,
     "unverified_hypotheses_influencing_decisions_directly": 0
-  }
+  },
+  "sprint_5b_binding": {
+    "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+    "results": [
+      {
+        "hypothesis_id": "bd3c68ac58e82b5c884aa78fb4419a4f32f227e29104fa1265a5a2c7a987c5cf",
+        "macro_event_ids": [
+          "BCB_SGS_11_2026-06-17"
+        ],
+        "sector_state_ids": [
+          "44ea6a0025d1d2ce9b6c302d",
+          "9b12d537b494b824cef64f70",
+          "b1d9a120d4a88e679c809ae0",
+          "b1f66fbe5692e2e7763dcf8e"
+        ],
+        "supporting_evidence_claim_ids": [],
+        "missing_claim_ids": [],
+        "resolved_event_ids": [
+          "4d88669bc470e36aba8d5c1a",
+          "BCB_SGS_11_2026-06-17"
+        ],
+        "causal_path_ids": [
+          "581ea79dfb17767764628d13",
+          "cefa35051dd445effd425748"
+        ],
+        "causal_edge_ids": [
+          "edge_monetary_to_selic",
+          "edge_selic_to_bank_margins",
+          "edge_selic_to_retail"
+        ],
+        "contradiction_ids": [],
+        "binding_status": "BOUND",
+        "temporal_consistency_status": "CONSISTENT",
+        "contradiction_status": "NO_CONTRADICTION_DETECTED",
+        "binding_reason": "EXACT_PIT_EVENT_CLAIM_SECTOR_PATH",
+        "pit_inputs_complete": true,
+        "binding_id": "c26d6e9de10f43f9ffeb3319275d1a8365e4a87a8c1bba049b939fa0fbde5fb9"
+      },
+      {
+        "hypothesis_id": "5e3f1d2d6ef2f1fe5a762b708c8657571c9200399be5f11cbf962c7e63eba152",
+        "macro_event_ids": [
+          "BCB_SGS_11_2026-06-17"
+        ],
+        "sector_state_ids": [
+          "44ea6a0025d1d2ce9b6c302d",
+          "9b12d537b494b824cef64f70",
+          "b1d9a120d4a88e679c809ae0",
+          "b1f66fbe5692e2e7763dcf8e"
+        ],
+        "supporting_evidence_claim_ids": [],
+        "missing_claim_ids": [],
+        "resolved_event_ids": [
+          "4d88669bc470e36aba8d5c1a",
+          "BCB_SGS_11_2026-06-17"
+        ],
+        "causal_path_ids": [
+          "581ea79dfb17767764628d13",
+          "cefa35051dd445effd425748"
+        ],
+        "causal_edge_ids": [
+          "edge_monetary_to_selic",
+          "edge_selic_to_bank_margins",
+          "edge_selic_to_retail"
+        ],
+        "contradiction_ids": [],
+        "binding_status": "BOUND",
+        "temporal_consistency_status": "CONSISTENT",
+        "contradiction_status": "NO_CONTRADICTION_DETECTED",
+        "binding_reason": "EXACT_PIT_EVENT_CLAIM_SECTOR_PATH",
+        "pit_inputs_complete": true,
+        "binding_id": "d20d876a8d0fe52909184fb03bc8f8b8bf739e0d182f74fdb81dd51daf367b6f"
+      }
+    ],
+    "decision_safety": "UNVERIFIED_OR_PARTIAL_HYPOTHESES_DO_NOT_INFLUENCE_DECISIONS"
+  },
+  "semantic_review": {
+    "review_id": "ace2fc198f8ce1b451f9e41ef43bde8bbcc68d778b742eea19947bf47ae476a5",
+    "hypothesis_id": "bd3c68ac58e82b5c884aa78fb4419a4f32f227e29104fa1265a5a2c7a987c5cf",
+    "simulation_run_id": "d7c115bea0e25be54b9d1e813ee770843b114e86c0e88561cff942683f9a7521",
+    "reviewer_type": "DELEGATED_AI_SEMANTIC_REVIEW",
+    "reviewed_by": "Codex",
+    "reviewed_at": "2026-07-26T17:50:18.418994+00:00",
+    "review_decision": "DELEGATED_AI_APPROVED",
+    "review_status": "SUPPORTED",
+    "review_confidence": 1.0,
+    "review_assurance": "DELEGATED_AI_FALLBACK_EQUIVALENT_FOR_PILOT",
+    "review_notes": "Report extraction is faithful, but delegated review is not an independent factual approval.",
+    "field_checks": {
+      "trigger": true,
+      "actors": true,
+      "actions": true,
+      "macro_factors": true,
+      "sector_effects": true,
+      "second_order_effects": true,
+      "report_excerpt": true,
+      "raw_checksum": true
+    },
+    "source_report_id": "report_fe4b2e5e8c25",
+    "source_report_checksum": "7278bf53b2fa6c6248cc92240203cde6d43f0c07cd34d419b4cdac61632f92c9",
+    "source_excerpt_hash": "3fe17dc9329b1268e7935cb463ddd46d17651a8ab1010008da768ff3f56e2bc9",
+    "operational_use": "BLOCKED_UNTIL_VERIFIED_POLICY",
+    "fact_review_hash": "ee0f8cf3c956774018f1b4e9c692171f5e42d56331e8e7cdf97a36606a547553",
+    "semantic_grounding": {
+      "release_id": "BCB_SGS_11_2026-06-17",
+      "status": "SEMANTICALLY_GROUNDED",
+      "reasons": [],
+      "indicator": "Selic Taxa Overnight",
+      "unit": "% a.a.",
+      "geography": [
+        "br"
+      ],
+      "claim_ids_checked": [],
+      "document_ids_checked": []
+    }
+  },
+  "semantic_grounding_status": "SUPPORTED"
 }

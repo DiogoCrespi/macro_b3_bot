@@ -121,6 +121,23 @@ def main() -> None:
                     "hypotheses": [h.model_dump(mode="json") for h in hypotheses]}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    (audits / "mirofish_5a_audit.json").write_text(
+        json.dumps({
+            "sprint": "5A.3",
+            "methodology_version": "5A.3-mirofish-engine-v3",
+            "cutoff_timestamp": seed.as_of_timestamp,
+            "seed_package": seed.model_dump(mode="json"),
+            "simulation_run": run.model_dump(mode="json"),
+            "scenario_set": scenario_set.model_dump(mode="json"),
+            "total_hypotheses": len(hypotheses),
+            "unverified_count": sum(h.verification_status == "UNVERIFIED" for h in hypotheses),
+            "safety_assurances": {
+                "dcf_executed": 0, "price_targets": 0,
+                "buy_signals": 0, "order_executions": 0,
+                "unverified_hypotheses_influencing_decisions_directly": 0,
+            },
+        }, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(json.dumps({"simulation_run_id": run_id, "status": run.status,
                       "report_id": report_id, "hypotheses": len(hypotheses),
                       "report_checksum": checksum}, ensure_ascii=False))
