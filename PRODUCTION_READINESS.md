@@ -195,12 +195,18 @@ estão pendentes.
 - [x] Persistir revisão, validação e binding append-only.
 - [x] Proibir matching por número ou substring isolada.
 - [ ] Executar um relatório MiroFish semanticamente compatível com evento brasileiro real.
-- [ ] Obter `source_document_ids` preservados na hipótese.
+- [x] Preservar `source_document_ids` no seed e validar sua disponibilidade PIT; a execução sem hipótese mantém zero vínculos.
 - [ ] Obter `SUPPORTED + BOUND + CONSISTENT` sem conflito.
 - [ ] Demonstrar candidato setorial ativo no mesmo corte.
 
 **Aceite:** pelo menos um caso real passa todos os gates sem alterar o payload canônico.
 O caso atual continua rejeitado corretamente e não deve ser promovido artificialmente.
+
+**Execução P3 real:** `run_id=39b8886c50eb97053d0601c39590a9290c2eda3ee38845c4636d124d9dbaff03`,
+evento `rel_bcb_ipca_202607`, corte `2026-07-22T23:59:59+00:00`. Sidecar, LLM, preparação,
+simulação e relatório concluíram; o relatório foi rejeitado como `FAILED_UNSUPPORTED_REPORT_SCHEMA`
+e gerou zero hipóteses porque continha inflação global e ITR como tecnologia. Nenhum binding,
+WATCH ou decisão foi criado.
 
 ### Fase P4 — Validação histórica dos bridges
 
@@ -291,7 +297,8 @@ históricos suficientes.
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
 | 25/07/2026 | `f4eb3aa` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull |
-| 25/07/2026 | `d38cda5` | P2 | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes | SSO/RBAC corporativo, entrega de alertas e monitoramento externo |
+| 25/07/2026 | `a9ae27a` | P2 | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes | SSO/RBAC corporativo, entrega de alertas e monitoramento externo |
+| 26/07/2026 | `P3-RUN-39b8886` | P3 | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding | Relatório nativo semanticamente compatível e `SUPPORTED + BOUND + CONSISTENT` |
 
 ## Backlog posterior
 
