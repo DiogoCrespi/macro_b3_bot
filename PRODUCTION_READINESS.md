@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `96b8524`
+**Estado avaliado:** commit `27401f3`
 **Última suíte local:** 345 testes aprovados em 79,45 s em Python 3.12
 
 ## Veredito
@@ -278,7 +278,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `96b8524` | P1 | Digest local do sidecar, validador fail-closed, worker local/Docker, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
+| 25/07/2026 | `27401f3` | P1 | Digest local do sidecar, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, digest publicado em registry e rotação de secrets |
 
 ## Backlog posterior
 
