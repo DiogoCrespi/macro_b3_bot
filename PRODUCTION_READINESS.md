@@ -1,4 +1,3 @@
-
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
@@ -65,14 +64,12 @@ restrições:
 - Estado atual: relatório semanticamente compatível **PASS**; `SUPPORTED + BOUND`
   **PENDENTE por ausência de candidato causal upstream**. Suíte completa: **353
   testes aprovados**; Ruff: **PASS**.
-- Correção adicional: os scripts MiroFish e binding agora usam
-  `data/audit.duckdb`, o banco PIT canônico; `data/macro_b3_bot.duckdb` ficou
-  explicitamente tratado como fixture legado. A avaliação setorial real no run
-  `sector_p3_real_20260726` persistiu **469 `SectorImpactCandidate`**, 132 eventos,
-  7 setores e 15 snapshots. Todos os 469 foram `SECTOR_IMPACT_REJECTED` por
-  evidência causal ausente/hipotética, conforme a política de segurança; nenhum
-  caminho foi inventado. Os dois eventos `MACRO_EVENT_WATCH` desse run não têm
-  caminho ativo dentro do horizonte e, corretamente, não geraram candidato.
+- A avaliação setorial no banco PIT canônico `audit.duckdb`, run
+  `sector_p3_real_20260726`, persistiu 469 candidatos e 15 snapshots. Uma
+  execução posterior com o evento real `BCB_SGS_11_2026-06-17` confirmou quatro
+  setores ativos no seed, mas o sidecar excedeu `TIMEOUT_PREPARE` ao preparar os
+  agentes. Ela foi interrompida sem relatório ou hipótese; deve ser retomada com
+  o mesmo seed content-addressed ou por recuperação do `simulation_id` exposto.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.
@@ -118,7 +115,7 @@ produção.
 | Ambiente               | Permitido  | Condição                                             |
 | ---------------------- | ---------- | ------------------------------------------------------ |
 | Desenvolvimento        | Sim        | Dados e credenciais locais, sem decisão operacional   |
-| Staging/piloto interno | Sim        | Dados PIT, logs, backup e `BUY` desabilitado         |
+| Staging/piloto interno | Sim        | Dados PIT, logs, backup e`BUY` desabilitado          |
 | Produção de pesquisa | Ainda não | Requer operação, segurança e monitoramento mínimos |
 | Produção decisória  | Não       | Requer validação estatística e financeira           |
 | Execução de ordens   | Não       | Requer governança, aprovação e controles de risco   |
@@ -157,12 +154,12 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 **Status:** `CONCLUÍDA`
 **Objetivo:** garantir que qualquer execução possa ser reproduzida e auditada.
 
-- [x] Suíte local completa executada (`342 passed` em Python 3.12).
-- [x] Ruff e `git diff --check` aprovados.
-- [x] Bytecodes rastreados removidos do Git.
-- [x] Fixar dependências Python 3.12 em `requirements-py312.lock` e versão em `.python-version`.
-- [x] Criar `data/audits/baseline_reproducible.json` com commit, configuração e checksums.
-- [x] Separar dados controlados e upstream em `data/README.md` e no manifesto.
+- [X] Suíte local completa executada (`342 passed` em Python 3.12).
+- [X] Ruff e `git diff --check` aprovados.
+- [X] Bytecodes rastreados removidos do Git.
+- [X] Fixar dependências Python 3.12 em `requirements-py312.lock` e versão em `.python-version`.
+- [X] Criar `data/audits/baseline_reproducible.json` com commit, configuração e checksums.
+- [X] Separar dados controlados e upstream em `data/README.md` e no manifesto.
 
 **Saída:** `baseline_reproducible.json`, `requirements-py312.lock`, `.python-version` e
 `data/README.md`.
@@ -172,17 +169,17 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 **Status:** `EM ANDAMENTO`
 **Objetivo:** executar o orquestrador e o sidecar como serviço controlado, sem ordens.
 
-- [x] Containerizar o orquestrador e declarar o sidecar no Compose.
-- [x] Criar configuração de staging distinta de `.env` de desenvolvimento.
-- [x] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
-- [x] Declarar secrets externos via Compose; rotação da chave Zep ainda pendente.
-- [x] Implementar health checks, timeout, retry básico e circuit breaker.
-- [x] Implementar cancelamento cooperativo do workflow após falha/timeout, via `/api/simulation/stop`.
-- [x] Implementar wrapper de scheduler com lock, idempotência e status por execução.
+- [X] Containerizar o orquestrador e declarar o sidecar no Compose.
+- [X] Criar configuração de staging distinta de `.env` de desenvolvimento.
+- [X] Fixar a imagem do sidecar por digest imutável no ambiente de staging.
+- [X] Declarar secrets externos via Compose; rotação da chave Zep ainda pendente.
+- [X] Implementar health checks, timeout, retry básico e circuit breaker.
+- [X] Implementar cancelamento cooperativo do workflow após falha/timeout, via `/api/simulation/stop`.
+- [X] Implementar wrapper de scheduler com lock, idempotência e status por execução.
 - [ ] Integrar o wrapper a um scheduler externo com comando e `run_id` point-in-time.
-- [x] Definir volume persistente e backup verificado do DuckDB.
-- [x] Testar cópia restaurável em ambiente temporário.
-- [x] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
+- [X] Definir volume persistente e backup verificado do DuckDB.
+- [X] Testar cópia restaurável em ambiente temporário.
+- [X] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
 
 **Evidência atual:** `docker build` aprovado, workflow GHCR concluído com sucesso, imagem
 MiroFish publicada e fixada por digest multi-arquitetura (`docker buildx imagetools inspect`),
@@ -214,13 +211,13 @@ foram definidos.
 **Status:** `EM ANDAMENTO`
 **Objetivo:** tornar falhas e decisões auditáveis por uma pessoa responsável.
 
-- [x] Autenticação por token hash configurado externamente, sem persistência do segredo.
+- [X] Autenticação por token hash configurado externamente, sem persistência do segredo.
 - [ ] RBAC separando operador, revisor e administrador.
-- [x] Núcleo de log append-only com hash chain para revisão/binding/decisão.
-- [x] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios em snapshots JSON.
-- [x] Avaliação determinística de alertas para atraso PIT, conflitos, falhas e baixa aprovação.
-- [x] Dashboard estático read-only de métricas gerado por `scripts/render_observability_dashboard.py`.
-- [x] Kill switch fail-closed com permissão administrativa e motivo obrigatório.
+- [X] Núcleo de log append-only com hash chain para revisão/binding/decisão.
+- [X] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios em snapshots JSON.
+- [X] Avaliação determinística de alertas para atraso PIT, conflitos, falhas e baixa aprovação.
+- [X] Dashboard estático read-only de métricas gerado por `scripts/render_observability_dashboard.py`.
+- [X] Kill switch fail-closed com permissão administrativa e motivo obrigatório.
 
 **Evidência P2 inicial:** `application/governance.py`, `application/observability.py`,
 `docs/STAGING_RUNBOOK.md` e testes validam RBAC mínimo, autenticação por hash, ledger
@@ -233,14 +230,14 @@ estão pendentes.
 **Status:** `PARCIALMENTE CONCLUÍDA`
 **Objetivo:** obter hipóteses realmente compatíveis com eventos e estados PIT reais.
 
-- [x] Remover templates locais de cenário.
-- [x] Persistir relatório bruto, checksum e extração estruturada.
-- [x] Rejeitar incompatibilidade semântica IPCA/global e ITR/tecnologia.
-- [x] Separar revisão delegada de revisão humana.
-- [x] Persistir revisão, validação e binding append-only.
-- [x] Proibir matching por número ou substring isolada.
+- [X] Remover templates locais de cenário.
+- [X] Persistir relatório bruto, checksum e extração estruturada.
+- [X] Rejeitar incompatibilidade semântica IPCA/global e ITR/tecnologia.
+- [X] Separar revisão delegada de revisão humana.
+- [X] Persistir revisão, validação e binding append-only.
+- [X] Proibir matching por número ou substring isolada.
 - [ ] Executar um relatório MiroFish semanticamente compatível com evento brasileiro real.
-- [x] Preservar `source_document_ids` no seed e validar sua disponibilidade PIT; a execução sem hipótese mantém zero vínculos.
+- [X] Preservar `source_document_ids` no seed e validar sua disponibilidade PIT; a execução sem hipótese mantém zero vínculos.
 - [ ] Obter `SUPPORTED + BOUND + CONSISTENT` sem conflito.
 - [ ] Demonstrar candidato setorial ativo no mesmo corte.
 
@@ -256,9 +253,7 @@ WATCH ou decisão foi criado.
 **Correção em andamento:** o prompt/seed agora carrega glossário obrigatório de domínio
 (`IPCA=índice nacional brasileiro`, `ITR=Informações Trimestrais CVM`) e a validação rejeita
 explicitamente traduções tecnológicas. O próximo replay real deve demonstrar mudança do
-relatório, não uma hipótese fabricada localmente.
-
-### Fase P4 — Validação histórica dos bridges
+rFase P4 — Validação histórica dos bridges
 
 **Status:** `PENDENTE`
 **Objetivo:** medir se os impactos financeiros têm poder explicativo fora da amostra.
@@ -342,13 +337,13 @@ históricos suficientes.
 
 ## Registro de progresso
 
-| Data | Commit | Fase | Resultado | Próximo bloqueio |
-|---|---|---|---|---|
-| 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
-| 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `f4eb3aa` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull |
-| 25/07/2026 | `a9ae27a` | P2 | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes | SSO/RBAC corporativo, entrega de alertas e monitoramento externo |
-| 26/07/2026 | `P3-RUN-39b8886` | P3 | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding | Relatório nativo semanticamente compatível e `SUPPORTED + BOUND + CONSISTENT` |
+| Data       | Commit             | Fase | Resultado                                                                                                                                                                                                                                                                                                                              | Próximo bloqueio                                                                |
+| ---------- | ------------------ | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 25/07/2026 | `6e3fefa`        | P3   | 5B.1 implementado; hipótese atual rejeitada corretamente                                                                                                                                                                                                                                                                              | Caso real`SUPPORTED + BOUND`                                                   |
+| 25/07/2026 | `a3dc7e1`        | P0   | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados                                                                                                                                                                                                                                                                      | P1: staging operacional seguro                                                   |
+| 25/07/2026 | `f4eb3aa`        | P1   | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull        |
+| 25/07/2026 | `a9ae27a`        | P2   | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes                                                                                                                                                                         | SSO/RBAC corporativo, entrega de alertas e monitoramento externo                 |
+| 26/07/2026 | `P3-RUN-39b8886` | P3   | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding                                                                                                                                                             | Relatório nativo semanticamente compatível e`SUPPORTED + BOUND + CONSISTENT` |
 
 ## Backlog posterior
 

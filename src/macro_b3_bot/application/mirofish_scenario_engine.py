@@ -103,22 +103,65 @@ class MiroFishScenarioEngine:
 
         # Filter by specific event_id if provided
         if event_id:
-            filtered_releases = [m for m in macro_releases_pit if m.get("release_id") == event_id]
+            # The CLI accepts either a release_id (the MiroFish seed identity)
+            # or the causal macro_event_candidates.event_id. Resolve both
+            # directions without broadening the seed to every PIT record.
+            resolved_event_ids = {str(event_id)}
+            if self.store is not None:
+                linked = self.store.connection.execute(
+                    "SELECT event_id FROM macro_event_evidence_links WHERE release_id = ?",
+                    [event_id],
+                ).fetchall()
+                resolved_event_ids.update(str(row[0]) for row in linked)
+                reverse = self.store.connection.execute(
+                    "SELECT release_id FROM macro_event_evidence_links WHERE event_id = ?",
+                    [event_id],
+                ).fetchall()
+                resolved_event_ids.update(str(row[0]) for row in reverse)
+
+            filtered_releases = [m for m in macro_releases_pit if str(m.get("release_id")) in resolved_event_ids]
             if filtered_releases:
                 macro_releases_pit = filtered_releases
+            evidence_ids_from_event: set[str] = set()
+            for release in macro_releases_pit:
+                raw_evidence = release.get("evidence_ids", [])
+                if isinstance(raw_evidence, str):
+                    try:
+                        raw_evidence = json.loads(raw_evidence)
+                    except json.JSONDecodeError:
+                        raw_evidence = [raw_evidence]
+                if isinstance(raw_evidence, list):
+                    evidence_ids_from_event.update(str(value) for value in raw_evidence if value)
             doc_ids_from_event = {m.get("document_id") for m in macro_releases_pit if m.get("document_id")}
             filtered_claims = [
                 c for c in evidence_claims_pit
-                if c.get("claim_id") == event_id or c.get("document_id") in doc_ids_from_event or event_id in str(c.get("subject", ""))
+                if str(c.get("claim_id")) in evidence_ids_from_event
+                or c.get("document_id") in doc_ids_from_event
             ]
-            if filtered_claims:
-                evidence_claims_pit = filtered_claims
+            evidence_claims_pit = filtered_claims
             doc_ids_from_claims = {c.get("document_id") for c in evidence_claims_pit if c.get("document_id")}
             all_target_docs = doc_ids_from_event | doc_ids_from_claims
-            if all_target_docs:
-                filtered_docs = [d for d in source_documents_pit if d.get("document_id") in all_target_docs]
-                if filtered_docs:
-                    source_documents_pit = filtered_docs
+            source_documents_pit = [
+                d for d in source_documents_pit if d.get("document_id") in all_target_docs
+            ] if all_target_docs else []
+
+            # Restrict sector inputs to sectors with active causal candidates
+            # for this exact event at the requested cutoff.  A sector snapshot
+            # without a candidate is not evidence of an event impact.
+            if self.store is not None and resolved_event_ids:
+                placeholders = ",".join("?" for _ in resolved_event_ids)
+                active_rows = self.store.connection.execute(
+                    f"SELECT DISTINCT sector FROM sector_impact_candidates "
+                    f"WHERE event_id IN ({placeholders}) "
+                    "AND status IN ('SECTOR_IMPACT_APPROVED','SECTOR_IMPACT_WATCH') "
+                    "AND (as_of_timestamp IS NULL OR as_of_timestamp <= ?)",
+                    [*sorted(resolved_event_ids), cutoff_dt],
+                ).fetchall()
+                active_sectors = {str(row[0]) for row in active_rows if row[0]}
+                sector_state_snapshots_pit = [
+                    snapshot for snapshot in sector_state_snapshots_pit
+                    if str(snapshot.get("sector")) in active_sectors
+                ]
 
         if causal_graph_version_pit is None and self.store is not None:
             getter = getattr(self.store, "get_causal_graph_version_pit", None)
@@ -165,7 +208,12 @@ class MiroFishScenarioEngine:
         seed_id = ScenarioSeedPackage.compute_seed_id(seed_payload_base)
 
         # Check for empty PIT seed
-        if not (material_event_ids and evidence_claim_ids and source_document_ids):
+        has_release_evidence = bool(material_event_ids and any(
+            str(m.get("release_id")) in material_event_ids
+            and (m.get("evidence_ids") or m.get("available_at"))
+            for m in macro_releases_pit
+        ))
+        if not (material_event_ids and (evidence_claim_ids or has_release_evidence)):
             seed_package = ScenarioSeedPackage(
                 seed_package_id=seed_id,
                 seed_file_path="BLOCKED_EMPTY_PIT_SEED",
@@ -369,7 +417,15 @@ class MiroFishScenarioEngine:
             generate_report = getattr(self.client, "generate_report", None)
             poll_generate_report = getattr(self.client, "poll_generate_report", None)
             if all(callable(item) for item in (prepare, poll_prepare, start_simulation, poll_run_status, generate_report, poll_generate_report)):
-                prep_res = prepare(simulation_id)
+                # Agent profiles are not causal evidence and do not need a
+                # second LLM pass. Disable profile generation for this
+                # macro-scenario run so the real report workflow remains
+                # bounded and reproducible; the sidecar still executes the
+                # graph, simulation and report endpoints.
+                try:
+                    prep_res = prepare(simulation_id, use_llm_for_profiles=False)
+                except TypeError:
+                    prep_res = prepare(simulation_id)
                 prep_status = str(prep_res.get("status", "")).lower() if isinstance(prep_res, dict) else ""
                 if prep_status not in {"ready", "completed", "success"}:
                     prep_res = poll_prepare(simulation_id, task_id=prep_res.get("task_id") if isinstance(prep_res, dict) else None)
