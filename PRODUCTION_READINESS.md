@@ -298,6 +298,13 @@ drivers ausentes e `promotion_status=NOT_PROMOTED_TO_VALUATION`. Nenhum valor si
 foi criado para séries ausentes. P4 permanece aberto até haver exposição efetiva de juros
 da MGLU3 e séries PIT suficientes para os bridges de dívida da KLBN11.
 
+**Recalibração P4 executada em `financial_4d3b_integrity`:** os payloads atuais foram
+reconstruídos no contrato `BridgeCalibrationResult` e persistidos em
+`financial_bridge_calibrations`. MGLU3 continua `STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE`
+por falta de parcela efetivamente flutuante, caixa sensível, repricing e derivativos;
+SUZB3 e KLBN11 continuam sem promoção por erro/estabilidade OOS e drivers ausentes.
+Payloads legados não são reinterpretados como calibração válida.
+
 **Métricas de decisão P4:** `data/audits/p4_decision_metrics_ablation.json` calcula
 precision@k, hit rate, drawdown, turnover e custos a partir do replay 4G. Como os cinco
 eventos históricos foram `NO_ALLOCATION`, precision@k e hit rate são `null` com status
@@ -331,6 +338,13 @@ Os múltiplos de mercado, quando disponíveis, são apenas descritivos e carrega
 `not_a_fair_value=true` e `not_buy_eligible=true`. O script ignora payloads de
 calibração históricos que não possuem o contrato P4 atual e registra
 `CALIBRATION_SCHEMA_INVALID`, em vez de reinterpretá-los ou promovê-los.
+
+O FCF normalizado permanece bloqueado de forma verificável: os documentos disponíveis
+contêm CFO e capex total, mas não uma divulgação explícita de capex de manutenção nem
+uma reconciliação de itens não recorrentes. O artefato registra
+`MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED` e
+`CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED`; o valor estatístico não é promovido a
+`VALUATION_READY`.
 
 **Aceite:** cada bloqueio informa código e evidência; nenhum preço-alvo é produzido para
 empresa sem FCF e calibração aptos.
@@ -450,6 +464,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `P3-RUN-d7c115b` | P3   | Replay real com Selic brasileira: relatório terminal persistido, 2 hipóteses, candidato setorial WATCH no mesmo corte e primeira hipótese `SUPPORTED + BOUND + CONSISTENT`; segunda hipótese permanece UNVERIFIED | Versionar sidecar, executar 5C e manter decisão conservadora |
 | 26/07/2026 | `financial_p4_walk_forward` | P4 | Replay PIT atualizado após ingestão BCB SGS 12/433: SUZB3 e KLBN11 FX, CDI/SOFR e IPCA com 7–8 janelas OOS; MGLU3 estrutural; nenhum bridge promovido | Determinar exposição efetiva, repricing/derivativos e completar RMSE/ablação com outcomes avaliáveis |
 | 26/07/2026 | `P5-valuation-readiness-pilot-v1` | P5 | Gate formal executado para 5 empresas; 5/5 bloqueadas; múltiplos somente descritivos; zero DCF, fair value, preço-alvo, BUY ou ordens; artefato PIT persistido | Promover calibração P4 e FCF normalizado antes de qualquer valuation |
+| 26/07/2026 | `financial_4d3b_integrity` | P4/P5 | Calibrações reconstruídas no schema atual e persistidas; MGLU3 estrutural, SUZB3/KLBN11 não promovidas; FCF permanece proxy por ausência de manutenção de capex explicitamente evidenciada | Obter divulgação auditável de manutenção de capex e drivers financeiros antes de liberar DCF |
 
 ## Backlog posterior
 

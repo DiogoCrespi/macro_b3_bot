@@ -74,7 +74,11 @@ def main() -> None:
             continue
         baseline = _baseline(baseline_row)
         cal_rows = store.connection.execute(
-            "SELECT calibration_payload FROM financial_bridge_calibrations WHERE ticker=? ORDER BY created_at DESC",
+            """
+            SELECT calibration_payload FROM financial_bridge_calibrations
+            WHERE ticker=? AND run_id='financial_4d3b_integrity'
+            ORDER BY created_at DESC
+            """,
             [ticker],
         ).fetchall()
         calibrations = []
@@ -113,6 +117,15 @@ def main() -> None:
             run_id="valuation_p5_readiness", as_of_timestamp=as_of,
         )
         payload = assessment.model_dump(mode="json")
+        payload["fcf_readiness"] = {
+            "status": normalized.normalization_status,
+            "dcf_eligible": normalized.dcf_eligible,
+            "normalization_type": normalized.normalization_type,
+            "blocked_reasons": [
+                "MAINTENANCE_CAPEX_NOT_EXPLICITLY_DISCLOSED",
+                "CFO_NON_RECURRING_COMPONENTS_NOT_RECONCILED",
+            ],
+        }
         if calibration_validation_errors:
             payload["blockers"] = sorted(set(payload["blockers"] + ["CALIBRATION_SCHEMA_INVALID"]))
             payload["reasons"] = payload["reasons"] + [

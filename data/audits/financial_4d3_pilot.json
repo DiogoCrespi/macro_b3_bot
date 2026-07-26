@@ -1,17 +1,17 @@
 {
-  "run_id": "financial_4d3_pilot",
-  "as_of_timestamp": "2026-07-22T23:59:59+00:00",
+  "run_id": "financial_4d3b_integrity",
+  "as_of_timestamp": "2026-07-26T23:59:59+00:00",
   "execution_modes": {
     "CALIBRATION_MODE": "controlled positive/negative shocks; no decision output",
     "DECISION_MODE": "real graph direction only; unresolved conflict is BLOCKED"
   },
   "conflict_diagnostics": [
     {
-      "diagnostic_id": "d9f6fa239bc85d27329743c1",
+      "diagnostic_id": "1efb829638d283b9d1e4d0d9",
       "ticker": "SUZB3",
       "sector": "PAPEL_CELULOSE",
       "factor": "FX",
-      "as_of_timestamp": "2026-07-22T23:59:59Z",
+      "as_of_timestamp": "2026-07-26T23:59:59Z",
       "paths": [
         {
           "factor": "FX",
@@ -577,14 +577,14 @@
       "classification": "LEGITIMATE_COMPETING_HYPOTHESES",
       "decision_mode_status": "BLOCKED",
       "resolution_method": "NONE",
-      "run_id": "financial_4d3_pilot"
+      "run_id": "financial_4d3b_integrity"
     },
     {
-      "diagnostic_id": "1c96b61deaf0107be32bc811",
+      "diagnostic_id": "bc2fa22886a05ace69a0a2e6",
       "ticker": "KLBN11",
       "sector": "PAPEL_CELULOSE",
       "factor": "FX",
-      "as_of_timestamp": "2026-07-22T23:59:59Z",
+      "as_of_timestamp": "2026-07-26T23:59:59Z",
       "paths": [
         {
           "factor": "FX",
@@ -1150,12 +1150,12 @@
       "classification": "LEGITIMATE_COMPETING_HYPOTHESES",
       "decision_mode_status": "BLOCKED",
       "resolution_method": "NONE",
-      "run_id": "financial_4d3_pilot"
+      "run_id": "financial_4d3b_integrity"
     }
   ],
   "calibrations": [
     {
-      "calibration_id": "007a47a265608bc1be84100a",
+      "calibration_id": "dead81af928fe47b7462b176",
       "ticker": "MGLU3",
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "mode": "CALIBRATION_MODE",
@@ -1169,6 +1169,8 @@
           "financial_change": 100263000.0,
           "predicted_change": -0.0,
           "error": 100263000.0,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2023-06-30_v1",
             "BCB_SGS:1178"
@@ -1183,6 +1185,8 @@
           "financial_change": 231492000.0,
           "predicted_change": 4311837.1875,
           "error": 227180162.8125,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2023-09-30_v3",
             "BCB_SGS:1178"
@@ -1197,6 +1201,8 @@
           "financial_change": 73444000.0,
           "predicted_change": 12318453.09938525,
           "error": 61125546.90061475,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "DFP_22470_2023-12-31_v1",
             "BCB_SGS:1178"
@@ -1211,6 +1217,8 @@
           "financial_change": -156265000.0,
           "predicted_change": 11248207.377049176,
           "error": -167513207.37704918,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2024-03-31_v1",
             "BCB_SGS:1178"
@@ -1225,6 +1233,8 @@
           "financial_change": -17654000.0,
           "predicted_change": 6289436.285128803,
           "error": -23943436.285128802,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2024-06-30_v2",
             "BCB_SGS:1178"
@@ -1239,6 +1249,8 @@
           "financial_change": 100526000.0,
           "predicted_change": 634693.7040043408,
           "error": 99891306.29599565,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2024-09-30_v1",
             "BCB_SGS:1178"
@@ -1247,12 +1259,30 @@
         {
           "ticker": "MGLU3",
           "bridge": "NET_INTEREST_CASH_EFFECT",
-          "period_end": "2025-03-31",
-          "factor_change": 0.025229756582215598,
+          "period_end": "2024-12-31",
+          "factor_change": 0.007117604617604627,
           "secondary_factor_change": null,
-          "financial_change": -187516000.0,
-          "predicted_change": -19289315.78334575,
-          "error": -168226684.21665424,
+          "financial_change": -89438000.0,
+          "predicted_change": -4902184.342532474,
+          "error": -84535815.65746753,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
+          "source_ids": [
+            "DFP_22470_2024-12-31_v1",
+            "BCB_SGS:1178"
+          ]
+        },
+        {
+          "ticker": "MGLU3",
+          "bridge": "NET_INTEREST_CASH_EFFECT",
+          "period_end": "2025-03-31",
+          "factor_change": 0.01811215196461097,
+          "secondary_factor_change": null,
+          "financial_change": -98078000.0,
+          "predicted_change": -13847577.86397345,
+          "error": -84230422.13602655,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2025-03-31_v1",
             "BCB_SGS:1178"
@@ -1267,6 +1297,8 @@
           "financial_change": -7496000.0,
           "predicted_change": -16194803.93442623,
           "error": 8698803.93442623,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2025-06-30_v1",
             "BCB_SGS:1178"
@@ -1281,6 +1313,8 @@
           "financial_change": 7490000.0,
           "predicted_change": -4727325.860655749,
           "error": 12217325.86065575,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2025-09-30_v1",
             "BCB_SGS:1178"
@@ -1295,6 +1329,8 @@
           "financial_change": -84395000.0,
           "predicted_change": -0.0,
           "error": -84395000.0,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "DFP_22470_2025-12-31_v1",
             "BCB_SGS:1178"
@@ -1309,6 +1345,8 @@
           "financial_change": 3765000.0,
           "predicted_change": 347859.86680328695,
           "error": 3417140.133196713,
+          "out_of_sample_predicted_change": null,
+          "out_of_sample_error": null,
           "source_ids": [
             "ITR_22470_2026-03-31_v1",
             "BCB_SGS:1178"
@@ -1316,66 +1354,90 @@
         }
       ],
       "parameters": {
-        "observed_slope": -4237568000.0,
-        "average_gross_floating_debt": 5947933000.0,
-        "average_cash_sensitive_to_rate": 1575837000.0,
-        "cash_yield_offset_pct": 1.0,
-        "derivative_effect_incremental": 0.0,
-        "repricing_factor": 1.0,
-        "quarter_horizon": 0.25,
-        "tax_shield_rate": 0.0
+        "observed_slope": -4004957500.0,
+        "average_gross_debt_proxy": 5504046500.0,
+        "average_standardized_cash_proxy": 1701517000.0,
+        "quarter_horizon": 0.25
       },
       "parameter_ranges": {
         "observed_slope": [
-          -3178176000.0,
-          -4237568000.0,
-          -5296960000.0
+          -3003718125.0,
+          -4004957500.0,
+          -5006196875.0
         ],
-        "average_gross_floating_debt": [
-          4460949750.0,
-          5947933000.0,
-          7434916250.0
+        "average_gross_debt_proxy": [
+          4128034875.0,
+          5504046500.0,
+          6880058125.0
         ],
-        "average_cash_sensitive_to_rate": [
-          1181877750.0,
-          1575837000.0,
-          1969796250.0
-        ],
-        "cash_yield_offset_pct": [
-          0.75,
-          1.0,
-          1.25
-        ],
-        "derivative_effect_incremental": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "repricing_factor": [
-          0.75,
-          1.0,
-          1.25
+        "average_standardized_cash_proxy": [
+          1276137750.0,
+          1701517000.0,
+          2126896250.0
         ],
         "quarter_horizon": [
           0.1875,
           0.25,
           0.3125
-        ],
-        "tax_shield_rate": [
-          0.0,
-          0.0,
-          0.0
         ]
       },
-      "mean_absolute_error": 86988328.5287474,
+      "heuristic_sensitivity_band": {
+        "observed_slope": [
+          -3003718125.0,
+          -4004957500.0,
+          -5006196875.0
+        ],
+        "average_gross_debt_proxy": [
+          4128034875.0,
+          5504046500.0,
+          6880058125.0
+        ],
+        "average_standardized_cash_proxy": [
+          1276137750.0,
+          1701517000.0,
+          2126896250.0
+        ],
+        "quarter_horizon": [
+          0.1875,
+          0.25,
+          0.3125
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 79784263.94942176,
+      "in_sample_mae": 79784263.94942176,
+      "out_of_sample_mae": null,
+      "validation_method": "STRUCTURAL_FORMULA_ONLY",
+      "coefficient_sign_stability": {},
+      "observation_count": 12,
+      "calibration_type": "STRUCTURAL_SENSITIVITY",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "DERIVATIVE_RATE_EFFECT",
+        "EFFECTIVE_FLOATING_DEBT_SHARE",
+        "NO_EMPIRICAL_PARAMETER_ESTIMATION",
+        "RATE_SENSITIVE_CASH_SHARE",
+        "REPRICING_LAG",
+        "USABLE_TAX_SHIELD"
+      ],
       "confidence": 0.05,
-      "calibration_status": "COMPANY_CALIBRATED",
-      "missing_drivers": [],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "run_id": "financial_4d3_pilot"
+      "calibration_status": "STRUCTURAL_SENSITIVITY_LOW_CONFIDENCE",
+      "missing_drivers": [
+        "EFFECTIVE_FLOATING_DEBT_SHARE",
+        "RATE_SENSITIVE_CASH_SHARE",
+        "REPRICING_LAG",
+        "DERIVATIVE_RATE_EFFECT",
+        "USABLE_TAX_SHIELD"
+      ],
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "run_id": "financial_4d3b_integrity"
     },
     {
-      "calibration_id": "75818b6d277a06eb05e1fea9",
+      "calibration_id": "c1dcded0ad8dbdcc060df9d2",
       "ticker": "SUZB3",
       "bridge": "FX_OPERATING_REVENUE",
       "mode": "CALIBRATION_MODE",
@@ -1387,8 +1449,10 @@
           "factor_change": -0.04768757709566118,
           "secondary_factor_change": -0.14644227437795942,
           "financial_change": -0.18771524521648475,
-          "predicted_change": -0.14903624061226237,
-          "error": -0.03867900460422238,
+          "predicted_change": -0.162943872868547,
+          "error": -0.024771372347937748,
+          "out_of_sample_predicted_change": -0.14537449491441398,
+          "out_of_sample_error": -0.04234075030207077,
           "source_ids": [
             "ITR_13986_2023-06-30_v1",
             "BCB_SGS:1",
@@ -1402,8 +1466,10 @@
           "factor_change": -0.013789751391785288,
           "secondary_factor_change": -0.10700889548370407,
           "financial_change": -0.023103652394844576,
-          "predicted_change": -0.07229122700517004,
-          "error": 0.04918757461032547,
+          "predicted_change": -0.07800514853264534,
+          "error": 0.054901496137800765,
+          "out_of_sample_predicted_change": -0.09597961818198991,
+          "out_of_sample_error": 0.07287596578714534,
           "source_ids": [
             "ITR_13986_2023-09-30_v1",
             "BCB_SGS:1",
@@ -1417,8 +1483,10 @@
           "factor_change": 0.015369543963263066,
           "secondary_factor_change": 0.012463172780686538,
           "financial_change": 0.15908917432283576,
-          "predicted_change": 0.0323514071055671,
-          "error": 0.12673776721726865,
+          "predicted_change": 0.05268744072860495,
+          "error": 0.1064017335942308,
+          "out_of_sample_predicted_change": 0.04025261367888272,
+          "out_of_sample_error": 0.11883656064395304,
           "source_ids": [
             "DFP_13986_2023-12-31_v1",
             "BCB_SGS:1",
@@ -1432,8 +1500,10 @@
           "factor_change": -0.000762885520194656,
           "secondary_factor_change": 0.057090787554893385,
           "financial_change": -0.08802381901635681,
-          "predicted_change": 0.02444960207294638,
-          "error": -0.1124734210893032,
+          "predicted_change": 0.054966609695247956,
+          "error": -0.14299042871160478,
+          "out_of_sample_predicted_change": 0.10398494304760872,
+          "out_of_sample_error": -0.19200876206396553,
           "source_ids": [
             "ITR_13986_2024-03-31_v1",
             "BCB_SGS:1",
@@ -1447,8 +1517,10 @@
           "factor_change": 0.05279043707902131,
           "secondary_factor_change": 0.08976337327186035,
           "financial_change": 0.21520453022550257,
-          "predicted_change": 0.13231889561669888,
-          "error": 0.08288563460880369,
+          "predicted_change": 0.16920049298809797,
+          "error": 0.046004037237404594,
+          "out_of_sample_predicted_change": 0.14459600097299344,
+          "out_of_sample_error": 0.07060852925250913,
           "source_ids": [
             "ITR_13986_2024-06-30_v1",
             "BCB_SGS:1",
@@ -1462,10 +1534,46 @@
           "factor_change": 0.0637843560680802,
           "secondary_factor_change": 0.0269258305523159,
           "financial_change": 0.06780935948556732,
-          "predicted_change": 0.12306426583154927,
-          "error": -0.055254906345981944,
+          "predicted_change": 0.1458059199941258,
+          "error": -0.07799656050855847,
+          "out_of_sample_predicted_change": 0.18546482071524487,
+          "out_of_sample_error": -0.11765546122967754,
           "source_ids": [
             "ITR_13986_2024-09-30_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2024-12-31",
+          "factor_change": 0.05256722089241417,
+          "secondary_factor_change": -0.019127242264346256,
+          "financial_change": 0.15508574294665944,
+          "predicted_change": 0.09546716389636176,
+          "error": 0.05961857905029769,
+          "out_of_sample_predicted_change": 0.06762915562286749,
+          "out_of_sample_error": 0.08745658732379195,
+          "source_ids": [
+            "DFP_13986_2024-12-31_v1",
+            "BCB_SGS:1",
+            "FRED:WPU0911"
+          ]
+        },
+        {
+          "ticker": "SUZB3",
+          "bridge": "FX_OPERATING_REVENUE",
+          "period_end": "2025-03-31",
+          "factor_change": 0.0026090197490218348,
+          "secondary_factor_change": -0.05654750816091991,
+          "financial_change": -0.1850939811093999,
+          "predicted_change": -0.0157735135921022,
+          "error": -0.1693204675172977,
+          "out_of_sample_predicted_change": 0.008297310352172033,
+          "out_of_sample_error": -0.19339129146157194,
+          "source_ids": [
+            "ITR_13986_2025-03-31_v1",
             "BCB_SGS:1",
             "FRED:WPU0911"
           ]
@@ -1477,8 +1585,10 @@
           "factor_change": -0.03179886453436076,
           "secondary_factor_change": 0.011247355238716006,
           "financial_change": 0.15086868507107432,
-          "predicted_change": -0.05021336341859981,
-          "error": 0.20108204848967412,
+          "predicted_change": -0.02936147809512062,
+          "error": 0.18023016316619495,
+          "out_of_sample_predicted_change": -0.09438668281172498,
+          "out_of_sample_error": 0.24525536788279928,
           "source_ids": [
             "ITR_13986_2025-06-30_v1",
             "BCB_SGS:1",
@@ -1492,8 +1602,10 @@
           "factor_change": -0.03945565128012507,
           "secondary_factor_change": 0.011467717661336474,
           "financial_change": -0.08594758006136483,
-          "predicted_change": -0.0634273960884638,
-          "error": -0.022520183972901023,
+          "predicted_change": -0.04239899295516965,
+          "error": -0.04354858710619518,
+          "out_of_sample_predicted_change": -0.020924899729934915,
+          "out_of_sample_error": -0.06502268033142991,
           "source_ids": [
             "ITR_13986_2025-09-30_v1",
             "BCB_SGS:1",
@@ -1507,8 +1619,10 @@
           "factor_change": -0.008638209997488322,
           "secondary_factor_change": -0.06441476826394321,
           "financial_change": 0.07903904709439402,
-          "predicted_change": -0.04410283599008817,
-          "error": 0.12314188308448219,
+          "predicted_change": -0.04044206132436989,
+          "error": 0.11948110841876391,
+          "out_of_sample_predicted_change": -0.05749192830564015,
+          "out_of_sample_error": 0.13653097540003417,
           "source_ids": [
             "DFP_13986_2025-12-31_v1",
             "BCB_SGS:1",
@@ -1522,8 +1636,10 @@
           "factor_change": -0.02528017330506338,
           "secondary_factor_change": -0.044344873888759184,
           "financial_change": -0.16359220169291422,
-          "predicted_change": -0.06397825387327193,
-          "error": -0.09961394781964229,
+          "predicted_change": -0.05558250027981546,
+          "error": -0.10800970141309876,
+          "out_of_sample_predicted_change": -0.03945847987784734,
+          "out_of_sample_error": -0.12413372181506688,
           "source_ids": [
             "ITR_13986_2026-03-31_v1",
             "BCB_SGS:1",
@@ -1532,32 +1648,85 @@
         }
       ],
       "parameters": {
-        "fx_observed_slope": 1.738787461353172,
-        "pulp_price_observed_slope": 0.45149312093697697
+        "intercept": 0.017823933180850283,
+        "fx_observed_slope": 1.7221259829655708,
+        "pulp_price_observed_slope": 0.6736018740988081,
+        "latest_quarter_revenue": 10968416000.0
       },
       "parameter_ranges": {
+        "intercept": [
+          0.013367949885637713,
+          0.017823933180850283,
+          0.022279916476062853
+        ],
         "fx_observed_slope": [
-          1.304090596014879,
-          1.738787461353172,
-          2.173484326691465
+          1.2915944872241782,
+          1.7221259829655708,
+          2.1526574787069634
         ],
         "pulp_price_observed_slope": [
-          0.3386198407027327,
-          0.45149312093697697,
-          0.5643664011712212
+          0.5052014055741061,
+          0.6736018740988081,
+          0.8420023426235101
+        ],
+        "latest_quarter_revenue": [
+          8226312000.0,
+          10968416000.0,
+          13710520000.0
         ]
       },
-      "mean_absolute_error": 0.0911576371842605,
-      "confidence": 0.10121881990335752,
+      "heuristic_sensitivity_band": {
+        "intercept": [
+          0.013367949885637713,
+          0.017823933180850283,
+          0.022279916476062853
+        ],
+        "fx_observed_slope": [
+          1.2915944872241782,
+          1.7221259829655708,
+          2.1526574787069634
+        ],
+        "pulp_price_observed_slope": [
+          0.5052014055741061,
+          0.6736018740988081,
+          0.8420023426235101
+        ],
+        "latest_quarter_revenue": [
+          8226312000.0,
+          10968416000.0,
+          13710520000.0
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 0.09443951960078212,
+      "in_sample_mae": 0.09443951960078212,
+      "out_of_sample_mae": 0.12217638779116796,
+      "validation_method": "EMPIRICAL_LOO_CROSS_VALIDATED",
+      "coefficient_sign_stability": {
+        "fx_observed_slope": 1.0,
+        "pulp_price_observed_slope": 1.0
+      },
+      "observation_count": 12,
+      "calibration_type": "EMPIRICAL_IN_SAMPLE",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "DISCLOSED_VOLUME_HISTORY",
+        "OUT_OF_SAMPLE_ERROR_TOO_HIGH"
+      ],
+      "confidence": 0.05,
       "calibration_status": "PARTIAL_MISSING_DRIVER",
       "missing_drivers": [
         "DISCLOSED_VOLUME_HISTORY"
       ],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "run_id": "financial_4d3_pilot"
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "run_id": "financial_4d3b_integrity"
     },
     {
-      "calibration_id": "abd0ea32d419e305a0e6ab0e",
+      "calibration_id": "3b27ad4e145f7857280f84a6",
       "ticker": "KLBN11",
       "bridge": "FX_OPERATING_REVENUE",
       "mode": "CALIBRATION_MODE",
@@ -1569,8 +1738,10 @@
           "factor_change": -0.04768757709566118,
           "secondary_factor_change": -0.14644227437795942,
           "financial_change": -0.11140729172898434,
-          "predicted_change": -0.08461076814186404,
-          "error": -0.0267965235871203,
+          "predicted_change": -0.07616158000275129,
+          "error": -0.035245711726233045,
+          "out_of_sample_predicted_change": -0.050190513819786516,
+          "out_of_sample_error": -0.06121677790919782,
           "source_ids": [
             "ITR_12653_2023-06-30_v1",
             "BCB_SGS:1",
@@ -1584,8 +1755,10 @@
           "factor_change": -0.013789751391785288,
           "secondary_factor_change": -0.10700889548370407,
           "financial_change": 0.025119630879245403,
-          "predicted_change": -0.059410388545757226,
-          "error": 0.08453001942500263,
+          "predicted_change": -0.050466362505204865,
+          "error": 0.07558599338445027,
+          "out_of_sample_predicted_change": -0.07366781460792551,
+          "out_of_sample_error": 0.09878744548717092,
           "source_ids": [
             "ITR_12653_2023-09-30_v1",
             "BCB_SGS:1",
@@ -1599,8 +1772,10 @@
           "factor_change": 0.015369543963263066,
           "secondary_factor_change": 0.012463172780686538,
           "financial_change": 0.022633133707859354,
-          "predicted_change": 0.008499114517496176,
-          "error": 0.014134019190363178,
+          "predicted_change": 0.025113116991655415,
+          "error": -0.002479983283796061,
+          "out_of_sample_predicted_change": 0.025433956682249015,
+          "out_of_sample_error": -0.0028008229743896607,
           "source_ids": [
             "DFP_12653_2023-12-31_v1",
             "BCB_SGS:1",
@@ -1614,8 +1789,10 @@
           "factor_change": -0.000762885520194656,
           "secondary_factor_change": 0.057090787554893385,
           "financial_change": -0.015648659711706814,
-          "predicted_change": 0.030764353016343508,
-          "error": -0.04641301272805032,
+          "predicted_change": 0.05251098980954742,
+          "error": -0.06815964952125424,
+          "out_of_sample_predicted_change": 0.07399710474714039,
+          "out_of_sample_error": -0.0896457644588472,
           "source_ids": [
             "ITR_12653_2024-03-31_v1",
             "BCB_SGS:1",
@@ -1629,8 +1806,10 @@
           "factor_change": 0.05279043707902131,
           "secondary_factor_change": 0.08976337327186035,
           "financial_change": 0.11720064845833122,
-          "predicted_change": 0.054567109790377134,
-          "error": 0.0626335386679541,
+          "predicted_change": 0.07458683146840377,
+          "error": 0.04261381698992746,
+          "out_of_sample_predicted_change": 0.049236797341996937,
+          "out_of_sample_error": 0.0679638511163343,
           "source_ids": [
             "ITR_12653_2024-06-30_v1",
             "BCB_SGS:1",
@@ -1644,8 +1823,10 @@
           "factor_change": 0.0637843560680802,
           "secondary_factor_change": 0.0269258305523159,
           "financial_change": 0.010102787925717616,
-          "predicted_change": 0.021871449256981555,
-          "error": -0.01176866133126394,
+          "predicted_change": 0.035647715874785185,
+          "error": -0.02554492794906757,
+          "out_of_sample_predicted_change": 0.04840674867657282,
+          "out_of_sample_error": -0.0383039607508552,
           "source_ids": [
             "ITR_12653_2024-09-30_v2",
             "BCB_SGS:1",
@@ -1659,8 +1840,10 @@
           "factor_change": 0.055313389558895754,
           "secondary_factor_change": -0.0745931525372272,
           "financial_change": -0.028046129326074642,
-          "predicted_change": -0.0339617341864705,
-          "error": 0.005915604860395857,
+          "predicted_change": -0.02807113230915843,
+          "error": 2.500298308378765e-05,
+          "out_of_sample_predicted_change": -0.028094413361989447,
+          "out_of_sample_error": 4.8284035914804985e-05,
           "source_ids": [
             "ITR_12653_2025-03-31_v1",
             "BCB_SGS:1",
@@ -1674,8 +1857,10 @@
           "factor_change": -0.03179886453436076,
           "secondary_factor_change": 0.011247355238716006,
           "financial_change": 0.07999697027951225,
-          "predicted_change": 0.002428437004874905,
-          "error": 0.07756853327463734,
+          "predicted_change": 0.022897310875070784,
+          "error": 0.057099659404441463,
+          "out_of_sample_predicted_change": 0.00485895893010174,
+          "out_of_sample_error": 0.0751380113494105,
           "source_ids": [
             "ITR_12653_2025-06-30_v1",
             "BCB_SGS:1",
@@ -1689,8 +1874,10 @@
           "factor_change": -0.03945565128012507,
           "secondary_factor_change": 0.011467717661336474,
           "financial_change": 0.03416392202930241,
-          "predicted_change": 0.0016687304670716255,
-          "error": 0.03249519156223078,
+          "predicted_change": 0.022798732805804772,
+          "error": 0.011365189223497635,
+          "out_of_sample_predicted_change": 0.01807566528610888,
+          "out_of_sample_error": 0.016088256743193526,
           "source_ids": [
             "ITR_12653_2025-09-30_v1",
             "BCB_SGS:1",
@@ -1704,8 +1891,10 @@
           "factor_change": -0.008638209997488322,
           "secondary_factor_change": -0.06441476826394321,
           "financial_change": -0.04812763074022197,
-          "predicted_change": -0.03580122831713057,
-          "error": -0.012326402423091402,
+          "predicted_change": -0.0236826636198906,
+          "error": -0.02444496712033137,
+          "out_of_sample_predicted_change": -0.020112986140542927,
+          "out_of_sample_error": -0.028014644599679044,
           "source_ids": [
             "DFP_12653_2025-12-31_v1",
             "BCB_SGS:1",
@@ -1719,8 +1908,10 @@
           "factor_change": -0.02528017330506338,
           "secondary_factor_change": -0.044344873888759184,
           "financial_change": -0.04246545798659673,
-          "predicted_change": -0.02686548399306578,
-          "error": -0.015599973993530952,
+          "predicted_change": -0.01165103560187846,
+          "error": -0.030814422384718272,
+          "out_of_sample_predicted_change": -0.006745416017826904,
+          "out_of_sample_error": -0.03572004196876983,
           "source_ids": [
             "ITR_12653_2026-03-31_v1",
             "BCB_SGS:1",
@@ -1729,29 +1920,83 @@
         }
       ],
       "parameters": {
-        "fx_observed_slope": 0.11477276470945087,
-        "pulp_price_observed_slope": 0.5404008740812801
+        "intercept": 0.016848276336299442,
+        "fx_observed_slope": 0.030864385698540442,
+        "pulp_price_observed_slope": 0.625079123875711,
+        "latest_quarter_revenue": 4945957000.0
       },
       "parameter_ranges": {
+        "intercept": [
+          0.012636207252224581,
+          0.016848276336299442,
+          0.021060345420374302
+        ],
         "fx_observed_slope": [
-          0.08607957353208816,
-          0.11477276470945087,
-          0.1434659558868136
+          0.02314828927390533,
+          0.030864385698540442,
+          0.03858048212317555
         ],
         "pulp_price_observed_slope": [
-          0.40530065556096007,
-          0.5404008740812801,
-          0.6755010926016002
+          0.4688093429067832,
+          0.625079123875711,
+          0.7813489048446387
+        ],
+        "latest_quarter_revenue": [
+          3709467750.0,
+          4945957000.0,
+          6182446250.0
         ]
       },
-      "mean_absolute_error": 0.03547104373124007,
-      "confidence": 0.10822767904364282,
+      "heuristic_sensitivity_band": {
+        "intercept": [
+          0.012636207252224581,
+          0.016848276336299442,
+          0.021060345420374302
+        ],
+        "fx_observed_slope": [
+          0.02314828927390533,
+          0.030864385698540442,
+          0.03858048212317555
+        ],
+        "pulp_price_observed_slope": [
+          0.4688093429067832,
+          0.625079123875711,
+          0.7813489048446387
+        ],
+        "latest_quarter_revenue": [
+          3709467750.0,
+          4945957000.0,
+          6182446250.0
+        ]
+      },
+      "sensitivity_band_type": "HEURISTIC_SENSITIVITY_BAND",
+      "mean_absolute_error": 0.03394357490643647,
+      "in_sample_mae": 0.03394357490643647,
+      "out_of_sample_mae": 0.046702532853978435,
+      "validation_method": "EMPIRICAL_LOO_CROSS_VALIDATED",
+      "coefficient_sign_stability": {
+        "fx_observed_slope": 0.5454545454545454,
+        "pulp_price_observed_slope": 1.0
+      },
+      "observation_count": 11,
+      "calibration_type": "EMPIRICAL_IN_SAMPLE",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "validation_gate_passed": false,
+      "validation_failures": [
+        "COEFFICIENT_SIGN_UNSTABLE",
+        "DISCLOSED_VOLUME_HISTORY",
+        "OUT_OF_SAMPLE_ERROR_TOO_HIGH"
+      ],
+      "confidence": 0.05,
       "calibration_status": "PARTIAL_MISSING_DRIVER",
       "missing_drivers": [
         "DISCLOSED_VOLUME_HISTORY"
       ],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "run_id": "financial_4d3_pilot"
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "run_id": "financial_4d3b_integrity"
     }
   ],
   "controlled_shocks": [
@@ -1761,15 +2006,19 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": -200,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": 21860480.0,
+      "estimated_financial_change": 19012647.5,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": 29739665.0,
-      "cash_and_investment_yield_offset": -7879185.0,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": 21860480.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": 27520232.5,
+      "standardized_cash_structural_proxy_offset": -8507585.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 19012647.5
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1777,15 +2026,19 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": -100,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": 10930240.0,
+      "estimated_financial_change": 9506323.75,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": 14869832.5,
-      "cash_and_investment_yield_offset": -3939592.5,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": 10930240.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": 13760116.25,
+      "standardized_cash_structural_proxy_offset": -4253792.5,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 9506323.75
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1793,15 +2046,39 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": -50,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": 5465120.0,
+      "estimated_financial_change": 4753161.875,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": 7434916.25,
-      "cash_and_investment_yield_offset": -1969796.25,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": 5465120.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": 6880058.125,
+      "standardized_cash_structural_proxy_offset": -2126896.25,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 4753161.875
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "MGLU3",
+      "bridge": "NET_INTEREST_CASH_EFFECT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": -0.0,
+      "standardized_cash_structural_proxy_offset": 0.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": 0.0
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1809,15 +2086,19 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": 50,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": -5465120.0,
+      "estimated_financial_change": -4753161.875,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": -7434916.25,
-      "cash_and_investment_yield_offset": 1969796.25,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": -5465120.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": -6880058.125,
+      "standardized_cash_structural_proxy_offset": 2126896.25,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -4753161.875
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1825,15 +2106,19 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": 100,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": -10930240.0,
+      "estimated_financial_change": -9506323.75,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": -14869832.5,
-      "cash_and_investment_yield_offset": 3939592.5,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": -10930240.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": -13760116.25,
+      "standardized_cash_structural_proxy_offset": 4253792.5,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -9506323.75
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1841,15 +2126,19 @@
       "bridge": "NET_INTEREST_CASH_EFFECT",
       "shock": 200,
       "unit": "BASIS_POINTS",
-      "estimated_financial_change": -21860480.0,
+      "estimated_financial_change": -19012647.5,
       "financial_change_unit": "BRL",
-      "gross_floating_debt_effect": -29739665.0,
-      "cash_and_investment_yield_offset": 7879185.0,
-      "derivative_effect": 0.0,
-      "repricing_lag_factor": 1.0,
-      "average_effective_exposure": 4237568000.0,
-      "tax_shield": 0.0,
-      "net_interest_cash_effect": -21860480.0
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE",
+      "gross_debt_structural_proxy_effect": -27520232.5,
+      "standardized_cash_structural_proxy_offset": 8507585.0,
+      "derivative_effect": null,
+      "repricing_lag_factor": null,
+      "average_effective_exposure": 4004957500.0,
+      "tax_shield": null,
+      "net_interest_cash_effect": -19012647.5
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1857,8 +2146,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -20,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -17224836859.46045,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -3777798837.115059,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1866,8 +2159,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -10,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -8612418429.730225,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -1888899418.5575294,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1875,8 +2172,25 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -5,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -4306209214.865112,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -944449709.2787647,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "SUZB3",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 0,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1884,8 +2198,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 5,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 4306209214.865112,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 944449709.2787647,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1893,8 +2211,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 10,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 8612418429.730225,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 1888899418.5575294,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1902,8 +2224,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 20,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 17224836859.46045,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 3777798837.115059,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1911,8 +2237,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -20,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -477108776.0784814,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -30530784.899279196,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1920,8 +2250,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -10,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -238554388.0392407,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -15265392.449639598,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1929,8 +2263,25 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": -5,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": -119277194.01962034,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": -7632696.224819799,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "FX_OPERATING_REVENUE",
+      "shock": 0,
+      "unit": "PERCENT_CHANGE",
+      "estimated_financial_change": 0.0,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1938,8 +2289,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 5,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 119277194.01962034,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 7632696.224819799,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1947,8 +2302,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 10,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 238554388.0392407,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 15265392.449639598,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1956,8 +2315,12 @@
       "bridge": "FX_OPERATING_REVENUE",
       "shock": 20,
       "unit": "PERCENT_CHANGE",
-      "estimated_financial_change": 477108776.0784814,
-      "financial_change_unit": "BRL"
+      "estimated_financial_change": 30530784.899279196,
+      "financial_change_unit": "BRL",
+      "calibration_horizon": "QUARTERLY",
+      "financial_target_period": "QUARTERLY",
+      "monetary_base_period": "QUARTERLY",
+      "annualization_method": "NONE"
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -1985,6 +2348,15 @@
       "unit": "BASIS_POINTS",
       "monetary_base": 23609443190.0,
       "estimated_financial_change": 118047215.95
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "CDI_SOFR_DEBT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 23609443190.0,
+      "estimated_financial_change": -0.0
     },
     {
       "mode": "CALIBRATION_MODE",
@@ -2044,6 +2416,15 @@
       "mode": "CALIBRATION_MODE",
       "ticker": "KLBN11",
       "bridge": "IPCA_DEBT",
+      "shock": 0,
+      "unit": "BASIS_POINTS",
+      "monetary_base": 1089774775.0,
+      "estimated_financial_change": -0.0
+    },
+    {
+      "mode": "CALIBRATION_MODE",
+      "ticker": "KLBN11",
+      "bridge": "IPCA_DEBT",
       "shock": 50,
       "unit": "BASIS_POINTS",
       "monetary_base": 1089774775.0,
@@ -2086,10 +2467,10 @@
         "mode": "CALIBRATION_MODE",
         "ticker": "KLBN11",
         "bridge": "CDI_SOFR_DEBT",
-        "shock": 50,
+        "shock": 0,
         "unit": "BASIS_POINTS",
         "monetary_base": 23609443190.0,
-        "estimated_financial_change": -118047215.95
+        "estimated_financial_change": -0.0
       },
       "optimistic": {
         "mode": "CALIBRATION_MODE",
@@ -2111,17 +2492,25 @@
         "bridge": "FX_OPERATING_REVENUE",
         "shock": -20,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": -477108776.0784814,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": -30530784.899279196,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       },
       "base": {
         "mode": "CALIBRATION_MODE",
         "ticker": "KLBN11",
         "bridge": "FX_OPERATING_REVENUE",
-        "shock": -5,
+        "shock": 0,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": -119277194.01962034,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": 0.0,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       },
       "optimistic": {
         "mode": "CALIBRATION_MODE",
@@ -2129,8 +2518,12 @@
         "bridge": "FX_OPERATING_REVENUE",
         "shock": 20,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": 477108776.0784814,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": 30530784.899279196,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       }
     },
     {
@@ -2150,10 +2543,10 @@
         "mode": "CALIBRATION_MODE",
         "ticker": "KLBN11",
         "bridge": "IPCA_DEBT",
-        "shock": 50,
+        "shock": 0,
         "unit": "BASIS_POINTS",
         "monetary_base": 1089774775.0,
-        "estimated_financial_change": -5448873.875
+        "estimated_financial_change": -0.0
       },
       "optimistic": {
         "mode": "CALIBRATION_MODE",
@@ -2175,31 +2568,39 @@
         "bridge": "NET_INTEREST_CASH_EFFECT",
         "shock": 200,
         "unit": "BASIS_POINTS",
-        "estimated_financial_change": -21860480.0,
+        "estimated_financial_change": -19012647.5,
         "financial_change_unit": "BRL",
-        "gross_floating_debt_effect": -29739665.0,
-        "cash_and_investment_yield_offset": 7879185.0,
-        "derivative_effect": 0.0,
-        "repricing_lag_factor": 1.0,
-        "average_effective_exposure": 4237568000.0,
-        "tax_shield": 0.0,
-        "net_interest_cash_effect": -21860480.0
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE",
+        "gross_debt_structural_proxy_effect": -27520232.5,
+        "standardized_cash_structural_proxy_offset": 8507585.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4004957500.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": -19012647.5
       },
       "base": {
         "mode": "CALIBRATION_MODE",
         "ticker": "MGLU3",
         "bridge": "NET_INTEREST_CASH_EFFECT",
-        "shock": 50,
+        "shock": 0,
         "unit": "BASIS_POINTS",
-        "estimated_financial_change": -5465120.0,
+        "estimated_financial_change": 0.0,
         "financial_change_unit": "BRL",
-        "gross_floating_debt_effect": -7434916.25,
-        "cash_and_investment_yield_offset": 1969796.25,
-        "derivative_effect": 0.0,
-        "repricing_lag_factor": 1.0,
-        "average_effective_exposure": 4237568000.0,
-        "tax_shield": 0.0,
-        "net_interest_cash_effect": -5465120.0
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE",
+        "gross_debt_structural_proxy_effect": -0.0,
+        "standardized_cash_structural_proxy_offset": 0.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4004957500.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": 0.0
       },
       "optimistic": {
         "mode": "CALIBRATION_MODE",
@@ -2207,15 +2608,19 @@
         "bridge": "NET_INTEREST_CASH_EFFECT",
         "shock": -200,
         "unit": "BASIS_POINTS",
-        "estimated_financial_change": 21860480.0,
+        "estimated_financial_change": 19012647.5,
         "financial_change_unit": "BRL",
-        "gross_floating_debt_effect": 29739665.0,
-        "cash_and_investment_yield_offset": -7879185.0,
-        "derivative_effect": 0.0,
-        "repricing_lag_factor": 1.0,
-        "average_effective_exposure": 4237568000.0,
-        "tax_shield": 0.0,
-        "net_interest_cash_effect": 21860480.0
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE",
+        "gross_debt_structural_proxy_effect": 27520232.5,
+        "standardized_cash_structural_proxy_offset": -8507585.0,
+        "derivative_effect": null,
+        "repricing_lag_factor": null,
+        "average_effective_exposure": 4004957500.0,
+        "tax_shield": null,
+        "net_interest_cash_effect": 19012647.5
       }
     },
     {
@@ -2228,17 +2633,25 @@
         "bridge": "FX_OPERATING_REVENUE",
         "shock": -20,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": -17224836859.46045,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": -3777798837.115059,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       },
       "base": {
         "mode": "CALIBRATION_MODE",
         "ticker": "SUZB3",
         "bridge": "FX_OPERATING_REVENUE",
-        "shock": -5,
+        "shock": 0,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": -4306209214.865112,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": 0.0,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       },
       "optimistic": {
         "mode": "CALIBRATION_MODE",
@@ -2246,38 +2659,46 @@
         "bridge": "FX_OPERATING_REVENUE",
         "shock": 20,
         "unit": "PERCENT_CHANGE",
-        "estimated_financial_change": 17224836859.46045,
-        "financial_change_unit": "BRL"
+        "estimated_financial_change": 3777798837.115059,
+        "financial_change_unit": "BRL",
+        "calibration_horizon": "QUARTERLY",
+        "financial_target_period": "QUARTERLY",
+        "monetary_base_period": "QUARTERLY",
+        "annualization_method": "NONE"
       }
     }
   ],
   "normalized_cash_flows": [
     {
-      "snapshot_id": "38427c8fa9ee8729e63394de",
+      "snapshot_id": "e9cec62fa4a97858c01ff164",
       "ticker": "MGLU3",
-      "as_of_timestamp": "2026-07-22T23:59:59",
-      "reported_operating_cash_flow": 15508441000.0,
-      "reported_capex": -912885000.0,
-      "levered_fcf_proxy": 14595556000.0,
+      "as_of_timestamp": "2026-03-13T23:59:59",
+      "reported_operating_cash_flow": 15719373000.0,
+      "reported_capex": -1053683000.0,
+      "levered_fcf_proxy": 14665690000.0,
       "normalized_operating_cash_flow": 12135342000.0,
-      "maintenance_capex": 912885000.0,
-      "normalized_levered_fcf": 11222457000.0,
+      "maintenance_capex": 1053683000.0,
+      "normalized_levered_fcf": 11081659000.0,
+      "statistical_normalized_fcf_proxy": 11081659000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
       "adjustments": [
         {
-          "adjustment_id": "758d95847f57600928228764",
+          "adjustment_id": "f1f3dde6cdb69f2fe3b0d98e",
           "field_name": "normalized_operating_cash_flow",
-          "value": 3373099000.0,
+          "value": 3584031000.0,
           "sign": -1,
-          "period_end": "2026-03-31",
+          "period_end": "2025-12-31",
           "source_ids": [
+            "DFP_22470_2024-12-31_v1",
             "DFP_22470_2025-12-31_v1",
             "ITR_22470_2024-03-31_v1",
             "ITR_22470_2024-06-30_v2",
             "ITR_22470_2024-09-30_v1",
             "ITR_22470_2025-03-31_v1",
             "ITR_22470_2025-06-30_v1",
-            "ITR_22470_2025-09-30_v1",
-            "ITR_22470_2026-03-31_v1"
+            "ITR_22470_2025-09-30_v1"
           ],
           "rationale": "Replace reported TTM CFO with the annualized median of the latest eight standalone quarters to damp exceptional working-capital and financial-arm volatility.",
           "recurrence": "NORMALIZATION_PROXY",
@@ -2285,20 +2706,20 @@
           "formula": "median(last_8_quarter_reported_cfo) * 4 - reported_ttm_cfo"
         },
         {
-          "adjustment_id": "016a5ab7c12b89aab95f80bc",
+          "adjustment_id": "be0899fcab90ed32a725c9ee",
           "field_name": "maintenance_capex",
-          "value": 912885000.0,
+          "value": 1053683000.0,
           "sign": -1,
-          "period_end": "2026-03-31",
+          "period_end": "2025-12-31",
           "source_ids": [
+            "DFP_22470_2024-12-31_v1",
             "DFP_22470_2025-12-31_v1",
             "ITR_22470_2024-03-31_v1",
             "ITR_22470_2024-06-30_v2",
             "ITR_22470_2024-09-30_v1",
             "ITR_22470_2025-03-31_v1",
             "ITR_22470_2025-06-30_v1",
-            "ITR_22470_2025-09-30_v1",
-            "ITR_22470_2026-03-31_v1"
+            "ITR_22470_2025-09-30_v1"
           ],
           "rationale": "Use reported TTM capex as a conservative maintenance-capex proxy until issuer growth/maintenance disclosure is available.",
           "recurrence": "NORMALIZATION_PROXY",
@@ -2306,36 +2727,40 @@
           "formula": "abs(reported_ttm_capex)"
         }
       ],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "confidence": 0.5,
-      "run_id": "financial_4d3_pilot"
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3b_integrity"
     },
     {
-      "snapshot_id": "68d26081ddfa0b70d2a8af40",
+      "snapshot_id": "9225ee4603d2e2e35b6fb1a3",
       "ticker": "SUZB3",
-      "as_of_timestamp": "2026-07-22T23:59:59",
-      "reported_operating_cash_flow": 16635252000.0,
-      "reported_capex": -4583848000.0,
-      "levered_fcf_proxy": 12051404000.0,
-      "normalized_operating_cash_flow": 17516530000.0,
-      "maintenance_capex": 4583848000.0,
-      "normalized_levered_fcf": 12932682000.0,
+      "as_of_timestamp": "2026-02-11T23:59:59",
+      "reported_operating_cash_flow": 18152175000.0,
+      "reported_capex": 29995000.0,
+      "levered_fcf_proxy": 18182170000.0,
+      "normalized_operating_cash_flow": 19393148000.0,
+      "maintenance_capex": 29995000.0,
+      "normalized_levered_fcf": 19363153000.0,
+      "statistical_normalized_fcf_proxy": 19363153000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
       "adjustments": [
         {
-          "adjustment_id": "62907b663213c95eaee37255",
+          "adjustment_id": "5e894521a77f55b54b2438b6",
           "field_name": "normalized_operating_cash_flow",
-          "value": 881278000.0,
+          "value": 1240973000.0,
           "sign": 1,
-          "period_end": "2026-03-31",
+          "period_end": "2025-12-31",
           "source_ids": [
+            "DFP_13986_2024-12-31_v1",
             "DFP_13986_2025-12-31_v1",
             "ITR_13986_2024-03-31_v1",
             "ITR_13986_2024-06-30_v1",
             "ITR_13986_2024-09-30_v1",
             "ITR_13986_2025-03-31_v1",
             "ITR_13986_2025-06-30_v1",
-            "ITR_13986_2025-09-30_v1",
-            "ITR_13986_2026-03-31_v1"
+            "ITR_13986_2025-09-30_v1"
           ],
           "rationale": "Replace reported TTM CFO with the annualized median of the latest eight standalone quarters to damp exceptional working-capital and financial-arm volatility.",
           "recurrence": "NORMALIZATION_PROXY",
@@ -2343,20 +2768,20 @@
           "formula": "median(last_8_quarter_reported_cfo) * 4 - reported_ttm_cfo"
         },
         {
-          "adjustment_id": "14b9b78f9e43dadff612c12e",
+          "adjustment_id": "5033163252b89c3b20f8c2aa",
           "field_name": "maintenance_capex",
-          "value": 4583848000.0,
+          "value": 29995000.0,
           "sign": -1,
-          "period_end": "2026-03-31",
+          "period_end": "2025-12-31",
           "source_ids": [
+            "DFP_13986_2024-12-31_v1",
             "DFP_13986_2025-12-31_v1",
             "ITR_13986_2024-03-31_v1",
             "ITR_13986_2024-06-30_v1",
             "ITR_13986_2024-09-30_v1",
             "ITR_13986_2025-03-31_v1",
             "ITR_13986_2025-06-30_v1",
-            "ITR_13986_2025-09-30_v1",
-            "ITR_13986_2026-03-31_v1"
+            "ITR_13986_2025-09-30_v1"
           ],
           "rationale": "Use reported TTM capex as a conservative maintenance-capex proxy until issuer growth/maintenance disclosure is available.",
           "recurrence": "NORMALIZATION_PROXY",
@@ -2364,12 +2789,12 @@
           "formula": "abs(reported_ttm_capex)"
         }
       ],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "confidence": 0.5,
-      "run_id": "financial_4d3_pilot"
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3b_integrity"
     },
     {
-      "snapshot_id": "3c2a29f934e839e1ebe2ebd0",
+      "snapshot_id": "bf7986b8a67798f11b49388e",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-22T23:59:59",
       "reported_operating_cash_flow": 5793062000.0,
@@ -2378,6 +2803,10 @@
       "normalized_operating_cash_flow": 7602828000.0,
       "maintenance_capex": 1755544000.0,
       "normalized_levered_fcf": 5847284000.0,
+      "statistical_normalized_fcf_proxy": 5847284000.0,
+      "normalization_type": "STATISTICAL_NORMALIZATION_PROXY",
+      "normalization_status": "NOT_VALUATION_READY",
+      "dcf_eligible": false,
       "adjustments": [
         {
           "adjustment_id": "bddf0ad39a8785059252a896",
@@ -2422,9 +2851,405 @@
           "formula": "abs(reported_ttm_capex)"
         }
       ],
-      "methodology_version": "4D.3-calibration-normalized-fcf-v1",
-      "confidence": 0.5,
-      "run_id": "financial_4d3_pilot"
+      "methodology_version": "4D.3B-pit-horizon-integrity-v1",
+      "confidence": 0.3,
+      "run_id": "financial_4d3b_integrity"
+    }
+  ],
+  "valuation_readiness_assessments": [
+    {
+      "assessment_id": "4e1-0f6f7f86e7cb4feb",
+      "ticker": "MGLU3",
+      "as_of_timestamp": "2026-07-26T23:59:59Z",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "valuation_eligible": false,
+      "dcf_eligible": false,
+      "blockers": [
+        "LOW_CALIBRATION_CONFIDENCE",
+        "FCF_NOT_READY",
+        "MISSING_MARKET_DATA"
+      ],
+      "reasons": [
+        "4D calibration gate did not establish company-calibrated parameters",
+        "normalized cash flow is a statistical proxy and is not DCF eligible",
+        "PIT market data requires positive price and shares_outstanding"
+      ],
+      "evidence_ids": [
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1",
+        "DFP_22470_2025-12-31_v1"
+      ],
+      "inputs": {
+        "baseline_id": "6f117cc79bf099cb77f82942",
+        "calibration_ids": [
+          "dead81af928fe47b7462b176"
+        ],
+        "normalized_cash_flow_id": "e9cec62fa4a97858c01ff164",
+        "diagnostic_ids": [],
+        "scenario_outcome_ids": [],
+        "market_data_fields": [],
+        "market_data_version": null,
+        "market_snapshot_id": null,
+        "market_data_source_id": null,
+        "market_data_as_of": null,
+        "dcf_blocked": true,
+        "input_identity": {
+          "ticker": "MGLU3",
+          "as_of": "2026-07-26T23:59:59+00:00",
+          "baseline_id": "6f117cc79bf099cb77f82942",
+          "calibration_ids": [
+            "dead81af928fe47b7462b176"
+          ],
+          "normalized_cash_flow_id": "e9cec62fa4a97858c01ff164",
+          "diagnostic_ids": [],
+          "scenario_outcome_ids": [],
+          "market_data_version": null,
+          "market_snapshot_id": null,
+          "market_data_content": {},
+          "methodology_version": "4E.1-valuation-readiness-gate-v1"
+        }
+      },
+      "descriptive_metrics": {
+        "market_capitalization": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "enterprise_value": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "pe_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "ev_ebitda_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "p_fcf_proxy_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        }
+      },
+      "methodology_version": "4E.1-valuation-readiness-gate-v1",
+      "run_id": "financial_4d3b_integrity"
+    },
+    {
+      "assessment_id": "4e1-e3f8181d6e2b6ac9",
+      "ticker": "SUZB3",
+      "as_of_timestamp": "2026-07-26T23:59:59Z",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "valuation_eligible": false,
+      "dcf_eligible": false,
+      "blockers": [
+        "LOW_CALIBRATION_CONFIDENCE",
+        "EMPIRICAL_VALIDATION",
+        "FCF_NOT_READY",
+        "CONFLICTING_MACRO_DIRECTION",
+        "MISSING_MARKET_DATA"
+      ],
+      "reasons": [
+        "4D calibration gate did not establish company-calibrated parameters",
+        "empirical validation is insufficient for valuation use",
+        "normalized cash flow is a statistical proxy and is not DCF eligible",
+        "macro factor direction remains unresolved in decision mode",
+        "PIT market data requires positive price and shares_outstanding"
+      ],
+      "evidence_ids": [
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1",
+        "DFP_13986_2025-12-31_v1"
+      ],
+      "inputs": {
+        "baseline_id": "daaaad6d39c805659cb2852c",
+        "calibration_ids": [
+          "c1dcded0ad8dbdcc060df9d2"
+        ],
+        "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
+        "diagnostic_ids": [
+          "1efb829638d283b9d1e4d0d9"
+        ],
+        "scenario_outcome_ids": [],
+        "market_data_fields": [],
+        "market_data_version": null,
+        "market_snapshot_id": null,
+        "market_data_source_id": null,
+        "market_data_as_of": null,
+        "dcf_blocked": true,
+        "input_identity": {
+          "ticker": "SUZB3",
+          "as_of": "2026-07-26T23:59:59+00:00",
+          "baseline_id": "daaaad6d39c805659cb2852c",
+          "calibration_ids": [
+            "c1dcded0ad8dbdcc060df9d2"
+          ],
+          "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
+          "diagnostic_ids": [
+            "1efb829638d283b9d1e4d0d9"
+          ],
+          "scenario_outcome_ids": [],
+          "market_data_version": null,
+          "market_snapshot_id": null,
+          "market_data_content": {},
+          "methodology_version": "4E.1-valuation-readiness-gate-v1"
+        }
+      },
+      "descriptive_metrics": {
+        "market_capitalization": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "enterprise_value": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "pe_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "ev_ebitda_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "p_fcf_proxy_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        }
+      },
+      "methodology_version": "4E.1-valuation-readiness-gate-v1",
+      "run_id": "financial_4d3b_integrity"
+    },
+    {
+      "assessment_id": "4e1-3b05ccde7d77c00e",
+      "ticker": "KLBN11",
+      "as_of_timestamp": "2026-07-26T23:59:59Z",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
+      "valuation_eligible": false,
+      "dcf_eligible": false,
+      "blockers": [
+        "LOW_CALIBRATION_CONFIDENCE",
+        "EMPIRICAL_VALIDATION",
+        "FCF_NOT_READY",
+        "CONFLICTING_MACRO_DIRECTION",
+        "MISSING_MARKET_DATA"
+      ],
+      "reasons": [
+        "4D calibration gate did not establish company-calibrated parameters",
+        "empirical validation is insufficient for valuation use",
+        "normalized cash flow is a statistical proxy and is not DCF eligible",
+        "macro factor direction remains unresolved in decision mode",
+        "PIT market data requires positive price and shares_outstanding"
+      ],
+      "evidence_ids": [
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1",
+        "DFP_12653_2025-12-31_v1",
+        "DFP_12653_2025-12-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "ITR_12653_2026-03-31_v1",
+        "b318aa0710858b79372c4dd03551cd4f961666fc8606a267b9b44104f2b3ffa1"
+      ],
+      "inputs": {
+        "baseline_id": "7e2281edc9ea77a976f0b66d",
+        "calibration_ids": [
+          "3b27ad4e145f7857280f84a6"
+        ],
+        "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
+        "diagnostic_ids": [
+          "bc2fa22886a05ace69a0a2e6"
+        ],
+        "scenario_outcome_ids": [],
+        "market_data_fields": [],
+        "market_data_version": null,
+        "market_snapshot_id": null,
+        "market_data_source_id": null,
+        "market_data_as_of": null,
+        "dcf_blocked": true,
+        "input_identity": {
+          "ticker": "KLBN11",
+          "as_of": "2026-07-26T23:59:59+00:00",
+          "baseline_id": "7e2281edc9ea77a976f0b66d",
+          "calibration_ids": [
+            "3b27ad4e145f7857280f84a6"
+          ],
+          "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
+          "diagnostic_ids": [
+            "bc2fa22886a05ace69a0a2e6"
+          ],
+          "scenario_outcome_ids": [],
+          "market_data_version": null,
+          "market_snapshot_id": null,
+          "market_data_content": {},
+          "methodology_version": "4E.1-valuation-readiness-gate-v1"
+        }
+      },
+      "descriptive_metrics": {
+        "market_capitalization": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "enterprise_value": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "pe_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "ev_ebitda_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        },
+        "p_fcf_proxy_observed": {
+          "value": null,
+          "classification": "DESCRIPTIVE_ONLY",
+          "not_a_fair_value": true,
+          "not_buy_eligible": true
+        }
+      },
+      "methodology_version": "4E.1-valuation-readiness-gate-v1",
+      "run_id": "financial_4d3b_integrity"
     }
   ],
   "acceptance_checks": {
@@ -2433,12 +3258,19 @@
     "decision_mode_blocks_conflicts": true,
     "positive_and_negative_shocks": true,
     "outcomes_ordered_after_financial_calculation": true,
+    "neutral_base_is_zero": true,
+    "mglu_structural_not_calibrated": true,
+    "fx_out_of_sample_error_persisted": true,
+    "unvalidated_bridges_fail_gate": true,
+    "heuristic_bands_not_confidence_intervals": true,
     "minimum_five_replays_per_bridge": true,
     "normalized_fcf_three_companies": true,
     "normalized_fcf_values_finite": true,
     "normalization_adjustments_evidenced": true,
     "reported_proxy_and_normalized_fcf_separate": true,
-    "uncalibrated_fx_confidence_capped": true
+    "uncalibrated_fx_confidence_capped": true,
+    "normalized_fcf_blocked_for_dcf": true,
+    "pit_timestamp_propagated": true
   },
   "readiness": {
     "MGLU3": "PARTIAL_CALIBRATION",
@@ -2447,6 +3279,11 @@
     "valuation": "BLOCKED",
     "buy": "BLOCKED",
     "orders": "BLOCKED",
-    "mirofish": "BLOCKED"
+    "mirofish": "BLOCKED",
+    "valuation_blockers": [
+      "LOW_CALIBRATION_CONFIDENCE",
+      "MISSING_VALUATION_READY_NORMALIZED_FCF",
+      "CONFLICTING_MACRO_DIRECTION"
+    ]
   }
 }

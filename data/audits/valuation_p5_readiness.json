@@ -4,21 +4,19 @@
   "as_of_timestamp": "2026-07-26T23:59:59+00:00",
   "results": [
     {
-      "assessment_id": "4e1-87c21c7639874ff3",
+      "assessment_id": "4e1-dbffe19e3aef5fcb",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-26T23:59:59Z",
-      "status": "VALUATION_BLOCKED_CALIBRATION_SCHEMA_INVALID",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
       "valuation_eligible": false,
       "dcf_eligible": false,
       "blockers": [
-        "CALIBRATION_SCHEMA_INVALID",
-        "FCF_NOT_READY",
-        "LOW_CALIBRATION_CONFIDENCE"
+        "LOW_CALIBRATION_CONFIDENCE",
+        "FCF_NOT_READY"
       ],
       "reasons": [
         "4D calibration gate did not establish company-calibrated parameters",
-        "normalized cash flow is a statistical proxy and is not DCF eligible",
-        "historical calibration payload does not satisfy the current valuation schema"
+        "normalized cash flow is a statistical proxy and is not DCF eligible"
       ],
       "evidence_ids": [
         "DFP_22470_2025-12-31_v1",
@@ -83,8 +81,7 @@
       "inputs": {
         "baseline_id": "f5dbd3f603ed48b752814a88",
         "calibration_ids": [
-          "dead81af928fe47b7462b176",
-          "aa0742bca86de39fed50a2fd"
+          "dead81af928fe47b7462b176"
         ],
         "normalized_cash_flow_id": "e9cec62fa4a97858c01ff164",
         "diagnostic_ids": [],
@@ -130,7 +127,6 @@
           "as_of": "2026-07-26T23:59:59+00:00",
           "baseline_id": "f5dbd3f603ed48b752814a88",
           "calibration_ids": [
-            "aa0742bca86de39fed50a2fd",
             "dead81af928fe47b7462b176"
           ],
           "normalized_cash_flow_id": "e9cec62fa4a97858c01ff164",
@@ -206,31 +202,26 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
-      "calibration_validation_errors": [
-        "ValidationError"
-      ],
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
     },
     {
-      "assessment_id": "4e1-f33474945427f806",
+      "assessment_id": "4e1-3bd1a6e98130e733",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-26T23:59:59Z",
-      "status": "VALUATION_BLOCKED_CALIBRATION_SCHEMA_INVALID",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
       "valuation_eligible": false,
       "dcf_eligible": false,
       "blockers": [
-        "CALIBRATION_SCHEMA_INVALID",
+        "LOW_CALIBRATION_CONFIDENCE",
         "EMPIRICAL_VALIDATION",
-        "FCF_NOT_READY",
-        "LOW_CALIBRATION_CONFIDENCE"
+        "FCF_NOT_READY"
       ],
       "reasons": [
         "4D calibration gate did not establish company-calibrated parameters",
         "empirical validation is insufficient for valuation use",
-        "normalized cash flow is a statistical proxy and is not DCF eligible",
-        "historical calibration payload does not satisfy the current valuation schema"
+        "normalized cash flow is a statistical proxy and is not DCF eligible"
       ],
       "evidence_ids": [
         "DFP_13986_2025-12-31_v1",
@@ -291,8 +282,7 @@
       "inputs": {
         "baseline_id": "4e0bc68ca217911bc93d5b96",
         "calibration_ids": [
-          "c1dcded0ad8dbdcc060df9d2",
-          "25f5b3ebadadbcb6259de821"
+          "c1dcded0ad8dbdcc060df9d2"
         ],
         "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
         "diagnostic_ids": [],
@@ -338,7 +328,6 @@
           "as_of": "2026-07-26T23:59:59+00:00",
           "baseline_id": "4e0bc68ca217911bc93d5b96",
           "calibration_ids": [
-            "25f5b3ebadadbcb6259de821",
             "c1dcded0ad8dbdcc060df9d2"
           ],
           "normalized_cash_flow_id": "9225ee4603d2e2e35b6fb1a3",
@@ -414,33 +403,28 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
-      "calibration_validation_errors": [
-        "ValidationError"
-      ],
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
     },
     {
-      "assessment_id": "4e1-06e50cf8392c55e8",
+      "assessment_id": "4e1-5908e652a912cc1a",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-26T23:59:59Z",
-      "status": "VALUATION_BLOCKED_CALIBRATION_SCHEMA_INVALID",
+      "status": "VALUATION_BLOCKED_LOW_CALIBRATION_CONFIDENCE",
       "valuation_eligible": false,
       "dcf_eligible": false,
       "blockers": [
-        "CALIBRATION_SCHEMA_INVALID",
+        "LOW_CALIBRATION_CONFIDENCE",
         "EMPIRICAL_VALIDATION",
         "FCF_NOT_READY",
-        "LOW_CALIBRATION_CONFIDENCE",
         "MISSING_MARKET_DATA"
       ],
       "reasons": [
         "4D calibration gate did not establish company-calibrated parameters",
         "empirical validation is insufficient for valuation use",
         "normalized cash flow is a statistical proxy and is not DCF eligible",
-        "PIT market data requires positive price and shares_outstanding",
-        "historical calibration payload does not satisfy the current valuation schema"
+        "PIT market data requires positive price and shares_outstanding"
       ],
       "evidence_ids": [
         "DFP_12653_2025-12-31_v1",
@@ -511,8 +495,7 @@
       "inputs": {
         "baseline_id": "fc2a89b225ff5a85fa2a341a",
         "calibration_ids": [
-          "3b27ad4e145f7857280f84a6",
-          "029e0ad6447e11bba83d14e4"
+          "3b27ad4e145f7857280f84a6"
         ],
         "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
         "diagnostic_ids": [],
@@ -528,7 +511,6 @@
           "as_of": "2026-07-26T23:59:59+00:00",
           "baseline_id": "fc2a89b225ff5a85fa2a341a",
           "calibration_ids": [
-            "029e0ad6447e11bba83d14e4",
             "3b27ad4e145f7857280f84a6"
           ],
           "normalized_cash_flow_id": "bf7986b8a67798f11b49388e",
@@ -574,9 +556,6 @@
       },
       "methodology_version": "4E.1-valuation-readiness-gate-v1",
       "run_id": "valuation_p5_readiness",
-      "calibration_validation_errors": [
-        "ValidationError"
-      ],
       "fair_value": null,
       "price_target": null,
       "multiple_classification": "DESCRIPTIVE_ONLY"
