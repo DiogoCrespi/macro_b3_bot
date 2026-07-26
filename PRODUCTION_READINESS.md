@@ -3,7 +3,7 @@
 
 **Data da avaliação:** 25/07/2026
 **Estado avaliado:** commit `a15c46f`
-**Última suíte local:** 345 testes aprovados em 79,45 s em Python 3.12
+**Última suíte local:** 348 testes aprovados em 98,20 s em Python 3.12
 
 ## Veredito
 
@@ -289,7 +289,7 @@ históricos suficientes.
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
 | 25/07/2026 | `f4eb3aa` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull |
-| 25/07/2026 | `a15c46f` | P2 | RBAC mínimo, ledger append-only com hash chain e kill switch administrativo implementados e testados | Autenticação real, métricas, alertas, dashboard e runbook |
+| 25/07/2026 | `eb308fb` | P2 | RBAC mínimo, ledger append-only com hash chain e kill switch administrativo implementados e testados; 348 testes | Autenticação real, métricas, alertas, dashboard e runbook |
 
 ## Backlog posterior
 
