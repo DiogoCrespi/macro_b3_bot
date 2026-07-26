@@ -2,8 +2,8 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** alterações locais do P1 em validação
-**Última suíte local:** 342 testes aprovados em 84,91 s em Python 3.12
+**Estado avaliado:** commit `bc06eec`
+**Última suíte local:** 344 testes aprovados em 81,37 s em Python 3.12
 
 ## Veredito
 
@@ -27,7 +27,7 @@ restrições:
   `REJECTED_MACRO_EVENT_NO_ACTIVE_CANDIDATE` e não criou `SectorImpactCandidate` inexistente.
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
-- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 341 testes.
+- O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 344 testes.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.
@@ -144,7 +144,9 @@ proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker c
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
 `restore_check=PASS`. O aceite final permanece bloqueado por digest publicado em registry,
-integração do scheduler externo, cancelamento iniciado pelo operador e rotação de secrets.
+integração do scheduler externo e rotação de secrets. O cancelamento cooperativo foi
+implementado para falhas/timeouts; cancelamento iniciado por operador ainda requer comando
+operacional autenticado.
 
 ### Fase P2 — Observabilidade e governança
 
@@ -269,7 +271,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `0622505` | P1 | Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados | Digest do sidecar, scheduler externo, cancelamento e rotação de secrets |
+| 25/07/2026 | `bc06eec` | P1 | Digest local do sidecar, validador fail-closed, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 344 testes, Ruff e diff check | Digest publicado em registry, scheduler externo e rotação de secrets |
 
 ## Backlog posterior
 
