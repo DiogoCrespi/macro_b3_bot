@@ -153,6 +153,11 @@ operacional autenticado.
 O `docker pull` local do sidecar excedeu o timeout de 3 minutos por tamanho da imagem;
 isso não invalida o manifesto publicado, mas o smoke test pós-pull ainda não foi aprovado.
 
+**Secrets:** o `.env` do sidecar contém uma chave Zep de desenvolvimento e o arquivo
+`.secrets/zep_api_key` de staging ainda não existe. A chave não foi copiada nem versionada;
+é necessário revogá-la no provedor Zep, criar uma nova credencial e materializá-la somente
+no secret store local/CI antes de executar o Compose.
+
 **Scheduler:** adaptadores reais estão em `scripts/register_staging_task.ps1` e
 `scripts/invoke_staging_job.ps1`. O registro foi validado com `-WhatIf` e o invocador
 foi executado com `run_id` explícito e retorno `scheduler-invoker-ok`; a tarefa persistente

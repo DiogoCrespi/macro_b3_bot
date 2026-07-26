@@ -1,5 +1,6 @@
 .env
 .env.staging
+.secrets/
 .venv*/
 venv*/
 *.egg-info/
