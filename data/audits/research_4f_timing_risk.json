@@ -17,20 +17,29 @@
   },
   "snapshots": [
     {
-      "timing_risk_id": "b3ed6839eba6a78c8d2033d1998bc16dc5282a39a9791c98e6ed51b95ec6e583",
+      "timing_risk_id": "92bcd740cef5f63216f5c92072ceb2ce2d5f3660b90484a2fb91eaedf1acedef",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "research_decision_id": "c85cf0e4d3087c8ae5298fbd2ccfac8053f96b8f2e440978728e5d1f86d0a6d0",
       "execution_mode": "REAL_UPSTREAM_SYNTHESIS",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "event_id": "4d88669bc470e36aba8d5c1a",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9934,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        }
+      ],
       "expected_horizon": {
         "target_horizon_days": 180,
         "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "STALE_OR_MISSING",
-        "average_decay_factor": 0.0,
-        "monitored_events_count": 0
+        "freshness_status": "FRESH",
+        "average_decay_factor": 0.9923,
+        "monitored_events_count": 1
       },
       "market_metrics": {
         "status": "VALID_MARKET_DATA",
@@ -102,20 +111,301 @@
       }
     },
     {
-      "timing_risk_id": "ee2e70106582b6361064de44c2d5f3d620f882566dac1b7852487960ada0237f",
+      "timing_risk_id": "d011045817e0b2cba8999220cd567e98717d0e8c451e759c591c047031a14493",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "research_decision_id": "351fb976a39ce86623a784c7c31c1be0e0344b2eaf987cd6e25d0fa9bec71ab0",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "event_id": "0bb655e7ff44276931fbfb90",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9694,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1686a5e15f14a811bbaeb5b3",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9164,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1f57afa16480a74080b1aa97",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9807,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1f868a896127e3428b8758ee",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9527,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "35a08a49785311301abc3cab",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9244,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "35df06988a75a6edbb108790",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9037,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "3bc58960d693695fd2c44f4d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9617,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "4036cbb3b28152eba5c46f61",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9865,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "43f2a44fe37d6ac788efb244",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9785,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "47a2148d54b139fa8f007c43",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9625,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "4955054cd2edb6b5ad79805d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9572,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "56dc8604580e75112fcb8e83",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.962,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "736fa4e13a32a03426d04478",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9579,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "769d02c641172ff633de4662",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9454,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "7fb32fe161ea14257f8db05b",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9342,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "82c067e905e3c651c26f0d94",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9193,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "83fc8908b03941d3ef3b6493",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9775,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "8988b917dfd33f5a83364b5a",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9852,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9446a5189fa3b77935163c55",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9779,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "95295c2efe1e180e23f57511",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9381,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9669f96f4ad0ef729b5548dc",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.961,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9a52fdea3f0341b9e74e3991",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9779,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9bd9d01044aa95ddeca910bd",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9653,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9dec4651209fe07ec2c71371",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9885,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "a41b3dbba46af7c74231091d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9192,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "a7c97984462c606ccd0af7bb",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9887,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "d7b4625f828c390b8777cf34",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9154,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "d8b20be4e07b18a71550293e",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9504,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "de1b106b8f3aadb790ba0ca8",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9065,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e2ee04c67fc112a6975af356",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.964,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e6c5f2d62196d7f4fa3a9bc0",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9546,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e764bc91d5e3c9359f73a324",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9689,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "ebb3e062d89a0b62b9fc542d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9559,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "ef99bc0c1f04cb0c39899247",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9754,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "f5efe20a281d55a4b6ac20cf",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.931,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        }
+      ],
       "expected_horizon": {
         "target_horizon_days": 180,
         "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "STALE_OR_MISSING",
-        "average_decay_factor": 0.0,
-        "monitored_events_count": 0
+        "freshness_status": "FRESH",
+        "average_decay_factor": 0.9923,
+        "monitored_events_count": 35
       },
       "market_metrics": {
         "status": "VALID_MARKET_DATA",
@@ -231,20 +521,301 @@
       }
     },
     {
-      "timing_risk_id": "f3ea3c8da359dd83451f7ddc2ff43996e1d8e0574a7d6a9a556455948e8c40b9",
+      "timing_risk_id": "986c1c915e98c9eb3c4e5791c36973c9126c080974cb4771cd055ded2b821eac",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "research_decision_id": "5386cbbbb4b90f57b5e39c6f73abf9838cf63716c0a5659bd08e646960f10a2c",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "event_id": "0bb655e7ff44276931fbfb90",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9694,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1686a5e15f14a811bbaeb5b3",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9164,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1f57afa16480a74080b1aa97",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9807,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "1f868a896127e3428b8758ee",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9527,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "35a08a49785311301abc3cab",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9244,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "35df06988a75a6edbb108790",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9037,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "3bc58960d693695fd2c44f4d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9617,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "4036cbb3b28152eba5c46f61",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9865,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "43f2a44fe37d6ac788efb244",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9785,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "47a2148d54b139fa8f007c43",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9625,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "4955054cd2edb6b5ad79805d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9572,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "56dc8604580e75112fcb8e83",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.962,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "736fa4e13a32a03426d04478",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9579,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "769d02c641172ff633de4662",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9454,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "7fb32fe161ea14257f8db05b",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9342,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "82c067e905e3c651c26f0d94",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9193,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "83fc8908b03941d3ef3b6493",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9775,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "8988b917dfd33f5a83364b5a",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9852,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9446a5189fa3b77935163c55",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9779,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "95295c2efe1e180e23f57511",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9381,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9669f96f4ad0ef729b5548dc",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.961,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9a52fdea3f0341b9e74e3991",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9779,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9bd9d01044aa95ddeca910bd",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9653,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "9dec4651209fe07ec2c71371",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9885,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "a41b3dbba46af7c74231091d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9192,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "a7c97984462c606ccd0af7bb",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9887,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "d7b4625f828c390b8777cf34",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9154,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "d8b20be4e07b18a71550293e",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9504,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "de1b106b8f3aadb790ba0ca8",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9065,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e2ee04c67fc112a6975af356",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.964,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e6c5f2d62196d7f4fa3a9bc0",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9546,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "e764bc91d5e3c9359f73a324",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9689,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "ebb3e062d89a0b62b9fc542d",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9559,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "ef99bc0c1f04cb0c39899247",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9754,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        },
+        {
+          "event_id": "f5efe20a281d55a4b6ac20cf",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.931,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        }
+      ],
       "expected_horizon": {
         "target_horizon_days": 180,
         "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "STALE_OR_MISSING",
-        "average_decay_factor": 0.0,
-        "monitored_events_count": 0
+        "freshness_status": "FRESH",
+        "average_decay_factor": 0.9923,
+        "monitored_events_count": 35
       },
       "market_metrics": {
         "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
@@ -337,20 +908,29 @@
       }
     },
     {
-      "timing_risk_id": "45f0079203a5fdb6238c433ed9470564bfda9b874099a595b34dd3cf58a0d0f5",
+      "timing_risk_id": "4d71b68ab697e0ede4978459f00979d6fccfb9c3a5c67424a6d2f191a27a034f",
       "ticker": "RAIL3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "research_decision_id": "cb2ec7484eeb8ac8b871192855c14146a79dd63a6de2e75ec9e8825ea93f405b",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "event_id": "4d88669bc470e36aba8d5c1a",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9934,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        }
+      ],
       "expected_horizon": {
         "target_horizon_days": 180,
         "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "STALE_OR_MISSING",
-        "average_decay_factor": 0.0,
-        "monitored_events_count": 0
+        "freshness_status": "FRESH",
+        "average_decay_factor": 0.9923,
+        "monitored_events_count": 1
       },
       "market_metrics": {
         "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
@@ -409,20 +989,29 @@
       }
     },
     {
-      "timing_risk_id": "f1ebfcc1cffc0293cabdb27bd249068651c2a20d26c830ab7f402baeed414143",
+      "timing_risk_id": "36702f9d4c8212707148c6477566dc44dd327ece7122764d8dbfb2b0380c4e12",
       "ticker": "SLCE3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "research_decision_id": "b8627196d3319208ff05c815065091d892f19395f46def0005846b9c729fa264",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "event_id": "4d88669bc470e36aba8d5c1a",
+          "status": "MACRO_EVENT_APPROVED",
+          "importance": 0.9934,
+          "age_days": 1,
+          "decay_factor": 0.9923,
+          "freshness_status": "FRESH"
+        }
+      ],
       "expected_horizon": {
         "target_horizon_days": 180,
         "evaluation_scope": "MEDIUM_TERM_FUNDAMENTAL"
       },
       "event_freshness": {
-        "freshness_status": "STALE_OR_MISSING",
-        "average_decay_factor": 0.0,
-        "monitored_events_count": 0
+        "freshness_status": "FRESH",
+        "average_decay_factor": 0.9923,
+        "monitored_events_count": 1
       },
       "market_metrics": {
         "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",

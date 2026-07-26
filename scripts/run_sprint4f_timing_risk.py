@@ -75,17 +75,22 @@ def main() -> None:
     macro_events = []
     try:
         raw_events = store.connection.execute(
-            "SELECT macro_event_id, factor, factor_direction, available_at, event_status, importance FROM macro_events WHERE available_at <= ?",
-            [as_of]
+            """
+            SELECT event_id, indicator, direction, detected_at, status, surprise_score
+            FROM macro_event_candidates
+            WHERE detected_at <= ?
+              AND status IN ('MACRO_EVENT_APPROVED', 'MACRO_EVENT_WATCH')
+            """,
+            [as_of],
         ).fetchall()
-        for r in raw_events:
+        for event_id, indicator, direction, detected_at, status, importance in raw_events:
             macro_events.append({
-                "macro_event_id": r[0],
-                "factor": r[1],
-                "factor_direction": r[2],
-                "available_at": str(r[3]),
-                "event_status": r[4],
-                "importance": r[5],
+                "macro_event_id": event_id,
+                "factor": "INTEREST_RATES" if "Selic" in str(indicator) else "UNKNOWN",
+                "factor_direction": -1 if str(direction).upper() in {"DOVISH", "FALLING", "DOWN"} else 1,
+                "available_at": str(detected_at),
+                "event_status": status,
+                "importance": importance,
             })
     except Exception:
         pass

@@ -391,7 +391,8 @@ impostos quando aplicáveis e kill switch exercitado em staging. O resultado atu
 elegibilidade (`p6_allocation_eligibility.json`) confirma `0/5` decisões elegíveis. O
 MGLU3 agora possui `WATCH` em modo upstream real, com setor ativo, exposição delegadamente
 aprovada e canal financeiro PIT; ainda assim permanece fora da alocação por
-`WAIT_FOR_CONFIRMATION`/`ELEVATED_RISK`. As demais quatro empresas continuam bloqueadas
+`WAIT_FOR_CONFIRMATION`/`ELEVATED_RISK` por volatilidade realizada de 21 dias acima do
+limite operacional. A frescura do evento BCB agora é `FRESH` no timing engine. As demais quatro empresas continuam bloqueadas
 por upstream, conflito ou ausência de sinal. Nenhuma aprovação foi criada artificialmente.
 
 ### Fase P7 — Produção decisória e execução
