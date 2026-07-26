@@ -4,15 +4,15 @@
   "as_of_timestamp": "2026-07-24T00:00:00+00:00",
   "total_evaluated": 5,
   "execution_modes": {
-    "MGLU3": "BLOCKED_MISSING_UPSTREAM_INPUT",
+    "MGLU3": "REAL_UPSTREAM_SYNTHESIS",
     "SUZB3": "BLOCKED_MISSING_UPSTREAM_INPUT",
     "KLBN11": "BLOCKED_MISSING_UPSTREAM_INPUT",
     "RAIL3": "BLOCKED_MISSING_UPSTREAM_INPUT",
     "SLCE3": "BLOCKED_MISSING_UPSTREAM_INPUT"
   },
   "decisions_count": {
-    "WATCH": 0,
-    "NO_ACTION": 5
+    "WATCH": 1,
+    "NO_ACTION": 4
   },
   "technical_debts": [
     "PITSecurityMapping is RECONSTRUCTED_VALIDATED_MAPPING, not strict contemporaneous PIT",
@@ -21,18 +21,177 @@
   ],
   "decisions": [
     {
-      "decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+      "decision_id": "c85cf0e4d3087c8ae5298fbd2ccfac8053f96b8f2e440978728e5d1f86d0a6d0",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "decision": "NO_ACTION",
-      "macro_event_ids": [],
-      "active_factors": [],
-      "factor_directions": {},
+      "decision": "WATCH",
+      "macro_event_ids": [
+        "4d88669bc470e36aba8d5c1a"
+      ],
+      "active_factors": [
+        "INTEREST_RATES"
+      ],
+      "factor_directions": {
+        "INTEREST_RATES": -1
+      },
       "macro_conflict_status": "NO_CONFLICT",
-      "sector_state": null,
+      "sector_state": {
+        "sector_name": "SECTOR_STATE_ACTIVE",
+        "sector_snapshot_id": "8ee54aa7ec04e780636d267d",
+        "is_active": true,
+        "has_active_signal": true,
+        "impact_score": 0.0556,
+        "available_at": "2026-07-22T23:59:59-03:00"
+      },
       "sector_impact": null,
-      "company_contributions": [],
-      "financial_outcomes": [],
+      "company_contributions": [
+        {
+          "contribution_id": "a25cb808b28673dcac364d0c",
+          "company_exposure_id": "8ee54aa7ec04e780636d267d",
+          "ticker": "MGLU3",
+          "channel": "debt",
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.1973,
+          "evidence_ids": [
+            "05449fcb9b8994a009a38822",
+            "05dda0f700f86f0db19cf071",
+            "06c2a05eb2d7bd1229241340",
+            "1029be4418b54aa8001e7f8b",
+            "140e540cda41231f69312d32",
+            "1aa3b2de7a8f2a14ff668281",
+            "1c71d7fd5a8a3ccecdb462c2",
+            "1d757102fe39029cd674cdd8",
+            "217d549822d3ecf953896ac2",
+            "2188ffc34d522a90b0c33333",
+            "23bbc420da37cc0765c82dfd",
+            "2860fb16447e27e140e96d5f",
+            "289d23547a5d613d0a112b25",
+            "2906e997c9ed9ccc9567467f",
+            "291495548ef29f767b8bfa39",
+            "2da2475052efff29d229d634",
+            "2dd74e12122f9af650f8907a",
+            "2fcdf4a3cdc4e8cfc46159b0",
+            "3554d1f96bed7a0ea681e57a",
+            "37c894cc65b7dd11115469be",
+            "3c659a2ee233637479990213",
+            "3e18bae3554040bbb89ad58e",
+            "402ec8bc232d67c780c374fd",
+            "407f16da6db65447af44c751",
+            "44ea587903a50fe052d97fac",
+            "4688eb7ebe0e20203594f902",
+            "498083080f3ee213ac3f7a9f",
+            "4a3ec4506bbb8416ee96dcbf",
+            "4d88669bc470e36aba8d5c1a",
+            "5045a5337732e550e01cee07",
+            "5182c9aa0e637c117c92e909",
+            "51c14be73e667b900add9f29",
+            "56424bf19240ab89eff95f23",
+            "56e16324d645a624872095bb",
+            "5a74ce3e977ee67150639131",
+            "5f0255961dc6a9534a3bf024",
+            "6433e7f612796f350a857678",
+            "69f62cb4f614e978abf902d3",
+            "6fe7c699360491c377ff32ce",
+            "70183506a59690c19b59f2d0",
+            "70da9cbed02438e2b5379469",
+            "7197f2831a2971242a08cc44",
+            "733549a0cb33eafd2db4abf2",
+            "744b7d9d1ae38881f6b78c80",
+            "76f79296dbfc2cdc8e1551d4",
+            "78d06ba60febf332d4d99744",
+            "7f2bccd3d1b07efdc7649132",
+            "813950cf5c590a48927cda15",
+            "815d97192ca4637ea5834ab0",
+            "85728019c60b15b58079148c",
+            "8a116b8fd89effa96104fb5b",
+            "8ae9eb87290e8f535b98b7c1",
+            "8b71db2722c05f653350299a",
+            "8eec0a182e43868d6d5491a4",
+            "9723bd24b1dfc0e575b3f04b",
+            "9d687d50641d1c44585d0e4f",
+            "9ddd2e08e575a3cdf3eb7a0d",
+            "a30d97defc95a2c60ead6a3a",
+            "a793db92faa673d0e7add3f2",
+            "a82b0c596a742339f67d6c7d",
+            "a82ecada6fa3f79ac3257902",
+            "a83ad87c537c41a1b3922ffb",
+            "a856e539a694f8f0371ee3f0",
+            "abc6b913ca00856b98b58e95",
+            "ac0b1fd97d0cc1d6a53734ca",
+            "ae16980eb70bb355925c32e7",
+            "b04e9a2f286071d1850f9d9c",
+            "b25bd272973424060dd4c997",
+            "b2bd38e11170d980ca1c3ad8",
+            "b5f200c43322c16d091a2fec",
+            "c1f2916b524013158e7b6f6c",
+            "c2ce6a5decf81dadf1bc77e6",
+            "c32267e963ce1a604c21ff11",
+            "c72ad1f0023ab92961f6929e",
+            "c912beda51c042651a3fae12",
+            "d10c8599d67d7a08a90dae95",
+            "d1aaa9f2d16018c0b25e80f8",
+            "d1bd7ca686d6ca5274143e76",
+            "d6f9ab9473d5dbb00574031c",
+            "d7562f43349474bb2c8db5e1",
+            "d85a3bace05acb3c0f2315e8",
+            "d88c30b42435c88de5ad7143",
+            "dd3cbfac77395d327670d15b",
+            "dd46bcb1412bc9848d353898",
+            "e173eb2c8fafc6b5cf1a4140",
+            "e3a3ad1129fe00db0ab1e55a",
+            "ea1653f7de451a7565233778",
+            "ebfb0e34e7de7aa9142e16d5",
+            "ed164a62895a9caabc2dacad",
+            "f0bd291ffc6dc886919a9f32",
+            "f1ee353e6f4fcf7bf386b36a",
+            "f2ff5e0967ae603c7eec2499",
+            "f4616e3addf6ba0bb38075a3",
+            "f605b7726298eca0e4468c67",
+            "f9ba69ae4d854ecb11edc363",
+            "fa23443bfb700513eab37347",
+            "faa8e50255b51f1adce7d899"
+          ],
+          "available_at": "2026-07-22T23:59:59-03:00"
+        }
+      ],
+      "financial_outcomes": [
+        {
+          "financial_outcome_id": "37eff4ea1eee1f22a5ce5e53",
+          "contribution_id": "185571b63cc44b2a18f5b14f",
+          "baseline_id": "3088b874249a527e6577b5cd",
+          "ticker": "MGLU3",
+          "metric": "net_income",
+          "unit": "BRL",
+          "direction": 1,
+          "status": "PARTIAL",
+          "delta_net_income": 100046960.0,
+          "available_at": "2026-07-22T23:59:59"
+        },
+        {
+          "financial_outcome_id": "af2c94b7d7ab055b85875d69",
+          "contribution_id": "185571b63cc44b2a18f5b14f",
+          "baseline_id": "3088b874249a527e6577b5cd",
+          "ticker": "MGLU3",
+          "metric": "net_income",
+          "unit": "BRL",
+          "direction": 1,
+          "status": "PARTIAL",
+          "delta_net_income": 50023480.0,
+          "available_at": "2026-07-22T23:59:59"
+        },
+        {
+          "financial_outcome_id": "641da31a7b944abe67276b5b",
+          "contribution_id": "185571b63cc44b2a18f5b14f",
+          "baseline_id": "3088b874249a527e6577b5cd",
+          "ticker": "MGLU3",
+          "metric": "net_income",
+          "unit": "BRL",
+          "direction": 1,
+          "status": "PARTIAL",
+          "delta_net_income": 25011740.0,
+          "available_at": "2026-07-22T23:59:59"
+        }
+      ],
       "historical_multiple_position": {
         "observation_count": 9,
         "median_ev_ebitda": 4.670487216769859,
@@ -200,32 +359,20 @@
         "not_buy_eligible": true
       },
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.2,
-      "confidence": 0.153,
+      "evidence_completeness": 1.0,
+      "confidence": 0.2671,
       "confidence_tier": "LOW",
-      "critical_blockers": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
-      ],
+      "critical_blockers": [],
       "noncritical_warnings": [
         "EMPIRICAL_CALIBRATION_INCOMPLETE",
         "FCF_NOT_DCF_READY",
         "SMALL_VALUATION_SAMPLE"
       ],
-      "missing_inputs": [
-        "company_contributions",
-        "financial_outcomes",
-        "macro_events",
-        "sector_state"
-      ],
-      "rationale": "Company MGLU3 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 4.670487x across 9 PIT observations.",
-      "invalidation_conditions": [
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested"
-      ],
+      "missing_inputs": [],
+      "rationale": "Company MGLU3 qualified for WATCH list: active sector signal, 1 approved exposures, and 3 calculable financial channels without critical blockers. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 4.670487x across 9 PIT observations.",
+      "invalidation_conditions": [],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
-      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "execution_mode": "REAL_UPSTREAM_SYNTHESIS",
       "input_ids": {
         "valuation_observation_ids": [
           "hist-85258cb0218a161b4dbf2ac8",
@@ -260,11 +407,24 @@
           "2dcb974b59b48e9463bf5f8d",
           "6f117cc79bf099cb77f82942"
         ],
+        "macro_event_ids": [
+          "4d88669bc470e36aba8d5c1a"
+        ],
+        "sector_snapshot_id": "8ee54aa7ec04e780636d267d",
+        "company_contribution_ids": [
+          "a25cb808b28673dcac364d0c"
+        ],
+        "financial_outcome_ids": [
+          "37eff4ea1eee1f22a5ce5e53",
+          "af2c94b7d7ab055b85875d69",
+          "641da31a7b944abe67276b5b"
+        ],
+        "security_mapping_id": "a61242b879e9c6552160096a5af3ee04e88d2c0fa424fe87e6b45b9ec797bcf1",
         "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+      "decision_id": "351fb976a39ce86623a784c7c31c1be0e0344b2eaf987cd6e25d0fa9bec71ab0",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -312,9 +472,49 @@
         "FX": null
       },
       "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
-      "sector_state": null,
+      "sector_state": {
+        "sector_name": "SECTOR_STATE_WATCH",
+        "sector_snapshot_id": "6de950a76036975af547d229",
+        "is_active": true,
+        "has_active_signal": true,
+        "impact_score": 0.0007,
+        "available_at": "2026-07-22T23:59:59-03:00"
+      },
       "sector_impact": null,
-      "company_contributions": [],
+      "company_contributions": [
+        {
+          "contribution_id": "e6d9e582a8511b4faac24df0",
+          "company_exposure_id": "6de950a76036975af547d229",
+          "ticker": "SUZB3",
+          "channel": "revenue",
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.2097,
+          "evidence_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "available_at": "2026-07-22T23:59:59-03:00"
+        }
+      ],
       "financial_outcomes": [],
       "historical_multiple_position": {
         "observation_count": 9,
@@ -483,14 +683,13 @@
         "not_buy_eligible": true
       },
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.4,
-      "confidence": 0.1785,
+      "evidence_completeness": 0.8,
+      "confidence": 0.1629,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "noncritical_warnings": [
         "EMPIRICAL_CALIBRATION_INCOMPLETE",
@@ -498,14 +697,11 @@
         "SMALL_VALUATION_SAMPLE"
       ],
       "missing_inputs": [
-        "company_contributions",
-        "financial_outcomes",
-        "sector_state"
+        "financial_outcomes"
       ],
-      "rationale": "Company SUZB3 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, CONFLICTING_MACRO_DIRECTION, NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 6.171108x across 9 PIT observations.",
+      "rationale": "Company SUZB3 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, CONFLICTING_MACRO_DIRECTION, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY, SMALL_VALUATION_SAMPLE]. Valuation Context: Real 4E.2 EV/EBITDA median is 6.171108x across 9 PIT observations.",
       "invalidation_conditions": [
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested",
+        "No calculable financial bridge channel with finite numeric output for approved exposures",
         "Unresolved opposing macro factor directions detected"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
@@ -581,11 +777,16 @@
           "ef99bc0c1f04cb0c39899247",
           "f5efe20a281d55a4b6ac20cf"
         ],
+        "sector_snapshot_id": "6de950a76036975af547d229",
+        "company_contribution_ids": [
+          "e6d9e582a8511b4faac24df0"
+        ],
+        "security_mapping_id": "54d6f83d0dc5897022a14fd034c6ab6f0e3cca740f58ebaebdd5e5d580ae0c2a",
         "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+      "decision_id": "5386cbbbb4b90f57b5e39c6f73abf9838cf63716c0a5659bd08e646960f10a2c",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
@@ -633,36 +834,72 @@
         "FX": null
       },
       "macro_conflict_status": "CONFLICTING_MACRO_DIRECTION",
-      "sector_state": null,
+      "sector_state": {
+        "sector_name": "SECTOR_STATE_WATCH",
+        "sector_snapshot_id": "cd402742f7da2ebe0a16c828",
+        "is_active": true,
+        "has_active_signal": true,
+        "impact_score": 0.0,
+        "available_at": "2026-07-22T23:59:59-03:00"
+      },
       "sector_impact": null,
-      "company_contributions": [],
+      "company_contributions": [
+        {
+          "contribution_id": "2b0e9e05d105e0f31a210c86",
+          "company_exposure_id": "cd402742f7da2ebe0a16c828",
+          "ticker": "KLBN11",
+          "channel": "debt",
+          "approval_status": "DELEGATED_AI_APPROVED",
+          "confidence": 0.422,
+          "evidence_ids": [
+            "0bb655e7ff44276931fbfb90",
+            "1f57afa16480a74080b1aa97",
+            "35a08a49785311301abc3cab",
+            "3bc58960d693695fd2c44f4d",
+            "4036cbb3b28152eba5c46f61",
+            "43f2a44fe37d6ac788efb244",
+            "47a2148d54b139fa8f007c43",
+            "4955054cd2edb6b5ad79805d",
+            "736fa4e13a32a03426d04478",
+            "7fb32fe161ea14257f8db05b",
+            "83fc8908b03941d3ef3b6493",
+            "9446a5189fa3b77935163c55",
+            "9a52fdea3f0341b9e74e3991",
+            "9dec4651209fe07ec2c71371",
+            "a41b3dbba46af7c74231091d",
+            "a7c97984462c606ccd0af7bb",
+            "d7b4625f828c390b8777cf34",
+            "de1b106b8f3aadb790ba0ca8",
+            "e2ee04c67fc112a6975af356",
+            "ebb3e062d89a0b62b9fc542d",
+            "ef99bc0c1f04cb0c39899247"
+          ],
+          "available_at": "2026-07-22T23:59:59-03:00"
+        }
+      ],
       "financial_outcomes": [],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.2,
-      "confidence": 0.18,
+      "evidence_completeness": 0.6,
+      "confidence": 0.2213,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "noncritical_warnings": [
         "EMPIRICAL_CALIBRATION_INCOMPLETE",
         "FCF_NOT_DCF_READY"
       ],
       "missing_inputs": [
-        "company_contributions",
         "financial_outcomes",
-        "historical_multiple_position",
-        "sector_state"
+        "historical_multiple_position"
       ],
-      "rationale": "Company KLBN11 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, CONFLICTING_MACRO_DIRECTION, NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY].",
+      "rationale": "Company KLBN11 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, CONFLICTING_MACRO_DIRECTION, NO_CALCULABLE_FINANCIAL_CHANNEL]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY].",
       "invalidation_conditions": [
-        "No active macro/sector signal for company's sector",
-        "No approved company macro exposure with valid ID and channel ingested",
+        "No calculable financial bridge channel with finite numeric output for approved exposures",
         "Unresolved opposing macro factor directions detected"
       ],
       "methodology_version": "4E.3-research-decision-synthesis-v1",
@@ -708,27 +945,44 @@
           "ef99bc0c1f04cb0c39899247",
           "f5efe20a281d55a4b6ac20cf"
         ],
+        "sector_snapshot_id": "cd402742f7da2ebe0a16c828",
+        "company_contribution_ids": [
+          "2b0e9e05d105e0f31a210c86"
+        ],
         "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+      "decision_id": "cb2ec7484eeb8ac8b871192855c14146a79dd63a6de2e75ec9e8825ea93f405b",
       "ticker": "RAIL3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
-      "macro_event_ids": [],
-      "active_factors": [],
-      "factor_directions": {},
+      "macro_event_ids": [
+        "4d88669bc470e36aba8d5c1a"
+      ],
+      "active_factors": [
+        "INTEREST_RATES"
+      ],
+      "factor_directions": {
+        "INTEREST_RATES": -1
+      },
       "macro_conflict_status": "NO_CONFLICT",
-      "sector_state": null,
+      "sector_state": {
+        "sector_name": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+        "sector_snapshot_id": "4e6f9b9155ec8a45a0d4d627",
+        "is_active": false,
+        "has_active_signal": false,
+        "impact_score": null,
+        "available_at": "2026-07-22T23:59:59-03:00"
+      },
       "sector_impact": null,
       "company_contributions": [],
       "financial_outcomes": [],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.0,
-      "confidence": 0.15,
+      "evidence_completeness": 0.4,
+      "confidence": 0.21,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
@@ -742,9 +996,7 @@
       "missing_inputs": [
         "company_contributions",
         "financial_outcomes",
-        "historical_multiple_position",
-        "macro_events",
-        "sector_state"
+        "historical_multiple_position"
       ],
       "rationale": "Company RAIL3 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY].",
       "invalidation_conditions": [
@@ -757,27 +1009,44 @@
         "valuation_observation_ids": [],
         "market_snapshot_ids": [],
         "financial_baseline_ids": [],
+        "macro_event_ids": [
+          "4d88669bc470e36aba8d5c1a"
+        ],
+        "sector_snapshot_id": "4e6f9b9155ec8a45a0d4d627",
         "hypothesis_ids": []
       }
     },
     {
-      "decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+      "decision_id": "b8627196d3319208ff05c815065091d892f19395f46def0005846b9c729fa264",
       "ticker": "SLCE3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
       "decision": "NO_ACTION",
-      "macro_event_ids": [],
-      "active_factors": [],
-      "factor_directions": {},
+      "macro_event_ids": [
+        "4d88669bc470e36aba8d5c1a"
+      ],
+      "active_factors": [
+        "INTEREST_RATES"
+      ],
+      "factor_directions": {
+        "INTEREST_RATES": -1
+      },
       "macro_conflict_status": "NO_CONFLICT",
-      "sector_state": null,
+      "sector_state": {
+        "sector_name": "SECTOR_STATE_NO_ACTIVE_SIGNAL",
+        "sector_snapshot_id": "78131de5dbb206d07d31cc22",
+        "is_active": false,
+        "has_active_signal": false,
+        "impact_score": null,
+        "available_at": "2026-07-22T23:59:59-03:00"
+      },
       "sector_impact": null,
       "company_contributions": [],
       "financial_outcomes": [],
       "historical_multiple_position": {},
       "price_implied_fundamentals": {},
       "valuation_classification": "VALUATION_BLOCKED",
-      "evidence_completeness": 0.0,
-      "confidence": 0.15,
+      "evidence_completeness": 0.4,
+      "confidence": 0.21,
       "confidence_tier": "LOW",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
@@ -791,9 +1060,7 @@
       "missing_inputs": [
         "company_contributions",
         "financial_outcomes",
-        "historical_multiple_position",
-        "macro_events",
-        "sector_state"
+        "historical_multiple_position"
       ],
       "rationale": "Company SLCE3 assigned NO_ACTION due to critical blockers: [BLOCKED_MISSING_UPSTREAM_INPUT, NO_ACTIVE_SECTOR_SIGNAL, NO_APPROVED_COMPANY_EXPOSURE]. Non-critical warnings noted: [EMPIRICAL_CALIBRATION_INCOMPLETE, FCF_NOT_DCF_READY].",
       "invalidation_conditions": [
@@ -806,6 +1073,10 @@
         "valuation_observation_ids": [],
         "market_snapshot_ids": [],
         "financial_baseline_ids": [],
+        "macro_event_ids": [
+          "4d88669bc470e36aba8d5c1a"
+        ],
+        "sector_snapshot_id": "78131de5dbb206d07d31cc22",
         "hypothesis_ids": []
       }
     }

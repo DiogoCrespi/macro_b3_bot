@@ -2872,7 +2872,7 @@ class DatabaseStore:
             SELECT canonical_payload_json
             FROM research_decision_snapshots
             WHERE ticker = ? AND as_of_timestamp <= ?
-            ORDER BY as_of_timestamp DESC
+            ORDER BY as_of_timestamp DESC, created_at DESC
             LIMIT 1
             """,
             [ticker, as_of_timestamp]

@@ -3,12 +3,12 @@
   "total_allocation_events": 10,
   "events": [
     {
-      "allocation_event_id": "86c7284d9c159ded4bfe61afd856a4bfb66fae14c3eca672b98522c262290fbd",
+      "allocation_event_id": "5a655c72f9566bdd29806eec244f0b1fb46e4f4325984d2bfe99a2a50c222caf",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "MGLU3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
-      "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+      "research_decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+      "timing_risk_id": "a0132a421e860df70e7094f66ea01ce6c0aa45c7418afb2798d43fd1fd150520",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2024-03-19",
       "execution_price": 1.97,
@@ -25,8 +25,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
-        "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+        "research_decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+        "timing_risk_id": "a0132a421e860df70e7094f66ea01ce6c0aa45c7418afb2798d43fd1fd150520",
         "macro_event_ids": [],
         "valuation_observation_ids": [
           "hist-85258cb0218a161b4dbf2ac8",
@@ -49,12 +49,12 @@
       "created_at": "2026-07-24T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "f4f5412a65ff17057823efe32d7756d85a8901dd0691a77e3ab8c7cc262f96bc",
+      "allocation_event_id": "c81389af1a86315cc4cf65eca08aeac469474225c51d07017aeb2f3fef54fcc8",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "SUZB3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
-      "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+      "research_decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+      "timing_risk_id": "349418c8a4a8a41fed07610606bec189de3b9e190f5c5add3e2fd27742185e43",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2024-02-29",
       "execution_price": 56.35,
@@ -71,8 +71,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'CONFLICTING_MACRO_DIRECTION', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
-        "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+        "research_decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+        "timing_risk_id": "349418c8a4a8a41fed07610606bec189de3b9e190f5c5add3e2fd27742185e43",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -132,12 +132,12 @@
       "created_at": "2026-07-24T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "984f8f7e5b1eddda819d8da118c9706818f10f0d488f82d4f569659c81da2ac4",
+      "allocation_event_id": "11af117a915409b42e62b952df3c8121916cf46f5e47e5ff04c68e105aa6dd12",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "KLBN11",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
-      "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+      "research_decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+      "timing_risk_id": "ca4ad442b89eea70e287aeed343c37345cba23e363180676f9a274092824e556",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-25",
       "execution_price": null,
@@ -154,8 +154,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'CONFLICTING_MACRO_DIRECTION', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
-        "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+        "research_decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+        "timing_risk_id": "ca4ad442b89eea70e287aeed343c37345cba23e363180676f9a274092824e556",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -205,12 +205,12 @@
       "created_at": "2026-07-24T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "aaacd54717d7a9c27307d926990d5cd27004ebed2015b0f2fe31a4b21f356a3b",
+      "allocation_event_id": "92627402da77a1ba19d348db987ca869b1d000bb784d955a2d5e7fe7a1804bc8",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "RAIL3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
-      "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+      "research_decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+      "timing_risk_id": "5a553716a7c21b74801284225ff3fdea091b8efe5cbbebdddec9397782703ede",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-25",
       "execution_price": null,
@@ -227,8 +227,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
-        "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+        "research_decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+        "timing_risk_id": "5a553716a7c21b74801284225ff3fdea091b8efe5cbbebdddec9397782703ede",
         "macro_event_ids": [],
         "valuation_observation_ids": [],
         "critical_blockers": [
@@ -241,12 +241,12 @@
       "created_at": "2026-07-24T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "7a6f9ba1668076df00ccad07e0e9aaf95e7095e2dedca26144b1ddda732e345b",
+      "allocation_event_id": "a31e8f92ee744ba92eed118bb52cdb8e4520a47ed39dafecceab3874454d733d",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "SLCE3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
-      "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
+      "research_decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+      "timing_risk_id": "22b234221d9fc8c2e07d85f598726b00668b9e4fbe6cb14cc23c7e7e70d8e31b",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-25",
       "execution_price": null,
@@ -263,8 +263,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
-        "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
+        "research_decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+        "timing_risk_id": "22b234221d9fc8c2e07d85f598726b00668b9e4fbe6cb14cc23c7e7e70d8e31b",
         "macro_event_ids": [],
         "valuation_observation_ids": [],
         "critical_blockers": [
@@ -277,12 +277,12 @@
       "created_at": "2026-07-24T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "a5259d5f6740f2fbb9c484dfbdbc7e773fdab470c75d06c466180dd2685a192a",
+      "allocation_event_id": "fa3de6631817ac894454728093a355ee3ad308cc91d740296cc848cb49b594b5",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "MGLU3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
-      "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+      "research_decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+      "timing_risk_id": "a0132a421e860df70e7094f66ea01ce6c0aa45c7418afb2798d43fd1fd150520",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2024-03-19",
       "execution_price": 1.97,
@@ -299,8 +299,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "52337519b03915cac9e455a78b2e9b5035108a841886f6a4d61662d5708d14fb",
-        "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+        "research_decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
+        "timing_risk_id": "a0132a421e860df70e7094f66ea01ce6c0aa45c7418afb2798d43fd1fd150520",
         "macro_event_ids": [],
         "valuation_observation_ids": [
           "hist-85258cb0218a161b4dbf2ac8",
@@ -323,12 +323,12 @@
       "created_at": "2026-07-26T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "57861db0ecf68757d6f15a9da346bdbc540ed2881e362ce9f315485531e6b74b",
+      "allocation_event_id": "40026ebe054c5949de1c0552fd7af17ccd9f22ee67502fb99f86294cf022ad79",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "SUZB3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
-      "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+      "research_decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+      "timing_risk_id": "349418c8a4a8a41fed07610606bec189de3b9e190f5c5add3e2fd27742185e43",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2024-02-29",
       "execution_price": 56.35,
@@ -345,8 +345,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'CONFLICTING_MACRO_DIRECTION', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "fea62f326c0a6094fbd487c2c81aad1321369b6ba8eed5cc763233e11c6b1673",
-        "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+        "research_decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+        "timing_risk_id": "349418c8a4a8a41fed07610606bec189de3b9e190f5c5add3e2fd27742185e43",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -406,12 +406,12 @@
       "created_at": "2026-07-26T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "60f5d78c84b728d845f2f946e4d5124b92d3b4cadcbcf27fff15bfdf3500325d",
+      "allocation_event_id": "6081be4ce84329a22fa7104b659fe33bcadee3a04d6259c2abfde6229c4c4aec",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "KLBN11",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
-      "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+      "research_decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+      "timing_risk_id": "ca4ad442b89eea70e287aeed343c37345cba23e363180676f9a274092824e556",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-27",
       "execution_price": null,
@@ -428,8 +428,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'CONFLICTING_MACRO_DIRECTION', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "ba97aef4b7cb8fe207fdbb7a8de9f071eccfc2133b047f84c610fe6f17ea58d8",
-        "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+        "research_decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+        "timing_risk_id": "ca4ad442b89eea70e287aeed343c37345cba23e363180676f9a274092824e556",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -479,12 +479,12 @@
       "created_at": "2026-07-26T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "57c71d8b3c7dc28969df5fbe6824923c3a048a3740863caea6c37569903f3f1e",
+      "allocation_event_id": "643e7c10e5e4d2a90464c327ec2ab4382bc7d39ac9e24d3c429dd17cc9e47bfe",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "RAIL3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
-      "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+      "research_decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+      "timing_risk_id": "5a553716a7c21b74801284225ff3fdea091b8efe5cbbebdddec9397782703ede",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-27",
       "execution_price": null,
@@ -501,8 +501,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "ccdba7f9d1b3fb6fb805552274504ed4c475b6e1c4d27b912f899af22fd566d8",
-        "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+        "research_decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+        "timing_risk_id": "5a553716a7c21b74801284225ff3fdea091b8efe5cbbebdddec9397782703ede",
         "macro_event_ids": [],
         "valuation_observation_ids": [],
         "critical_blockers": [
@@ -515,12 +515,12 @@
       "created_at": "2026-07-26T00:00:00+00:00"
     },
     {
-      "allocation_event_id": "42b5438e1990e2624d904b2eff6b76d01363fea4073ba893afe191052eb96e56",
+      "allocation_event_id": "ac05a22b7442ac4e0bec078af3ec9a6d527477f5c780cad8446084d4f84b4d5e",
       "portfolio_id": "pilot_paper_portfolio_001",
       "ticker": "SLCE3",
       "event_type": "NO_ALLOCATION",
-      "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
-      "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
+      "research_decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+      "timing_risk_id": "22b234221d9fc8c2e07d85f598726b00668b9e4fbe6cb14cc23c7e7e70d8e31b",
       "decision_available_at": "2026-07-24T00:00:00+00:00",
       "execution_session": "2026-07-27",
       "execution_price": null,
@@ -537,8 +537,8 @@
       "slippage_cost": 0.0,
       "reason": "Ineligible for simulated entry: Decision=NO_ACTION, Timing=WAIT_FOR_CONFIRMATION, Risk=HIGH_RISK, Mode=BLOCKED_MISSING_UPSTREAM_INPUT, Blockers=['BLOCKED_MISSING_UPSTREAM_INPUT', 'NO_ACTIVE_SECTOR_SIGNAL', 'NO_APPROVED_COMPANY_EXPOSURE']",
       "input_ids": {
-        "research_decision_id": "c20eba92bd7c0b2328038821fc2fb62d99c16d9722f2be259a0822f6c8c9ea14",
-        "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
+        "research_decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+        "timing_risk_id": "22b234221d9fc8c2e07d85f598726b00668b9e4fbe6cb14cc23c7e7e70d8e31b",
         "macro_event_ids": [],
         "valuation_observation_ids": [],
         "critical_blockers": [

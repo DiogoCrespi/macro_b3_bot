@@ -11,17 +11,17 @@
   "risk_classifications_count": {
     "LOW_RISK": 0,
     "MODERATE_RISK": 0,
-    "ELEVATED_RISK": 0,
-    "HIGH_RISK": 5,
+    "ELEVATED_RISK": 1,
+    "HIGH_RISK": 4,
     "UNACCEPTABLE_RISK": 0
   },
   "snapshots": [
     {
-      "timing_risk_id": "97ebc27334762f159776706298c72bba5ef63ad28f3fbabcfa2776ccae7151b9",
+      "timing_risk_id": "b3ed6839eba6a78c8d2033d1998bc16dc5282a39a9791c98e6ed51b95ec6e583",
       "ticker": "MGLU3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
-      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
+      "research_decision_id": "c85cf0e4d3087c8ae5298fbd2ccfac8053f96b8f2e440978728e5d1f86d0a6d0",
+      "execution_mode": "REAL_UPSTREAM_SYNTHESIS",
       "catalysts": [],
       "expected_horizon": {
         "target_horizon_days": 180,
@@ -33,29 +33,40 @@
         "monitored_events_count": 0
       },
       "market_metrics": {
-        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "observations_count": 9,
-        "returns": {},
-        "realized_volatility": {},
-        "drawdowns": {},
-        "volume": {}
+        "status": "VALID_MARKET_DATA",
+        "observations_count": 888,
+        "returns": {
+          "return_21d": 0.06561085972850678,
+          "return_63d": -0.4604810996563574,
+          "return_126d": -0.4653802497162316
+        },
+        "realized_volatility": {
+          "realized_vol_21d": 0.5458702818072741,
+          "realized_vol_63d": 0.5483567498166689
+        },
+        "drawdowns": {
+          "drawdown_63d": -0.4604810996563574
+        },
+        "volume": {
+          "avg_volume_20d_brl": 4727500.0,
+          "avg_volume_60d_brl": 5686000.0,
+          "amihud_illiquidity_proxy": 5.683542009099569e-09
+        }
       },
       "pricing_risk": {
-        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
-        "explanation": "Insufficient market quotes to assess pricing risk."
+        "pricing_risk_status": "POSSIBLY_PRICED",
+        "explanation": "Significant 63-day cumulative return of -46.05% observed."
       },
       "volatility_state": {
-        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "historical_volatility": null
+        "volatility_status": "HIGH_VOLATILITY",
+        "realized_volatility": 0.5458702818072741
       },
       "liquidity_state": {
-        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "daily_volume_brl": null
+        "liquidity_status": "ADEQUATE",
+        "daily_volume_brl": 4727500.0
       },
       "thesis_invalidators": [],
       "risk_flags": [
-        "MARKET_DATA_INSUFFICIENT",
-        "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
         "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
         "WARNING_FCF_NOT_DCF_READY",
         "WARNING_SMALL_VALUATION_SAMPLE"
@@ -67,26 +78,34 @@
       ],
       "next_review_at": "",
       "timing_classification": "WAIT_FOR_CONFIRMATION",
-      "risk_classification": "HIGH_RISK",
-      "risk_severity_level": 4,
-      "confidence": 0.4111,
+      "risk_classification": "ELEVATED_RISK",
+      "risk_severity_level": 3,
+      "confidence": 0.2404,
       "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "8e3f6886e94089692caa793f55b999a6126da84da53b37a20065e4f19d3a640d",
+        "research_decision_id": "c85cf0e4d3087c8ae5298fbd2ccfac8053f96b8f2e440978728e5d1f86d0a6d0",
         "macro_event_ids": [
-          "evt_selic_cut_2025_001"
+          "4d88669bc470e36aba8d5c1a"
         ],
         "valuation_observation_ids": [
+          "hist-85258cb0218a161b4dbf2ac8",
+          "hist-02feaffa09767e4cf0f7969b",
+          "hist-0cbbb373759cad49718e6c95",
+          "hist-1b0941a18f7a0a5378f91d7a",
+          "hist-e4b371160c0a41dac3884fd4",
+          "hist-4b16335ae6da4f31cf7b0d2f",
+          "hist-c5fa6d8c8a2af2789edbce3c",
+          "hist-8dc02d93b53ba3955f9e26ac",
           "hist-67f1cc84f052f0b7287e8e78"
         ],
-        "market_quote_records_count": 9
+        "market_quote_records_count": 888
       }
     },
     {
-      "timing_risk_id": "1832243274252bac61f8708f028cfb40bdcea7bfc711f9351a4f1cf22e35ac68",
+      "timing_risk_id": "ee2e70106582b6361064de44c2d5f3d620f882566dac1b7852487960ada0237f",
       "ticker": "SUZB3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
+      "research_decision_id": "351fb976a39ce86623a784c7c31c1be0e0344b2eaf987cd6e25d0fa9bec71ab0",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
@@ -99,32 +118,49 @@
         "monitored_events_count": 0
       },
       "market_metrics": {
-        "status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "observations_count": 9,
-        "returns": {},
-        "realized_volatility": {},
-        "drawdowns": {},
-        "volume": {}
+        "status": "VALID_MARKET_DATA",
+        "observations_count": 888,
+        "returns": {
+          "return_21d": 0.010238095238095157,
+          "return_63d": -0.07033304119193695,
+          "return_126d": -0.18716475095785445
+        },
+        "realized_volatility": {
+          "realized_vol_21d": 0.21957794708959852,
+          "realized_vol_63d": 0.2339149480875283
+        },
+        "drawdowns": {
+          "drawdown_63d": -0.07033304119193691
+        },
+        "volume": {
+          "avg_volume_20d_brl": 41154000.0,
+          "avg_volume_60d_brl": 41881500.0,
+          "amihud_illiquidity_proxy": 2.1775327646604302e-10
+        }
       },
       "pricing_risk": {
-        "pricing_risk_status": "UNKNOWN_INSUFFICIENT_DATA",
-        "explanation": "Insufficient market quotes to assess pricing risk."
+        "pricing_risk_status": "NOT_OBVIOUSLY_PRICED",
+        "explanation": "Observed price and valuation movement do not indicate extreme pre-pricing."
       },
       "volatility_state": {
-        "volatility_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "historical_volatility": null
+        "volatility_status": "NORMAL",
+        "realized_volatility": 0.21957794708959852
       },
       "liquidity_state": {
-        "liquidity_status": "UNKNOWN_INSUFFICIENT_MARKET_DATA",
-        "daily_volume_brl": null
+        "liquidity_status": "ADEQUATE",
+        "daily_volume_brl": 41154000.0
       },
       "thesis_invalidators": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "No calculable financial bridge channel with finite numeric output for approved exposures",
         "Unresolved opposing macro factor directions detected"
       ],
       "risk_flags": [
+        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_CONFLICTING_MACRO_DIRECTION",
-        "MARKET_DATA_INSUFFICIENT",
+        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
         "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
         "WARNING_FCF_NOT_DCF_READY",
@@ -139,10 +175,10 @@
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
       "risk_severity_level": 4,
-      "confidence": 0.3396,
+      "confidence": 0.1466,
       "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "5cefd093a78402e4a0635670258362010d169b4a24631751fc2780cafa9fc8f3",
+        "research_decision_id": "351fb976a39ce86623a784c7c31c1be0e0344b2eaf987cd6e25d0fa9bec71ab0",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -181,16 +217,24 @@
           "f5efe20a281d55a4b6ac20cf"
         ],
         "valuation_observation_ids": [
+          "hist-5dc9a8ccc15010ebf0c8183a",
+          "hist-ebc007c89adff0b5f8fdfa8c",
+          "hist-70e4b2ee5ad38e8078e3f074",
+          "hist-d53fe1e1819f95688b9e7e3a",
+          "hist-333d1fe2bffdcbdc381e111b",
+          "hist-c3a92bad63a85d3ed6128398",
+          "hist-cf82c71fcbf9617c7da175a7",
+          "hist-424aa66d1dd82b2315734000",
           "hist-d8c1a9c72054ed31061cdec9"
         ],
-        "market_quote_records_count": 9
+        "market_quote_records_count": 888
       }
     },
     {
-      "timing_risk_id": "e2e7a2b724c9d9abc0fd0a32a9a7ec5335f2a68ec45ddd18c72cbb3710933b95",
+      "timing_risk_id": "f3ea3c8da359dd83451f7ddc2ff43996e1d8e0574a7d6a9a556455948e8c40b9",
       "ticker": "KLBN11",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
+      "research_decision_id": "5386cbbbb4b90f57b5e39c6f73abf9838cf63716c0a5659bd08e646960f10a2c",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
@@ -223,17 +267,20 @@
         "daily_volume_brl": null
       },
       "thesis_invalidators": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
         "NO_CALCULABLE_FINANCIAL_CHANNEL",
-        "No calculable financial bridge channel with numeric output for approved exposures",
+        "No calculable financial bridge channel with finite numeric output for approved exposures",
         "Unresolved opposing macro factor directions detected"
       ],
       "risk_flags": [
+        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_CONFLICTING_MACRO_DIRECTION",
         "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
         "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "WARNING_FCF_NOT_DCF_READY"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
@@ -244,10 +291,10 @@
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
       "risk_severity_level": 4,
-      "confidence": 0.4408,
+      "confidence": 0.1992,
       "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "47c2b470f353ee86b9535b7feca5edfb59b4f4390fa0e5bdce7025d667aa461d",
+        "research_decision_id": "5386cbbbb4b90f57b5e39c6f73abf9838cf63716c0a5659bd08e646960f10a2c",
         "macro_event_ids": [
           "0bb655e7ff44276931fbfb90",
           "1686a5e15f14a811bbaeb5b3",
@@ -290,10 +337,10 @@
       }
     },
     {
-      "timing_risk_id": "6b1f9d2259c2c32e115942e5d5e87d72075957db85e03a35703655a76e6280ce",
+      "timing_risk_id": "45f0079203a5fdb6238c433ed9470564bfda9b874099a595b34dd3cf58a0d0f5",
       "ticker": "RAIL3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
+      "research_decision_id": "cb2ec7484eeb8ac8b871192855c14146a79dd63a6de2e75ec9e8825ea93f405b",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
@@ -326,17 +373,20 @@
         "daily_volume_brl": null
       },
       "thesis_invalidators": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
         "No active macro/sector signal for company's sector",
-        "No calculable financial bridge channel with numeric output for approved exposures"
+        "No approved company macro exposure with valid ID and channel ingested"
       ],
       "risk_flags": [
+        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
         "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "WARNING_FCF_NOT_DCF_READY"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
@@ -347,20 +397,22 @@
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
       "risk_severity_level": 4,
-      "confidence": 0.3452,
+      "confidence": 0.189,
       "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "f27a38357f6fdbd27cbdb59cac75e4b843289cdf3bf5dc9bbd3da52cc67cfc61",
-        "macro_event_ids": [],
+        "research_decision_id": "cb2ec7484eeb8ac8b871192855c14146a79dd63a6de2e75ec9e8825ea93f405b",
+        "macro_event_ids": [
+          "4d88669bc470e36aba8d5c1a"
+        ],
         "valuation_observation_ids": [],
         "market_quote_records_count": 0
       }
     },
     {
-      "timing_risk_id": "df0bea053dcaf0a408fad7a62d745f8967a9b5125b8637ddfb27845b8647f664",
+      "timing_risk_id": "f1ebfcc1cffc0293cabdb27bd249068651c2a20d26c830ab7f402baeed414143",
       "ticker": "SLCE3",
       "as_of_timestamp": "2026-07-24T00:00:00+00:00",
-      "research_decision_id": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d",
+      "research_decision_id": "b8627196d3319208ff05c815065091d892f19395f46def0005846b9c729fa264",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "catalysts": [],
       "expected_horizon": {
@@ -393,17 +445,20 @@
         "daily_volume_brl": null
       },
       "thesis_invalidators": [
+        "BLOCKED_MISSING_UPSTREAM_INPUT",
         "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "NO_APPROVED_COMPANY_EXPOSURE",
         "No active macro/sector signal for company's sector",
-        "No calculable financial bridge channel with numeric output for approved exposures"
+        "No approved company macro exposure with valid ID and channel ingested"
       ],
       "risk_flags": [
+        "BLOCKER_BLOCKED_MISSING_UPSTREAM_INPUT",
         "BLOCKER_NO_ACTIVE_SECTOR_SIGNAL",
-        "BLOCKER_NO_CALCULABLE_FINANCIAL_CHANNEL",
+        "BLOCKER_NO_APPROVED_COMPANY_EXPOSURE",
         "MARKET_DATA_INSUFFICIENT",
         "UPSTREAM_EXECUTION_MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE"
+        "WARNING_EMPIRICAL_CALIBRATION_INCOMPLETE",
+        "WARNING_FCF_NOT_DCF_READY"
       ],
       "review_triggers": [
         "Macro interest rate / FX decision update",
@@ -414,11 +469,13 @@
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
       "risk_severity_level": 4,
-      "confidence": 0.3418,
+      "confidence": 0.189,
       "methodology_version": "4F.2-research-timing-risk-v2",
       "input_ids": {
-        "research_decision_id": "eec28a69946e0ea4757420c5e1a53671feb1b42aa1e22f47bf191994c722d94d",
-        "macro_event_ids": [],
+        "research_decision_id": "b8627196d3319208ff05c815065091d892f19395f46def0005846b9c729fa264",
+        "macro_event_ids": [
+          "4d88669bc470e36aba8d5c1a"
+        ],
         "valuation_observation_ids": [],
         "market_quote_records_count": 0
       }

@@ -62,7 +62,7 @@ def parse_as_of_arg() -> datetime:
     return dt
 
 
-def load_macro_events(ticker: str, as_of: datetime, audit_4d3a: dict[str, Any]) -> list[dict[str, Any]]:
+def load_macro_events(ticker: str, as_of: datetime, audit_4d3a: dict[str, Any], store_conn: Any) -> list[dict[str, Any]]:
     events = []
     conflicts = [d for d in audit_4d3a.get("conflict_diagnostics", []) if d.get("ticker") == ticker]
     for conf in conflicts:
@@ -81,21 +81,58 @@ def load_macro_events(ticker: str, as_of: datetime, audit_4d3a: dict[str, Any]) 
                     "decision_mode_status": "BLOCKED" if conf.get("paths") and len({x.get("factor_direction") for x in conf["paths"]}) > 1 else "ACTIVE",
                     "available_at": avail,
                 })
-    return events
+    if events:
+        return events
+
+    # The financial calibration manifest only contains conflict diagnostics
+    # for SUZB3/KLBN11.  For the retail pilot, resolve the real approved BCB
+    # event from the canonical PIT store instead of silently treating the
+    # absence of a diagnostic as absence of a macro event.
+    rows = store_conn.execute(
+        """
+        SELECT event_id, event_type, indicator, reference_date, detected_at,
+               direction, horizon_months, status
+        FROM macro_event_candidates
+        WHERE status = 'MACRO_EVENT_APPROVED'
+          AND indicator = 'Selic Taxa Overnight'
+          AND reference_date <= ?
+        ORDER BY reference_date DESC, detected_at DESC
+        LIMIT 1
+        """,
+        [as_of.date()],
+    ).fetchall()
+    if not rows:
+        return []
+    event_id, event_type, indicator, reference_date, detected_at, direction, horizon_months, status = rows[0]
+    factor_direction = -1 if str(direction).upper() in {"DOVISH", "FALLING", "DOWN"} else 1
+    return [{
+        "macro_event_id": event_id,
+        "event_type": event_type,
+        "indicator": indicator,
+        "factor": "INTEREST_RATES",
+        "factor_direction": factor_direction,
+        "decision_mode_status": "ACTIVE",
+        "available_at": detected_at.isoformat() if detected_at else reference_date.isoformat(),
+        "horizon_months": horizon_months,
+        "status": status,
+    }]
 
 
 def load_sector_state(ticker: str, as_of: datetime, audit_4c5b_pilot: dict[str, Any]) -> dict[str, Any] | None:
     for comp in audit_4c5b_pilot.get("comparisons", []):
         if comp.get("ticker") == ticker:
             sec_id = comp.get("approved_snapshot_id")
-            avail = comp.get("as_of_timestamp")
             sec_name = comp.get("sector_state")
+            avail = comp.get("as_of_timestamp") or next(
+                (p.get("as_of_timestamp") for p in comp.get("policies", {}).values() if p.get("as_of_timestamp")),
+                None,
+            )
             if sec_id and avail and sec_name:
                 return {
                     "sector_name": sec_name,
                     "sector_snapshot_id": sec_id,
-                    "is_active": True if sec_name == "SECTOR_STATE_WATCH" else False,
-                    "has_active_signal": True if sec_name == "SECTOR_STATE_WATCH" else False,
+                    "is_active": sec_name in {"SECTOR_STATE_ACTIVE", "SECTOR_STATE_WATCH"},
+                    "has_active_signal": sec_name in {"SECTOR_STATE_ACTIVE", "SECTOR_STATE_WATCH"},
                     "impact_score": comp.get("policies", {}).get("THREE_COMPONENTS", {}).get("net_company_impact", 0.0),
                     "available_at": avail,
                 }
@@ -106,11 +143,15 @@ def load_company_exposures(ticker: str, as_of: datetime, audit_4c5b_pilot: dict[
     exposures = []
     for comp in audit_4c5b_pilot.get("comparisons", []):
         if comp.get("ticker") == ticker:
-            pol = comp.get("policies", {}).get("THREE_COMPONENTS", {})
+            policies = comp.get("policies", {})
+            materiality = policies.get("MATERIALITY_COVERAGE", {})
+            pol = materiality if materiality.get("status") == "WATCH" else policies.get("THREE_COMPONENTS", {})
             cand_id = pol.get("candidate_id")
             exp_id = pol.get("company_exposure_id") or comp.get("approved_snapshot_id")
             channel = pol.get("channel") or comp.get("approved_channel")
-            avail = comp.get("as_of_timestamp")
+            if channel is None and pol.get("factor_contributions"):
+                channel = pol["factor_contributions"][0].get("channel")
+            avail = comp.get("as_of_timestamp") or pol.get("as_of_timestamp")
             
             # Require candidate_id, company_exposure_id, channel, and available_at; no defaults!
             if cand_id and exp_id and channel and avail:
@@ -119,7 +160,7 @@ def load_company_exposures(ticker: str, as_of: datetime, audit_4c5b_pilot: dict[
                     "company_exposure_id": exp_id,
                     "ticker": ticker,
                     "channel": channel,
-                    "approval_status": "HUMAN_APPROVED",
+                    "approval_status": "DELEGATED_AI_APPROVED",
                     "confidence": pol.get("confidence", 0.75),
                     "evidence_ids": pol.get("supporting_event_ids", []),
                     "available_at": avail,
@@ -127,9 +168,41 @@ def load_company_exposures(ticker: str, as_of: datetime, audit_4c5b_pilot: dict[
     return exposures
 
 
-def load_financial_outcomes(ticker: str, as_of: datetime, audit_4d3a: dict[str, Any], audit_4d3_pilot: dict[str, Any]) -> list[dict[str, Any]]:
+def load_financial_outcomes(ticker: str, as_of: datetime, audit_4d3a: dict[str, Any], audit_4d3_pilot: dict[str, Any], store_conn: Any) -> list[dict[str, Any]]:
     outcomes = []
-    raw_outcomes = [o for o in audit_4d3_pilot.get("outcomes", []) if o.get("ticker") == ticker]
+    rows = store_conn.execute(
+        """
+        SELECT outcome_id, ticker, as_of_timestamp, baseline_id,
+               company_impact_candidate_id, outcome_payload, confidence, status
+        FROM financial_scenario_outcomes
+        WHERE ticker = ? AND as_of_timestamp <= ?
+        ORDER BY as_of_timestamp DESC, created_at DESC
+        """,
+        [ticker, as_of],
+    ).fetchall()
+    raw_outcomes = []
+    for outcome_id, row_ticker, available_at, baseline_id, candidate_id, payload, confidence, status in rows[:3]:
+        data = json.loads(payload)
+        data.update({
+            "outcome_id": outcome_id,
+            "financial_outcome_id": outcome_id,
+            "ticker": row_ticker,
+            "baseline_id": baseline_id,
+            "company_impact_candidate_id": candidate_id,
+            "confidence": confidence,
+            "status": status,
+            "available_at": available_at.isoformat(),
+        })
+        changes = data.get("absolute_changes", {})
+        data["delta_net_income"] = changes.get("net_income")
+        data["delta_ebitda"] = changes.get("ebitda")
+        data["delta_fcf"] = changes.get("fcf")
+        data["delta_revenue"] = changes.get("revenue")
+        data["contribution_id"] = candidate_id
+        data["metric"] = "net_income"
+        data["unit"] = "BRL"
+        data["direction"] = 1 if (changes.get("net_income") or 0) >= 0 else -1
+        raw_outcomes.append(data)
     if not raw_outcomes:
         raw_outcomes = [o for o in audit_4d3a.get("outcomes", []) if o.get("ticker") == ticker]
 
@@ -163,7 +236,11 @@ def load_financial_outcomes(ticker: str, as_of: datetime, audit_4d3a: dict[str, 
 
 
 def load_pit_security_mapping(ticker: str, as_of: datetime, audit_4e1d: dict[str, Any]) -> dict[str, Any] | None:
-    mappings = audit_4e1d.get("official_mappings", []) or audit_4e1d.get("mappings", [])
+    mappings = (
+        audit_4e1d.get("official_mappings", [])
+        or audit_4e1d.get("mappings", [])
+        or audit_4e1d.get("pit_mappings", [])
+    )
     for m in mappings:
         if m.get("ticker") == ticker:
             map_id = m.get("mapping_id") or m.get("source_record_hash")
@@ -274,10 +351,10 @@ def main() -> None:
     for ticker in target_tickers:
         print(f"\nProcessing ticker: {ticker}...")
 
-        macro_events = load_macro_events(ticker, as_of, audit_4d3a)
+        macro_events = load_macro_events(ticker, as_of, audit_4d3a, store.connection)
         sector_state = load_sector_state(ticker, as_of, audit_4c5b_pilot)
         company_contributions = load_company_exposures(ticker, as_of, audit_4c5b_pilot)
-        financial_outcomes = load_financial_outcomes(ticker, as_of, audit_4d3a, audit_4d3_pilot)
+        financial_outcomes = load_financial_outcomes(ticker, as_of, audit_4d3a, audit_4d3_pilot, store.connection)
         security_mapping = load_pit_security_mapping(ticker, as_of, audit_4e1d)
         historical_multiple_position, price_implied_fundamentals, val_input_ids = load_historical_valuation(ticker, as_of, audit_4e2)
 

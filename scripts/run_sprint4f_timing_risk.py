@@ -60,7 +60,8 @@ def main() -> None:
     print(f"Assessment Cutoff (as_of_timestamp): {as_of.isoformat()}")
 
     settings = Settings()
-    db_path = settings.data_dir / "macro_b3_bot.duckdb"
+    # Use the same canonical PIT store as decision synthesis and paper replay.
+    db_path = settings.data_dir / "audit.duckdb"
     store = DatabaseStore(db_path)
 
     audits_dir = Path("data/audits")

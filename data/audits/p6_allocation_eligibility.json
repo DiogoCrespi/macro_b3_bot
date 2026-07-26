@@ -6,49 +6,39 @@
   "total_decisions": 5,
   "eligible_for_paper_allocation": 0,
   "blocker_counts": {
-    "BLOCKED_MISSING_UPSTREAM_INPUT": 5,
-    "DECISION_NO_ACTION": 5,
-    "MODE_BLOCKED_MISSING_UPSTREAM_INPUT": 5,
-    "NO_ACTIVE_SECTOR_SIGNAL": 5,
-    "NO_APPROVED_COMPANY_EXPOSURE": 5,
-    "RISK_HIGH_RISK": 5,
     "TIMING_WAIT_FOR_CONFIRMATION": 5,
-    "CONFLICTING_MACRO_DIRECTION": 2
+    "BLOCKED_MISSING_UPSTREAM_INPUT": 4,
+    "CONFLICTING_MACRO_DIRECTION": 2,
+    "DECISION_NO_ACTION": 4,
+    "MODE_BLOCKED_MISSING_UPSTREAM_INPUT": 4,
+    "NO_CALCULABLE_FINANCIAL_CHANNEL": 2,
+    "RISK_HIGH_RISK": 4,
+    "NO_ACTIVE_SECTOR_SIGNAL": 2,
+    "NO_APPROVED_COMPANY_EXPOSURE": 2
   },
   "decisions": [
     {
       "ticker": "MGLU3",
-      "decision_id": "e55b519c11a686bfdf369bea2a0e6167f776da6f0ea23f68a60147604825cda3",
-      "decision": "NO_ACTION",
-      "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
-      "critical_blockers": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
-      ],
+      "decision_id": "c85cf0e4d3087c8ae5298fbd2ccfac8053f96b8f2e440978728e5d1f86d0a6d0",
+      "decision": "WATCH",
+      "execution_mode": "REAL_UPSTREAM_SYNTHESIS",
+      "critical_blockers": [],
       "timing_classification": "WAIT_FOR_CONFIRMATION",
-      "risk_classification": "HIGH_RISK",
+      "risk_classification": "ELEVATED_RISK",
       "eligible_for_paper_allocation": false,
       "reasons": [
-        "BLOCKED_MISSING_UPSTREAM_INPUT",
-        "DECISION_NO_ACTION",
-        "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
-        "RISK_HIGH_RISK",
         "TIMING_WAIT_FOR_CONFIRMATION"
       ]
     },
     {
       "ticker": "SUZB3",
-      "decision_id": "b0c68cae26747ead7ce44c89ab312e0126600586e0fc5c6781c4ae5b9ba09a08",
+      "decision_id": "351fb976a39ce86623a784c7c31c1be0e0344b2eaf987cd6e25d0fa9bec71ab0",
       "decision": "NO_ACTION",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
@@ -58,22 +48,20 @@
         "CONFLICTING_MACRO_DIRECTION",
         "DECISION_NO_ACTION",
         "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
         "RISK_HIGH_RISK",
         "TIMING_WAIT_FOR_CONFIRMATION"
       ]
     },
     {
       "ticker": "KLBN11",
-      "decision_id": "4e01dd5762a1057a3ebb101cff79f7ba88c2df18d07c5eb8f181e557140eb32e",
+      "decision_id": "5386cbbbb4b90f57b5e39c6f73abf9838cf63716c0a5659bd08e646960f10a2c",
       "decision": "NO_ACTION",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "critical_blockers": [
         "BLOCKED_MISSING_UPSTREAM_INPUT",
         "CONFLICTING_MACRO_DIRECTION",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE"
+        "NO_CALCULABLE_FINANCIAL_CHANNEL"
       ],
       "timing_classification": "WAIT_FOR_CONFIRMATION",
       "risk_classification": "HIGH_RISK",
@@ -83,15 +71,14 @@
         "CONFLICTING_MACRO_DIRECTION",
         "DECISION_NO_ACTION",
         "MODE_BLOCKED_MISSING_UPSTREAM_INPUT",
-        "NO_ACTIVE_SECTOR_SIGNAL",
-        "NO_APPROVED_COMPANY_EXPOSURE",
+        "NO_CALCULABLE_FINANCIAL_CHANNEL",
         "RISK_HIGH_RISK",
         "TIMING_WAIT_FOR_CONFIRMATION"
       ]
     },
     {
       "ticker": "RAIL3",
-      "decision_id": "1c9f68ec6db8fc14180b2da256aa0dc549a807e1eabffa7d0f9ddcea54d90d0a",
+      "decision_id": "cb2ec7484eeb8ac8b871192855c14146a79dd63a6de2e75ec9e8825ea93f405b",
       "decision": "NO_ACTION",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "critical_blockers": [
@@ -114,7 +101,7 @@
     },
     {
       "ticker": "SLCE3",
-      "decision_id": "e36f6b2124a6a92901c9a9af823055447121e33600faebd342cbdb64d41c6a08",
+      "decision_id": "b8627196d3319208ff05c815065091d892f19395f46def0005846b9c729fa264",
       "decision": "NO_ACTION",
       "execution_mode": "BLOCKED_MISSING_UPSTREAM_INPUT",
       "critical_blockers": [

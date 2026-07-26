@@ -388,9 +388,11 @@ empresa sem FCF e calibração aptos.
 justificativa de cobertura para o estado `NO_ACTION`, reconciliação de eventos corporativos,
 impostos quando aplicáveis e kill switch exercitado em staging. O resultado atual é
 `PAPER_REPLAY_NO_ACTION`, não uma tese ou uma promessa de performance. A auditoria de
-elegibilidade (`p6_allocation_eligibility.json`) confirma `0/5` decisões elegíveis:
-as cinco estão `NO_ACTION`, `BLOCKED_MISSING_UPSTREAM_INPUT`, `WAIT_FOR_CONFIRMATION`
-e `HIGH_RISK`. Nenhuma aprovação foi criada artificialmente.
+elegibilidade (`p6_allocation_eligibility.json`) confirma `0/5` decisões elegíveis. O
+MGLU3 agora possui `WATCH` em modo upstream real, com setor ativo, exposição delegadamente
+aprovada e canal financeiro PIT; ainda assim permanece fora da alocação por
+`WAIT_FOR_CONFIRMATION`/`ELEVATED_RISK`. As demais quatro empresas continuam bloqueadas
+por upstream, conflito ou ausência de sinal. Nenhuma aprovação foi criada artificialmente.
 
 ### Fase P7 — Produção decisória e execução
 
@@ -496,7 +498,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `financial_4d3b_integrity` | P4/P5 | Calibrações reconstruídas no schema atual e persistidas; MGLU3 estrutural, SUZB3/KLBN11 não promovidas; FCF permanece proxy por ausência de manutenção de capex explicitamente evidenciada | Obter divulgação auditável de manutenção de capex e drivers financeiros antes de liberar DCF |
 | 26/07/2026 | `issuer_adjusted_fcf_20260726` | P5 | Evidência primária incorporada: FCF ajustado com maintenance capex explícito para SUZB3 e KLBN11; MGLU3 permanece bloqueada por ausência do split | Calibrar bridges e obter mercado PIT válido antes de DCF |
 | 26/07/2026 | `32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30` | P6 | Replay PIT canônico persistido em `audit.duckdb`: 34 cutoffs, 640 sessões, 10 avaliações, 34 snapshots, performance reconciliada; 0 entradas/saídas, NAV final igual ao capital inicial, custos/slippage 0 | Cobertura de decisões aprovadas, eventos corporativos PIT, impostos e kill-switch em staging |
-| 26/07/2026 | `p6_allocation_eligibility` | P6 | Auditoria dos 5 decisions snapshots: `0/5` elegíveis para alocação; nenhum approval foi criado; bloqueios preservados (`NO_ACTION`, upstream ausente, timing e risco) | Produzir upstream PIT completo e decisão `WATCH` sem bloqueadores antes de qualquer entrada simulada |
+| 26/07/2026 | `p6_allocation_eligibility` | P6 | Auditoria dos 5 decision snapshots: `0/5` elegíveis; MGLU3 alcançou `WATCH` upstream real, mas segue `WAIT_FOR_CONFIRMATION`/`ELEVATED_RISK`; nenhum approval foi criado | Resolver timing/risk com dados PIT suficientes antes de qualquer entrada simulada |
 
 ## Backlog posterior
 
