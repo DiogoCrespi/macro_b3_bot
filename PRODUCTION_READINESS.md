@@ -308,15 +308,29 @@ a política decisória.
 
 ### Fase P5 — Valuation readiness
 
-**Status:** `BLOQUEADA POR P4`
+**Status:** `EM ANDAMENTO — GATE EXECUTADO EM MODO FAIL-CLOSED`
 **Objetivo:** impedir valuation artificial e liberar somente dados qualificados.
 
-- [ ] Gate formal `VALUATION_READY`/`VALUATION_BLOCKED`.
-- [ ] Bloqueio explícito para FCF estatístico não normalizado.
-- [ ] Baselines e mercado point-in-time reproduzíveis.
-- [ ] Múltiplos observados com amostra e data válidas.
-- [ ] Cenários de receita, EBITDA, lucro e FCF com premissas auditáveis.
-- [ ] DCF somente para empresas que passarem todos os gates.
+- [X] Gate formal `VALUATION_READY`/`VALUATION_BLOCKED` persistido por empresa.
+- [X] Bloqueio explícito para FCF estatístico não normalizado e calibração legada incompatível.
+- [X] Baselines e mercado point-in-time reproduzíveis, com corte `2026-07-26T23:59:59+00:00`.
+- [X] Múltiplos observados classificados como `DESCRIPTIVE_ONLY`, nunca como fair value.
+- [~] Cenários de receita, EBITDA, lucro e FCF: aguardam FCF normalizado e calibração promovida.
+- [X] DCF, preço-alvo, BUY e ordens bloqueados enquanto qualquer gate falhar.
+
+**Execução persistida:** `data/audits/valuation_p5_readiness.json`, gerado por
+`scripts/run_valuation_readiness_pilot.py`. Foram avaliadas MGLU3, SUZB3, KLBN11,
+RAIL3 e SLCE3. O resultado atual é fail-closed: as três primeiras têm calibração
+legada incompatível com o schema atual e FCF estatístico; RAIL3 e SLCE3 não possuem
+snapshot de FCF normalizado. Portanto, `valuation_eligible=false` e `dcf_eligible=false`
+para 5/5. O artefato confirma `formal_gate_present`, `fcf_proxy_blocked`,
+`no_fair_value_or_price_target` e `pit_cutoff`; nenhum valor justo ou preço-alvo foi
+calculado.
+
+Os múltiplos de mercado, quando disponíveis, são apenas descritivos e carregam
+`not_a_fair_value=true` e `not_buy_eligible=true`. O script ignora payloads de
+calibração históricos que não possuem o contrato P4 atual e registra
+`CALIBRATION_SCHEMA_INVALID`, em vez de reinterpretá-los ou promovê-los.
 
 **Aceite:** cada bloqueio informa código e evidência; nenhum preço-alvo é produzido para
 empresa sem FCF e calibração aptos.
@@ -435,6 +449,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `P3-RUN-39b8886` | P3   | Execução real do sidecar/LLM com seed PIT, relatório bruto e checksums persistidos; incompatibilidade semântica rejeitada corretamente; zero hipóteses e zero binding                                                                                                                                                             | Relatório nativo semanticamente compatível e`SUPPORTED + BOUND + CONSISTENT` |
 | 26/07/2026 | `P3-RUN-d7c115b` | P3   | Replay real com Selic brasileira: relatório terminal persistido, 2 hipóteses, candidato setorial WATCH no mesmo corte e primeira hipótese `SUPPORTED + BOUND + CONSISTENT`; segunda hipótese permanece UNVERIFIED | Versionar sidecar, executar 5C e manter decisão conservadora |
 | 26/07/2026 | `financial_p4_walk_forward` | P4 | Replay PIT atualizado após ingestão BCB SGS 12/433: SUZB3 e KLBN11 FX, CDI/SOFR e IPCA com 7–8 janelas OOS; MGLU3 estrutural; nenhum bridge promovido | Determinar exposição efetiva, repricing/derivativos e completar RMSE/ablação com outcomes avaliáveis |
+| 26/07/2026 | `P5-valuation-readiness-pilot-v1` | P5 | Gate formal executado para 5 empresas; 5/5 bloqueadas; múltiplos somente descritivos; zero DCF, fair value, preço-alvo, BUY ou ordens; artefato PIT persistido | Promover calibração P4 e FCF normalizado antes de qualquer valuation |
 
 ## Backlog posterior
 
