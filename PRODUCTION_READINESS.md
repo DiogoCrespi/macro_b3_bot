@@ -422,6 +422,20 @@ integração de corretora real, aprovação segregada e entrega externa de alert
 Até que esses critérios sejam atendidos, o comportamento correto do sistema é bloquear
 ou retornar `NO_ACTION`, nunca fabricar uma tese, valuation ou ordem.
 
+### Varredura integral do universo B3 — 26/07/2026
+
+Foi adicionada e executada a varredura `scripts/run_universe_research_scan.py`, usando
+os snapshots persistidos no DuckDB. O relatório escaneou **234 ativos** e produziu uma
+watchlist comparativa em `data/audits/universe_research_scan.md` e
+`data/audits/universe_research_scan.json`.
+
+O ranking usa grupos de métricas com pesos iguais (valuation descritivo, qualidade,
+alavancagem, renda e liquidez). Fatores macro são reportados separadamente e não são
+convertidos diretamente em score do ativo. Assim, El Niño/ENSO não domina a lista: ele
+só aparece quando existir evento upstream real; nesta execução os eventos registrados
+foram política monetária, câmbio e crescimento. Todos os resultados permanecem
+`RESEARCH_WATCHLIST_ONLY`, sem valuation, BUY ou ordens.
+
 ## Estado do Sprint 5B.1
 
 O fechamento de integridade do MiroFish foi implementado e testado:
