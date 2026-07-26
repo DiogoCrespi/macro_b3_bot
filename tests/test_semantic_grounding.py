@@ -37,3 +37,16 @@ def test_numeric_overlap_alone_is_not_a_claim_binding():
     )
     assert result["status"] == "REJECTED_SEMANTIC_SOURCE_MISMATCH"
     assert "DECLARED_CLAIM_NOT_AVAILABLE_AT_PIT" in result["reasons"]
+
+
+def test_cvm_itr_technology_translation_is_rejected():
+    result = validate_hypothesis_grounding(
+        _hypothesis(),
+        release={"indicator": "IPCA", "unit": "%", "geography": '["BR"]'},
+        claims=[{"claim_id": "claim-1"}],
+        documents=[{"document_id": "doc-1"}],
+        sector_states=[{"snapshot_id": "sector-1", "sector": "RETAIL"}],
+        report_text="ITR (information technology report) is the key source.",
+    )
+    assert result["status"] == "REJECTED_SEMANTIC_SOURCE_MISMATCH"
+    assert "CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT" in result["reasons"]

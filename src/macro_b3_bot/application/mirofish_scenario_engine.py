@@ -303,7 +303,14 @@ class MiroFishScenarioEngine:
                 "Do not substitute ontology JSON or narrative prose for the report. "
                 "The report object must contain report_text and scenarios, and each "
                 "scenario must contain scenario_type, trigger and report_excerpt. "
-                f"Schema hash: {report_config['report_schema_hash']}."
+                f"Schema hash: {report_config['report_schema_hash']}. "
+                "MANDATORY BRAZILIAN DOMAIN GLOSSARY: IPCA means the Brazilian "
+                "national consumer price index (geography BR), never global inflation. "
+                "ITR means CVM Informações Trimestrais (quarterly financial filing), "
+                "never information technology report. Preserve the event indicator, "
+                "unit, geography, claim IDs and source document IDs from the seed. "
+                "If the simulation cannot satisfy these meanings, report the limitation "
+                "explicitly instead of translating or inventing a different indicator."
             )
             res = self.client.generate_ontology(
                 [str(seed_file_path)],

@@ -61,7 +61,7 @@ def validate_hypothesis_grounding(
 
     # ITR is a controlled CVM acronym. A translation to information technology
     # is a source-semantic contradiction, not a harmless language variation.
-    if "itr" in report and any(token in report for token in ("information technology report", "信息技术报告")):
+    if "itr" in report and any(token in report for token in ("information technology report", "信息技术报告", "information technology") ):
         reasons.append("CVM_ITR_MAPPED_TO_INFORMATION_TECHNOLOGY_REPORT")
 
     if hypothesis.get("macro_event_ids") and not release:

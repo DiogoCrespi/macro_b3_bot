@@ -208,6 +208,11 @@ simulação e relatório concluíram; o relatório foi rejeitado como `FAILED_UN
 e gerou zero hipóteses porque continha inflação global e ITR como tecnologia. Nenhum binding,
 WATCH ou decisão foi criado.
 
+**Correção em andamento:** o prompt/seed agora carrega glossário obrigatório de domínio
+(`IPCA=índice nacional brasileiro`, `ITR=Informações Trimestrais CVM`) e a validação rejeita
+explicitamente traduções tecnológicas. O próximo replay real deve demonstrar mudança do
+relatório, não uma hipótese fabricada localmente.
+
 ### Fase P4 — Validação histórica dos bridges
 
 **Status:** `PENDENTE`
