@@ -3,12 +3,13 @@
   "source_repository": "C:/Nestjs/Advanced_Btc_Bot_TCC/Advanced_Btc_Bot/MiroFish",
   "source_commit": "0be53e479aa4d03fe535e223057ee791e77e40e0",
   "dockerfile_sha256": "acf36e3c8a13bd8a2a87ee68a9d52aadd569cc4755daab681b46aa5e9b85d85f",
-  "image_reference": "mirofish-local@sha256:3ef16407aab37eb4933c12fa8f00f6447f4475ce05eb370ef4a12f49f964618e",
-  "image_id": "sha256:3ef16407aab37eb4933c12fa8f00f6447f4475ce05eb370ef4a12f49f964618e",
+  "image_reference": "ghcr.io/diogocrespi/mirofish@sha256:ebb6b48bec2356b5b8028f89375b068a17dfee6068e473cb34715095bdb547ee",
+  "registry_digest": "sha256:ebb6b48bec2356b5b8028f89375b068a17dfee6068e473cb34715095bdb547ee",
+  "linux_amd64_manifest_digest": "sha256:69502606f2b17d9f3f836bd769065df2c823af7c0825fc66b2d8bb6388003c72",
+  "local_build_digest": "sha256:3ef16407aab37eb4933c12fa8f00f6447f4475ce05eb370ef4a12f49f964618e",
   "built_at": "2026-07-25T20:39:17.32280523Z",
-  "status": "LOCAL_STAGING_PIN",
+  "status": "REGISTRY_STAGING_PIN",
   "limitations": [
-    "The digest is immutable for this locally built image and is not yet published to a registry.",
-    "A registry digest and signed provenance are required before multi-host production deployment."
+    "The image is immutable and published to GHCR; signature verification remains a later supply-chain control."
   ]
 }

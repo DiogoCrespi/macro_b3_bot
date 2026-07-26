@@ -139,13 +139,13 @@ Este arquivo é o caminho oficial de implementação. Cada alteração futura de
 - [x] Testar cópia restaurável em ambiente temporário.
 - [x] Definir retenção e limpeza automática de backups (`--keep`, padrão 7).
 
-**Evidência atual:** `docker build` aprovado, imagem MiroFish local fixada por digest e
-proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
+**Evidência atual:** `docker build` aprovado, imagem MiroFish publicada no GHCR e fixada
+por digest multi-arquitetura, proveniência registrada em `data/audits/mirofish_sidecar_image.json`, `docker compose config` aprovado, health
 check do container aprovado, backup com `restore_check=PASS` e segunda execução retornando
 `STAGING_RUN_ALREADY_SUCCEEDED`, circuit breaker aberto após falhas transitórias e
 `restore_check=PASS`; o worker foi executado localmente e dentro da imagem Docker com
-`worker-ok`. O aceite final permanece bloqueado por digest publicado em registry,
-integração do scheduler externo e rotação de secrets. O cancelamento cooperativo foi
+`worker-ok`. O aceite final permanece bloqueado por registro persistente do scheduler
+e rotação de secrets. O cancelamento cooperativo foi
 implementado para falhas/timeouts; cancelamento iniciado por operador ainda requer comando
 operacional autenticado.
 
@@ -278,7 +278,7 @@ históricos suficientes.
 |---|---|---|---|---|
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
-| 25/07/2026 | `27401f3` | P1 | Digest local do sidecar, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, digest publicado em registry e rotação de secrets |
+| 25/07/2026 | `27401f3` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler e rotação de secrets |
 
 ## Backlog posterior
 
