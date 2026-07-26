@@ -149,6 +149,12 @@ integração do scheduler externo e rotação de secrets. O cancelamento coopera
 implementado para falhas/timeouts; cancelamento iniciado por operador ainda requer comando
 operacional autenticado.
 
+**Scheduler:** adaptadores reais estão em `scripts/register_staging_task.ps1` e
+`scripts/invoke_staging_job.ps1`. O registro foi validado com `-WhatIf` e o invocador
+foi executado com `run_id` explícito e retorno `scheduler-invoker-ok`; a tarefa persistente
+não foi criada porque horário, identidade operacional e política de execução ainda não
+foram definidos.
+
 ### Fase P2 — Observabilidade e governança
 
 **Status:** `PENDENTE`
