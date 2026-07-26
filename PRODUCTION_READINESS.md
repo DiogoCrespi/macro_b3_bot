@@ -172,14 +172,15 @@ foram definidos.
 - [ ] Autenticação e autorização para revisão, decisão e administração.
 - [ ] RBAC separando operador, revisor e administrador.
 - [x] Núcleo de log append-only com hash chain para revisão/binding/decisão.
-- [ ] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios.
-- [ ] Alertas de dados atrasados, conflitos, runs incompletos e checksum divergente.
+- [x] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios em snapshots JSON.
+- [x] Avaliação determinística de alertas para atraso PIT, conflitos, falhas e baixa aprovação.
 - [ ] Dashboard de teses, hipóteses, `WATCH`, `NO_ACTION` e invalidadores.
 - [x] Kill switch fail-closed com permissão administrativa e motivo obrigatório.
 
-**Evidência P2 inicial:** `application/governance.py` e `tests/test_governance.py` validam
-RBAC mínimo, ledger append-only com cadeia de hashes e kill switch persistido. Autenticação
-real, métricas/alertas, dashboard e runbook operacional ainda estão pendentes.
+**Evidência P2 inicial:** `application/governance.py`, `application/observability.py`,
+`docs/STAGING_RUNBOOK.md` e testes validam RBAC mínimo, ledger append-only, kill switch,
+snapshots de métricas e alertas determinísticos. Autenticação real, entrega de alertas,
+dashboard visual e integração com monitoramento externo ainda estão pendentes.
 
 ### Fase P3 — Grounding e binding econômico real
 
