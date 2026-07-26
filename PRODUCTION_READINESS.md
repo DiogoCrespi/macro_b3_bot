@@ -397,23 +397,24 @@ por upstream, conflito ou ausência de sinal. Nenhuma aprovação foi criada art
 
 ### Fase P7 — Produção decisória e execução
 
-**Status:** `INICIADA — AUDITORIA FAIL-CLOSED BLOQUEADA`
+**Status:** `STAGING_READY_ONLY — PRODUÇÃO BLOQUEADA POR DESENHO`
 **Objetivo:** somente após P0–P6, avaliar produção e eventual integração de corretora.
 
 - [X] Auditoria fail-closed de configuração e governança executada.
 - [X] `BUY` e execução de ordens permanecem desabilitados por configuração e ambiente.
 - [ ] Revisão de segurança e compliance.
 - [ ] Segregação de credenciais de corretora.
-- [ ] Sandbox de ordens e reconciliação com broker.
+- [X] Sandbox local de ordens e reconciliação determinística (sem rede).
 - [ ] Aprovação humana segregada e auditável.
 - [ ] Limites pré-trade, pós-trade e kill switch independente.
 - [ ] Rollback operacional e plano de incidente.
 
 **Evidência atual:** `data/audits/p7_production_readiness.json`. A auditoria confirma
 `order_execution_disabled=true`, `buy_signals_disabled=true`, governança rejeitando
-operador não autenticado e zero chamadas de broker. A fase permanece bloqueada por
-ausência de sandbox/reconciliação de corretora, aprovação humana segregada e entrega
-externa de alertas.
+operador não autenticado, reconciliação sandbox aprovada e zero chamadas de broker.
+O broker sandbox grava apenas JSONL local, com IDs determinísticos e idempotência;
+não há integração de rede nem ordem real. A produção permanece bloqueada por
+integração de corretora real, aprovação segregada e entrega externa de alertas.
 
 **Aceite:** somente uma aprovação formal de produção pode alterar o estado para
 `PRODUÇÃO DECISÓRIA`. Até lá, `BUY` e ordens continuam bloqueados.
@@ -508,7 +509,7 @@ por política. Não há valuation, DCF, `BUY` ou ordens.
 | 26/07/2026 | `issuer_adjusted_fcf_20260726` | P5 | Evidência primária incorporada: FCF ajustado com maintenance capex explícito para SUZB3 e KLBN11; MGLU3 permanece bloqueada por ausência do split | Calibrar bridges e obter mercado PIT válido antes de DCF |
 | 26/07/2026 | `32e4355ac11ec154db17f8c5c695403f66901639cb203df0087fe698642cac30` | P6 | Replay PIT canônico persistido em `audit.duckdb`: 34 cutoffs, 640 sessões, 10 avaliações, 34 snapshots, performance reconciliada; 0 entradas/saídas, NAV final igual ao capital inicial, custos/slippage 0 | Cobertura de decisões aprovadas, eventos corporativos PIT, impostos e kill-switch em staging |
 | 26/07/2026 | `p6_allocation_eligibility` | P6 | Auditoria dos 5 decision snapshots: `0/5` elegíveis; MGLU3 alcançou `WATCH` upstream real, mas segue `WAIT_FOR_CONFIRMATION`/`ELEVATED_RISK`; nenhum approval foi criado | Resolver timing/risk com dados PIT suficientes antes de qualquer entrada simulada |
-| 26/07/2026 | `p7_production_readiness` | P7 | Auditoria fail-closed executada: BUY/ordens/broker = 0; configuração e governança seguras; sandbox, reconciliação de broker, aprovação segregada e alertas externos ainda ausentes | Implementar somente em sandbox e manter produção bloqueada até aprovação formal |
+| 26/07/2026 | `6c8f6f5` | P7 | Auditoria fail-closed: BUY/ordens/broker = 0; sandbox local idempotente e reconciliação determinística aprovados; produção segue bloqueada | Aprovação segregada, alertas externos e integração de corretora real |
 
 ## Backlog posterior
 

@@ -1,6 +1,6 @@
 {
   "phase": "P7",
-  "status": "BLOCKED",
+  "status": "STAGING_READY_ONLY",
   "environment": "development",
   "checks": {
     "order_execution_disabled": true,
@@ -9,20 +9,28 @@
     "governance_rejects_unauthenticated_operator": true,
     "kill_switch_control_exists": true,
     "real_broker_integration": false,
-    "sandbox_order_reconciliation": false,
+    "sandbox_order_reconciliation": true,
     "segregated_human_approval": false,
     "external_alert_delivery": false
   },
   "blockers": [
     "real_broker_integration",
-    "sandbox_order_reconciliation",
     "segregated_human_approval",
     "external_alert_delivery"
   ],
   "safety": {
     "buy_signals": 0,
     "orders": 0,
-    "broker_calls": 0
+    "broker_calls": 0,
+    "sandbox_only": true
   },
-  "policy": "P7 audit cannot enable orders; production requires a separate approval and broker sandbox."
+  "sandbox_reconciliation": {
+    "matched": [
+      "270d650544d78fb9987b850e4ac6c371e6498db41a5a0f50ffa86bca133b8577"
+    ],
+    "missing": [],
+    "extra": [],
+    "passed": true
+  },
+  "policy": "P7 audit cannot enable orders; sandbox is local-only and production requires separate approval, alerts and broker controls."
 }

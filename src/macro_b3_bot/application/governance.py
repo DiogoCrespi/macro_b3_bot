@@ -18,7 +18,7 @@ from typing import Any
 
 ROLES = frozenset({"operator", "reviewer", "administrator"})
 ROLE_PERMISSIONS = {
-    "operator": frozenset({"run_pipeline", "read_audit"}),
+    "operator": frozenset({"run_pipeline", "read_audit", "submit_sandbox_order"}),
     "reviewer": frozenset({"read_audit", "review_exposure", "review_hypothesis"}),
     "administrator": frozenset({"read_audit", "review_exposure", "review_hypothesis", "kill_switch"}),
 }
