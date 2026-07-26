@@ -9,7 +9,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
+import hmac
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +37,15 @@ class GovernanceActor:
 def require_permission(actor: GovernanceActor, permission: str) -> None:
     if actor.role not in ROLES or not actor.can(permission):
         raise PermissionError(f"governance permission denied: {permission}")
+
+
+def authenticate_token(token: str, *, actor_id: str, role: str, token_hash: str | None = None) -> GovernanceActor:
+    """Authenticate a configured token without storing or logging its plaintext."""
+    configured_hash = token_hash or os.environ.get("GOVERNANCE_AUTH_TOKEN_SHA256", "")
+    if not token or not actor_id or role not in ROLES or not configured_hash:
+        return GovernanceActor(actor_id=actor_id, role=role, authenticated=False)
+    presented_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    return GovernanceActor(actor_id=actor_id, role=role, authenticated=hmac.compare_digest(presented_hash, configured_hash))
 
 
 class AppendOnlyAuditLedger:

@@ -169,18 +169,19 @@ foram definidos.
 **Status:** `EM ANDAMENTO`
 **Objetivo:** tornar falhas e decisões auditáveis por uma pessoa responsável.
 
-- [ ] Autenticação e autorização para revisão, decisão e administração.
+- [x] Autenticação por token hash configurado externamente, sem persistência do segredo.
 - [ ] RBAC separando operador, revisor e administrador.
 - [x] Núcleo de log append-only com hash chain para revisão/binding/decisão.
 - [x] Métricas de ingestão, atraso PIT, falhas do sidecar, hipóteses e bloqueios em snapshots JSON.
 - [x] Avaliação determinística de alertas para atraso PIT, conflitos, falhas e baixa aprovação.
-- [ ] Dashboard de teses, hipóteses, `WATCH`, `NO_ACTION` e invalidadores.
+- [x] Dashboard estático read-only de métricas gerado por `scripts/render_observability_dashboard.py`.
 - [x] Kill switch fail-closed com permissão administrativa e motivo obrigatório.
 
 **Evidência P2 inicial:** `application/governance.py`, `application/observability.py`,
-`docs/STAGING_RUNBOOK.md` e testes validam RBAC mínimo, ledger append-only, kill switch,
-snapshots de métricas e alertas determinísticos. Autenticação real, entrega de alertas,
-dashboard visual e integração com monitoramento externo ainda estão pendentes.
+`docs/STAGING_RUNBOOK.md` e testes validam RBAC mínimo, autenticação por hash, ledger
+append-only, kill switch, snapshots de métricas, alertas determinísticos e dashboard
+read-only. SSO/RBAC corporativo, entrega externa de alertas e publicação do dashboard ainda
+estão pendentes.
 
 ### Fase P3 — Grounding e binding econômico real
 

@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from macro_b3_bot.application.governance import AppendOnlyAuditLedger, GovernanceActor, KillSwitch, require_permission
+from macro_b3_bot.application.governance import AppendOnlyAuditLedger, GovernanceActor, KillSwitch, authenticate_token, require_permission
 
 
 def test_governance_requires_authenticated_role():
@@ -29,3 +29,12 @@ def test_kill_switch_requires_admin_and_persists(tmp_path):
         switch.activate(GovernanceActor("reviewer-1", "reviewer", authenticated=True), "stop")
     switch.activate(GovernanceActor("admin-1", "administrator", authenticated=True), "incident")
     assert switch.is_active()
+
+
+def test_token_authentication_uses_hash_without_persisting_plaintext():
+    import hashlib
+
+    digest = hashlib.sha256(b"secret-token").hexdigest()
+    actor = authenticate_token("secret-token", actor_id="admin-1", role="administrator", token_hash=digest)
+    assert actor.authenticated is True
+    assert authenticate_token("wrong", actor_id="admin-1", role="administrator", token_hash=digest).authenticated is False
