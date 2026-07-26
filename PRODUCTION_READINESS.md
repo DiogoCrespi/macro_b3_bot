@@ -329,7 +329,10 @@ a política decisória.
 `scripts/run_valuation_readiness_pilot.py`. Foram avaliadas MGLU3, SUZB3, KLBN11,
 RAIL3 e SLCE3. O resultado atual é fail-closed: as três primeiras têm calibração
 legada incompatível com o schema atual e FCF estatístico; RAIL3 e SLCE3 não possuem
-snapshot de FCF normalizado. Portanto, `valuation_eligible=false` e `dcf_eligible=false`
+snapshot de FCF normalizado. Após a recalibração `financial_4d3b_integrity`, os
+payloads atuais são lidos sem erro de schema, mas continuam bloqueados por baixa
+confiança, validação OOS insuficiente e/ou conflito macro. Portanto,
+`valuation_eligible=false` e `dcf_eligible=false`
 para 5/5. O artefato confirma `formal_gate_present`, `fcf_proxy_blocked`,
 `no_fair_value_or_price_target` e `pit_cutoff`; nenhum valor justo ou preço-alvo foi
 calculado.
