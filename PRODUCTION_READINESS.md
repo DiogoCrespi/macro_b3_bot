@@ -2,7 +2,7 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `07ec392`
+**Estado avaliado:** working tree após correção de recuperação de relatório e glossário de domínio (P3)
 **Última suíte local:** 352 testes aprovados em 80,68 s em Python 3.12
 
 ## Veredito
@@ -28,6 +28,23 @@ restrições:
 - O gate de decisão bloqueia hipóteses não suportadas, sem binding ou com contradição.
 - O último resultado operacional real permanece `NO_ACTION`.
 - O CI publicado foi aprovado em Python 3.11 e 3.12; a suíte local atual tem 345 testes.
+
+### P3 — última execução real (25/07/2026)
+
+- O prompt enviado ao sidecar agora contém um glossário obrigatório e identificadores
+  canônicos: IPCA brasileiro, ITR como Informações Trimestrais da CVM, evento,
+  claim, estado setorial e documento-fonte.
+- A suíte focada do parser/grounding passou: **31 testes**; Ruff passou.
+- A execução real `639abc3fa1f4c7c714c2e2ad6d06e17a13a5eabe2af5d6a5a6849471b177573a`
+  chegou a gerar e persistir um relatório completo no sidecar, mas o endpoint de
+  status devolveu HTTP 500 durante a leitura concorrente do arquivo de progresso.
+  O resultado foi corretamente classificado como
+  `FAILED_INCOMPLETE_SERVICE_RUN`; não foram criadas hipóteses.
+- Foi implementada recuperação somente quando `/api/report/list` confirma um
+  relatório `COMPLETED`; nenhum relatório ou hipótese é sintetizado localmente.
+- `SUPPORTED + BOUND + CONSISTENT` permanece **pendente** até uma nova execução
+  real concluir e o relatório respeitar o glossário. A falha atual é operacional
+  do sidecar/status, não autorização para relaxar o grounding semântico.
 
 Esses fatos demonstram integridade do fluxo experimental, não validade econômica para
 produção.

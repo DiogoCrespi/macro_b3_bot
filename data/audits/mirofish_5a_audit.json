@@ -84,16 +84,19 @@
     }
   },
   "simulation_run": {
-    "simulation_run_id": "39b8886c50eb97053d0601c39590a9290c2eda3ee38845c4636d124d9dbaff03",
+    "simulation_run_id": "639abc3fa1f4c7c714c2e2ad6d06e17a13a5eabe2af5d6a5a6849471b177573a",
     "seed_package_id": "9f9b765a898d8f23952e5d1b80a6db07a09c42025bd1da270b8dded50bf0934f",
-    "mirofish_project_id": "proj_0cf250db1a6e",
-    "mirofish_graph_id": "mirofish_ed3933707c9649e4",
-    "mirofish_simulation_id": "sim_16ae4f962c03",
-    "requested_at": "2026-07-26T00:43:50.941389+00:00",
-    "completed_at": "2026-07-26T00:55:05.533509+00:00",
+    "mirofish_project_id": "NOT_EXPOSED_BY_SERVICE",
+    "mirofish_graph_id": "NOT_EXPOSED_BY_SERVICE",
+    "mirofish_simulation_id": "NOT_EXPOSED_BY_SERVICE",
+    "requested_at": "2026-07-26T01:13:04.841737+00:00",
+    "completed_at": "2026-07-26T01:24:15.119233+00:00",
     "service_version": "NOT_EXPOSED_BY_SERVICE",
     "model_information": "NOT_EXPOSED_BY_SERVICE",
     "configuration": {
+      "error_fallback": true,
+      "error_message": "Server error '500 INTERNAL SERVER ERROR' for url 'http://localhost:5001/api/report/generate/status'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500",
+      "cancellation": "FAILED:Client error '400 BAD REQUEST' for url 'http://localhost:5001/api/simulation/stop'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
       "loader_diagnostics": {
         "cutoff_timestamp": "2026-07-22T23:59:59+00:00",
         "filter_event_id": "rel_bcb_ipca_202607",
@@ -145,122 +148,29 @@
           "records_selected": 1,
           "source_checksum": "e39c74a4244762d806df57f0b2d7ca63e6ab3dd4ce98e77f9d99b81509e1c695"
         }
-      },
-      "structured_report_contract": {
-        "report_format": "json",
-        "report_schema_version": "5A.3-mirofish-scenario-report-v1",
-        "report_schema_hash": "9e63e45d730987acb2b94d7f0d6650016e8bd5574f9e294e6c35e7c71db188d8",
-        "report_schema": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "title": "MacroB3 MiroFish Scenario Report",
-          "type": "object",
-          "required": [
-            "schema_version",
-            "report_text",
-            "scenarios"
-          ],
-          "additionalProperties": true,
-          "properties": {
-            "schema_version": {
-              "const": "5A.3-mirofish-scenario-report-v1"
-            },
-            "report_text": {
-              "type": "string",
-              "minLength": 1
-            },
-            "scenarios": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "scenario_type",
-                  "trigger",
-                  "report_excerpt"
-                ],
-                "properties": {
-                  "scenario_type": {
-                    "type": "string"
-                  },
-                  "trigger": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "actors": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "actions": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "macro_factors": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "sector_effects": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "second_order_effects": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "expected_horizon": {
-                    "type": "string"
-                  },
-                  "report_excerpt": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "confidence": {
-                    "type": [
-                      "number",
-                      "null"
-                    ],
-                    "minimum": 0,
-                    "maximum": 1
-                  }
-                }
-              }
-            }
-          }
-        },
-        "require_structured_report": true
       }
     },
     "random_seed": "NOT_EXPOSED_BY_SERVICE",
-    "prompt_hash": "f446a7b0e9ed524a996732b13c5005f9029dfd2ccfe719f0527383dd973564f6",
+    "prompt_hash": "af11a60185fe325055172d704534ebc12c884d924cc908a0aaba7e163094b6be",
     "input_checksum": "dc7db70cf1b9461d293941c2f5c29671f39acef111c918c98101c7121b28d558",
-    "status": "FAILED_UNSUPPORTED_REPORT_SCHEMA",
-    "raw_report_ids": [
-      "report_cc0489dfe15c"
-    ],
-    "raw_response_checksum": "2399068a6d56d68ffffdd7a5d51d01209557914b45832528a74439a64b2b2da5",
+    "status": "FAILED_INCOMPLETE_SERVICE_RUN",
+    "raw_report_ids": [],
+    "raw_response_checksum": "FAILED_INCOMPLETE_SERVICE_RUN",
     "execution_classification": "CONTROLLED_SIDECAR_HOMOLOGATION",
     "methodology_version": "5A.3-mirofish-engine-v3"
   },
   "scenario_set": {
-    "scenario_set_id": "ea5d935cdd74e55e90a6ff70a2ce73554207408d530c7f85f13dd8500459a955",
+    "scenario_set_id": "37287253b300165c7bb22549c1b7f6a87de5f172fee45b704e6d3a1d73d360e2",
     "event_id": "rel_bcb_ipca_202607",
     "as_of_timestamp": "2026-07-22T23:59:59+00:00",
     "scenario_hypothesis_ids": [],
-    "coverage_summary": "MiroFish report schema unsupported for cutoff 2026-07-22T23:59:59+00:00. Zero hypotheses generated.",
+    "coverage_summary": "Online scenario set failed for cutoff 2026-07-22T23:59:59+00:00: Server error '500 INTERNAL SERVER ERROR' for url 'http://localhost:5001/api/report/generate/status'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500",
     "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
     "missing_variables": [
-      "UNSUPPORTED_REPORT_SCHEMA"
+      "REALTIME_MIROFISH_INTERACTION"
     ],
     "methodology_version": "5A.3-scenario-set-v3",
-    "created_at": "2026-07-26T00:55:33.371719+00:00"
+    "created_at": "2026-07-26T01:24:15.119439+00:00"
   },
   "total_hypotheses": 0,
   "unverified_count": 0,

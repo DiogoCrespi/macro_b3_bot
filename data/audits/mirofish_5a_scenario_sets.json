@@ -2,17 +2,17 @@
   "total_scenario_sets": 1,
   "scenario_sets": [
     {
-      "scenario_set_id": "ea5d935cdd74e55e90a6ff70a2ce73554207408d530c7f85f13dd8500459a955",
+      "scenario_set_id": "37287253b300165c7bb22549c1b7f6a87de5f172fee45b704e6d3a1d73d360e2",
       "event_id": "rel_bcb_ipca_202607",
       "as_of_timestamp": "2026-07-22T23:59:59+00:00",
       "scenario_hypothesis_ids": [],
-      "coverage_summary": "MiroFish report schema unsupported for cutoff 2026-07-22T23:59:59+00:00. Zero hypotheses generated.",
+      "coverage_summary": "Online scenario set failed for cutoff 2026-07-22T23:59:59+00:00: Server error '500 INTERNAL SERVER ERROR' for url 'http://localhost:5001/api/report/generate/status'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500",
       "contradiction_summary": "CONTRADICTION_ANALYSIS_NOT_EXECUTED",
       "missing_variables": [
-        "UNSUPPORTED_REPORT_SCHEMA"
+        "REALTIME_MIROFISH_INTERACTION"
       ],
       "methodology_version": "5A.3-scenario-set-v3",
-      "created_at": "2026-07-26T00:55:33.371719+00:00"
+      "created_at": "2026-07-26T01:24:15.119439+00:00"
     }
   ],
   "hypotheses": []

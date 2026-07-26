@@ -368,12 +368,37 @@ class MiroFishClient:
     ) -> dict[str, Any]:
         start_time = time.monotonic()
         while (time.monotonic() - start_time) < timeout_seconds:
-            response = self._request("POST",
-                f"{self.report_prefix}/generate/status",
-                json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
-            )
-            response.raise_for_status()
-            res = response.json()
+            try:
+                response = self._request("POST",
+                    f"{self.report_prefix}/generate/status",
+                    json={"simulation_id": simulation_id, **({"task_id": task_id} if task_id else {})},
+                )
+                response.raise_for_status()
+                res = response.json()
+            except httpx.HTTPStatusError:
+                # The sidecar can finish writing the report at the same instant
+                # that its progress-file status endpoint observes an incomplete
+                # JSON write and returns 500.  Recover only from a persisted
+                # completed report; never synthesize a report or task status.
+                try:
+                    reports = self.list_reports(simulation_id=simulation_id).get("reports", [])
+                except (httpx.HTTPError, ValueError, TypeError):
+                    reports = []
+                completed = [
+                    item for item in reports
+                    if isinstance(item, dict)
+                    and str(item.get("status", "")).lower() in {"completed", "success"}
+                ]
+                if completed:
+                    latest = completed[-1]
+                    return {
+                        "simulation_id": simulation_id,
+                        "report_id": latest.get("report_id"),
+                        "status": "completed",
+                        "recovered_from_status_endpoint_error": True,
+                    }
+                time.sleep(interval_seconds)
+                continue
             data = res.get("data", res) if isinstance(res, dict) else res
             if isinstance(data, dict) and str(data.get("status", "")).lower() in {"completed", "success", "failed", "error"}:
                 return data

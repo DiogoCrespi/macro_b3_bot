@@ -238,7 +238,19 @@ class MiroFishScenarioEngine:
             f"The final report MUST be native JSON matching schema "
             f"{MIROFISH_REPORT_SCHEMA_VERSION}; return no narrative-only report. "
             "Each scenario requires scenario_type, trigger and report_excerpt "
-            "copied verbatim from the report."
+            "copied verbatim from the report. "
+            "DOMAIN GLOSSARY (must be followed in every generated report): "
+            "Write the report in Portuguese. IPCA is Brazil's national consumer "
+            "price index (Índice Nacional de Preços ao Consumidor Amplo), geography BR; "
+            "the event is a Brazilian IPCA acceleration to 0.45 percent, not global "
+            "inflation and not IPC. ITR is CVM Informações Trimestrais, a Brazilian "
+            "public-company quarterly filing, not an information technology report. "
+            "The report MUST preserve these canonical identifiers verbatim: event "
+            "rel_bcb_ipca_202607; claim claim_ipca_acceleration_001; sector state "
+            "sec_retail_202607; source document doc_cvm_itr_202607. Preserve the "
+            "event ID, claim IDs, sector state and source document IDs from the seed. "
+            "If these constraints cannot be satisfied, state the limitation rather "
+            "than changing the indicator or geography."
         )
         prompt_hash = sha256(prompt_str.encode("utf-8")).hexdigest()
         input_checksum = seed_file_checksum
