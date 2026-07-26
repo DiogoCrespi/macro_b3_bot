@@ -2,8 +2,8 @@
 # Avaliação de prontidão para produção
 
 **Data da avaliação:** 25/07/2026
-**Estado avaliado:** commit `2acfdf2`
-**Última suíte local:** 350 testes aprovados em 79,20 s em Python 3.12
+**Estado avaliado:** commit `d38cda5`
+**Última suíte local:** 352 testes aprovados em 80,68 s em Python 3.12
 
 ## Veredito
 
@@ -291,7 +291,7 @@ históricos suficientes.
 | 25/07/2026 | `6e3fefa` | P3 | 5B.1 implementado; hipótese atual rejeitada corretamente | Caso real `SUPPORTED + BOUND` |
 | 25/07/2026 | `a3dc7e1` | P0 | 341 testes, Ruff, Python 3.12 e manifesto reproduzível aprovados | P1: staging operacional seguro |
 | 25/07/2026 | `f4eb3aa` | P1 | Digest GHCR multi-arquitetura fixado, validador fail-closed, worker local/Docker, adaptadores Task Scheduler validados em WhatIf e invocador executado com run_id, cancelamento cooperativo, Docker build, Compose config, health check, backup/restore, lock/idempotência e circuit breaker aprovados; 345 testes, Ruff e diff check | Registro persistente do scheduler, rotação de secrets e smoke pós-pull |
-| 25/07/2026 | `2acfdf2` | P2 | RBAC mínimo, ledger append-only com hash chain, kill switch, métricas, alertas e runbook inicial implementados e testados; 350 testes | Autenticação real, entrega de alertas, dashboard e monitoramento externo |
+| 25/07/2026 | `d38cda5` | P2 | RBAC mínimo, autenticação por hash, ledger append-only, kill switch, métricas, alertas, dashboard read-only e runbook implementados e testados; 352 testes | SSO/RBAC corporativo, entrega de alertas e monitoramento externo |
 
 ## Backlog posterior
 
