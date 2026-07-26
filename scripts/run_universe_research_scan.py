@@ -40,7 +40,7 @@ def _higher_is_better(value: float | None, bad: float, good: float) -> float | N
     return _clamp((value - bad) / (good - bad))
 
 
-def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None) -> dict[str, Any]:
+def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None, manual_exposure: dict[str, Any] | None = None) -> dict[str, Any]:
     metrics = record.get("metrics", {})
     components = {
         "valuation_pe": _lower_is_better(_metric(metrics, "pe"), 8, 30),
@@ -67,6 +67,7 @@ def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None) -> 
     score = sum(usable_groups) / len(usable_groups) if usable_groups else 0.0
     completeness = len(known) / len(components)
     macro = macro or {}
+    manual_exposure = manual_exposure or {}
     macro_impact = macro.get("net_company_impact")
     macro_confidence = macro.get("confidence")
     macro_score = None
@@ -91,6 +92,9 @@ def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None) -> 
         "macro_factors": macro.get("factors", []),
         "macro_missing_exposures": macro.get("missing_exposures", []),
         "macro_conflict_ratio": macro.get("conflict_ratio"),
+        "manual_exposure_status": "CATALOGED" if manual_exposure else "NOT_CATALOGED",
+        "manual_macro_channels": manual_exposure.get("macro_channels", []),
+        "manual_exposure_observations": manual_exposure.get("observations", []),
         "data_completeness": round(completeness, 4),
         "group_scores": {key: None if value is None else round(value, 4) for key, value in group_scores.items()},
         "metrics": metrics,
@@ -99,9 +103,10 @@ def score_asset(record: dict[str, Any], macro: dict[str, Any] | None = None) -> 
     }
 
 
-def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str, int], as_of: str, macro_by_ticker: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str, int], as_of: str, macro_by_ticker: dict[str, dict[str, Any]] | None = None, manual_by_ticker: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
     macro_by_ticker = macro_by_ticker or {}
-    ranked = sorted((score_asset(item, macro_by_ticker.get(item["ticker"])) for item in records), key=lambda x: (x["integrated_score"] * x["data_completeness"], x["integrated_score"]), reverse=True)
+    manual_by_ticker = manual_by_ticker or {}
+    ranked = sorted((score_asset(item, macro_by_ticker.get(item["ticker"]), manual_by_ticker.get(item["ticker"])) for item in records), key=lambda x: (x["integrated_score"] * x["data_completeness"], x["integrated_score"]), reverse=True)
     total_factor_events = sum(factor_counts.values())
     factor_summary = [
         {"factor": factor, "event_count": count, "share": round(count / total_factor_events, 4) if total_factor_events else 0}
@@ -113,6 +118,7 @@ def build_universe_report(records: list[dict[str, Any]], factor_counts: dict[str
         "assets_scanned": len(records),
         "assets_ranked": len(ranked),
         "assets_with_causal_candidate": sum(1 for item in ranked if item["macro_score"] is not None),
+        "assets_with_manual_exposure_catalog": sum(1 for item in ranked if item["manual_exposure_status"] == "CATALOGED"),
         "ranking_policy": "equal_weighted_groups; macro factors are context only",
         "macro_factor_summary": factor_summary,
         "factor_dominance_guard": {"max_single_factor_weight": 1.0, "enso_is_not_special_cased": True},
@@ -133,6 +139,10 @@ def main() -> None:
     records = [{"ticker": r[0], "asset_class": r[1], "as_of": r[2].isoformat(), "price": r[3], "avg_daily_volume_brl": r[4], "sector": r[5], "metrics": json.loads(r[6] or "{}")} for r in rows]
     factors = db.connection.execute("SELECT event_type, COUNT(*) FROM macro_event_candidates WHERE detected_at <= ? GROUP BY event_type", [cutoff]).fetchall()
     macro_by_ticker: dict[str, dict[str, Any]] = {}
+    manual_path = settings.data_dir / "audits" / "manual_asset_exposure_review_20260726.json"
+    manual_by_ticker: dict[str, dict[str, Any]] = {}
+    if manual_path.exists():
+        manual_by_ticker = {item["ticker"]: item for item in json.loads(manual_path.read_text(encoding="utf-8")).get("assets", [])}
     candidate_rows = db.connection.execute("""SELECT ticker, impact_payload, confidence, conflict_ratio, missing_exposures, status
         FROM company_impact_candidates
         QUALIFY ROW_NUMBER() OVER (PARTITION BY ticker ORDER BY
@@ -149,18 +159,24 @@ def main() -> None:
             "status": str(status),
             "factors": sorted({str(c.get("factor")) for c in contributions if c.get("factor")}),
         }
-    report = build_universe_report(records, {str(row[0]): int(row[1]) for row in factors}, cutoff.isoformat(), macro_by_ticker)
+    report = build_universe_report(records, {str(row[0]): int(row[1]) for row in factors}, cutoff.isoformat(), macro_by_ticker, manual_by_ticker)
+    requested = sorted(manual_by_ticker)
+    universe_tickers = {item["ticker"] for item in records}
+    report["manual_catalog_assets"] = [{"ticker": ticker, "asset_type": manual_by_ticker[ticker].get("asset_type"), "macro_channels": manual_by_ticker[ticker].get("macro_channels", []), "observations": manual_by_ticker[ticker].get("observations", []), "in_universe": ticker in universe_tickers} for ticker in requested]
+    report["requested_assets_not_in_universe"] = [ticker for ticker in requested if ticker not in universe_tickers]
     out_json = settings.data_dir / "audits" / "universe_research_scan.json"
     out_md = settings.data_dir / "audits" / "universe_research_scan.md"
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    lines = ["# Full B3 universe research scan\n", f"As of: `{report['as_of_timestamp']}`", f"\nAssets scanned: **{report['assets_scanned']}**", f"Causal candidates available: **{report['assets_with_causal_candidate']}**", "\n## Macro context (not a single-factor ranking)\n"]
+    lines = ["# Full B3 universe research scan\n", f"As of: `{report['as_of_timestamp']}`", f"\nAssets scanned: **{report['assets_scanned']}**", f"Causal candidates available: **{report['assets_with_causal_candidate']}**", f"Manual exposure catalogs: **{report['assets_with_manual_exposure_catalog']}**", "\n## Macro context (not a single-factor ranking)\n"]
     lines += [f"- `{item['factor']}`: {item['event_count']} events ({item['share']:.1%})" for item in report["macro_factor_summary"]]
     lines += ["\n## Top 25 integrated research watchlist\n", "| Rank | Ticker | Integrated | Fundamental | Macro | Macro status | Completeness |", "|---:|---|---:|---:|---:|---|---:|"]
     lines += [f"| {idx} | {item['ticker']} | {item['integrated_score']:.4f} | {item['research_score']:.4f} | {item['macro_score'] if item['macro_score'] is not None else 'UNKNOWN'} | {item['macro_status']} | {item['data_completeness']:.1%} |" for idx, item in enumerate(report["results"][:25], 1)]
     lines += ["\n## Assets with persisted causal coverage\n", "| Ticker | Macro score | Status | Factors | Missing exposures |", "|---|---:|---|---|---|"]
     covered = [item for item in report["results"] if item["macro_score"] is not None]
     lines += [f"| {item['ticker']} | {item['macro_score']:.4f} | {item['macro_status']} | {', '.join(item['macro_factors']) or 'UNKNOWN'} | {', '.join(item['macro_missing_exposures']) or 'none'} |" for item in covered]
+    lines += ["\n## Manual catalogs requested\n", "| Ticker | In current universe | Channels |", "|---|---|---|"]
+    lines += [f"| {item['ticker']} | {'yes' if item['in_universe'] else 'no'} | {', '.join(item['macro_channels'])} |" for item in report["manual_catalog_assets"]]
     lines += ["\nThis is a comparative research report, not BUY advice, valuation or order execution."]
     out_md.write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps({"assets_scanned": report["assets_scanned"], "json": str(out_json), "markdown": str(out_md)}))

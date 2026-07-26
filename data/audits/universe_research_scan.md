@@ -1,9 +1,10 @@
 # Full B3 universe research scan
 
-As of: `2026-07-26T20:11:59.319416+00:00`
+As of: `2026-07-26T20:31:31.331704+00:00`
 
 Assets scanned: **234**
 Causal candidates available: **3**
+Manual exposure catalogs: **2**
 
 ## Macro context (not a single-factor ranking)
 
@@ -48,5 +49,20 @@ Causal candidates available: **3**
 | SUZB3 | 0.1009 | NO_ACTION | FX | cost, debt, demand |
 | MGLU3 | 0.0997 | WATCH | INTEREST_RATES | revenue, cost, demand |
 | KLBN11 | 0.2030 | NO_ACTION | FX | cost, demand |
+
+## Manual catalogs requested
+
+| Ticker | In current universe | Channels |
+|---|---|---|
+| BBAS3 | yes | INTEREST_RATES, CREDIT_CYCLE, COUNTRY_RISK, AGRICULTURAL_CREDIT, DEFAULT_RISK |
+| CPTS11 | no | INTEREST_RATES, INFLATION, CREDIT_SPREAD, REAL_ESTATE_CREDIT |
+| GARE11 | no | INTEREST_RATES, INFLATION, TENANT_CREDIT, RETAIL_DEMAND, REAL_ESTATE_TRANSACTIONS |
+| GGRC11 | no | INTEREST_RATES, INFLATION, TENANT_CREDIT, INDUSTRIAL_DEMAND |
+| HGLG11 | no | INTEREST_RATES, INFLATION, LOGISTICS_DEMAND, VACANCY |
+| KNCR11 | no | INTEREST_RATES, CREDIT_SPREAD, REAL_ESTATE_CREDIT |
+| QQQI11 | no | USD_BRL, US_TECH_EQUITY, IMPLIED_VOLATILITY, US_INTEREST_RATES |
+| SAPR4 | yes | INFLATION, INTEREST_RATES, REGULATORY_TARIFF, CAPEX, HYDROLOGY |
+| TRXF11 | no | INTEREST_RATES, INFLATION, TENANT_CREDIT, RETAIL_DEMAND |
+| XPML11 | no | INTEREST_RATES, INFLATION, RETAIL_DEMAND, SHOPPING_SALES, VACANCY |
 
 This is a comparative research report, not BUY advice, valuation or order execution.

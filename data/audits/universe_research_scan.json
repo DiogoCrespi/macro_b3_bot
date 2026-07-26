@@ -1,9 +1,10 @@
 {
   "report_type": "FULL_UNIVERSE_RESEARCH_SCAN",
-  "as_of_timestamp": "2026-07-26T20:11:59.319416+00:00",
+  "as_of_timestamp": "2026-07-26T20:31:31.331704+00:00",
   "assets_scanned": 234,
   "assets_ranked": 234,
   "assets_with_causal_candidate": 3,
+  "assets_with_manual_exposure_catalog": 2,
   "ranking_policy": "equal_weighted_groups; macro factors are context only",
   "macro_factor_summary": [
     {
@@ -40,6 +41,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9036,
@@ -74,6 +78,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9552,
@@ -108,6 +115,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9233,
@@ -142,6 +152,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -176,6 +189,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7934,
@@ -210,6 +226,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8107,
@@ -244,6 +263,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9594,
@@ -278,6 +300,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5692,
@@ -312,6 +337,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -346,6 +374,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7559,
@@ -380,6 +411,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9437,
@@ -414,6 +448,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5588,
@@ -448,6 +485,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9302,
@@ -482,6 +522,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9138,
@@ -516,6 +559,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8704,
@@ -550,6 +596,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4369,
@@ -584,6 +633,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8786,
@@ -618,6 +670,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -652,6 +707,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9948,
@@ -686,6 +744,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9567,
@@ -720,6 +781,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9728,
@@ -754,6 +818,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6318,
@@ -788,6 +855,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7867,
@@ -822,6 +892,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9958,
@@ -856,6 +929,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8898,
@@ -890,6 +966,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.974,
@@ -924,6 +1003,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.822,
@@ -958,6 +1040,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -992,6 +1077,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7096,
@@ -1026,6 +1114,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7846,
@@ -1060,6 +1151,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9851,
@@ -1094,6 +1188,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6508,
@@ -1128,6 +1225,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.6356,
@@ -1162,6 +1262,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9269,
@@ -1196,6 +1299,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.834,
@@ -1230,6 +1336,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7761,
@@ -1264,6 +1373,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9467,
@@ -1298,6 +1410,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6974,
@@ -1332,6 +1447,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5554,
@@ -1366,6 +1484,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -1405,6 +1526,9 @@
         "demand"
       ],
       "macro_conflict_ratio": 0.0,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5852,
@@ -1439,6 +1563,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9117,
@@ -1473,6 +1600,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.974,
@@ -1507,6 +1637,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8932,
@@ -1541,6 +1674,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9417,
@@ -1575,6 +1711,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7386,
@@ -1609,6 +1748,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9167,
@@ -1643,6 +1785,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9994,
@@ -1677,6 +1822,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6667,
@@ -1711,6 +1859,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.999,
@@ -1745,6 +1896,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -1779,6 +1933,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.612,
@@ -1813,6 +1970,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8822,
@@ -1847,6 +2007,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -1881,6 +2044,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6851,
@@ -1915,6 +2081,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6967,
@@ -1949,6 +2118,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -1983,6 +2155,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9343,
@@ -2017,6 +2192,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8637,
@@ -2051,6 +2229,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8814,
@@ -2085,6 +2266,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5478,
@@ -2119,6 +2303,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6895,
@@ -2153,6 +2340,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5611,
@@ -2187,6 +2377,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9125,
@@ -2221,6 +2414,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5566,
@@ -2255,6 +2451,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6433,
@@ -2289,6 +2488,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8765,
@@ -2323,6 +2525,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8249,
@@ -2357,6 +2562,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9715,
@@ -2391,6 +2599,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8072,
@@ -2425,6 +2636,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8812,
@@ -2459,6 +2673,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9131,
@@ -2493,6 +2710,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5007,
@@ -2527,6 +2747,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7357,
@@ -2561,6 +2784,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4557,
@@ -2595,6 +2821,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.2713,
@@ -2629,6 +2858,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6434,
@@ -2663,6 +2895,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8397,
@@ -2697,6 +2932,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6499,
@@ -2731,6 +2969,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7436,
@@ -2765,6 +3006,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4705,
@@ -2799,6 +3043,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6116,
@@ -2833,6 +3080,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7021,
@@ -2867,6 +3117,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7502,
@@ -2901,6 +3154,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.66,
@@ -2935,6 +3191,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.3172,
@@ -2969,6 +3228,26 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "CATALOGED",
+      "manual_macro_channels": [
+        "INFLATION",
+        "INTEREST_RATES",
+        "REGULATORY_TARIFF",
+        "CAPEX",
+        "HYDROLOGY"
+      ],
+      "manual_exposure_observations": [
+        {
+          "field": "tariff_adjustment_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "maintenance_capex",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.983,
@@ -3003,6 +3282,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7692,
@@ -3037,6 +3319,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7914,
@@ -3071,6 +3356,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.88,
@@ -3105,6 +3393,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7808,
@@ -3139,6 +3430,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8696,
@@ -3173,6 +3467,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6753,
@@ -3207,6 +3504,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 1.0,
@@ -3241,6 +3541,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5088,
@@ -3280,6 +3583,9 @@
         "demand"
       ],
       "macro_conflict_ratio": 0.0,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6911,
@@ -3314,6 +3620,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.4019,
@@ -3348,6 +3657,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4026,
@@ -3382,6 +3694,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.3229,
@@ -3416,6 +3731,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.0,
@@ -3450,6 +3768,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.5121,
@@ -3484,6 +3805,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9109,
@@ -3518,6 +3842,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7617,
@@ -3552,6 +3879,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7713,
@@ -3586,6 +3916,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.7616,
@@ -3620,6 +3953,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8723,
@@ -3654,6 +3990,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8626,
@@ -3688,6 +4027,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9144,
@@ -3722,6 +4064,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5793,
@@ -3756,6 +4101,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7844,
@@ -3790,6 +4138,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8938,
@@ -3824,6 +4175,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9872,
@@ -3858,6 +4212,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7875,
@@ -3892,6 +4249,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.2092,
@@ -3932,6 +4292,9 @@
         "demand"
       ],
       "macro_conflict_ratio": 0.6524,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.768,
@@ -3966,6 +4329,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9854,
@@ -4000,6 +4366,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.2583,
@@ -4034,6 +4403,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5349,
@@ -4068,6 +4440,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.6832,
@@ -4102,6 +4477,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8734,
@@ -4136,6 +4514,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5514,
@@ -4170,6 +4551,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9196,
@@ -4204,6 +4588,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9277,
@@ -4238,6 +4625,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7336,
@@ -4272,6 +4662,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.6536,
@@ -4306,6 +4699,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4544,
@@ -4340,6 +4736,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8704,
@@ -4374,6 +4773,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4461,
@@ -4408,6 +4810,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7386,
@@ -4442,6 +4847,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4688,
@@ -4476,6 +4884,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.793,
@@ -4510,6 +4921,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7554,
@@ -4544,6 +4958,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6667,
@@ -4578,6 +4995,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.475,
@@ -4612,6 +5032,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.5335,
@@ -4646,6 +5069,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4277,
@@ -4680,6 +5106,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8354,
@@ -4714,6 +5143,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9552,
@@ -4748,6 +5180,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5417,
@@ -4788,6 +5223,9 @@
         "demand"
       ],
       "macro_conflict_ratio": 0.0,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.703,
@@ -4827,6 +5265,9 @@
         "demand"
       ],
       "macro_conflict_ratio": 0.6524,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.253,
@@ -4861,6 +5302,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9476,
@@ -4895,6 +5339,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8467,
@@ -4929,6 +5376,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.7146,
@@ -4963,6 +5413,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.905,
@@ -4997,6 +5450,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.7959,
@@ -5031,6 +5487,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9212,
@@ -5065,6 +5524,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.4848,
@@ -5099,6 +5561,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6812,
@@ -5133,6 +5598,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.0183,
@@ -5167,6 +5635,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.1389,
@@ -5201,6 +5672,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.3841,
@@ -5235,6 +5709,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 1.0,
@@ -5269,6 +5746,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4451,
@@ -5303,6 +5783,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.3798,
@@ -5337,6 +5820,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.1865,
@@ -5371,6 +5857,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.6667,
@@ -5405,6 +5894,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.8516,
@@ -5439,6 +5931,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9455,
@@ -5473,6 +5968,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.9161,
@@ -5507,6 +6005,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.399,
@@ -5541,6 +6042,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.6746,
@@ -5575,6 +6079,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9906,
@@ -5609,6 +6116,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8836,
@@ -5643,6 +6153,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4315,
@@ -5677,6 +6190,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9719,
@@ -5711,6 +6227,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.2521,
@@ -5745,6 +6264,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.9544,
@@ -5779,6 +6301,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9625,
@@ -5813,6 +6338,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.815,
@@ -5847,6 +6375,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 1.0,
@@ -5881,6 +6412,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.4839,
@@ -5915,6 +6449,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9047,
@@ -5949,6 +6486,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9631,
@@ -5983,6 +6523,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.7844,
@@ -6017,6 +6560,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.8995,
@@ -6051,6 +6597,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -6085,6 +6634,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 1.0,
@@ -6119,6 +6671,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -6153,6 +6708,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.2466,
@@ -6187,6 +6745,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.3933,
@@ -6221,6 +6782,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.1625,
@@ -6255,6 +6819,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9465,
@@ -6289,6 +6856,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8512,
@@ -6323,6 +6893,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.5653,
@@ -6357,6 +6930,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9258,
@@ -6391,6 +6967,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9594,
@@ -6425,6 +7004,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.7535,
@@ -6459,6 +7041,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9656,
@@ -6493,6 +7078,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.5021,
@@ -6527,6 +7115,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.3359,
@@ -6561,6 +7152,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.9406,
@@ -6595,6 +7189,26 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "CATALOGED",
+      "manual_macro_channels": [
+        "INTEREST_RATES",
+        "CREDIT_CYCLE",
+        "COUNTRY_RISK",
+        "AGRICULTURAL_CREDIT",
+        "DEFAULT_RISK"
+      ],
+      "manual_exposure_observations": [
+        {
+          "field": "floating_rate_asset_share",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "credit_duration",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.9991,
@@ -6629,6 +7243,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.5,
@@ -6663,6 +7280,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.0,
@@ -6697,6 +7317,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.7126,
@@ -6731,6 +7354,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -6765,6 +7391,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 1.0,
@@ -6799,6 +7428,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.1552,
@@ -6833,6 +7465,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.7946,
@@ -6867,6 +7502,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.4608,
@@ -6901,6 +7539,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.7351,
@@ -6935,6 +7576,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -6969,6 +7613,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.9938,
@@ -7003,6 +7650,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9025,
@@ -7037,6 +7687,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.4813,
@@ -7071,6 +7724,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -7105,6 +7761,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -7139,6 +7798,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.4688,
@@ -7173,6 +7835,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.7562,
@@ -7207,6 +7872,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.8965,
@@ -7241,6 +7909,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.7235,
@@ -7275,6 +7946,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 1.0,
@@ -7309,6 +7983,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.5903,
@@ -7343,6 +8020,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.7515,
@@ -7377,6 +8057,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.8234,
@@ -7411,6 +8094,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 1.0,
       "group_scores": {
         "valuation": 0.1521,
@@ -7445,6 +8131,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.8635,
@@ -7479,6 +8168,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.8813,
@@ -7513,6 +8205,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.415,
@@ -7547,6 +8242,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.9669,
@@ -7581,6 +8279,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.7985,
@@ -7615,6 +8316,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.4246,
@@ -7649,6 +8353,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.75,
       "group_scores": {
         "valuation": 0.7406,
@@ -7683,6 +8390,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.5,
       "group_scores": {
         "valuation": 0.9781,
@@ -7717,6 +8427,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.8938,
@@ -7751,6 +8464,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 1.0,
@@ -7785,6 +8501,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.5,
       "group_scores": {
         "valuation": null,
@@ -7819,6 +8538,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.875,
       "group_scores": {
         "valuation": 0.42,
@@ -7853,6 +8575,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.0,
@@ -7887,6 +8612,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.5,
       "group_scores": {
         "valuation": null,
@@ -7921,6 +8649,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.625,
       "group_scores": {
         "valuation": 0.0331,
@@ -7955,6 +8686,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.5,
       "group_scores": {
         "valuation": null,
@@ -7989,6 +8723,9 @@
       "macro_factors": [],
       "macro_missing_exposures": [],
       "macro_conflict_ratio": null,
+      "manual_exposure_status": "NOT_CATALOGED",
+      "manual_macro_channels": [],
+      "manual_exposure_observations": [],
       "data_completeness": 0.5,
       "group_scores": {
         "valuation": null,
@@ -8015,5 +8752,275 @@
     "buy_signals": 0,
     "orders": 0,
     "valuation": "DESCRIPTIVE_ONLY"
-  }
+  },
+  "manual_catalog_assets": [
+    {
+      "ticker": "BBAS3",
+      "asset_type": "BANK",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "CREDIT_CYCLE",
+        "COUNTRY_RISK",
+        "AGRICULTURAL_CREDIT",
+        "DEFAULT_RISK"
+      ],
+      "observations": [
+        {
+          "field": "floating_rate_asset_share",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "credit_duration",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": true
+    },
+    {
+      "ticker": "CPTS11",
+      "asset_type": "FII_CREDIT_HYBRID",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "CREDIT_SPREAD",
+        "REAL_ESTATE_CREDIT"
+      ],
+      "observations": [
+        {
+          "field": "cdi_linked_credit_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "ipca_linked_credit_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "GARE11",
+      "asset_type": "FII_HYBRID_REAL_ESTATE",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "TENANT_CREDIT",
+        "RETAIL_DEMAND",
+        "REAL_ESTATE_TRANSACTIONS"
+      ],
+      "observations": [
+        {
+          "field": "tenant_concentration",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "contract_indexation",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "GGRC11",
+      "asset_type": "FII_INDUSTRIAL_LOGISTICS",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "TENANT_CREDIT",
+        "INDUSTRIAL_DEMAND"
+      ],
+      "observations": [
+        {
+          "field": "atypical_contract_revenue_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "contract_remaining_term_years",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "HGLG11",
+      "asset_type": "FII_LOGISTICS",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "LOGISTICS_DEMAND",
+        "VACANCY"
+      ],
+      "observations": [
+        {
+          "field": "portfolio_occupancy",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "rental_contract_indexation",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "KNCR11",
+      "asset_type": "FII_CREDIT_CDI",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "CREDIT_SPREAD",
+        "REAL_ESTATE_CREDIT"
+      ],
+      "observations": [
+        {
+          "field": "cri_cdi_pct_of_equity",
+          "value": 0.786,
+          "unit": "fraction_of_equity",
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "lci_pct_of_equity",
+          "value": 0.126,
+          "unit": "fraction_of_equity",
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "cash_instruments_pct_of_equity",
+          "value": 0.087,
+          "unit": "fraction_of_equity",
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "cri_cdi_average_spread",
+          "value": 0.0206,
+          "unit": "annual_rate",
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "average_term_years",
+          "value": 4.1,
+          "unit": "years",
+          "status": "EXPLICIT_DISCLOSURE"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "QQQI11",
+      "asset_type": "ETF_NASDAQ100_COVERED_CALL",
+      "macro_channels": [
+        "USD_BRL",
+        "US_TECH_EQUITY",
+        "IMPLIED_VOLATILITY",
+        "US_INTEREST_RATES"
+      ],
+      "observations": [
+        {
+          "field": "underlying_index",
+          "value": "NASDAQ-100",
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "covered_call_strategy",
+          "value": true,
+          "status": "EXPLICIT_DISCLOSURE"
+        },
+        {
+          "field": "usd_exposure_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "SAPR4",
+      "asset_type": "REGULATED_SANITATION",
+      "macro_channels": [
+        "INFLATION",
+        "INTEREST_RATES",
+        "REGULATORY_TARIFF",
+        "CAPEX",
+        "HYDROLOGY"
+      ],
+      "observations": [
+        {
+          "field": "tariff_adjustment_pct",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "maintenance_capex",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": true
+    },
+    {
+      "ticker": "TRXF11",
+      "asset_type": "FII_RENDA_URBANA",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "TENANT_CREDIT",
+        "RETAIL_DEMAND"
+      ],
+      "observations": [
+        {
+          "field": "rental_contract_indexation",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "tenant_concentration",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    },
+    {
+      "ticker": "XPML11",
+      "asset_type": "FII_SHOPPING_MALLS",
+      "macro_channels": [
+        "INTEREST_RATES",
+        "INFLATION",
+        "RETAIL_DEMAND",
+        "SHOPPING_SALES",
+        "VACANCY"
+      ],
+      "observations": [
+        {
+          "field": "tenant_sales_exposure",
+          "value": null,
+          "status": "UNKNOWN"
+        },
+        {
+          "field": "occupancy",
+          "value": null,
+          "status": "UNKNOWN"
+        }
+      ],
+      "in_universe": false
+    }
+  ],
+  "requested_assets_not_in_universe": [
+    "CPTS11",
+    "GARE11",
+    "GGRC11",
+    "HGLG11",
+    "KNCR11",
+    "QQQI11",
+    "TRXF11",
+    "XPML11"
+  ]
 }

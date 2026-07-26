@@ -442,6 +442,15 @@ exposições ausentes. Nesta base, apenas SUZB3, MGLU3 e KLBN11 possuem candidat
 persistido; os demais ativos aparecem honestamente como `NO_CAUSAL_COVERAGE`, não como
 se tivessem uma tese macro fabricada.
 
+Foi catalogada uma busca manual inicial para TRXF11, HGLG11, CPTS11, GGRC11, BBAS3,
+SAPR4, KNCR11, GARE11, QQQI11 e XPML11 em
+`data/audits/manual_asset_exposure_review_20260726.{json,md}`. KNCR11 possui divulgação
+explícita de 78,6% do PL em CRI CDI, spread médio CDI+2,06% e prazo médio de 4,1 anos;
+QQQI11 possui mandato Nasdaq-100 com calls cobertas. Os demais têm canais identificados,
+mas percentuais permanecem `UNKNOWN` até a extração dos documentos originais. BBAS3 e
+SAPR4 estão no universo atual; os FIIs/ETF ausentes do snapshot atual ficam marcados
+como `not_in_universe`, sem serem descartados silenciosamente.
+
 ## Estado do Sprint 5B.1
 
 O fechamento de integridade do MiroFish foi implementado e testado:
