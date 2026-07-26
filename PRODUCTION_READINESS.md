@@ -265,8 +265,8 @@ explicitamente configurada, mas permanece distinguido de uma assinatura humana i
 
 - [X] Replays walk-forward por data de disponibilidade para os bridges com séries PIT.
 - [X] Mínimo de cinco janelas para os bridges calculáveis; bridges sem série ficam explicitamente bloqueados.
-- [~] MGLU3: juros líquidos, caixa sensível, repricing e derivativos — saldo bruto/caixa
-  observados; parcela sensível, repricing e derivativos continuam explicitamente ausentes.
+- [~] MGLU3: dívida flutuante efetiva foi ligada a fato aprovado (`100%`, pós-hedge) e saldo
+  médio observado; caixa sensível, repricing e derivativos continuam explicitamente ausentes.
 - [~] SUZB3: FX e celulose com 8 janelas OOS; volume, custos cambiais e margem incremental
   continuam drivers ausentes e não são inferidos.
 - [~] KLBN11: FX com 7 janelas OOS; CDI/SOFR e IPCA separados com 8 janelas OOS cada,

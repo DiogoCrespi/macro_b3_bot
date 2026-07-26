@@ -19,6 +19,8 @@
       "parameters": {
         "average_gross_debt_observed": 5947933000.0,
         "average_cash_observed": 1784888000.0,
+        "approved_floating_rate_debt_pct": 1.0,
+        "average_effective_floating_debt": 5947933000.0,
         "gross_interest_effect_formula": "-effective_floating_debt * delta_rate * repricing_factor"
       },
       "coefficient_sign_stability": {},
@@ -31,7 +33,7 @@
       "notes": "Structural proxy; gross debt and cash are observed balances, but cash sensitivity, repricing lag and derivatives are not inferred.",
       "promotion_status": "NOT_PROMOTED_TO_VALUATION",
       "run_id": "financial_p4_walk_forward",
-      "validation_id": "45aa17618da67037f427c6b84090dedb"
+      "validation_id": "4f69fe3cd003a074f4ce72cb5bfa0719"
     },
     {
       "ticker": "SUZB3",

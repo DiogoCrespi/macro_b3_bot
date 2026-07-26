@@ -72,6 +72,17 @@ class HistoricalBridgeValidator:
         count = max(0, len(merged) - 1)
         gross_debt = float(frame["gross_debt"].median()) if not frame.empty else None
         cash = float(frame["cash"].median()) if not frame.empty else None
+        approved = self.store.connection.execute(
+            """
+            SELECT field_name, normalized_value FROM company_macro_exposure_facts
+            WHERE ticker=? AND review_status IN ('HUMAN_APPROVED','DELEGATED_AI_APPROVED')
+            ORDER BY reviewed_at DESC NULLS LAST
+            """,
+            [ticker],
+        ).fetchall()
+        approved_fields = {name: float(value) for name, value in approved if name and value is not None}
+        floating_share = approved_fields.get("floating_rate_debt_pct")
+        floating_debt = gross_debt * floating_share if gross_debt is not None and floating_share is not None else None
         return self._base_result(
             ticker=ticker,
             bridge="NET_INTEREST_CASH_EFFECT",
@@ -90,6 +101,8 @@ class HistoricalBridgeValidator:
             parameters={
                 "average_gross_debt_observed": gross_debt,
                 "average_cash_observed": cash,
+                "approved_floating_rate_debt_pct": floating_share,
+                "average_effective_floating_debt": floating_debt,
                 "gross_interest_effect_formula": "-effective_floating_debt * delta_rate * repricing_factor",
             },
             notes=(
